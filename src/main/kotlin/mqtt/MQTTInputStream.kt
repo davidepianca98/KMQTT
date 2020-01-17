@@ -14,7 +14,7 @@ class MQTTInputStream(inputStream: InputStream) : DataInputStream(inputStream) {
 
         val type = MQTTControlPacketType.valueOf(mqttControlPacketType)!!
 
-        val remainingLength = read()
+        val remainingLength = decodeVariableByteInteger()
         val packet = ByteArray(remainingLength)
         readFully(packet, 0, remainingLength)
         return parseMQTTPacket(type, flags, packet)
@@ -22,10 +22,10 @@ class MQTTInputStream(inputStream: InputStream) : DataInputStream(inputStream) {
 
     private fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: ByteArray): MQTTPacket {
         return when (type) {
-            MQTTControlPacketType.CONNECT -> MQTTConnect(flags, data)
-            MQTTControlPacketType.Reserved -> TODO("Throw exception malformed packet")
+            MQTTControlPacketType.CONNECT -> MQTTConnect.fromByteArray(flags, data)
+            MQTTControlPacketType.Reserved -> throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
             MQTTControlPacketType.CONNACK -> MQTTConnack(flags, data)
-            MQTTControlPacketType.PUBLISH -> MQTTPublish(flags, data)
+            MQTTControlPacketType.PUBLISH -> MQTTPublish.fromByteArray(flags, data)
             MQTTControlPacketType.PUBACK -> MQTTPuback(flags, data)
             MQTTControlPacketType.PUBREC -> MQTTPubrec(flags, data)
             MQTTControlPacketType.PUBREL -> MQTTPubrel(flags, data)
