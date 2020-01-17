@@ -3,12 +3,18 @@ package mqtt.packets
 import mqtt.MalformedPacketException
 import java.io.ByteArrayInputStream
 
-class MQTTConnect(
+data class MQTTConnect(
     val protocolName: String,
     val protocolVersion: Int,
     val connectFlags: ConnectFlags,
     val keepAlive: Int,
-    val properties: MQTTProperties
+    val properties: MQTTProperties,
+    val clientID: String,
+    val willProperties: MQTTProperties?,
+    val willTopic: String?,
+    val willPayload: ByteArray?,
+    val userName: String?,
+    val password: ByteArray?
 ) : MQTTPacket {
 
     companion object : MQTTDeserializer {
@@ -25,6 +31,16 @@ class MQTTConnect(
             Property.MAXIMUM_PACKET_SIZE
         )
 
+        private val validWillProperties = listOf(
+            Property.WILL_DELAY_INTERVAL,
+            Property.PAYLOAD_FORMAT_INDICATOR,
+            Property.MESSAGE_EXPIRY_INTERVAL,
+            Property.CONTENT_TYPE,
+            Property.RESPONSE_TOPIC,
+            Property.CORRELATION_DATA,
+            Property.USER_PROPERTY
+        )
+
         data class ConnectFlags(
             val userNameFlag: Boolean,
             val passwordFlag: Boolean,
@@ -39,12 +55,25 @@ class MQTTConnect(
             val reserved = (byte and 1) == 1
             if (reserved)
                 throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+            val willFlag = ((byte shl 2) and 1) == 1
+            val willQos = ((byte shl 4) and 1) or ((byte shl 3) and 1)
+            val willRetain = ((byte shl 5) and 1) == 1
+            if (willFlag) {
+                if (willQos == 3)
+                    throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+            } else {
+                if (willQos != 0)
+                    throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+                if (willRetain)
+                    throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+            }
+
             return ConnectFlags(
                 ((byte shl 7) and 1) == 1,
                 ((byte shl 6) and 1) == 1,
-                ((byte shl 5) and 1) == 1,
-                ((byte shl 4) and 1) or ((byte shl 3) and 1),
-                ((byte shl 2) and 1) == 1,
+                willRetain,
+                willQos,
+                willFlag,
                 ((byte shl 1) and 1) == 1,
                 reserved
             )
@@ -66,7 +95,31 @@ class MQTTConnect(
 
             val properties = inStream.deserializeProperties(validProperties)
 
-            return MQTTConnect(protocolName, protocolVersion, connectFlags, keepAlive, properties)
+            // Payload
+            val clientID = inStream.readUTF8String()
+            if (clientID.isEmpty())
+                throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+
+            val willProperties =
+                if (connectFlags.willFlag) inStream.deserializeProperties(validWillProperties) else null
+            val willTopic = if (connectFlags.willFlag) inStream.readUTF8String() else null
+            val willPayload = if (connectFlags.willFlag) inStream.readBinaryData() else null
+            val userName = if (connectFlags.userNameFlag) inStream.readUTF8String() else null
+            val password = if (connectFlags.passwordFlag) inStream.readBinaryData() else null
+
+            return MQTTConnect(
+                protocolName,
+                protocolVersion,
+                connectFlags,
+                keepAlive,
+                properties,
+                clientID,
+                willProperties,
+                willTopic,
+                willPayload,
+                userName,
+                password
+            )
         }
 
     }

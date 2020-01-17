@@ -1,19 +1,18 @@
 package mqtt
 
 import java.io.InputStream
+import java.io.OutputStream
 
-fun Int.encodeVariableByteInteger(): ByteArray {
-    val encoded = mutableListOf<Int>()
-    var x = this
+fun OutputStream.encodeVariableByteInteger(value: Int) {
+    var x = value
     do {
         var encodedByte = x.rem(128)
         x /= 128
         if (x > 0) {
             encodedByte = encodedByte or 128
         }
-        encoded.add(encodedByte)
+        write(encodedByte)
     } while (x > 0)
-    return encoded.map { it.toByte() }.toByteArray()
 }
 
 fun InputStream.decodeVariableByteInteger(): Int {

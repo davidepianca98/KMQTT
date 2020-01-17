@@ -36,6 +36,8 @@ data class MQTTPublish(
 
             val properties = inStream.deserializeProperties(validProperties)
 
+            // TODO payload
+
             return MQTTPublish(retain, qos, dup, packetIdentifier, properties)
         }
 

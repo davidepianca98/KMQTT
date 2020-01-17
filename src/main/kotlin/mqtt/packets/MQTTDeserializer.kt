@@ -56,7 +56,7 @@ interface MQTTDeserializer {
             val propertyId = Property.valueOf(decodeVariableByteInteger())
             if (propertyId !in validProperties)
                 throw IllegalArgumentException()
-            when (propertyId) {
+            when (propertyId) { // TODO check for duplicates of certain properties that are not allowed
                 Property.PAYLOAD_FORMAT_INDICATOR -> properties.payloadFormatIndicator = read()
                 Property.MESSAGE_EXPIRY_INTERVAL -> properties.messageExpiryInterval = read4BytesInt()
                 Property.CONTENT_TYPE -> properties.contentType = readUTF8String()
