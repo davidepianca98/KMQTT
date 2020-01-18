@@ -23,7 +23,7 @@ class MQTTInputStream(inputStream: InputStream) : DataInputStream(inputStream) {
     private fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: ByteArray): MQTTPacket {
         return when (type) {
             MQTTControlPacketType.CONNECT -> MQTTConnect.fromByteArray(flags, data)
-            MQTTControlPacketType.Reserved -> throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+            MQTTControlPacketType.Reserved -> throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
             MQTTControlPacketType.CONNACK -> MQTTConnack.fromByteArray(flags, data)
             MQTTControlPacketType.PUBLISH -> MQTTPublish.fromByteArray(flags, data)
             MQTTControlPacketType.PUBACK -> MQTTPuback.fromByteArray(flags, data)

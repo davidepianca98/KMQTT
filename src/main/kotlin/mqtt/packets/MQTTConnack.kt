@@ -8,7 +8,7 @@ data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
 
 data class MQTTConnack(
     val connectAcknowledgeFlags: ConnectAcknowledgeFlags,
-    val connectReasonCode: ReasonCodes,
+    val connectReasonCode: ReasonCode,
     val properties: MQTTProperties? = null
 ) : MQTTPacket, MQTTSerializer {
 
@@ -35,7 +35,7 @@ data class MQTTConnack(
     override fun toByteArray(): ByteArray {
         val outStream = ByteArrayOutputStream()
 
-        outStream.write(if (connectAcknowledgeFlags.sessionPresentFlag && connectReasonCode == ReasonCodes.SUCCESS) 1 else 0)
+        outStream.write(if (connectAcknowledgeFlags.sessionPresentFlag && connectReasonCode == ReasonCode.SUCCESS) 1 else 0)
         outStream.write(connectReasonCode.ordinal)
         properties?.let {
             outStream.writeBytes(it.serializeProperties(validProperties))

@@ -32,30 +32,41 @@ class ClientHandler(private val client: Socket, private val sessions: MutableMap
 
     private fun handlePacket(packet: MQTTPacket) {
         when (packet) {
-            is MQTTConnect -> {
-                // TODO authentication first with username, password or authentication method/data in properties
-                var sessionPresent = false
-                if (sessions[packet.clientID] != null) {
-                    // TODO if already connected to another client the Server sends a DISCONNECT packet to the existing Client with Reason Code of 0x8E (Session taken over) as described in section 4.13 and MUST close the Network Connection of the existing Client . If the existing Client has a Will Message, that Will Message is published
-                    //   If the Will Delay Interval of the existing Network Connection is 0 and there is a Will Message, it will be sent because the Network Connection is closed. If the Session Expiry Interval of the existing Network Connection is 0, or the new Network Connection has Clean Start set to 1 then if the existing Network Connection has a Will Message it will be sent because the original Session is ended on the takeover.
-                    sessionPresent = true
-                    // TODO update will message in session
-                } else {
-                    // TODO create new session
-                    sessions[packet.clientID] = Session(packet)
-                }
-                val session = sessions[packet.clientID] ?: error("") // TODO
-
-                if (packet.connectFlags.cleanStart) {
-                    session.clean()
-                }
-                if (packet.connectFlags.willFlag) {
-
-                }
-                // TODO reason codes and properties
-                val connack = MQTTConnack(ConnectAcknowledgeFlags(sessionPresent), ReasonCodes.SUCCESS)
-                writer.writePacket(connack)
-            }
+            is MQTTConnect -> handleConnect(packet)
         }
+    }
+
+    private fun handleConnect(packet: MQTTConnect) {
+        // TODO authentication first with username, password or authentication method/data in properties
+        var sessionPresent = false
+        var session = sessions[packet.clientID]
+        if (session != null) {
+            if (session.connected) {
+                // Send disconnect to the old connection and close it
+                session.clientHandler.writer.writePacket(MQTTDisconnect(ReasonCode.SESSION_TAKEN_OVER))
+                session.clientHandler.close()
+
+                // Send old will if present
+                if (session.will?.willDelayInterval == 0 || packet.connectFlags.cleanStart) {
+                    // TODO send session's will if present
+                }
+            }
+            if (packet.connectFlags.cleanStart) {
+                session = Session(packet, this)
+                sessions[packet.clientID] = session
+            } else {
+                // Update the session with the new parameters
+                session.clientHandler = this
+                session.update(packet) // TODO maybe must not be done
+                sessionPresent = true
+            }
+        } else {
+            session = Session(packet, this)
+            sessions[packet.clientID] = session
+        }
+
+        // TODO reason codes and properties
+        val connack = MQTTConnack(ConnectAcknowledgeFlags(sessionPresent), ReasonCode.SUCCESS)
+        writer.writePacket(connack)
     }
 }

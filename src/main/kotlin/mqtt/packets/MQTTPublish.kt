@@ -45,7 +45,7 @@ data class MQTTPublish(
 
         override fun checkFlags(flags: Int) {
             if (getQos(flags) !in 0..2)
-                throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+                throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
         }
     }
 }

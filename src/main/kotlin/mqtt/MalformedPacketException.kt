@@ -1,5 +1,5 @@
 package mqtt
 
-import mqtt.packets.ReasonCodes
+import mqtt.packets.ReasonCode
 
-class MalformedPacketException(reasonCode: ReasonCodes) : Exception()
+class MalformedPacketException(reasonCode: ReasonCode) : Exception()

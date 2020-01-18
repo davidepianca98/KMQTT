@@ -14,7 +14,7 @@ interface MQTTDeserializer {
             flags.flagsBit(2) != 0 ||
             flags.flagsBit(3) != 0
         )
-            throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+            throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
     }
 
     fun ByteArrayInputStream.getPacketIdentifier(): Int {
@@ -84,7 +84,7 @@ interface MQTTDeserializer {
                 Property.WILDCARD_SUBSCRIPTION_AVAILABLE -> properties.wildcardSubscriptionAvailable = read()
                 Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE -> properties.subscriptionIdentifierAvailable = read()
                 Property.SHARED_SUBSCRIPTION_AVAILABLE -> properties.sharedSubscriptionAvailable = read()
-                null -> throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+                null -> throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
             }
         }
         return properties

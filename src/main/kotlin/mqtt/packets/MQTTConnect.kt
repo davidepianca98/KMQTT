@@ -54,18 +54,18 @@ data class MQTTConnect(
         private fun connectFlags(byte: Int): ConnectFlags {
             val reserved = (byte and 1) == 1
             if (reserved)
-                throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+                throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
             val willFlag = ((byte shl 2) and 1) == 1
             val willQos = ((byte shl 4) and 1) or ((byte shl 3) and 1)
             val willRetain = ((byte shl 5) and 1) == 1
             if (willFlag) {
                 if (willQos == 3)
-                    throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+                    throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
             } else {
                 if (willQos != 0)
-                    throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+                    throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
                 if (willRetain)
-                    throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+                    throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
             }
 
             return ConnectFlags(
@@ -85,10 +85,10 @@ data class MQTTConnect(
             val inStream = ByteArrayInputStream(data)
             val protocolName = inStream.readUTF8String()
             if (protocolName != "MQTT")
-                throw MalformedPacketException(ReasonCodes.UNSUPPORTED_PROTOCOL_VERSION)
+                throw MalformedPacketException(ReasonCode.UNSUPPORTED_PROTOCOL_VERSION)
             val protocolVersion = inStream.read()
             if (protocolVersion != 5)
-                throw MalformedPacketException(ReasonCodes.UNSUPPORTED_PROTOCOL_VERSION)
+                throw MalformedPacketException(ReasonCode.UNSUPPORTED_PROTOCOL_VERSION)
 
             val connectFlags = connectFlags(inStream.read())
             val keepAlive = inStream.read2BytesInt()
@@ -98,7 +98,7 @@ data class MQTTConnect(
             // Payload
             val clientID = inStream.readUTF8String()
             if (clientID.isEmpty())
-                throw MalformedPacketException(ReasonCodes.MALFORMED_PACKET)
+                throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
 
             val willProperties =
                 if (connectFlags.willFlag) inStream.deserializeProperties(validWillProperties) else null

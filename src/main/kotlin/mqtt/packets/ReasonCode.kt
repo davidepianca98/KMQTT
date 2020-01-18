@@ -1,6 +1,6 @@
 package mqtt.packets
 
-enum class ReasonCodes(value: Int) {
+enum class ReasonCode(value: Int) {
     SUCCESS(0),
     NORMAL_DISCONNECTION(0),
     GRANTED_QOS0(0),
