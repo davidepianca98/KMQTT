@@ -97,8 +97,6 @@ data class MQTTConnect(
 
             // Payload
             val clientID = inStream.readUTF8String()
-            if (clientID.isEmpty())
-                throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
 
             val willProperties =
                 if (connectFlags.willFlag) inStream.deserializeProperties(validWillProperties) else null

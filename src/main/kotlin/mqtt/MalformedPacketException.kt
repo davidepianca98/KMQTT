@@ -2,4 +2,4 @@ package mqtt
 
 import mqtt.packets.ReasonCode
 
-class MalformedPacketException(reasonCode: ReasonCode) : Exception()
+class MalformedPacketException(val reasonCode: ReasonCode) : Exception()

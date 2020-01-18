@@ -1,33 +1,34 @@
 package mqtt.packets
 
+@ExperimentalUnsignedTypes
 data class MQTTProperties(
-    var payloadFormatIndicator: Int? = null,
-    var messageExpiryInterval: Int? = null,
+    var payloadFormatIndicator: UInt? = null,
+    var messageExpiryInterval: UInt? = null,
     var contentType: String? = null,
     var responseTopic: String? = null,
     var correlationData: ByteArray? = null,
-    var subscriptionIdentifier: Int? = null,
-    var sessionExpiryInterval: Int? = null,
+    var subscriptionIdentifier: UInt? = null,
+    var sessionExpiryInterval: UInt? = null,
     var assignedClientIdentifier: String? = null,
-    var serverKeepAlive: Int? = null,
+    var serverKeepAlive: UInt? = null,
     var authenticationMethod: String? = null,
     var authenticationData: ByteArray? = null,
-    var requestProblemInformation: Int? = null,
-    var willDelayInterval: Int? = null,
-    var requestResponseInformation: Int? = null,
+    var requestProblemInformation: UInt? = null,
+    var willDelayInterval: UInt? = null,
+    var requestResponseInformation: UInt? = null,
     var responseInformation: String? = null,
     var serverReference: String? = null,
     var reasonString: String? = null,
-    var receiveMaximum: Int? = null,
-    var topicAliasMaximum: Int? = null,
-    var topicAlias: Int? = null,
-    var maximumQos: Int? = null,
-    var retainAvailable: Int? = null,
+    var receiveMaximum: UInt? = null,
+    var topicAliasMaximum: UInt? = null,
+    var topicAlias: UInt? = null,
+    var maximumQos: UInt? = null,
+    var retainAvailable: UInt? = null,
     val userProperty: MutableMap<String, String> = mutableMapOf(), // TODO shouldn't be map because the key can appear multiple times
-    var maximumPacketSize: Int? = null,
-    var wildcardSubscriptionAvailable: Int? = null,
-    var subscriptionIdentifierAvailable: Int? = null,
-    var sharedSubscriptionAvailable: Int? = null
+    var maximumPacketSize: UInt? = null,
+    var wildcardSubscriptionAvailable: UInt? = null,
+    var subscriptionIdentifierAvailable: UInt? = null,
+    var sharedSubscriptionAvailable: UInt? = null
 ) {
     fun addUserProperty(property: Pair<String, String>) {
         userProperty[property.first] = property.second

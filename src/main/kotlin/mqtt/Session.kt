@@ -3,6 +3,7 @@ package mqtt
 import ClientHandler
 import mqtt.packets.MQTTConnect
 
+@ExperimentalUnsignedTypes
 class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
 
     var connected = false
@@ -20,17 +21,17 @@ class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
     var will = buildWill(packet)
 
     // TODO if 0 delete session on disconnection else delete after timeout, if 0xFFFFFFFF never delete
-    var sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0
+    var sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
     // TODO handle flow control as explained in section 4.9
-    var receiveMaximum = packet.properties.receiveMaximum ?: 65535
+    var receiveMaximum = packet.properties.receiveMaximum ?: 65535u
     // TODO don't send packets larger than this, if null no limit
     var maximumPacketSize = packet.properties.maximumPacketSize
     // TODO if 0 don't send topic alias, otherwise maximum number of aliases
-    var topicAliasMaximum = packet.properties.topicAliasMaximum ?: 0
+    var topicAliasMaximum = packet.properties.topicAliasMaximum ?: 0u
     // TODO if different from 0 or 1 protocol error, if 1 may return response information in connack
-    var requestResponseInformation = packet.properties.requestResponseInformation ?: 0
+    var requestResponseInformation = packet.properties.requestResponseInformation ?: 0u
     // TODO if different from 0 or 1 protocol error, if 0 may send a reson string or user properties in connack or disconnect, but no reason string or user properties in any other packet than publish, connack, disconnect
-    var requestProblemInformation = packet.properties.requestProblemInformation ?: 1
+    var requestProblemInformation = packet.properties.requestProblemInformation ?: 1u
     var userProperties = packet.properties.userProperty
 
 
@@ -39,9 +40,9 @@ class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
         val qos: Int,
         val topic: String,
         val payload: ByteArray,
-        val willDelayInterval: Int,
-        val payloadFormatIndicator: Int,
-        val messageExpiryInterval: Int?,
+        val willDelayInterval: UInt,
+        val payloadFormatIndicator: UInt,
+        val messageExpiryInterval: UInt?,
         val contentType: String?,
         val responseTopic: String?,
         val correlationData: ByteArray?,
@@ -56,8 +57,8 @@ class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
                 packet.willTopic!!,
                 packet.willPayload!!,
                 packet.willProperties!!.willDelayInterval
-                    ?: 0, // TODO publish will after this interval or when the session ends, first to come
-                packet.willProperties.payloadFormatIndicator ?: 0, // TODO if 1 validate willpayload is utf-8
+                    ?: 0u, // TODO publish will after this interval or when the session ends, first to come
+                packet.willProperties.payloadFormatIndicator ?: 0u, // TODO if 1 validate willpayload is utf-8
                 packet.willProperties.messageExpiryInterval, // TODO lifetime of will message as publication expiry interval when sending
                 packet.willProperties.contentType, // TODO send as content type if present
                 packet.willProperties.responseTopic, // TODO send as response topic if present
@@ -73,12 +74,12 @@ class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
         keepAlive = packet.keepAlive
         will = buildWill(packet)
 
-        sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0
-        receiveMaximum = packet.properties.receiveMaximum ?: 65535
+        sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
+        receiveMaximum = packet.properties.receiveMaximum ?: 65535u
         maximumPacketSize = packet.properties.maximumPacketSize
-        topicAliasMaximum = packet.properties.topicAliasMaximum ?: 0
-        requestResponseInformation = packet.properties.requestResponseInformation ?: 0
-        requestProblemInformation = packet.properties.requestProblemInformation ?: 1
+        topicAliasMaximum = packet.properties.topicAliasMaximum ?: 0u
+        requestResponseInformation = packet.properties.requestResponseInformation ?: 0u
+        requestProblemInformation = packet.properties.requestProblemInformation ?: 1u
         userProperties = packet.properties.userProperty
     }
 

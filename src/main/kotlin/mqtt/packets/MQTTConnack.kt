@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream
 
 data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
 
+@ExperimentalUnsignedTypes
 data class MQTTConnack(
     val connectAcknowledgeFlags: ConnectAcknowledgeFlags,
     val connectReasonCode: ReasonCode,
