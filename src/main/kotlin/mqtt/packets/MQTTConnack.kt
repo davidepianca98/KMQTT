@@ -35,8 +35,7 @@ data class MQTTConnack(
     override fun toByteArray(): ByteArray {
         val outStream = ByteArrayOutputStream()
 
-        // TODO if nonzero reason code, session present = 0
-        outStream.write(if (connectAcknowledgeFlags.sessionPresentFlag) 1 else 0)
+        outStream.write(if (connectAcknowledgeFlags.sessionPresentFlag && connectReasonCode == ReasonCodes.SUCCESS) 1 else 0)
         outStream.write(connectReasonCode.ordinal)
         properties?.let {
             outStream.writeBytes(it.serializeProperties(validProperties))

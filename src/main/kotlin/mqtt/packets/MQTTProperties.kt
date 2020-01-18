@@ -12,7 +12,7 @@ data class MQTTProperties(
     var serverKeepAlive: Int? = null,
     var authenticationMethod: String? = null,
     var authenticationData: ByteArray? = null,
-    var requestInformation: Int? = null,
+    var requestProblemInformation: Int? = null,
     var willDelayInterval: Int? = null,
     var requestResponseInformation: Int? = null,
     var responseInformation: String? = null,
@@ -23,7 +23,7 @@ data class MQTTProperties(
     var topicAlias: Int? = null,
     var maximumQos: Int? = null,
     var retainAvailable: Int? = null,
-    val userProperty: MutableMap<String, String> = mutableMapOf(),
+    val userProperty: MutableMap<String, String> = mutableMapOf(), // TODO shouldn't be map because the key can appear multiple times
     var maximumPacketSize: Int? = null,
     var wildcardSubscriptionAvailable: Int? = null,
     var subscriptionIdentifierAvailable: Int? = null,

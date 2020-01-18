@@ -33,15 +33,16 @@ class ClientHandler(private val client: Socket, private val sessions: MutableMap
     private fun handlePacket(packet: MQTTPacket) {
         when (packet) {
             is MQTTConnect -> {
-                // TODO authentication first
+                // TODO authentication first with username, password or authentication method/data in properties
                 var sessionPresent = false
                 if (sessions[packet.clientID] != null) {
                     // TODO if already connected to another client the Server sends a DISCONNECT packet to the existing Client with Reason Code of 0x8E (Session taken over) as described in section 4.13 and MUST close the Network Connection of the existing Client . If the existing Client has a Will Message, that Will Message is published
                     //   If the Will Delay Interval of the existing Network Connection is 0 and there is a Will Message, it will be sent because the Network Connection is closed. If the Session Expiry Interval of the existing Network Connection is 0, or the new Network Connection has Clean Start set to 1 then if the existing Network Connection has a Will Message it will be sent because the original Session is ended on the takeover.
                     sessionPresent = true
+                    // TODO update will message in session
                 } else {
                     // TODO create new session
-                    sessions[packet.clientID] = Session()
+                    sessions[packet.clientID] = Session(packet)
                 }
                 val session = sessions[packet.clientID] ?: error("") // TODO
 
