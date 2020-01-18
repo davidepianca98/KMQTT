@@ -6,7 +6,6 @@ import java.io.InputStream
 
 class MQTTInputStream(inputStream: InputStream) : DataInputStream(inputStream) {
 
-    @ExperimentalUnsignedTypes
     fun readPacket(): MQTTPacket {
         val byte1 = read()
         val mqttControlPacketType = (byte1 shr 4) and 0b1111
@@ -23,7 +22,7 @@ class MQTTInputStream(inputStream: InputStream) : DataInputStream(inputStream) {
     private fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: ByteArray): MQTTPacket {
         return when (type) {
             MQTTControlPacketType.CONNECT -> MQTTConnect.fromByteArray(flags, data)
-            MQTTControlPacketType.Reserved -> throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
+            MQTTControlPacketType.Reserved -> throw MQTTException(ReasonCode.MALFORMED_PACKET)
             MQTTControlPacketType.CONNACK -> MQTTConnack.fromByteArray(flags, data)
             MQTTControlPacketType.PUBLISH -> MQTTPublish.fromByteArray(flags, data)
             MQTTControlPacketType.PUBACK -> MQTTPuback.fromByteArray(flags, data)

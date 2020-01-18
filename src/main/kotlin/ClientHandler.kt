@@ -1,23 +1,20 @@
+import mqtt.MQTTException
 import mqtt.MQTTInputStream
 import mqtt.MQTTOutputStream
-import mqtt.MalformedPacketException
 import mqtt.Session
 import mqtt.packets.*
 import java.net.Socket
 import java.util.*
 
 
-@ExperimentalUnsignedTypes
 class ClientHandler(
     private val client: Socket,
-    private val sessions: MutableMap<String, Session>,
     private val broker: Broker
 ) {
     private val reader = MQTTInputStream(client.getInputStream())
     private val writer = MQTTOutputStream(client.getOutputStream())
     private var running = false
 
-    @ExperimentalUnsignedTypes
     fun run() {
         running = true
 
@@ -25,7 +22,7 @@ class ClientHandler(
             try {
                 val packet = reader.readPacket()
                 handlePacket(packet)
-            } catch (e: MalformedPacketException) {
+            } catch (e: MQTTException) {
                 writer.writePacket(MQTTDisconnect(e.reasonCode))
                 close()
             }
@@ -47,7 +44,7 @@ class ClientHandler(
         var id: String
         do {
             id = UUID.randomUUID().toString()
-        } while (sessions[id] != null)
+        } while (broker.sessions[id] != null)
         return id
     }
 
@@ -59,7 +56,7 @@ class ClientHandler(
 
         val clientId = if (packet.clientID.isEmpty()) generateClientId() else packet.clientID
 
-        var session = sessions[clientId]
+        var session = broker.sessions[clientId]
         if (session != null) {
             if (session.connected) {
                 // Send disconnect to the old connection and close it
@@ -73,7 +70,7 @@ class ClientHandler(
             }
             if (packet.connectFlags.cleanStart) {
                 session = Session(packet, this)
-                sessions[clientId] = session
+                broker.sessions[clientId] = session
             } else {
                 // Update the session with the new parameters
                 session.clientHandler = this
@@ -82,7 +79,7 @@ class ClientHandler(
             }
         } else {
             session = Session(packet, this)
-            sessions[clientId] = session
+            broker.sessions[clientId] = session
         }
 
         //

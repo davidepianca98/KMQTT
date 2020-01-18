@@ -1,11 +1,12 @@
 package mqtt.packets
 
-import mqtt.MalformedPacketException
+import mqtt.MQTTException
 import mqtt.decodeVariableByteInteger
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
 
 interface MQTTDeserializer {
+
     fun fromByteArray(flags: Int, data: ByteArray): MQTTPacket
 
     fun checkFlags(flags: Int) {
@@ -14,7 +15,7 @@ interface MQTTDeserializer {
             flags.flagsBit(2) != 0 ||
             flags.flagsBit(3) != 0
         )
-            throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
+            throw MQTTException(ReasonCode.MALFORMED_PACKET)
     }
 
     fun ByteArrayInputStream.getPacketIdentifier(): Int {
@@ -26,21 +27,25 @@ interface MQTTDeserializer {
         return (this shr bit) and 0b1
     }
 
-    fun ByteArrayInputStream.read4BytesInt(): Int {
-        return (read() shl 24) or (read() shl 16) or (read() shl 8) or read()
+    fun ByteArrayInputStream.read4BytesInt(): UInt {
+        return (read().toUInt() shl 24) or (read().toUInt() shl 16) or (read().toUInt() shl 8) or read().toUInt()
     }
 
-    fun ByteArrayInputStream.read2BytesInt(): Int {
-        return (read() shl 8) or read()
+    fun ByteArrayInputStream.read2BytesInt(): UInt {
+        return (read().toUInt() shl 8) or read().toUInt()
+    }
+
+    fun ByteArrayInputStream.readByte(): UInt {
+        return read().toUInt()
     }
 
     fun ByteArrayInputStream.readUTF8String(): String {
-        val length = read2BytesInt()
+        val length = read2BytesInt().toInt()
         return String(readNBytes(length), StandardCharsets.UTF_8)
     }
 
     fun ByteArrayInputStream.readBinaryData(): ByteArray {
-        val length = read2BytesInt()
+        val length = read2BytesInt().toInt()
         return readNBytes(length)
     }
 
@@ -57,34 +62,35 @@ interface MQTTDeserializer {
             if (propertyId !in validProperties)
                 throw IllegalArgumentException()
             when (propertyId) { // TODO check for duplicates of certain properties that are not allowed
-                Property.PAYLOAD_FORMAT_INDICATOR -> properties.payloadFormatIndicator = read()
+                Property.PAYLOAD_FORMAT_INDICATOR -> properties.payloadFormatIndicator = readByte()
                 Property.MESSAGE_EXPIRY_INTERVAL -> properties.messageExpiryInterval = read4BytesInt()
                 Property.CONTENT_TYPE -> properties.contentType = readUTF8String()
                 Property.RESPONSE_TOPIC -> properties.responseTopic = readUTF8String()
                 Property.CORRELATION_DATA -> properties.correlationData = readBinaryData()
-                Property.SUBSCRIPTION_IDENTIFIER -> properties.subscriptionIdentifier = decodeVariableByteInteger()
+                Property.SUBSCRIPTION_IDENTIFIER -> properties.subscriptionIdentifier =
+                    decodeVariableByteInteger().toUInt()
                 Property.SESSION_EXPIRY_INTERVAL -> properties.sessionExpiryInterval = read4BytesInt()
                 Property.ASSIGNED_CLIENT_IDENTIFIER -> properties.assignedClientIdentifier = readUTF8String()
                 Property.SERVER_KEEP_ALIVE -> properties.serverKeepAlive = read2BytesInt()
                 Property.AUTHENTICATION_METHOD -> properties.authenticationMethod = readUTF8String()
                 Property.AUTHENTICATION_DATA -> properties.authenticationData = readBinaryData()
-                Property.REQUEST_PROBLEM_INFORMATION -> properties.requestProblemInformation = read()
+                Property.REQUEST_PROBLEM_INFORMATION -> properties.requestProblemInformation = readByte()
                 Property.WILL_DELAY_INTERVAL -> properties.willDelayInterval = read4BytesInt()
-                Property.REQUEST_RESPONSE_INFORMATION -> properties.requestResponseInformation = read()
+                Property.REQUEST_RESPONSE_INFORMATION -> properties.requestResponseInformation = readByte()
                 Property.RESPONSE_INFORMATION -> properties.responseInformation = readUTF8String()
                 Property.SERVER_REFERENCE -> properties.serverReference = readUTF8String()
                 Property.REASON_STRING -> properties.reasonString = readUTF8String()
                 Property.RECEIVE_MAXIMUM -> properties.receiveMaximum = read2BytesInt()
                 Property.TOPIC_ALIAS_MAXIMUM -> properties.topicAliasMaximum = read2BytesInt()
                 Property.TOPIC_ALIAS -> properties.topicAlias = read2BytesInt()
-                Property.MAXIMUM_QOS -> properties.maximumQos = read()
-                Property.RETAIN_AVAILABLE -> properties.retainAvailable = read()
+                Property.MAXIMUM_QOS -> properties.maximumQos = readByte()
+                Property.RETAIN_AVAILABLE -> properties.retainAvailable = readByte()
                 Property.USER_PROPERTY -> properties.addUserProperty(readUTF8StringPair())
                 Property.MAXIMUM_PACKET_SIZE -> properties.maximumPacketSize = read4BytesInt()
-                Property.WILDCARD_SUBSCRIPTION_AVAILABLE -> properties.wildcardSubscriptionAvailable = read()
-                Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE -> properties.subscriptionIdentifierAvailable = read()
-                Property.SHARED_SUBSCRIPTION_AVAILABLE -> properties.sharedSubscriptionAvailable = read()
-                null -> throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
+                Property.WILDCARD_SUBSCRIPTION_AVAILABLE -> properties.wildcardSubscriptionAvailable = readByte()
+                Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE -> properties.subscriptionIdentifierAvailable = readByte()
+                Property.SHARED_SUBSCRIPTION_AVAILABLE -> properties.sharedSubscriptionAvailable = readByte()
+                null -> throw MQTTException(ReasonCode.MALFORMED_PACKET)
             }
         }
         return properties

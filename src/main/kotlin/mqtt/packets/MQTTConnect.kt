@@ -1,9 +1,9 @@
 package mqtt.packets
 
-import mqtt.MalformedPacketException
+import mqtt.MQTTException
 import java.io.ByteArrayInputStream
 
-data class MQTTConnect(
+class MQTTConnect(
     val protocolName: String,
     val protocolVersion: Int,
     val connectFlags: ConnectFlags,
@@ -18,7 +18,6 @@ data class MQTTConnect(
 ) : MQTTPacket {
 
     companion object : MQTTDeserializer {
-
         private val validProperties = listOf(
             Property.SESSION_EXPIRY_INTERVAL,
             Property.AUTHENTICATION_METHOD,
@@ -54,18 +53,18 @@ data class MQTTConnect(
         private fun connectFlags(byte: Int): ConnectFlags {
             val reserved = (byte and 1) == 1
             if (reserved)
-                throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
+                throw MQTTException(ReasonCode.MALFORMED_PACKET)
             val willFlag = ((byte shl 2) and 1) == 1
             val willQos = ((byte shl 4) and 1) or ((byte shl 3) and 1)
             val willRetain = ((byte shl 5) and 1) == 1
             if (willFlag) {
                 if (willQos == 3)
-                    throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
+                    throw MQTTException(ReasonCode.MALFORMED_PACKET)
             } else {
                 if (willQos != 0)
-                    throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
+                    throw MQTTException(ReasonCode.MALFORMED_PACKET)
                 if (willRetain)
-                    throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
+                    throw MQTTException(ReasonCode.MALFORMED_PACKET)
             }
 
             return ConnectFlags(
@@ -85,10 +84,10 @@ data class MQTTConnect(
             val inStream = ByteArrayInputStream(data)
             val protocolName = inStream.readUTF8String()
             if (protocolName != "MQTT")
-                throw MalformedPacketException(ReasonCode.UNSUPPORTED_PROTOCOL_VERSION)
+                throw MQTTException(ReasonCode.UNSUPPORTED_PROTOCOL_VERSION)
             val protocolVersion = inStream.read()
             if (protocolVersion != 5)
-                throw MalformedPacketException(ReasonCode.UNSUPPORTED_PROTOCOL_VERSION)
+                throw MQTTException(ReasonCode.UNSUPPORTED_PROTOCOL_VERSION)
 
             val connectFlags = connectFlags(inStream.read())
             val keepAlive = inStream.read2BytesInt()
@@ -109,7 +108,7 @@ data class MQTTConnect(
                 protocolName,
                 protocolVersion,
                 connectFlags,
-                keepAlive,
+                keepAlive.toInt(),
                 properties,
                 clientID,
                 willProperties,
@@ -119,6 +118,9 @@ data class MQTTConnect(
                 password
             )
         }
+    }
 
+    override fun toByteArray(): ByteArray {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

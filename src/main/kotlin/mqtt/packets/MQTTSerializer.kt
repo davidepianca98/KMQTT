@@ -2,28 +2,39 @@ package mqtt.packets
 
 import mqtt.encodeVariableByteInteger
 import java.io.ByteArrayOutputStream
-import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
 interface MQTTSerializer {
 
     fun toByteArray(): ByteArray
 
-    fun ByteArrayOutputStream.write4BytesInt(value: Int) {
-        write(ByteBuffer.allocate(4).putInt(value).array())
+    fun ByteArrayOutputStream.write4BytesInt(value: UInt) {
+        val byteArray = ByteArray(4)
+        byteArray[0] = ((value shr 24) and 0xFFu).toByte()
+        byteArray[1] = ((value shr 16) and 0xFFu).toByte()
+        byteArray[2] = ((value shr 8) and 0xFFu).toByte()
+        byteArray[3] = (value and 0xFFu).toByte()
+        write(byteArray)
     }
 
-    fun ByteArrayOutputStream.write2BytesInt(value: Int) {
-        write(ByteBuffer.allocate(2).putInt(value).array())
+    fun ByteArrayOutputStream.write2BytesInt(value: UInt) {
+        val byteArray = ByteArray(2)
+        byteArray[0] = ((value shr 8) and 0xFFu).toByte()
+        byteArray[1] = (value and 0xFFu).toByte()
+        write(byteArray)
+    }
+
+    fun ByteArrayOutputStream.writeByte(value: UInt) {
+        write(value.toInt())
     }
 
     fun ByteArrayOutputStream.writeUTF8String(value: String) {
-        write2BytesInt(value.length)
+        write2BytesInt(value.length.toUInt())
         write(value.toByteArray(StandardCharsets.UTF_8))
     }
 
     fun ByteArrayOutputStream.writeBinaryData(data: ByteArray) {
-        write2BytesInt(data.size)
+        write2BytesInt(data.size.toUInt())
         writeBytes(data)
     }
 
@@ -37,7 +48,7 @@ interface MQTTSerializer {
         payloadFormatIndicator?.let {
             if (Property.PAYLOAD_FORMAT_INDICATOR in validProperties) {
                 out.write(Property.PAYLOAD_FORMAT_INDICATOR.ordinal)
-                out.write(it)
+                out.writeByte(it)
             }
         }
 
@@ -72,7 +83,7 @@ interface MQTTSerializer {
         subscriptionIdentifier?.let {
             if (Property.SUBSCRIPTION_IDENTIFIER in validProperties) {
                 out.write(Property.SUBSCRIPTION_IDENTIFIER.ordinal)
-                out.encodeVariableByteInteger(it)
+                out.encodeVariableByteInteger(it.toInt())
             }
         }
 
@@ -114,7 +125,7 @@ interface MQTTSerializer {
         requestProblemInformation?.let {
             if (Property.REQUEST_PROBLEM_INFORMATION in validProperties) {
                 out.write(Property.REQUEST_PROBLEM_INFORMATION.ordinal)
-                out.write(it)
+                out.writeByte(it)
             }
         }
 
@@ -128,7 +139,7 @@ interface MQTTSerializer {
         requestResponseInformation?.let {
             if (Property.REQUEST_RESPONSE_INFORMATION in validProperties) {
                 out.write(Property.REQUEST_RESPONSE_INFORMATION.ordinal)
-                out.write(it)
+                out.writeByte(it)
             }
         }
 
@@ -177,14 +188,14 @@ interface MQTTSerializer {
         maximumQos?.let {
             if (Property.MAXIMUM_QOS in validProperties) {
                 out.write(Property.MAXIMUM_QOS.ordinal)
-                out.write(it)
+                out.writeByte(it)
             }
         }
 
         retainAvailable?.let {
             if (Property.RETAIN_AVAILABLE in validProperties) {
                 out.write(Property.RETAIN_AVAILABLE.ordinal)
-                out.write(it)
+                out.writeByte(it)
             }
         }
 
@@ -205,21 +216,21 @@ interface MQTTSerializer {
         wildcardSubscriptionAvailable?.let {
             if (Property.WILDCARD_SUBSCRIPTION_AVAILABLE in validProperties) {
                 out.write(Property.WILDCARD_SUBSCRIPTION_AVAILABLE.ordinal)
-                out.write(it)
+                out.writeByte(it)
             }
         }
 
         subscriptionIdentifierAvailable?.let {
             if (Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE in validProperties) {
                 out.write(Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE.ordinal)
-                out.write(it)
+                out.writeByte(it)
             }
         }
 
         sharedSubscriptionAvailable?.let {
             if (Property.SHARED_SUBSCRIPTION_AVAILABLE in validProperties) {
                 out.write(Property.SHARED_SUBSCRIPTION_AVAILABLE.ordinal)
-                out.write(it)
+                out.writeByte(it)
             }
         }
 

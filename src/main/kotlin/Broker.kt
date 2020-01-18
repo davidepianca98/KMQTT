@@ -1,10 +1,10 @@
+import mqtt.Session
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.SocketAddress
 import kotlin.concurrent.thread
 
 // TODO 3.3
-@ExperimentalUnsignedTypes
 class Broker(
     local: SocketAddress,
     backlog: Int = 128,
@@ -23,6 +23,7 @@ class Broker(
     constructor(port: Int, host: String = "127.0.0.1") : this(InetSocketAddress(host, port))
 
     private val server = ServerSocket()
+    val sessions = mutableMapOf<String, Session>()
 
     init {
         receiveMaximum?.let {
@@ -38,7 +39,7 @@ class Broker(
     fun listen() {
         while (true) {
             val client = server.accept()
-            thread { ClientHandler(client, null, this).run() }
+            thread { ClientHandler(client, this).run() }
         }
     }
 }

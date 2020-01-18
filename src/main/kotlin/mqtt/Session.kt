@@ -3,7 +3,6 @@ package mqtt
 import ClientHandler
 import mqtt.packets.MQTTConnect
 
-@ExperimentalUnsignedTypes
 class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
 
     var connected = false

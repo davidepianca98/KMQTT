@@ -1,9 +1,9 @@
 package mqtt.packets
 
-import mqtt.MalformedPacketException
+import mqtt.MQTTException
 import java.io.ByteArrayInputStream
 
-data class MQTTPublish(
+class MQTTPublish(
     val retain: Boolean,
     val qos: Int,
     val dup: Boolean,
@@ -11,6 +11,10 @@ data class MQTTPublish(
     val properties: MQTTProperties,
     val payload: ByteArray?
 ) : MQTTPacket {
+
+    override fun toByteArray(): ByteArray {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     companion object : MQTTDeserializer {
 
@@ -45,7 +49,7 @@ data class MQTTPublish(
 
         override fun checkFlags(flags: Int) {
             if (getQos(flags) !in 0..2)
-                throw MalformedPacketException(ReasonCode.MALFORMED_PACKET)
+                throw MQTTException(ReasonCode.MALFORMED_PACKET)
         }
     }
 }

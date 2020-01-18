@@ -1,7 +1,6 @@
 package mqtt.packets
 
-@ExperimentalUnsignedTypes
-data class MQTTProperties(
+class MQTTProperties(
     var payloadFormatIndicator: UInt? = null,
     var messageExpiryInterval: UInt? = null,
     var contentType: String? = null,
