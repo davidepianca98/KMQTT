@@ -112,8 +112,8 @@ interface MQTTSerializer {
         }
 
         requestInformation?.let {
-            if (Property.REQUEST_INFORMATION in validProperties) {
-                out.write(Property.REQUEST_INFORMATION.ordinal)
+            if (Property.REQUEST_PROBLEM_INFORMATION in validProperties) {
+                out.write(Property.REQUEST_PROBLEM_INFORMATION.ordinal)
                 out.write(it)
             }
         }

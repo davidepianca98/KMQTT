@@ -1,10 +1,11 @@
 package mqtt.packets
 
-class MQTTPubrel(flags: Int, data: ByteArray) : MQTTPacket {
+class MQTTPubrel : MQTTPacket {
 
-    init {
-        checkFlags(flags)
-    }
+    val validProperties = listOf(
+        Property.REASON_STRING,
+        Property.USER_PROPERTY
+    )
 
     override fun checkFlags(flags: Int) {
         require(flags.flagsBit(0) == 0)

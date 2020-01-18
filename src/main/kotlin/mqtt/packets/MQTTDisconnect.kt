@@ -1,8 +1,11 @@
 package mqtt.packets
 
-class MQTTDisconnect(flags: Int, data: ByteArray) : MQTTPacket {
+class MQTTDisconnect : MQTTPacket {
 
-    init {
-        checkFlags(flags)
-    }
+    private val validProperties = listOf(
+        Property.SESSION_EXPIRY_INTERVAL,
+        Property.SERVER_REFERENCE,
+        Property.REASON_STRING,
+        Property.USER_PROPERTY
+    )
 }

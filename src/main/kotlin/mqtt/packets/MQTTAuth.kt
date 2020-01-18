@@ -1,8 +1,11 @@
 package mqtt.packets
 
-class MQTTAuth(flags: Int, data: ByteArray) : MQTTPacket {
+class MQTTAuth : MQTTPacket {
 
-    init {
-        checkFlags(flags)
-    }
+    private val validProperties = listOf(
+        Property.AUTHENTICATION_METHOD,
+        Property.AUTHENTICATION_DATA,
+        Property.REASON_STRING,
+        Property.USER_PROPERTY
+    )
 }

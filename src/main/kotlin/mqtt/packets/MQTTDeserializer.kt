@@ -68,7 +68,7 @@ interface MQTTDeserializer {
                 Property.SERVER_KEEP_ALIVE -> properties.serverKeepAlive = read2BytesInt()
                 Property.AUTHENTICATION_METHOD -> properties.authenticationMethod = readUTF8String()
                 Property.AUTHENTICATION_DATA -> properties.authenticationData = readBinaryData()
-                Property.REQUEST_INFORMATION -> properties.requestInformation = read()
+                Property.REQUEST_PROBLEM_INFORMATION -> properties.requestInformation = read()
                 Property.WILL_DELAY_INTERVAL -> properties.willDelayInterval = read4BytesInt()
                 Property.REQUEST_RESPONSE_INFORMATION -> properties.requestResponseInformation = read()
                 Property.RESPONSE_INFORMATION -> properties.responseInformation = readUTF8String()

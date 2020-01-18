@@ -1,10 +1,11 @@
 package mqtt.packets
 
-class MQTTSubscribe(flags: Int, data: ByteArray) : MQTTPacket {
+class MQTTSubscribe : MQTTPacket {
 
-    init {
-        checkFlags(flags)
-    }
+    val validProperties = listOf(
+        Property.SUBSCRIPTION_IDENTIFIER,
+        Property.USER_PROPERTY
+    )
 
     override fun checkFlags(flags: Int) {
         require(flags.flagsBit(0) == 0)

@@ -14,22 +14,22 @@ data class MQTTConnack(
 
     private val validProperties = listOf(
         Property.SESSION_EXPIRY_INTERVAL,
-        Property.RECEIVE_MAXIMUM,
-        Property.MAXIMUM_QOS,
-        Property.RETAIN_AVAILABLE,
-        Property.MAXIMUM_PACKET_SIZE,
         Property.ASSIGNED_CLIENT_IDENTIFIER,
-        Property.TOPIC_ALIAS_MAXIMUM,
-        Property.REASON_STRING,
-        Property.USER_PROPERTY,
-        Property.WILDCARD_SUBSCRIPTION_AVAILABLE,
-        Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE,
-        Property.SHARED_SUBSCRIPTION_AVAILABLE,
         Property.SERVER_KEEP_ALIVE,
+        Property.AUTHENTICATION_METHOD,
+        Property.AUTHENTICATION_DATA,
         Property.RESPONSE_INFORMATION,
         Property.SERVER_REFERENCE,
-        Property.AUTHENTICATION_METHOD,
-        Property.AUTHENTICATION_DATA
+        Property.REASON_STRING,
+        Property.RECEIVE_MAXIMUM,
+        Property.TOPIC_ALIAS_MAXIMUM,
+        Property.MAXIMUM_QOS,
+        Property.RETAIN_AVAILABLE,
+        Property.USER_PROPERTY,
+        Property.MAXIMUM_PACKET_SIZE,
+        Property.WILDCARD_SUBSCRIPTION_AVAILABLE,
+        Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE,
+        Property.SHARED_SUBSCRIPTION_AVAILABLE
     )
 
     override fun toByteArray(): ByteArray {

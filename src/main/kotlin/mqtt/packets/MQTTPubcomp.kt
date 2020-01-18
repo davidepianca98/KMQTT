@@ -1,8 +1,9 @@
 package mqtt.packets
 
-class MQTTPubcomp(flags: Int, data: ByteArray) : MQTTPacket {
+class MQTTPubcomp : MQTTPacket {
 
-    init {
-        checkFlags(flags)
-    }
+    val validProperties = listOf(
+        Property.REASON_STRING,
+        Property.USER_PROPERTY
+    )
 }

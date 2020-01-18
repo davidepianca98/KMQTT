@@ -1,8 +1,9 @@
 package mqtt.packets
 
-class MQTTPuback(flags: Int, data: ByteArray) : MQTTPacket {
+class MQTTPuback : MQTTPacket {
 
-    init {
-        checkFlags(flags)
-    }
+    val validProperties = listOf(
+        Property.REASON_STRING,
+        Property.USER_PROPERTY
+    )
 }

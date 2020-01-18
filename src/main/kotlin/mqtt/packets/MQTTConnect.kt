@@ -23,7 +23,7 @@ data class MQTTConnect(
             Property.SESSION_EXPIRY_INTERVAL,
             Property.AUTHENTICATION_METHOD,
             Property.AUTHENTICATION_DATA,
-            Property.REQUEST_INFORMATION,
+            Property.REQUEST_PROBLEM_INFORMATION,
             Property.REQUEST_RESPONSE_INFORMATION,
             Property.RECEIVE_MAXIMUM,
             Property.TOPIC_ALIAS_MAXIMUM,
@@ -32,12 +32,12 @@ data class MQTTConnect(
         )
 
         private val validWillProperties = listOf(
-            Property.WILL_DELAY_INTERVAL,
             Property.PAYLOAD_FORMAT_INDICATOR,
             Property.MESSAGE_EXPIRY_INTERVAL,
             Property.CONTENT_TYPE,
             Property.RESPONSE_TOPIC,
             Property.CORRELATION_DATA,
+            Property.WILL_DELAY_INTERVAL,
             Property.USER_PROPERTY
         )
 
