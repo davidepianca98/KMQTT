@@ -1,4 +1,6 @@
 import mqtt.Session
+import mqtt.packets.MQTTProperties
+import mqtt.packets.MQTTPublish
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.SocketAddress
@@ -40,6 +42,32 @@ class Broker(
         while (true) {
             val client = server.accept()
             thread { ClientHandler(client, this).run() }
+        }
+    }
+
+    fun publish(topicName: String, properties: MQTTProperties, payload: ByteArray) {
+        sessions.forEach { session ->
+            session.value.subscriptions.forEach { subscription ->
+                if (subscription.topicName == topicName) { // TODO check wildcard match
+                    subscription.subscriptionIdentifier?.let {
+                        // TODO If the subscription was shared, then only the Subscription Identifiers that were present in the SUBSCRIBE packet from the Client which is receiving the message are returned in the PUBLISH packet.
+                        properties.subscriptionIdentifier = it
+                    }
+
+                    // TODO continue after MQTT-3.3.4-6
+
+                    val packet = MQTTPublish(
+                        false,
+                        subscription.qos,
+                        false,
+                        topicName, // TODO maybe use topic aliases
+                        session.value.generatePacketId(),
+                        properties,
+                        payload
+                    )
+                    session.value.clientHandler.publish(packet)
+                }
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package mqtt
 
 import ClientHandler
 import mqtt.packets.MQTTConnect
+import mqtt.packets.MQTTPublish
 
 class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
 
@@ -9,6 +10,15 @@ class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
 
     var clientId = packet.clientID
     var keepAlive = packet.keepAlive
+
+    // TODO handle packet identifier counter section 2.2.1
+    var packetIdentifier = 1u
+
+    val qos1List = mutableListOf<MQTTPublish>()
+    val qos2List = mutableListOf<MQTTPublish>()
+
+    // The Clients subscriptions, including any Subscription Identifiers
+    val subscriptions = mutableListOf<Subscription>()
 
     // TODO publish will when:
     //  An I/O error or network failure detected by the Server.
@@ -85,11 +95,16 @@ class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
     fun clean() {
 
     }
+
+    fun generatePacketId(): UInt {
+        packetIdentifier++
+        if (packetIdentifier > 65535u)
+            packetIdentifier = 1u
+        return packetIdentifier
+    }
 }
 
 /*
-The Clients subscriptions, including any Subscription Identifiers.
-
 QoS 1 and QoS 2 messages which have been sent to the Client, but have not been completely acknowledged.
 
 QoS 1 and QoS 2 messages pending transmission to the Client and OPTIONALLY QoS 0 messages pending transmission to the Client.

@@ -18,10 +18,6 @@ interface MQTTDeserializer {
             throw MQTTException(ReasonCode.MALFORMED_PACKET)
     }
 
-    fun ByteArrayInputStream.getPacketIdentifier(): Int {
-        return (this.read() shl 1) or this.read()
-    }
-
     fun Int.flagsBit(bit: Int): Int {
         require(bit in 0..3)
         return (this shr bit) and 0b1

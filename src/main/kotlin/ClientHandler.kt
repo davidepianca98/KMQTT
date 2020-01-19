@@ -14,6 +14,11 @@ class ClientHandler(
     private val reader = MQTTInputStream(client.getInputStream())
     private val writer = MQTTOutputStream(client.getOutputStream())
     private var running = false
+    private var clientId: String? = null
+    private val session: Session =
+        broker.sessions[clientId] ?: throw Exception("Session not found") // TODO throw exception correctly
+
+    private val topicAliases = mutableMapOf<UInt, String>()
 
     fun run() {
         running = true
@@ -22,9 +27,9 @@ class ClientHandler(
             try {
                 val packet = reader.readPacket()
                 handlePacket(packet)
+                // TODO if on qos12list try sending packet
             } catch (e: MQTTException) {
-                writer.writePacket(MQTTDisconnect(e.reasonCode))
-                close()
+                disconnect(e.reasonCode)
             }
         }
     }
@@ -34,9 +39,23 @@ class ClientHandler(
         client.close()
     }
 
+    private fun disconnect(reasonCode: ReasonCode) {
+        writer.writePacket(MQTTDisconnect(reasonCode))
+        close()
+    }
+
     private fun handlePacket(packet: MQTTPacket) {
         when (packet) {
-            is MQTTConnect -> handleConnect(packet)
+            is MQTTConnect -> handleConnect(packet) // TODO only handle connect once as first packet otherwise error
+            is MQTTPublish -> handlePublish(packet)
+        }
+    }
+
+    fun publish(packet: MQTTPublish) {
+        when (packet.qos) {
+            0 -> writer.writePacket(packet)
+            1 -> session.qos1List.add(packet) // TODO for qos 1 and 2 verify that receive maximum isn't exceeded otherwise don't send
+            2 -> session.qos2List.add(packet)
         }
     }
 
@@ -60,8 +79,7 @@ class ClientHandler(
         if (session != null) {
             if (session.connected) {
                 // Send disconnect to the old connection and close it
-                session.clientHandler.writer.writePacket(MQTTDisconnect(ReasonCode.SESSION_TAKEN_OVER))
-                session.clientHandler.close()
+                session.clientHandler.disconnect(ReasonCode.SESSION_TAKEN_OVER)
 
                 // Send old will if present
                 if (session.will?.willDelayInterval == 0u || packet.connectFlags.cleanStart) {
@@ -97,7 +115,7 @@ class ClientHandler(
             }
         }
         broker.maximumQos?.let {
-            if (it == 0 || it == 1) // TODO the server must still accept SUBSCRIBE with qos of 0,1,2 but not PUBLISH (DISCONNECT with code 0x9B)
+            if (it == 0 || it == 1) // TODO the server must still accept SUBSCRIBE with qos of 0,1,2
                 connackProperties.maximumQos = it.toUInt()
         }
 
@@ -113,7 +131,6 @@ class ClientHandler(
             connackProperties.assignedClientIdentifier = clientId
 
         broker.maximumTopicAlias?.let {
-            // TODO if topic alias greater than this in PUBLISH close connection with topic_alias_invalid code
             connackProperties.topicAliasMaximum = it.toUInt()
         }
 
@@ -137,5 +154,44 @@ class ClientHandler(
 
         val connack = MQTTConnack(ConnectAcknowledgeFlags(sessionPresent), ReasonCode.SUCCESS, connackProperties)
         writer.writePacket(connack)
+        this.clientId = clientId
+    }
+
+    private fun handlePublish(packet: MQTTPublish) {
+        // TODO set DUP to 0 when propagating, but check in session if present packet with this packet id
+
+        // TODO if qos 1 or 2 save in session and handle confirmation
+        if (packet.qos > broker.maximumQos ?: 2) {
+            throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
+        }
+
+        // TODO handle section 3.3.1.3 RETAIN
+
+        // TODO last parts of section 3.3.2.1
+        // TODO handle section 3.3.2.3.3, must be modified by broker
+
+        // Handle topic alias
+        var topic = packet.topicName
+        packet.properties.topicAlias?.let {
+            if (it == 0u || it > broker.maximumTopicAlias?.toUInt() ?: 0u)
+                throw MQTTException(ReasonCode.TOPIC_ALIAS_INVALID)
+            if (packet.topicName.isNotEmpty()) {
+                topicAliases[it] = packet.topicName
+            }
+            topic = topicAliases[it] ?: throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            packet.properties.topicAlias = null
+        }
+
+        if (packet.qos > 0 && broker.receiveMaximum != null) {
+            if (session.qos1List.size + session.qos2List.size + 1 > broker.receiveMaximum)
+                throw MQTTException(ReasonCode.RECEIVE_MAXIMUM_EXCEEDED)
+        }
+
+        // TODO handle section 3.3.2.3.5
+        // TODO handle section 3.3.2.3.6
+        // TODO handle section 3.3.2.3.8
+
+        broker.publish()
+        // TODO section 3.3.4
     }
 }
