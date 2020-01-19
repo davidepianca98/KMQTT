@@ -2,6 +2,7 @@ package mqtt.packets
 
 import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
+import mqtt.containsWildcard
 import mqtt.encodeVariableByteInteger
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -40,7 +41,7 @@ class MQTTPublish(
                 ((qos shl 1) and 0x6) or
                 ((if (retain) 1 else 0) and 0x1)
         result.write(fixedHeader)
-        result.encodeVariableByteInteger(outStream.size())
+        result.encodeVariableByteInteger(outStream.size().toUInt())
         return result.toByteArray()
     }
 
@@ -67,7 +68,9 @@ class MQTTPublish(
                 throw MQTTException(ReasonCode.MALFORMED_PACKET)
 
             val inStream = ByteArrayInputStream(data)
-            val topicName = inStream.readUTF8String() // TODO check it doesn't contain wildcard characters
+            val topicName = inStream.readUTF8String()
+            if (topicName.containsWildcard())
+                throw MQTTException(ReasonCode.TOPIC_NAME_INVALID)
 
             val packetIdentifier = if (qos > 0) inStream.read2BytesInt() else null
 

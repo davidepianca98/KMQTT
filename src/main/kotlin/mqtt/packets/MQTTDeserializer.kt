@@ -1,6 +1,7 @@
 package mqtt.packets
 
 import mqtt.MQTTException
+import mqtt.containsWildcard
 import mqtt.decodeVariableByteInteger
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
@@ -53,18 +54,22 @@ interface MQTTDeserializer {
         val propertyLength = decodeVariableByteInteger()
 
         val properties = MQTTProperties()
-        for (i in 0 until propertyLength) {
-            val propertyId = Property.valueOf(decodeVariableByteInteger())
+        for (i in 0 until propertyLength.toInt()) {
+            val propertyId = Property.valueOf(decodeVariableByteInteger().toInt())
             if (propertyId !in validProperties)
                 throw IllegalArgumentException()
             when (propertyId) { // TODO check for duplicates of certain properties that are not allowed
                 Property.PAYLOAD_FORMAT_INDICATOR -> properties.payloadFormatIndicator = readByte()
                 Property.MESSAGE_EXPIRY_INTERVAL -> properties.messageExpiryInterval = read4BytesInt()
                 Property.CONTENT_TYPE -> properties.contentType = readUTF8String()
-                Property.RESPONSE_TOPIC -> properties.responseTopic = readUTF8String()
+                Property.RESPONSE_TOPIC -> {
+                    val responseTopic = readUTF8String()
+                    if (responseTopic.containsWildcard())
+                        throw MQTTException(ReasonCode.TOPIC_NAME_INVALID)
+                    properties.responseTopic = responseTopic
+                }
                 Property.CORRELATION_DATA -> properties.correlationData = readBinaryData()
-                Property.SUBSCRIPTION_IDENTIFIER -> properties.subscriptionIdentifier =
-                    decodeVariableByteInteger().toUInt()
+                Property.SUBSCRIPTION_IDENTIFIER -> properties.subscriptionIdentifier.add(decodeVariableByteInteger())
                 Property.SESSION_EXPIRY_INTERVAL -> properties.sessionExpiryInterval = read4BytesInt()
                 Property.ASSIGNED_CLIENT_IDENTIFIER -> properties.assignedClientIdentifier = readUTF8String()
                 Property.SERVER_KEEP_ALIVE -> properties.serverKeepAlive = read2BytesInt()

@@ -6,7 +6,7 @@ import java.net.ServerSocket
 import java.net.SocketAddress
 import kotlin.concurrent.thread
 
-// TODO 3.3
+// TODO 3.4
 class Broker(
     local: SocketAddress,
     backlog: Int = 128,
@@ -45,16 +45,15 @@ class Broker(
         }
     }
 
-    fun publish(topicName: String, properties: MQTTProperties, payload: ByteArray) {
+    fun publish(topicName: String, properties: MQTTProperties, payload: ByteArray?) {
         sessions.forEach { session ->
             session.value.subscriptions.forEach { subscription ->
                 if (subscription.topicName == topicName) { // TODO check wildcard match
                     subscription.subscriptionIdentifier?.let {
                         // TODO If the subscription was shared, then only the Subscription Identifiers that were present in the SUBSCRIBE packet from the Client which is receiving the message are returned in the PUBLISH packet.
-                        properties.subscriptionIdentifier = it
+                        properties.subscriptionIdentifier.clear()
+                        properties.subscriptionIdentifier.add(it)
                     }
-
-                    // TODO continue after MQTT-3.3.4-6
 
                     val packet = MQTTPublish(
                         false,

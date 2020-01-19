@@ -13,7 +13,7 @@ class MQTTInputStream(inputStream: InputStream) : DataInputStream(inputStream) {
 
         val type = MQTTControlPacketType.valueOf(mqttControlPacketType)!!
 
-        val remainingLength = decodeVariableByteInteger()
+        val remainingLength = decodeVariableByteInteger().toInt()
         val packet = ByteArray(remainingLength)
         readFully(packet, 0, remainingLength)
         return parseMQTTPacket(type, flags, packet)

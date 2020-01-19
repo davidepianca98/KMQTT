@@ -80,10 +80,10 @@ interface MQTTSerializer {
             }
         }
 
-        subscriptionIdentifier?.let {
+        subscriptionIdentifier.forEach {
             if (Property.SUBSCRIPTION_IDENTIFIER in validProperties) {
                 out.write(Property.SUBSCRIPTION_IDENTIFIER.ordinal)
-                out.encodeVariableByteInteger(it.toInt())
+                out.encodeVariableByteInteger(it)
             }
         }
 
@@ -235,7 +235,7 @@ interface MQTTSerializer {
         }
 
         val result = ByteArrayOutputStream()
-        result.encodeVariableByteInteger(out.size())
+        result.encodeVariableByteInteger(out.size().toUInt())
         result.writeBytes(out.toByteArray())
 
         return result.toByteArray()

@@ -119,11 +119,10 @@ class ClientHandler(
                 connackProperties.maximumQos = it.toUInt()
         }
 
-        if (!broker.retainedAvailable) // TODO disconnect client with code 0x9A if tries to send publish with retain 1 if not available
+        if (!broker.retainedAvailable)
             connackProperties.retainAvailable = 0u
 
         broker.maximumPacketSize?.let {
-            // TODO disconnect client with code 0x95 if client sends a PUBLISH bigger than limit
             connackProperties.maximumPacketSize = it.toUInt()
         }
 
@@ -160,10 +159,17 @@ class ClientHandler(
     private fun handlePublish(packet: MQTTPublish) {
         // TODO set DUP to 0 when propagating, but check in session if present packet with this packet id
 
-        // TODO if qos 1 or 2 save in session and handle confirmation
         if (packet.qos > broker.maximumQos ?: 2) {
             throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
         }
+
+        broker.maximumPacketSize?.let {
+            if (packet.toByteArray().size.toUInt() > it)
+                throw MQTTException(ReasonCode.PACKET_TOO_LARGE)
+        }
+
+        if (!broker.retainedAvailable && packet.retain)
+            throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
 
         // TODO handle section 3.3.1.3 RETAIN
 
@@ -182,16 +188,22 @@ class ClientHandler(
             packet.properties.topicAlias = null
         }
 
+        // Handle receive maximum
         if (packet.qos > 0 && broker.receiveMaximum != null) {
             if (session.qos1List.size + session.qos2List.size + 1 > broker.receiveMaximum)
                 throw MQTTException(ReasonCode.RECEIVE_MAXIMUM_EXCEEDED)
         }
 
-        // TODO handle section 3.3.2.3.5
-        // TODO handle section 3.3.2.3.6
-        // TODO handle section 3.3.2.3.8
+        when (packet.qos) {
+            1 -> {
+                // TODO send puback
+            }
+            2 -> {
+                // TODO send pubrec, wait for pubrel, send pubcomp
+                session.qos2ListReceived.add(packet)
+            }
+        }
 
-        broker.publish()
-        // TODO section 3.3.4
+        broker.publish(topic, packet.properties, packet.payload)
     }
 }

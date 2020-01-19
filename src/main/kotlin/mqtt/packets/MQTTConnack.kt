@@ -21,7 +21,7 @@ class MQTTConnack(
 
         val result = ByteArrayOutputStream()
         result.write((MQTTControlPacketType.CONNACK.ordinal shl 4) and 0xF0)
-        result.encodeVariableByteInteger(outStream.size())
+        result.encodeVariableByteInteger(outStream.size().toUInt())
         return result.toByteArray()
     }
 
