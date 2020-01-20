@@ -1,9 +1,29 @@
 package mqtt.packets
 
-class MQTTDisconnect(val reasonCode: ReasonCode) : MQTTPacket, MQTTSerializer {
+import mqtt.MQTTControlPacketType
+import mqtt.MQTTException
+import mqtt.encodeVariableByteInteger
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+
+class MQTTDisconnect(
+    val reasonCode: ReasonCode,
+    val properties: MQTTProperties = MQTTProperties()
+) : MQTTPacket, MQTTSerializer {
 
     override fun toByteArray(): ByteArray {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (reasonCode !in validReasonCodes)
+            throw IllegalArgumentException("Invalid reason code")
+        val outStream = ByteArrayOutputStream()
+
+        outStream.writeByte(reasonCode.ordinal.toUInt())
+        outStream.writeBytes(properties.serializeProperties(validProperties))
+
+        val result = ByteArrayOutputStream()
+        val fixedHeader = (MQTTControlPacketType.DISCONNECT.ordinal shl 4) and 0xF0
+        result.write(fixedHeader)
+        result.encodeVariableByteInteger(outStream.size().toUInt())
+        return result.toByteArray()
     }
 
     companion object : MQTTDeserializer {
@@ -15,8 +35,51 @@ class MQTTDisconnect(val reasonCode: ReasonCode) : MQTTPacket, MQTTSerializer {
             Property.USER_PROPERTY
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTPacket {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val validReasonCodes = listOf(
+            ReasonCode.NORMAL_DISCONNECTION,
+            ReasonCode.DISCONNECT_WITH_WILL_MESSAGE,
+            ReasonCode.UNSPECIFIED_ERROR,
+            ReasonCode.MALFORMED_PACKET,
+            ReasonCode.PROTOCOL_ERROR,
+            ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR,
+            ReasonCode.NOT_AUTHORIZED,
+            ReasonCode.SERVER_BUSY,
+            ReasonCode.SERVER_SHUTTING_DOWN,
+            ReasonCode.KEEP_ALIVE_TIMEOUT,
+            ReasonCode.SESSION_TAKEN_OVER,
+            ReasonCode.TOPIC_FILTER_INVALID,
+            ReasonCode.TOPIC_NAME_INVALID,
+            ReasonCode.RECEIVE_MAXIMUM_EXCEEDED,
+            ReasonCode.TOPIC_ALIAS_INVALID,
+            ReasonCode.PACKET_TOO_LARGE,
+            ReasonCode.MESSAGE_RATE_TOO_HIGH,
+            ReasonCode.QUOTA_EXCEEDED,
+            ReasonCode.ADMINISTRATIVE_ACTION,
+            ReasonCode.PAYLOAD_FORMAT_INVALID,
+            ReasonCode.RETAIN_NOT_SUPPORTED,
+            ReasonCode.QOS_NOT_SUPPORTED,
+            ReasonCode.USE_ANOTHER_SERVER,
+            ReasonCode.SERVER_MOVED,
+            ReasonCode.SHARED_SUBSCRIPTIONS_NOT_SUPPORTED,
+            ReasonCode.CONNECTION_RATE_EXCEEDED,
+            ReasonCode.MAXIMUM_CONNECT_TIME,
+            ReasonCode.SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED,
+            ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
+        )
+
+        override fun fromByteArray(flags: Int, data: ByteArray): MQTTDisconnect {
+            checkFlags(flags)
+            return if (data.isEmpty()) {
+                MQTTDisconnect(ReasonCode.SUCCESS)
+            } else {
+                val inStream = ByteArrayInputStream(data)
+                val reasonCode =
+                    ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
+                if (reasonCode !in validReasonCodes)
+                    throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+                val properties = inStream.deserializeProperties(validProperties)
+                MQTTDisconnect(reasonCode, properties)
+            }
         }
     }
 }

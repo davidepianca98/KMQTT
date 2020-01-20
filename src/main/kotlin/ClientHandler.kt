@@ -51,6 +51,8 @@ class ClientHandler(
             is MQTTSubscribe -> handleSubscribe(packet)
             is MQTTUnsubscribe -> handleUnsubscribe(packet)
             is MQTTPingreq -> handlePingreq(packet)
+            is MQTTDisconnect -> handleDisconnect(packet)
+            is MQTTAuth -> handleAuth(packet)
         }
     }
 
@@ -172,6 +174,7 @@ class ClientHandler(
         }
 
         broker.maximumPacketSize?.let {
+            // TODO handle this in MQTTInputStream
             if (packet.toByteArray().size.toUInt() > it)
                 throw MQTTException(ReasonCode.PACKET_TOO_LARGE)
         }
@@ -311,5 +314,19 @@ class ClientHandler(
 
     private fun handlePingreq(packet: MQTTPingreq) {
         writer.writePacket(MQTTPingresp())
+    }
+
+    private fun handleDisconnect(packet: MQTTDisconnect) {
+        if (session.sessionExpiryInterval == 0u && packet.properties.sessionExpiryInterval != 0u)
+            disconnect(ReasonCode.PROTOCOL_ERROR)
+        else {
+            if (packet.reasonCode == ReasonCode.SUCCESS)
+                session.will = null
+            close()
+        }
+    }
+
+    private fun handleAuth(packet: MQTTAuth) {
+        // TODO handle auth
     }
 }

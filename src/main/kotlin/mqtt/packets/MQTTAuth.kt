@@ -1,9 +1,29 @@
 package mqtt.packets
 
-class MQTTAuth : MQTTPacket {
+import mqtt.MQTTControlPacketType
+import mqtt.MQTTException
+import mqtt.encodeVariableByteInteger
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+
+class MQTTAuth(
+    val authenticateReasonCode: ReasonCode,
+    val properties: MQTTProperties = MQTTProperties()
+) : MQTTPacket {
 
     override fun toByteArray(): ByteArray {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (authenticateReasonCode !in validReasonCodes)
+            throw IllegalArgumentException("Invalid reason code")
+        val outStream = ByteArrayOutputStream()
+
+        outStream.writeByte(authenticateReasonCode.ordinal.toUInt())
+        outStream.writeBytes(properties.serializeProperties(validProperties))
+
+        val result = ByteArrayOutputStream()
+        val fixedHeader = (MQTTControlPacketType.AUTH.ordinal shl 4) and 0xF0
+        result.write(fixedHeader)
+        result.encodeVariableByteInteger(outStream.size().toUInt())
+        return result.toByteArray()
     }
 
     companion object : MQTTDeserializer {
@@ -15,8 +35,23 @@ class MQTTAuth : MQTTPacket {
             Property.USER_PROPERTY
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTPacket {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        private val validReasonCodes = listOf(
+            ReasonCode.SUCCESS,
+            ReasonCode.CONTINUE_AUTHENTICATION,
+            ReasonCode.RE_AUTHENTICATE
+        )
+
+        override fun fromByteArray(flags: Int, data: ByteArray): MQTTAuth {
+            checkFlags(flags)
+            val inStream = ByteArrayInputStream(data)
+            val reasonCode =
+                ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
+            if (reasonCode !in validReasonCodes)
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            val properties = inStream.deserializeProperties(validProperties)
+            if (properties.authenticationMethod == null)
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            return MQTTAuth(reasonCode, properties)
         }
     }
 }
