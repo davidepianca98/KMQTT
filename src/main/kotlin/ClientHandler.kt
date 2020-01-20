@@ -49,6 +49,7 @@ class ClientHandler(
             is MQTTPublish -> handlePublish(packet)
             is MQTTPubrel -> handlePubrel(packet)
             is MQTTSubscribe -> handleSubscribe(packet)
+            is MQTTUnsubscribe -> handleUnsubscribe(packet)
         }
     }
 
@@ -242,6 +243,7 @@ class ClientHandler(
         session.qos2ListReceived.firstOrNull { it.packetId == packet.packetId }?.let {
             writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.SUCCESS, packet.properties))
             broker.publish(getTopicOrAlias(it), Qos.EXACTLY_ONCE, packet.properties, it.payload)
+            // TODO remove packet from list
         } ?: run {
             writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.PACKET_IDENTIFIER_NOT_FOUND, packet.properties))
         }
@@ -292,5 +294,17 @@ class ClientHandler(
         }
 
         writer.writePacket(MQTTSuback(packet.packetIdentifier, reasonCodes))
+    }
+
+    private fun handleUnsubscribe(packet: MQTTUnsubscribe) {
+        val reasonCodes = packet.topicFilters.map { topicFilter ->
+            if (session.isPacketIdInUse(packet.packetIdentifier))
+                return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
+            if (session.subscriptions.removeIf { it.topicFilter == topicFilter })
+                return@map ReasonCode.SUCCESS
+            else
+                return@map ReasonCode.NO_SUBSCRIPTION_EXISTED
+        }
+        writer.writePacket(MQTTUnsuback(packet.packetIdentifier, reasonCodes))
     }
 }
