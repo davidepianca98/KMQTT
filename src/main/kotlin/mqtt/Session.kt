@@ -3,6 +3,7 @@ package mqtt
 import ClientHandler
 import mqtt.packets.MQTTConnect
 import mqtt.packets.MQTTPublish
+import mqtt.packets.Qos
 
 class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
 
@@ -48,7 +49,7 @@ class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
 
     class Will(
         val retain: Boolean,
-        val qos: Int,
+        val qos: Qos,
         val topic: String,
         val payload: ByteArray,
         val willDelayInterval: UInt,
@@ -94,15 +95,24 @@ class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
         userProperties = packet.properties.userProperty
     }
 
-    fun clean() {
+    fun generatePacketId(): UInt {
+        do {
+            packetIdentifier++
+            if (packetIdentifier > 65535u)
+                packetIdentifier = 1u
+        } while (isPacketIdInUse(packetIdentifier))
 
+        return packetIdentifier
     }
 
-    fun generatePacketId(): UInt {
-        packetIdentifier++
-        if (packetIdentifier > 65535u)
-            packetIdentifier = 1u
-        return packetIdentifier
+    fun isPacketIdInUse(packetId: UInt): Boolean {
+        if (qos1List.firstOrNull { it.packetId == packetId } != null)
+            return true
+        if (qos2List.firstOrNull { it.packetId == packetId } != null)
+            return true
+        if (qos2ListReceived.firstOrNull { it.packetId == packetId } != null)
+            return true
+        return false
     }
 }
 

@@ -30,6 +30,8 @@ class ClientHandler(
                 // TODO if on qos12list try sending packet
             } catch (e: MQTTException) {
                 disconnect(e.reasonCode)
+            } catch (e: Exception) {
+                // TODO handle generic exception
             }
         }
     }
@@ -48,14 +50,15 @@ class ClientHandler(
         when (packet) {
             is MQTTConnect -> handleConnect(packet) // TODO only handle connect once as first packet otherwise error
             is MQTTPublish -> handlePublish(packet)
+            is MQTTPubrel -> handlePubrel(packet)
         }
     }
 
     fun publish(packet: MQTTPublish) {
         when (packet.qos) {
-            0 -> writer.writePacket(packet)
-            1 -> session.qos1List.add(packet) // TODO for qos 1 and 2 verify that receive maximum isn't exceeded otherwise don't send
-            2 -> session.qos2List.add(packet)
+            Qos.AT_MOST_ONCE -> writer.writePacket(packet)
+            Qos.AT_LEAST_ONCE -> session.qos1List.add(packet) // TODO for qos 1 and 2 verify that client's receive maximum isn't exceeded otherwise don't send
+            Qos.EXACTLY_ONCE -> session.qos2List.add(packet)
         }
     }
 
@@ -69,8 +72,6 @@ class ClientHandler(
 
     private fun handleConnect(packet: MQTTConnect) {
         // TODO authentication first with username, password or authentication method/data in properties (section 4.12)
-        // TODO if will qos higher than supported, DISCONNECT with code 0x9B
-        // TODO if will retain requested but not supported, DISCONNECT with code 0x9a
         var sessionPresent = false
 
         val clientId = if (packet.clientID.isEmpty()) generateClientId() else packet.clientID
@@ -114,13 +115,20 @@ class ClientHandler(
                 connackProperties.receiveMaximum = it
             }
         }
-        broker.maximumQos?.let {
-            if (it == 0 || it == 1) // TODO the server must still accept SUBSCRIBE with qos of 0,1,2
-                connackProperties.maximumQos = it.toUInt()
+        broker.maximumQos?.let { maximumQos ->
+            if (maximumQos == Qos.AT_MOST_ONCE || maximumQos == Qos.AT_LEAST_ONCE) // TODO the server must still accept SUBSCRIBE with qos of 0,1,2
+                connackProperties.maximumQos = maximumQos.ordinal.toUInt()
+            session.will?.qos?.let {
+                if (it > maximumQos)
+                    throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
+            }
         }
 
-        if (!broker.retainedAvailable)
+        if (!broker.retainedAvailable) {
             connackProperties.retainAvailable = 0u
+            if (session.will?.retain == true)
+                throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
+        }
 
         broker.maximumPacketSize?.let {
             connackProperties.maximumPacketSize = it.toUInt()
@@ -159,7 +167,7 @@ class ClientHandler(
     private fun handlePublish(packet: MQTTPublish) {
         // TODO set DUP to 0 when propagating, but check in session if present packet with this packet id
 
-        if (packet.qos > broker.maximumQos ?: 2) {
+        if (packet.qos > broker.maximumQos ?: Qos.EXACTLY_ONCE) {
             throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
         }
 
@@ -177,6 +185,35 @@ class ClientHandler(
         // TODO handle section 3.3.2.3.3, must be modified by broker
 
         // Handle topic alias
+        val topic = getTopicOrAlias(packet)
+
+        // Handle receive maximum
+        if (packet.qos > Qos.AT_MOST_ONCE && broker.receiveMaximum != null) {
+            if (session.qos1List.size + session.qos2List.size + 1 > broker.receiveMaximum)
+                throw MQTTException(ReasonCode.RECEIVE_MAXIMUM_EXCEEDED)
+        }
+
+
+        when (packet.qos) {
+            Qos.AT_LEAST_ONCE -> {
+                val reasonCode = qos12ReasonCode(packet)
+                writer.writePacket(MQTTPuback(packet.packetId!!, reasonCode))
+                if (reasonCode != ReasonCode.SUCCESS)
+                    return
+            }
+            Qos.EXACTLY_ONCE -> {
+                val reasonCode = qos12ReasonCode(packet)
+                writer.writePacket(MQTTPubrec(packet.packetId!!, reasonCode))
+                if (reasonCode == ReasonCode.SUCCESS)
+                    session.qos2ListReceived.add(packet)
+                return // Don't send the PUBLISH to other clients until PUBCOMP
+            }
+        }
+
+        broker.publish(topic, packet.properties, packet.payload)
+    }
+
+    private fun getTopicOrAlias(packet: MQTTPublish): String {
         var topic = packet.topicName
         packet.properties.topicAlias?.let {
             if (it == 0u || it > broker.maximumTopicAlias?.toUInt() ?: 0u)
@@ -187,23 +224,28 @@ class ClientHandler(
             topic = topicAliases[it] ?: throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             packet.properties.topicAlias = null
         }
+        return topic
+    }
 
-        // Handle receive maximum
-        if (packet.qos > 0 && broker.receiveMaximum != null) {
-            if (session.qos1List.size + session.qos2List.size + 1 > broker.receiveMaximum)
-                throw MQTTException(ReasonCode.RECEIVE_MAXIMUM_EXCEEDED)
+    private fun qos12ReasonCode(packet: MQTTPublish): ReasonCode {
+        // TODO check quota exceeded if necessary, topic name invalid
+        val payloadFormatValid = packet.validatePayloadFormat()
+        return if (!payloadFormatValid)
+            ReasonCode.PAYLOAD_FORMAT_INVALID
+        else if (session.isPacketIdInUse(packet.packetId!!))
+            ReasonCode.PACKET_IDENTIFIER_IN_USE
+        else
+            ReasonCode.SUCCESS
+    }
+
+    private fun handlePubrel(packet: MQTTPubrel) {
+        if (packet.reasonCode != ReasonCode.SUCCESS)
+            return
+        session.qos2ListReceived.firstOrNull { it.packetId == packet.packetId }?.let {
+            writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.SUCCESS, packet.properties))
+            broker.publish(getTopicOrAlias(it), packet.properties, it.payload)
+        } ?: run {
+            writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.PACKET_IDENTIFIER_NOT_FOUND, packet.properties))
         }
-
-        when (packet.qos) {
-            1 -> {
-                // TODO send puback
-            }
-            2 -> {
-                // TODO send pubrec, wait for pubrel, send pubcomp
-                session.qos2ListReceived.add(packet)
-            }
-        }
-
-        broker.publish(topic, packet.properties, packet.payload)
     }
 }

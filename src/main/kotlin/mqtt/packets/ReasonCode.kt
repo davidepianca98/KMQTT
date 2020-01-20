@@ -45,5 +45,9 @@ enum class ReasonCode(value: Int) {
     CONNECTION_RATE_EXCEEDED(159),
     MAXIMUM_CONNECT_TIME(160),
     SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED(161),
-    WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED(162)
+    WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED(162);
+
+    companion object {
+        fun valueOf(value: Int) = values().firstOrNull { it.ordinal == value }
+    }
 }

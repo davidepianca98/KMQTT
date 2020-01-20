@@ -13,6 +13,9 @@ class MQTTConnack(
 ) : MQTTPacket {
 
     override fun toByteArray(): ByteArray {
+        if (connectReasonCode !in validReasonCodes)
+            throw IllegalArgumentException("Invalid reason code")
+
         val outStream = ByteArrayOutputStream()
 
         outStream.write(if (connectAcknowledgeFlags.sessionPresentFlag && connectReasonCode == ReasonCode.SUCCESS) 1 else 0)
@@ -45,6 +48,31 @@ class MQTTConnack(
             Property.WILDCARD_SUBSCRIPTION_AVAILABLE,
             Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE,
             Property.SHARED_SUBSCRIPTION_AVAILABLE
+        )
+
+        private val validReasonCodes = listOf(
+            ReasonCode.SUCCESS,
+            ReasonCode.UNSPECIFIED_ERROR,
+            ReasonCode.MALFORMED_PACKET,
+            ReasonCode.PROTOCOL_ERROR,
+            ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR,
+            ReasonCode.UNSUPPORTED_PROTOCOL_VERSION,
+            ReasonCode.CLIENT_IDENTIFIER_NOT_VALID,
+            ReasonCode.BAD_USER_NAME_OR_PASSWORD,
+            ReasonCode.NOT_AUTHORIZED,
+            ReasonCode.SERVER_UNAVAILABLE,
+            ReasonCode.SERVER_BUSY,
+            ReasonCode.BANNED,
+            ReasonCode.BAD_AUTHENTICATION_METHOD,
+            ReasonCode.TOPIC_NAME_INVALID,
+            ReasonCode.PACKET_TOO_LARGE,
+            ReasonCode.QUOTA_EXCEEDED,
+            ReasonCode.PAYLOAD_FORMAT_INVALID,
+            ReasonCode.RETAIN_NOT_SUPPORTED,
+            ReasonCode.QOS_NOT_SUPPORTED,
+            ReasonCode.USE_ANOTHER_SERVER,
+            ReasonCode.SERVER_MOVED,
+            ReasonCode.CONNECTION_RATE_EXCEEDED
         )
 
         override fun fromByteArray(flags: Int, data: ByteArray): MQTTPacket {

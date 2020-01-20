@@ -44,7 +44,7 @@ class MQTTConnect(
             val userNameFlag: Boolean,
             val passwordFlag: Boolean,
             val willRetain: Boolean,
-            val willQos: Int,
+            val willQos: Qos,
             val willFlag: Boolean,
             val cleanStart: Boolean,
             val reserved: Boolean
@@ -71,7 +71,7 @@ class MQTTConnect(
                 ((byte shl 7) and 1) == 1,
                 ((byte shl 6) and 1) == 1,
                 willRetain,
-                willQos,
+                Qos.valueOf(willQos),
                 willFlag,
                 ((byte shl 1) and 1) == 1,
                 reserved
