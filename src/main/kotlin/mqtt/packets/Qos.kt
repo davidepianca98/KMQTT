@@ -9,6 +9,7 @@ enum class Qos(value: Int) {
 
     companion object {
         fun valueOf(value: Int) =
-            values().firstOrNull { it.ordinal == value } ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
+            values().firstOrNull { it.ordinal == value }
+                ?: throw MQTTException(ReasonCode.MALFORMED_PACKET) // TODO maybe protocol error
     }
 }

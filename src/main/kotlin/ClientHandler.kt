@@ -1,7 +1,4 @@
-import mqtt.MQTTException
-import mqtt.MQTTInputStream
-import mqtt.MQTTOutputStream
-import mqtt.Session
+import mqtt.*
 import mqtt.packets.*
 import java.net.Socket
 import java.util.*
@@ -51,6 +48,7 @@ class ClientHandler(
             is MQTTConnect -> handleConnect(packet) // TODO only handle connect once as first packet otherwise error
             is MQTTPublish -> handlePublish(packet)
             is MQTTPubrel -> handlePubrel(packet)
+            is MQTTSubscribe -> handleSubscribe(packet)
         }
     }
 
@@ -141,13 +139,13 @@ class ClientHandler(
             connackProperties.topicAliasMaximum = it.toUInt()
         }
 
-        if (!broker.wildcardSubscriptionAvailable) // TODO if not supported but subscribe with wildcard received disconnect with code 0xA2
+        if (!broker.wildcardSubscriptionAvailable)
             connackProperties.wildcardSubscriptionAvailable = 0u
 
-        if (!broker.subscriptionIdentifiersAvailable) // TODO if not supported but subscribe with sub identifier disconnect with code 0xA1
+        if (!broker.subscriptionIdentifiersAvailable)
             connackProperties.subscriptionIdentifierAvailable = 0u
 
-        if (!broker.sharedSubscriptionsAvailable) // TODO if not supported but subscribe with shared sub send disconnect with code 0x9E
+        if (!broker.sharedSubscriptionsAvailable)
             connackProperties.sharedSubscriptionAvailable = 0u
 
         broker.serverKeepAlive?.let {
@@ -210,7 +208,7 @@ class ClientHandler(
             }
         }
 
-        broker.publish(topic, packet.properties, packet.payload)
+        broker.publish(topic, packet.qos, packet.properties, packet.payload)
     }
 
     private fun getTopicOrAlias(packet: MQTTPublish): String {
@@ -243,9 +241,56 @@ class ClientHandler(
             return
         session.qos2ListReceived.firstOrNull { it.packetId == packet.packetId }?.let {
             writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.SUCCESS, packet.properties))
-            broker.publish(getTopicOrAlias(it), packet.properties, it.payload)
+            broker.publish(getTopicOrAlias(it), Qos.EXACTLY_ONCE, packet.properties, it.payload)
         } ?: run {
             writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.PACKET_IDENTIFIER_NOT_FOUND, packet.properties))
         }
+    }
+
+    private fun handleSubscribe(packet: MQTTSubscribe) {
+        val reasonCodes = packet.subscriptions.map { subscription ->
+            if (!subscription.topicFilter.isValidTopic())
+                return@map ReasonCode.TOPIC_FILTER_INVALID
+
+            if (session.isPacketIdInUse(packet.packetIdentifier))
+                return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
+
+            // TODO return quota exceeded if it happens
+
+            val isShared = subscription.isShared()
+            if (!broker.sharedSubscriptionsAvailable && isShared)
+                return@map ReasonCode.SHARED_SUBSCRIPTIONS_NOT_SUPPORTED
+
+            if (packet.properties.subscriptionIdentifier.getOrNull(0) != null && !broker.subscriptionIdentifiersAvailable)
+                return@map ReasonCode.SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED
+
+            if (!broker.wildcardSubscriptionAvailable && subscription.topicFilter.containsWildcard())
+                return@map ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
+
+            session.subscriptions.removeIf { it.topicFilter == subscription.topicFilter }
+            session.subscriptions += subscription
+            if (!isShared) {
+                // TODO send retained messages based on options and broker retained enabled
+            }
+            when (subscription.options.qos) {
+                Qos.AT_MOST_ONCE -> ReasonCode.GRANTED_QOS0
+                Qos.AT_LEAST_ONCE -> ReasonCode.GRANTED_QOS1
+                Qos.EXACTLY_ONCE -> ReasonCode.GRANTED_QOS2
+            }
+        }
+        if (ReasonCode.SHARED_SUBSCRIPTIONS_NOT_SUPPORTED in reasonCodes) {
+            disconnect(ReasonCode.SHARED_SUBSCRIPTIONS_NOT_SUPPORTED)
+            return
+        }
+        if (ReasonCode.SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED in reasonCodes) {
+            disconnect(ReasonCode.SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED)
+            return
+        }
+        if (ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED in reasonCodes) {
+            disconnect(ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED)
+            return
+        }
+
+        writer.writePacket(MQTTSuback(packet.packetIdentifier, reasonCodes))
     }
 }
