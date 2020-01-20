@@ -50,6 +50,7 @@ class ClientHandler(
             is MQTTPubrel -> handlePubrel(packet)
             is MQTTSubscribe -> handleSubscribe(packet)
             is MQTTUnsubscribe -> handleUnsubscribe(packet)
+            is MQTTPingreq -> handlePingreq(packet)
         }
     }
 
@@ -306,5 +307,9 @@ class ClientHandler(
                 return@map ReasonCode.NO_SUBSCRIPTION_EXISTED
         }
         writer.writePacket(MQTTUnsuback(packet.packetIdentifier, reasonCodes))
+    }
+
+    private fun handlePingreq(packet: MQTTPingreq) {
+        writer.writePacket(MQTTPingresp())
     }
 }
