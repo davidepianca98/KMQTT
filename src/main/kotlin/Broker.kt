@@ -1,4 +1,5 @@
 import mqtt.Session
+import mqtt.matchesWildcard
 import mqtt.packets.MQTTProperties
 import mqtt.packets.MQTTPublish
 import java.net.InetSocketAddress
@@ -48,7 +49,7 @@ class Broker(
     fun publish(topicName: String, properties: MQTTProperties, payload: ByteArray?) {
         sessions.forEach { session ->
             session.value.subscriptions.forEach { subscription ->
-                if (subscription.topicName == topicName) { // TODO check wildcard match
+                if (topicName.matchesWildcard(subscription.topicName)) {
                     subscription.subscriptionIdentifier?.let {
                         // TODO If the subscription was shared, then only the Subscription Identifiers that were present in the SUBSCRIBE packet from the Client which is receiving the message are returned in the PUBLISH packet.
                         properties.subscriptionIdentifier.clear()
