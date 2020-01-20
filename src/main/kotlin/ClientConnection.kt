@@ -4,7 +4,7 @@ import java.net.Socket
 import java.util.*
 
 
-class ClientHandler(
+class ClientConnection(
     private val client: Socket,
     private val broker: Broker
 ) {
@@ -82,7 +82,7 @@ class ClientHandler(
         if (session != null) {
             if (session.connected) {
                 // Send disconnect to the old connection and close it
-                session.clientHandler.disconnect(ReasonCode.SESSION_TAKEN_OVER)
+                session.clientConnection.disconnect(ReasonCode.SESSION_TAKEN_OVER)
 
                 // Send old will if present
                 if (session.will?.willDelayInterval == 0u || packet.connectFlags.cleanStart) {
@@ -94,7 +94,7 @@ class ClientHandler(
                 broker.sessions[clientId] = session
             } else {
                 // Update the session with the new parameters
-                session.clientHandler = this
+                session.clientConnection = this
                 session.update(packet) // TODO maybe must not be done
                 sessionPresent = true
             }

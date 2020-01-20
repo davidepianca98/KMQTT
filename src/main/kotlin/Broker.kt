@@ -41,7 +41,7 @@ class Broker(
     fun listen() {
         while (true) {
             val client = server.accept()
-            thread { ClientHandler(client, this).run() }
+            thread { ClientConnection(client, this).run() }
         }
     }
 
@@ -64,7 +64,7 @@ class Broker(
                         properties,
                         payload
                     )
-                    session.value.clientHandler.publish(packet)
+                    session.value.clientConnection.publish(packet)
                 }
             }
         }

@@ -1,11 +1,11 @@
 package mqtt
 
-import ClientHandler
+import ClientConnection
 import mqtt.packets.MQTTConnect
 import mqtt.packets.MQTTPublish
 import mqtt.packets.Qos
 
-class Session(packet: MQTTConnect, var clientHandler: ClientHandler) {
+class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
     var connected = false
 
