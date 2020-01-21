@@ -5,6 +5,9 @@ fun String.containsWildcard(): Boolean {
 }
 
 fun String.isValidTopic(): Boolean {
+    if (this.isEmpty())
+        return false
+
     if (this.contains("#")) {
         if (this.count { it.toString().contains("#") } > 1 || (this != "#" && !this.endsWith("/#")))
             return false
@@ -33,6 +36,10 @@ fun String.matchesWildcard(wildcardTopic: String): Boolean {
     if (this.containsWildcard())
         return false
     if (!this.isValidTopic() || !wildcardTopic.isValidTopic())
+        return false
+
+    // The Server MUST NOT match Topic Filters starting with a wildcard character (# or +) with Topic Names beginning with a $ character
+    if ((wildcardTopic.startsWith("+") || wildcardTopic.startsWith("#")) && this.startsWith("$"))
         return false
 
     if (this == wildcardTopic) {
