@@ -121,8 +121,7 @@ class Broker(
     private fun removeExpiredRetainedMessages() {
         val expired = retainedList.filter {
             val message = it.value.first
-            val expiry = message.properties.messageExpiryInterval?.toLong() ?: (Long.MAX_VALUE / 1000)
-            ((expiry * 1000) + message.timestamp) < System.currentTimeMillis()
+            message.messageExpiryIntervalExpired()
         }
         expired.forEach {
             retainedList.remove(it.key)

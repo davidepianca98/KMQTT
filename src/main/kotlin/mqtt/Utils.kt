@@ -1,5 +1,6 @@
 package mqtt
 
+import mqtt.packets.MQTTPublish
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -27,4 +28,9 @@ fun InputStream.decodeVariableByteInteger(): UInt {
         multiplier *= 128u
     } while ((encodedByte and 128u) != 0u)
     return value
+}
+
+fun MQTTPublish.messageExpiryIntervalExpired(): Boolean {
+    val expiry = properties.messageExpiryInterval?.toLong() ?: (Long.MAX_VALUE / 1000)
+    return ((expiry * 1000) + timestamp) < System.currentTimeMillis()
 }

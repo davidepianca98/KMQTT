@@ -4,7 +4,8 @@ import mqtt.packets.*
 import java.io.DataInputStream
 import java.io.InputStream
 
-class MQTTInputStream(inputStream: InputStream) : DataInputStream(inputStream) {
+class MQTTInputStream(inputStream: InputStream, private val maximumPacketSize: UInt? = null) :
+    DataInputStream(inputStream) {
 
     fun readPacket(): MQTTPacket {
         val byte1 = read()
@@ -14,6 +15,12 @@ class MQTTInputStream(inputStream: InputStream) : DataInputStream(inputStream) {
         val type = MQTTControlPacketType.valueOf(mqttControlPacketType)!!
 
         val remainingLength = decodeVariableByteInteger().toInt()
+
+        maximumPacketSize?.let {
+            if (remainingLength + 2 > it.toInt())
+                throw MQTTException(ReasonCode.PACKET_TOO_LARGE)
+        }
+
         val packet = ByteArray(remainingLength)
         readFully(packet, 0, remainingLength)
         return parseMQTTPacket(type, flags, packet)

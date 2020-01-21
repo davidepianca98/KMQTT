@@ -14,7 +14,7 @@ class ClientConnection(
         private const val DEFAULT_MAX_SEND_QUOTA = 65535u
     }
 
-    private val reader = MQTTInputStream(client.getInputStream())
+    private val reader = MQTTInputStream(client.getInputStream(), broker.maximumPacketSize)
     private val writer = MQTTOutputStream(client.getOutputStream())
 
     private var clientId: String? = null
@@ -34,7 +34,7 @@ class ClientConnection(
             try {
                 val packet = reader.readPacket()
                 handlePacket(packet)
-                // TODO if on pendingSendMessages try sending packet
+                // TODO if on pendingSendMessages try sending packet, checking if expired don't send
             } catch (e: MQTTException) {
                 disconnect(e.reasonCode)
             } catch (e: Exception) {
@@ -71,6 +71,14 @@ class ClientConnection(
     }
 
     fun publish(packet: MQTTPublish) {
+        if (packet.messageExpiryIntervalExpired())
+            return
+        // Update the expiry interval if present
+        packet.properties.messageExpiryInterval?.let {
+            packet.properties.messageExpiryInterval =
+                it - ((System.currentTimeMillis() - packet.timestamp) / 1000).toUInt()
+        }
+
         if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
             if (sendQuota <= 0u)
                 return
@@ -221,15 +229,6 @@ class ClientConnection(
             throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
         }
 
-        broker.maximumPacketSize?.let {
-            // TODO handle this in MQTTInputStream
-            if (packet.toByteArray().size.toUInt() > it)
-                throw MQTTException(ReasonCode.PACKET_TOO_LARGE)
-        }
-
-        // TODO last parts of section 3.3.2.1
-        // TODO handle section 3.3.2.3.3, must be modified by broker
-
         if (!broker.retainedAvailable && packet.retain)
             throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
 
@@ -259,6 +258,8 @@ class ClientConnection(
                 if (reasonCode == ReasonCode.SUCCESS)
                     session.qos2ListReceived[packet.packetId] = packet
                 return // Don't send the PUBLISH to other clients until PUBCOMP
+            }
+            else -> {
             }
         }
 
