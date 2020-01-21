@@ -4,18 +4,17 @@ import ClientConnection
 import mqtt.packets.MQTTConnect
 import mqtt.packets.MQTTPublish
 import mqtt.packets.MQTTPubrel
+import mqtt.packets.ReasonCode
 
 class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
-    var connected = false
+    var connected = false // true only after sending CONNACK
     var destroySessionTimestamp: Long? =
         null // TODO set it on disconnection from now + sessionExpiryInterval, then periodically check if passed time and delete after
 
     var clientId = packet.clientID
-    var keepAlive = packet.keepAlive
 
-    // TODO handle packet identifier counter section 2.2.1
-    var packetIdentifier = 1u
+    private var packetIdentifier = 1u
 
     // QoS 1 and QoS 2 messages which have been sent to the Client, but have not been completely acknowledged
     private val pendingAcknowledgeMessages = mutableMapOf<UInt, MQTTPublish>()
@@ -78,15 +77,13 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     }
 
     // TODO shared subscription note:
-    //  If the Server is in the process of sending a QoS 1 message to its chosen subscribing Client and the connection to that Client breaks before the Server has received an acknowledgement from the Client, the Server MAY wait for the Client to reconnect and retransmit the message to that Client. If the Client'sSession terminates before the Client reconnects, the Server SHOULD send the Application Message to another Client that is subscribed to the same Shared Subscription. It MAY attempt to send the message to another Client as soon as it loses its connection to the first Client.
+    //  If the Server is in the process of sending a QoS 1 message to its chosen subscribing Client and the connection
+    //  to that Client breaks before the Server has received an acknowledgement from the Client, the Server MAY wait for
+    //  the Client to reconnect and retransmit the message to that Client. If the Client'sSession terminates before the
+    //  Client reconnects, the Server SHOULD send the Application Message to another Client that is subscribed to the
+    //  same Shared Subscription. It MAY attempt to send the message to another Client as soon as it loses its
+    //  connection to the first Client.
 
-    // TODO publish will when:
-    //  An I/O error or network failure detected by the Server.
-    //  The Client fails to communicate within the Keep Alive time.
-    //  The Client closes the Network Connection without first sending a DISCONNECT packet with a Reason Code 0x00 (Normal disconnection).
-    //  The Server closes the Network Connection without first receiving a DISCONNECT packet with a Reason Code 0x00 (Normal disconnection).
-
-    // TODO must be removed from the session also if will message published
     var will = buildWill(packet)
 
     // TODO if 0 delete session on disconnection else delete after timeout, if 0xFFFFFFFF never delete
@@ -102,20 +99,23 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     var userProperties = packet.properties.userProperty
 
     private fun buildWill(packet: MQTTConnect): Will? {
+        val formatIndicator = packet.willProperties!!.payloadFormatIndicator ?: 0u
+        if (packet.willPayload?.validatePayloadFormat(formatIndicator) == false)
+            throw MQTTException(ReasonCode.PAYLOAD_FORMAT_INVALID)
         return if (packet.connectFlags.willFlag)
             Will(
                 packet.connectFlags.willRetain,
                 packet.connectFlags.willQos,
                 packet.willTopic!!,
                 packet.willPayload!!,
-                packet.willProperties!!.willDelayInterval
-                    ?: 0u, // TODO publish will after this interval or when the session ends, first to come
-                packet.willProperties.payloadFormatIndicator ?: 0u, // TODO if 1 validate willpayload is utf-8
-                packet.willProperties.messageExpiryInterval, // TODO lifetime of will message as publication expiry interval when sending
-                packet.willProperties.contentType, // TODO send as content type if present
-                packet.willProperties.responseTopic, // TODO send as response topic if present
-                packet.willProperties.correlationData, // TODO send as correlation data if present
-                packet.willProperties.userProperty // TODO send as user properties maintaining order
+                packet.willProperties.willDelayInterval
+                    ?: 0u, // TODO publish will after this interval or when the session ends, first to come, if client reconnects to session don't send
+                formatIndicator,
+                packet.willProperties.messageExpiryInterval,
+                packet.willProperties.contentType,
+                packet.willProperties.responseTopic,
+                packet.willProperties.correlationData,
+                packet.willProperties.userProperty
             )
         else
             null
@@ -123,7 +123,6 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
     fun update(packet: MQTTConnect) { // TODO probably many of these settings must be in client connection and not in session
         clientId = packet.clientID
-        keepAlive = packet.keepAlive
         will = buildWill(packet)
 
         sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
@@ -148,8 +147,6 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
         if (pendingSendMessages[packetId] != null)
             return true
         if (pendingAcknowledgeMessages[packetId] != null)
-            return true
-        if (qos2ListReceived[packetId] != null)
             return true
         return false
     }

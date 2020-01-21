@@ -1,14 +1,8 @@
 package mqtt.packets
 
-import mqtt.MQTTControlPacketType
-import mqtt.MQTTException
-import mqtt.containsWildcard
-import mqtt.encodeVariableByteInteger
+import mqtt.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.nio.ByteBuffer
-import java.nio.charset.CharacterCodingException
-import java.nio.charset.Charset
 
 
 class MQTTPublish(
@@ -44,14 +38,7 @@ class MQTTPublish(
 
     fun validatePayloadFormat(): Boolean {
         properties.payloadFormatIndicator?.let {
-            if (it == 1u) {
-                return try {
-                    Charset.forName("UTF-8").newDecoder().decode(ByteBuffer.wrap(payload))
-                    true
-                } catch (e: CharacterCodingException) {
-                    false
-                }
-            }
+            return payload?.validatePayloadFormat(it) ?: true
         }
         return true
     }

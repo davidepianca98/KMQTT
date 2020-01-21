@@ -45,14 +45,17 @@ class Broker(
     fun listen() {
         while (true) {
             val client = server.accept()
+            client.soTimeout = 30000
             thread { ClientConnection(client, this).run() }
         }
     }
 
     private fun publishShared(
         shareName: String,
+        retain: Boolean,
         topicName: String,
         qos: Qos,
+        dup: Boolean,
         properties: MQTTProperties,
         payload: ByteArray?
     ) {
@@ -61,30 +64,45 @@ class Broker(
             it.value.hasSharedSubscriptionMatching(shareName, topicName)?.timestampShareSent ?: Long.MAX_VALUE
         }?.value
         session?.hasSharedSubscriptionMatching(shareName, topicName)?.let { subscription ->
-            publish(topicName, qos, properties, payload, session, subscription)
+            publish(retain, topicName, qos, dup, properties, payload, session, subscription)
             subscription.timestampShareSent = System.currentTimeMillis()
         }
     }
 
-    fun publish(topicName: String, qos: Qos, properties: MQTTProperties, payload: ByteArray?) {
+    fun publish(
+        retain: Boolean,
+        topicName: String,
+        qos: Qos,
+        dup: Boolean,
+        properties: MQTTProperties,
+        payload: ByteArray?
+    ) {
+        if (!retainedAvailable && retain)
+            throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
+        maximumQos?.let {
+            if (qos > it)
+                throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
+        }
         val sharedDone = mutableListOf<String>()
         sessions.forEach { session ->
             session.value.hasSubscriptionsMatching(topicName).forEach { subscription ->
                 if (subscription.isShared()) {
                     if (subscription.shareName!! !in sharedDone && sharedSubscriptionsAvailable) { // Check we only publish once per shared subscription
-                        publishShared(subscription.shareName, topicName, qos, properties, payload)
+                        publishShared(subscription.shareName, retain, topicName, qos, dup, properties, payload)
                         sharedDone += subscription.shareName
                     }
                 } else {
-                    publish(topicName, qos, properties, payload, session.value, subscription)
+                    publish(retain, topicName, qos, dup, properties, payload, session.value, subscription)
                 }
             }
         }
     }
 
     private fun publish(
+        retain: Boolean,
         topicName: String,
         qos: Qos,
+        dup: Boolean,
         properties: MQTTProperties,
         payload: ByteArray?,
         session: Session,
@@ -96,9 +114,9 @@ class Broker(
         }
 
         val packet = MQTTPublish(
-            false,
+            retain,
             Qos.valueOf(min(subscription.options.qos.ordinal, qos.ordinal)),
-            false,
+            dup,
             topicName, // TODO maybe use topic aliases
             session.generatePacketId(),
             properties,

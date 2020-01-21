@@ -3,6 +3,9 @@ package mqtt
 import mqtt.packets.MQTTPublish
 import java.io.InputStream
 import java.io.OutputStream
+import java.nio.ByteBuffer
+import java.nio.charset.CharacterCodingException
+import java.nio.charset.Charset
 
 fun OutputStream.encodeVariableByteInteger(value: UInt) {
     var x = value
@@ -33,4 +36,16 @@ fun InputStream.decodeVariableByteInteger(): UInt {
 fun MQTTPublish.messageExpiryIntervalExpired(): Boolean {
     val expiry = properties.messageExpiryInterval?.toLong() ?: (Long.MAX_VALUE / 1000)
     return ((expiry * 1000) + timestamp) < System.currentTimeMillis()
+}
+
+fun ByteArray.validatePayloadFormat(indicator: UInt): Boolean {
+    if (indicator == 1u) {
+        return try {
+            Charset.forName("UTF-8").newDecoder().decode(ByteBuffer.wrap(this))
+            true
+        } catch (e: CharacterCodingException) {
+            false
+        }
+    }
+    return true
 }
