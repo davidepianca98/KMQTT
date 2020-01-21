@@ -8,14 +8,23 @@ class ClientConnection(
     private val client: Socket,
     private val broker: Broker
 ) {
+
+    companion object {
+        private const val DEFAULT_MAX_SEND_QUOTA = 65535u
+    }
+
     private val reader = MQTTInputStream(client.getInputStream())
     private val writer = MQTTOutputStream(client.getOutputStream())
-    private var running = false
+
     private var clientId: String? = null
     private val session: Session =
         broker.sessions[clientId] ?: throw Exception("Session not found") // TODO throw exception correctly
 
+    // Client connection state
+    private var running = false
     private val topicAliases = mutableMapOf<UInt, String>()
+    private var maxSendQuota: UInt = DEFAULT_MAX_SEND_QUOTA // Client receive maximum
+    private var sendQuota: UInt = DEFAULT_MAX_SEND_QUOTA
 
     fun run() {
         running = true
@@ -56,13 +65,17 @@ class ClientConnection(
             is MQTTPingreq -> handlePingreq(packet)
             is MQTTDisconnect -> handleDisconnect(packet)
             is MQTTAuth -> handleAuth(packet)
+            else -> TODO("Error packet not supported")
         }
     }
 
     fun publish(packet: MQTTPublish) {
         if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
+            if (sendQuota <= 0u)
+                return
             session.sendQosBiggerThanZero(packet) {
                 writer.writePacket(packet)
+                decrementSendQuota()
             }
         } else {
             writer.writePacket(packet)
@@ -75,6 +88,16 @@ class ClientConnection(
             id = UUID.randomUUID().toString()
         } while (broker.sessions[id] != null)
         return id
+    }
+
+    private fun incrementSendQuota() {
+        if (++sendQuota >= maxSendQuota)
+            sendQuota = maxSendQuota
+    }
+
+    private fun decrementSendQuota() {
+        if (sendQuota > 0u)
+            sendQuota--
     }
 
     private fun handleConnect(packet: MQTTConnect) {
@@ -109,6 +132,9 @@ class ClientConnection(
             broker.sessions[clientId] = session
         }
 
+        sendQuota = packet.properties.receiveMaximum ?: DEFAULT_MAX_SEND_QUOTA
+        maxSendQuota = packet.properties.receiveMaximum ?: DEFAULT_MAX_SEND_QUOTA
+
         //
         // CONNACK properties
         //
@@ -118,8 +144,8 @@ class ClientConnection(
             connackProperties.sessionExpiryInterval = broker.maximumSessionExpiryInterval
         }
         broker.receiveMaximum?.toUInt()?.let {
-            if (session.receiveMaximum > it) {
-                session.receiveMaximum = it
+            if (maxSendQuota > it) {
+                maxSendQuota = it
                 connackProperties.receiveMaximum = it
             }
         }
@@ -248,11 +274,13 @@ class ClientConnection(
 
     private fun handlePuback(packet: MQTTPuback) {
         session.acknowledgePublish(packet.packetId)
+        incrementSendQuota()
     }
 
     private fun handlePubrec(packet: MQTTPubrec) {
         if (packet.reasonCode >= ReasonCode.UNSPECIFIED_ERROR) {
             session.acknowledgePublish(packet.packetId)
+            incrementSendQuota()
             return
         }
         val reasonCode = if (session.hasPendingAcknowledgeMessage(packet.packetId)) {
@@ -278,6 +306,7 @@ class ClientConnection(
 
     private fun handlePubcomp(packet: MQTTPubcomp) {
         session.acknowledgePubrel(packet.packetId)
+        incrementSendQuota()
     }
 
     private fun handleSubscribe(packet: MQTTSubscribe) {

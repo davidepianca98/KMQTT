@@ -4,7 +4,6 @@ import ClientConnection
 import mqtt.packets.MQTTConnect
 import mqtt.packets.MQTTPublish
 import mqtt.packets.MQTTPubrel
-import mqtt.packets.Qos
 
 class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
@@ -27,8 +26,6 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
 
     fun sendQosBiggerThanZero(packet: MQTTPublish, block: (packet: MQTTPublish) -> Unit) {
-        if (pendingSendMessages.size + pendingAcknowledgeMessages.size + 1 > receiveMaximum.toInt())
-            return
         // TODO maybe must be added to pending and sent later, check specification
         pendingSendMessages[packet.packetId!!] = packet
         block(packet)
@@ -93,8 +90,6 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
     // TODO if 0 delete session on disconnection else delete after timeout, if 0xFFFFFFFF never delete
     var sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
-    // TODO handle flow control as explained in section 4.9
-    var receiveMaximum = packet.properties.receiveMaximum ?: 65535u
     // TODO don't send packets larger than this, if null no limit
     var maximumPacketSize = packet.properties.maximumPacketSize
     // TODO if 0 don't send topic alias, otherwise maximum number of aliases
@@ -104,21 +99,6 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     // TODO if different from 0 or 1 protocol error, if 0 may send a reson string or user properties in connack or disconnect, but no reason string or user properties in any other packet than publish, connack, disconnect
     var requestProblemInformation = packet.properties.requestProblemInformation ?: 1u
     var userProperties = packet.properties.userProperty
-
-
-    class Will(
-        val retain: Boolean,
-        val qos: Qos,
-        val topic: String,
-        val payload: ByteArray,
-        val willDelayInterval: UInt,
-        val payloadFormatIndicator: UInt,
-        val messageExpiryInterval: UInt?,
-        val contentType: String?,
-        val responseTopic: String?,
-        val correlationData: ByteArray?,
-        val userProperty: Map<String, String>
-    )
 
     private fun buildWill(packet: MQTTConnect): Will? {
         return if (packet.connectFlags.willFlag)
@@ -146,7 +126,6 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
         will = buildWill(packet)
 
         sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
-        receiveMaximum = packet.properties.receiveMaximum ?: 65535u
         maximumPacketSize = packet.properties.maximumPacketSize
         topicAliasMaximum = packet.properties.topicAliasMaximum ?: 0u
         requestResponseInformation = packet.properties.requestResponseInformation ?: 0u
