@@ -23,13 +23,13 @@ class MQTTProperties(
     var topicAlias: UInt? = null,
     var maximumQos: UInt? = null,
     var retainAvailable: UInt? = null,
-    val userProperty: MutableMap<String, String> = mutableMapOf(), // TODO shouldn't be map because the key can appear multiple times
+    val userProperty: MutableList<Pair<String, String>> = mutableListOf(),
     var maximumPacketSize: UInt? = null,
     var wildcardSubscriptionAvailable: UInt? = null,
     var subscriptionIdentifierAvailable: UInt? = null,
     var sharedSubscriptionAvailable: UInt? = null
 ) {
     fun addUserProperty(property: Pair<String, String>) {
-        userProperty[property.first] = property.second
+        userProperty += property
     }
 }

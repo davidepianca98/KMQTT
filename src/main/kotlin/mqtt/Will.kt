@@ -13,5 +13,5 @@ class Will(
     val contentType: String?,
     val responseTopic: String?,
     val correlationData: ByteArray?,
-    val userProperty: Map<String, String>
+    val userProperty: List<Pair<String, String>>
 )

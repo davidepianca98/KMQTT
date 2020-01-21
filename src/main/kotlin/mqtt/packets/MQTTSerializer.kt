@@ -202,7 +202,7 @@ interface MQTTSerializer {
         userProperty.forEach {
             if (Property.USER_PROPERTY in validProperties) {
                 out.write(Property.USER_PROPERTY.ordinal)
-                out.writeUTF8StringPair(it.toPair())
+                out.writeUTF8StringPair(it)
             }
         }
 
