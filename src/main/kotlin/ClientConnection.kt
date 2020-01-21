@@ -2,6 +2,7 @@ import mqtt.*
 import mqtt.packets.*
 import java.net.Socket
 import java.util.*
+import kotlin.math.min
 
 
 class ClientConnection(
@@ -62,7 +63,7 @@ class ClientConnection(
             is MQTTPubcomp -> handlePubcomp(packet)
             is MQTTSubscribe -> handleSubscribe(packet)
             is MQTTUnsubscribe -> handleUnsubscribe(packet)
-            is MQTTPingreq -> handlePingreq(packet)
+            is MQTTPingreq -> handlePingreq()
             is MQTTDisconnect -> handleDisconnect(packet)
             is MQTTAuth -> handleAuth(packet)
             else -> TODO("Error packet not supported")
@@ -226,13 +227,11 @@ class ClientConnection(
                 throw MQTTException(ReasonCode.PACKET_TOO_LARGE)
         }
 
-        if (!broker.retainedAvailable && packet.retain)
-            throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
-
-        // TODO handle section 3.3.1.3 RETAIN
-
         // TODO last parts of section 3.3.2.1
         // TODO handle section 3.3.2.3.3, must be modified by broker
+
+        if (!broker.retainedAvailable && packet.retain)
+            throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
 
         // Handle topic alias
         val topic = getTopicOrAlias(packet)
@@ -241,6 +240,10 @@ class ClientConnection(
         if (packet.qos > Qos.AT_MOST_ONCE && broker.receiveMaximum != null) {
             if (session.qos2ListReceived.size + 1 > broker.receiveMaximum)
                 throw MQTTException(ReasonCode.RECEIVE_MAXIMUM_EXCEEDED)
+        }
+
+        if (packet.retain) {
+            broker.setRetained(packet.topicName, packet, session.clientId)
         }
 
         when (packet.qos) {
@@ -324,7 +327,34 @@ class ClientConnection(
         incrementSendQuota()
     }
 
+    private fun prepareRetainedMessages(subscription: Subscription, replaced: Boolean): List<MQTTPublish> {
+        val retainedMessagesList = mutableListOf<MQTTPublish>()
+        if (!subscription.isShared() &&
+            ((subscription.options.retainHandling == 0u) ||
+                    (subscription.options.retainHandling == 1u && !replaced))
+        ) {
+            broker.getRetained(subscription.topicFilter).forEach { pair ->
+                val retainedMessage = pair.first
+                val clientId = pair.second
+                if (!(subscription.options.noLocal && session.clientId == clientId)) {
+                    val qos = Qos.valueOf(min(retainedMessage.qos.ordinal, subscription.options.qos.ordinal))
+                    retainedMessagesList += MQTTPublish(
+                        if (subscription.options.retainedAsPublished) retainedMessage.retain else false,
+                        qos,
+                        false,
+                        retainedMessage.topicName,
+                        if (qos > Qos.AT_MOST_ONCE) session.generatePacketId() else null,
+                        retainedMessage.properties,
+                        retainedMessage.payload
+                    )
+                }
+            }
+        }
+        return retainedMessagesList
+    }
+
     private fun handleSubscribe(packet: MQTTSubscribe) {
+        val retainedMessagesList = mutableListOf<MQTTPublish>()
         val reasonCodes = packet.subscriptions.map { subscription ->
             if (!subscription.matchTopicFilter.isValidTopic())
                 return@map ReasonCode.TOPIC_FILTER_INVALID
@@ -338,16 +368,18 @@ class ClientConnection(
             if (!broker.sharedSubscriptionsAvailable && isShared)
                 return@map ReasonCode.SHARED_SUBSCRIPTIONS_NOT_SUPPORTED
 
+            if (isShared && subscription.options.noLocal)
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+
             if (packet.properties.subscriptionIdentifier.getOrNull(0) != null && !broker.subscriptionIdentifiersAvailable)
                 return@map ReasonCode.SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED
 
             if (!broker.wildcardSubscriptionAvailable && subscription.matchTopicFilter.containsWildcard())
                 return@map ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
 
-            session.addSubscription(subscription)
-            if (!isShared) {
-                // TODO send retained messages based on options and broker retained enabled
-            }
+            val replaced = session.addSubscription(subscription)
+            retainedMessagesList += prepareRetainedMessages(subscription, replaced)
+
             when (subscription.options.qos) {
                 Qos.AT_MOST_ONCE -> ReasonCode.GRANTED_QOS0
                 Qos.AT_LEAST_ONCE -> ReasonCode.GRANTED_QOS1
@@ -367,7 +399,10 @@ class ClientConnection(
             return
         }
 
+        // Send SUBACK
         writer.writePacket(MQTTSuback(packet.packetIdentifier, reasonCodes))
+        // Send retained messages
+        retainedMessagesList.forEach { writer.writePacket(it) }
     }
 
     private fun handleUnsubscribe(packet: MQTTUnsubscribe) {
@@ -382,7 +417,7 @@ class ClientConnection(
         writer.writePacket(MQTTUnsuback(packet.packetIdentifier, reasonCodes))
     }
 
-    private fun handlePingreq(packet: MQTTPingreq) {
+    private fun handlePingreq() {
         writer.writePacket(MQTTPingresp())
     }
 

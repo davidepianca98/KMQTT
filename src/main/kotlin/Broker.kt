@@ -1,9 +1,8 @@
-import mqtt.Authentication
-import mqtt.Session
-import mqtt.Subscription
+import mqtt.*
 import mqtt.packets.MQTTProperties
 import mqtt.packets.MQTTPublish
 import mqtt.packets.Qos
+import mqtt.packets.ReasonCode
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.SocketAddress
@@ -33,6 +32,7 @@ class Broker(
 
     private val server = ServerSocket()
     val sessions = mutableMapOf<String, Session>()
+    private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
 
     init {
         receiveMaximum?.let {
@@ -105,5 +105,32 @@ class Broker(
             payload
         )
         session.clientConnection.publish(packet)
+    }
+
+    fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
+        if (retainedAvailable) {
+            if (message.payload?.isNotEmpty() == true)
+                retainedList[topicName] = Pair(message, clientId)
+            else
+                retainedList.remove(topicName)
+        } else {
+            throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
+        }
+    }
+
+    private fun removeExpiredRetainedMessages() {
+        val expired = retainedList.filter {
+            val message = it.value.first
+            val expiry = message.properties.messageExpiryInterval?.toLong() ?: (Long.MAX_VALUE / 1000)
+            ((expiry * 1000) + message.timestamp) < System.currentTimeMillis()
+        }
+        expired.forEach {
+            retainedList.remove(it.key)
+        }
+    }
+
+    fun getRetained(topicFilter: String): List<Pair<MQTTPublish, String>> {
+        removeExpiredRetainedMessages()
+        return retainedList.filter { it.key.matchesWildcard(topicFilter) }.map { it.value }
     }
 }

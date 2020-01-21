@@ -67,9 +67,10 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
         return subscriptions.firstOrNull { it.isShared() && it.shareName == shareName && topicName.matchesWildcard(it.matchTopicFilter) }
     }
 
-    fun addSubscription(subscription: Subscription) {
-        subscriptions.removeIf { it.topicFilter == subscription.topicFilter }
+    fun addSubscription(subscription: Subscription): Boolean {
+        val replaced = subscriptions.removeIf { it.topicFilter == subscription.topicFilter }
         subscriptions += subscription
+        return replaced
     }
 
     fun removeSubscription(topicFilter: String): Boolean {

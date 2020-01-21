@@ -2,6 +2,7 @@ package mqtt.packets
 
 import mqtt.MQTTException
 import mqtt.Subscription
+import mqtt.isSharedTopicFilter
 import java.io.ByteArrayInputStream
 
 class MQTTSubscribe(
@@ -36,7 +37,10 @@ class MQTTSubscribe(
             while (inStream.available() > 0) {
                 val topicFilter = inStream.readUTF8String()
                 val subscriptionOptions = inStream.deserializeSubscriptionOptions()
-                subscriptions += Subscription(topicFilter, subscriptionOptions, subscriptionIdentifier)
+                val subscription = Subscription(topicFilter, subscriptionOptions, subscriptionIdentifier)
+                if (subscription.topicFilter.isSharedTopicFilter() && subscription.options.noLocal)
+                    throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+                subscriptions += subscription
             }
             return MQTTSubscribe(packetIdentifier, properties, subscriptions)
         }
@@ -52,14 +56,10 @@ class MQTTSubscribe(
             val subscriptionOptions = readByte()
             val qos = Qos.valueOf((subscriptionOptions and 0x3u).toInt())
             val noLocal =
-                ((subscriptionOptions and 0x4u) shr 2) == 1u // TODO protocol error if shared subscription and true
+                ((subscriptionOptions and 0x4u) shr 2) == 1u
             val retainedAsPublished =
-                ((subscriptionOptions and 0x8u) shr 3) == 1u // TODO if true maintain RETAIN flag as received by broker, else 0
+                ((subscriptionOptions and 0x8u) shr 3) == 1u
             val retainHandling = (subscriptionOptions and 0x30u) shr 4
-            // TODO This option specifies whether retained messages are sent when the subscription is established. This does not affect the sending of retained messages at any point after the subscribe. If there are no retained messages matching the Topic Filter, all of these values act the same. The values are:
-            //    0 = Send retained messages at the time of the subscribe
-            //    1 = Send retained messages at subscribe only if the subscription does not currently exist
-            //    2 = Do not send retained messages at the time of the subscribe
             if (retainHandling == 3u) throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             val reserved = (subscriptionOptions and 0xC0u) shr 6
             if (reserved != 0u) throw MQTTException(ReasonCode.MALFORMED_PACKET)

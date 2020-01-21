@@ -18,7 +18,8 @@ class MQTTPublish(
     val topicName: String,
     val packetId: UInt?,
     val properties: MQTTProperties,
-    val payload: ByteArray?
+    val payload: ByteArray?,
+    val timestamp: Long = System.currentTimeMillis()
 ) : MQTTPacket {
 
     override fun toByteArray(): ByteArray {
