@@ -24,7 +24,7 @@ class ClientConnection(
             try {
                 val packet = reader.readPacket()
                 handlePacket(packet)
-                // TODO if on qos12list try sending packet
+                // TODO if on pendingSendMessages try sending packet
             } catch (e: MQTTException) {
                 disconnect(e.reasonCode)
             } catch (e: Exception) {
@@ -47,7 +47,10 @@ class ClientConnection(
         when (packet) {
             is MQTTConnect -> handleConnect(packet) // TODO only handle connect once as first packet otherwise error
             is MQTTPublish -> handlePublish(packet)
+            is MQTTPuback -> handlePuback(packet)
+            is MQTTPubrec -> handlePubrec(packet)
             is MQTTPubrel -> handlePubrel(packet)
+            is MQTTPubcomp -> handlePubcomp(packet)
             is MQTTSubscribe -> handleSubscribe(packet)
             is MQTTUnsubscribe -> handleUnsubscribe(packet)
             is MQTTPingreq -> handlePingreq(packet)
@@ -57,10 +60,12 @@ class ClientConnection(
     }
 
     fun publish(packet: MQTTPublish) {
-        when (packet.qos) {
-            Qos.AT_MOST_ONCE -> writer.writePacket(packet)
-            Qos.AT_LEAST_ONCE -> session.qos1List.add(packet) // TODO for qos 1 and 2 verify that client's receive maximum isn't exceeded otherwise don't send
-            Qos.EXACTLY_ONCE -> session.qos2List.add(packet)
+        if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
+            session.sendQosBiggerThanZero(packet) {
+                writer.writePacket(packet)
+            }
+        } else {
+            writer.writePacket(packet)
         }
     }
 
@@ -96,6 +101,7 @@ class ClientConnection(
                 // Update the session with the new parameters
                 session.clientConnection = this
                 session.update(packet) // TODO maybe must not be done
+                // TODO resend all unacknowledged PUBLISH and PUBREL
                 sessionPresent = true
             }
         } else {
@@ -192,10 +198,9 @@ class ClientConnection(
 
         // Handle receive maximum
         if (packet.qos > Qos.AT_MOST_ONCE && broker.receiveMaximum != null) {
-            if (session.qos1List.size + session.qos2List.size + 1 > broker.receiveMaximum)
+            if (session.qos2ListReceived.size + 1 > broker.receiveMaximum)
                 throw MQTTException(ReasonCode.RECEIVE_MAXIMUM_EXCEEDED)
         }
-
 
         when (packet.qos) {
             Qos.AT_LEAST_ONCE -> {
@@ -208,7 +213,7 @@ class ClientConnection(
                 val reasonCode = qos12ReasonCode(packet)
                 writer.writePacket(MQTTPubrec(packet.packetId!!, reasonCode))
                 if (reasonCode == ReasonCode.SUCCESS)
-                    session.qos2ListReceived.add(packet)
+                    session.qos2ListReceived[packet.packetId] = packet
                 return // Don't send the PUBLISH to other clients until PUBCOMP
             }
         }
@@ -241,16 +246,38 @@ class ClientConnection(
             ReasonCode.SUCCESS
     }
 
+    private fun handlePuback(packet: MQTTPuback) {
+        session.acknowledgePublish(packet.packetId)
+    }
+
+    private fun handlePubrec(packet: MQTTPubrec) {
+        if (packet.reasonCode >= ReasonCode.UNSPECIFIED_ERROR) {
+            session.acknowledgePublish(packet.packetId)
+            return
+        }
+        val reasonCode = if (session.hasPendingAcknowledgeMessage(packet.packetId)) {
+            ReasonCode.SUCCESS
+        } else {
+            ReasonCode.PACKET_IDENTIFIER_NOT_FOUND
+        }
+        val pubrel = MQTTPubrel(packet.packetId, reasonCode)
+        session.addPendingAcknowledgePubrel(pubrel)
+        writer.writePacket(pubrel)
+    }
+
     private fun handlePubrel(packet: MQTTPubrel) {
         if (packet.reasonCode != ReasonCode.SUCCESS)
             return
-        session.qos2ListReceived.firstOrNull { it.packetId == packet.packetId }?.let {
+        session.qos2ListReceived.remove(packet.packetId)?.let {
             writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.SUCCESS, packet.properties))
             broker.publish(getTopicOrAlias(it), Qos.EXACTLY_ONCE, packet.properties, it.payload)
-            // TODO remove packet from list
         } ?: run {
             writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.PACKET_IDENTIFIER_NOT_FOUND, packet.properties))
         }
+    }
+
+    private fun handlePubcomp(packet: MQTTPubcomp) {
+        session.acknowledgePubrel(packet.packetId)
     }
 
     private fun handleSubscribe(packet: MQTTSubscribe) {
@@ -273,8 +300,7 @@ class ClientConnection(
             if (!broker.wildcardSubscriptionAvailable && subscription.topicFilter.containsWildcard())
                 return@map ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
 
-            session.subscriptions.removeIf { it.topicFilter == subscription.topicFilter }
-            session.subscriptions += subscription
+            session.addSubscription(subscription)
             if (!isShared) {
                 // TODO send retained messages based on options and broker retained enabled
             }
@@ -304,7 +330,7 @@ class ClientConnection(
         val reasonCodes = packet.topicFilters.map { topicFilter ->
             if (session.isPacketIdInUse(packet.packetIdentifier))
                 return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
-            if (session.subscriptions.removeIf { it.topicFilter == topicFilter })
+            if (session.removeSubscription(topicFilter))
                 return@map ReasonCode.SUCCESS
             else
                 return@map ReasonCode.NO_SUBSCRIPTION_EXISTED

@@ -1,5 +1,4 @@
 import mqtt.Session
-import mqtt.matchesWildcard
 import mqtt.packets.MQTTProperties
 import mqtt.packets.MQTTPublish
 import mqtt.packets.Qos
@@ -9,7 +8,7 @@ import java.net.SocketAddress
 import kotlin.concurrent.thread
 import kotlin.math.min
 
-// TODO 4
+// TODO 4.7.1
 class Broker(
     local: SocketAddress,
     backlog: Int = 128,
@@ -25,7 +24,9 @@ class Broker(
     val serverKeepAlive: Int? = null
 ) {
 
-    constructor(port: Int, host: String = "127.0.0.1") : this(InetSocketAddress(host, port))
+    constructor(port: Int = 1883, host: String = "127.0.0.1") : this(InetSocketAddress(host, port))
+
+    // TODO support TLS with custom constructor with default port 8883
 
     private val server = ServerSocket()
     val sessions = mutableMapOf<String, Session>()
@@ -47,25 +48,23 @@ class Broker(
 
     fun publish(topicName: String, qos: Qos, properties: MQTTProperties, payload: ByteArray?) {
         sessions.forEach { session ->
-            session.value.subscriptions.forEach { subscription ->
-                if (topicName.matchesWildcard(subscription.topicFilter)) {
-                    subscription.subscriptionIdentifier?.let {
-                        // TODO If the subscription was shared, then only the Subscription Identifiers that were present in the SUBSCRIBE packet from the Client which is receiving the message are returned in the PUBLISH packet.
-                        properties.subscriptionIdentifier.clear()
-                        properties.subscriptionIdentifier.add(it)
-                    }
-
-                    val packet = MQTTPublish(
-                        false,
-                        Qos.valueOf(min(subscription.options.qos.ordinal, qos.ordinal)),
-                        false,
-                        topicName, // TODO maybe use topic aliases
-                        session.value.generatePacketId(),
-                        properties,
-                        payload
-                    )
-                    session.value.clientConnection.publish(packet)
+            session.value.hasSubscriptionsMatching(topicName).forEach { subscription ->
+                subscription.subscriptionIdentifier?.let {
+                    // TODO If the subscription was shared, then only the Subscription Identifiers that were present in the SUBSCRIBE packet from the Client which is receiving the message are returned in the PUBLISH packet.
+                    properties.subscriptionIdentifier.clear()
+                    properties.subscriptionIdentifier.add(it)
                 }
+
+                val packet = MQTTPublish(
+                    false,
+                    Qos.valueOf(min(subscription.options.qos.ordinal, qos.ordinal)),
+                    false,
+                    topicName, // TODO maybe use topic aliases
+                    session.value.generatePacketId(),
+                    properties,
+                    payload
+                )
+                session.value.clientConnection.publish(packet)
             }
         }
     }

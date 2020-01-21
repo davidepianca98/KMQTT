@@ -3,11 +3,14 @@ package mqtt
 import ClientConnection
 import mqtt.packets.MQTTConnect
 import mqtt.packets.MQTTPublish
+import mqtt.packets.MQTTPubrel
 import mqtt.packets.Qos
 
 class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
     var connected = false
+    var destroySessionTimestamp: Long? =
+        null // TODO set it on disconnection from now + sessionExpiryInterval, then periodically check if passed time and delete after
 
     var clientId = packet.clientID
     var keepAlive = packet.keepAlive
@@ -15,13 +18,59 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     // TODO handle packet identifier counter section 2.2.1
     var packetIdentifier = 1u
 
-    val qos1List = mutableListOf<MQTTPublish>()
-    val qos2List = mutableListOf<MQTTPublish>()
+    // QoS 1 and QoS 2 messages which have been sent to the Client, but have not been completely acknowledged
+    private val pendingAcknowledgeMessages = mutableMapOf<UInt, MQTTPublish>()
+    private val pendingAcknowledgePubrel = mutableMapOf<UInt, MQTTPubrel>()
+    // QoS 1 and QoS 2 messages pending transmission to the Client
+    private val pendingSendMessages = mutableMapOf<UInt, MQTTPublish>()
     // QoS 2 messages which have been received from the Client that have not been completely acknowledged
-    val qos2ListReceived = mutableListOf<MQTTPublish>()
+    val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
+
+    fun sendQosBiggerThanZero(packet: MQTTPublish, block: (packet: MQTTPublish) -> Unit) {
+        if (pendingSendMessages.size + pendingAcknowledgeMessages.size + 1 > receiveMaximum.toInt())
+            return
+        // TODO maybe must be added to pending and sent later, check specification
+        pendingSendMessages[packet.packetId!!] = packet
+        block(packet)
+        pendingSendMessages.remove(packet.packetId)
+        pendingAcknowledgeMessages[packet.packetId] = packet
+    }
+
+    fun hasPendingAcknowledgeMessage(packetId: UInt): Boolean {
+        return pendingAcknowledgeMessages[packetId] != null
+    }
+
+    fun acknowledgePublish(packetId: UInt) {
+        pendingAcknowledgeMessages.remove(packetId)
+    }
+
+    fun addPendingAcknowledgePubrel(packet: MQTTPubrel) {
+        pendingAcknowledgePubrel[packet.packetId] = packet
+    }
+
+    fun hasPendingAcknowledgePubrel(packetId: UInt): Boolean {
+        return pendingAcknowledgePubrel[packetId] != null
+    }
+
+    fun acknowledgePubrel(packetId: UInt) {
+        pendingAcknowledgePubrel.remove(packetId)
+    }
 
     // The Clients subscriptions, including any Subscription Identifiers
-    val subscriptions = mutableListOf<Subscription>()
+    private val subscriptions = mutableListOf<Subscription>()
+
+    fun hasSubscriptionsMatching(topicName: String): List<Subscription> {
+        return subscriptions.filter { topicName.matchesWildcard(it.topicFilter) }
+    }
+
+    fun addSubscription(subscription: Subscription) {
+        subscriptions.removeIf { it.topicFilter == subscription.topicFilter }
+        subscriptions += subscription
+    }
+
+    fun removeSubscription(topicFilter: String): Boolean {
+        return subscriptions.removeIf { it.topicFilter == topicFilter }
+    }
 
     // TODO publish will when:
     //  An I/O error or network failure detected by the Server.
@@ -29,7 +78,7 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     //  The Client closes the Network Connection without first sending a DISCONNECT packet with a Reason Code 0x00 (Normal disconnection).
     //  The Server closes the Network Connection without first receiving a DISCONNECT packet with a Reason Code 0x00 (Normal disconnection).
 
-    // TODO must be removed from the session if disconnect reason success or will message published
+    // TODO must be removed from the session also if will message published
     var will = buildWill(packet)
 
     // TODO if 0 delete session on disconnection else delete after timeout, if 0xFFFFFFFF never delete
@@ -81,7 +130,7 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
             null
     }
 
-    fun update(packet: MQTTConnect) {
+    fun update(packet: MQTTConnect) { // TODO probably many of these settings must be in client connection and not in session
         clientId = packet.clientID
         keepAlive = packet.keepAlive
         will = buildWill(packet)
@@ -106,20 +155,12 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     }
 
     fun isPacketIdInUse(packetId: UInt): Boolean {
-        if (qos1List.firstOrNull { it.packetId == packetId } != null)
+        if (pendingSendMessages[packetId] != null)
             return true
-        if (qos2List.firstOrNull { it.packetId == packetId } != null)
+        if (pendingAcknowledgeMessages[packetId] != null)
             return true
-        if (qos2ListReceived.firstOrNull { it.packetId == packetId } != null)
+        if (qos2ListReceived[packetId] != null)
             return true
         return false
     }
 }
-
-/*
-QoS 1 and QoS 2 messages which have been sent to the Client, but have not been completely acknowledged.
-
-QoS 1 and QoS 2 messages pending transmission to the Client and OPTIONALLY QoS 0 messages pending transmission to the Client.
-
-If the Session is currently not connected, the time at which the Session will end and Session State will be discarded.
- */
