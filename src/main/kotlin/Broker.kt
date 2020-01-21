@@ -1,4 +1,5 @@
 import mqtt.Session
+import mqtt.Subscription
 import mqtt.packets.MQTTProperties
 import mqtt.packets.MQTTPublish
 import mqtt.packets.Qos
@@ -46,26 +47,61 @@ class Broker(
         }
     }
 
+    private fun publishShared(
+        shareName: String,
+        topicName: String,
+        qos: Qos,
+        properties: MQTTProperties,
+        payload: ByteArray?
+    ) {
+        // Get the sessions which subscribe to this shared session and get the one which hasn't received a message for the longest time
+        val session = sessions.minBy {
+            it.value.hasSharedSubscriptionMatching(shareName, topicName)?.timestampShareSent ?: Long.MAX_VALUE
+        }?.value
+        session?.hasSharedSubscriptionMatching(shareName, topicName)?.let { subscription ->
+            publish(topicName, qos, properties, payload, session, subscription)
+            subscription.timestampShareSent = System.currentTimeMillis()
+        }
+    }
+
     fun publish(topicName: String, qos: Qos, properties: MQTTProperties, payload: ByteArray?) {
+        val sharedDone = mutableListOf<String>()
         sessions.forEach { session ->
             session.value.hasSubscriptionsMatching(topicName).forEach { subscription ->
-                subscription.subscriptionIdentifier?.let {
-                    // TODO If the subscription was shared, then only the Subscription Identifiers that were present in the SUBSCRIBE packet from the Client which is receiving the message are returned in the PUBLISH packet.
-                    properties.subscriptionIdentifier.clear()
-                    properties.subscriptionIdentifier.add(it)
+                if (subscription.isShared()) {
+                    if (subscription.shareName!! !in sharedDone && sharedSubscriptionsAvailable) { // Check we only publish once per shared subscription
+                        publishShared(subscription.shareName, topicName, qos, properties, payload)
+                        sharedDone += subscription.shareName
+                    }
+                } else {
+                    publish(topicName, qos, properties, payload, session.value, subscription)
                 }
-
-                val packet = MQTTPublish(
-                    false,
-                    Qos.valueOf(min(subscription.options.qos.ordinal, qos.ordinal)),
-                    false,
-                    topicName, // TODO maybe use topic aliases
-                    session.value.generatePacketId(),
-                    properties,
-                    payload
-                )
-                session.value.clientConnection.publish(packet)
             }
         }
+    }
+
+    private fun publish(
+        topicName: String,
+        qos: Qos,
+        properties: MQTTProperties,
+        payload: ByteArray?,
+        session: Session,
+        subscription: Subscription
+    ) {
+        subscription.subscriptionIdentifier?.let {
+            properties.subscriptionIdentifier.clear()
+            properties.subscriptionIdentifier.add(it)
+        }
+
+        val packet = MQTTPublish(
+            false,
+            Qos.valueOf(min(subscription.options.qos.ordinal, qos.ordinal)),
+            false,
+            topicName, // TODO maybe use topic aliases
+            session.generatePacketId(),
+            properties,
+            payload
+        )
+        session.clientConnection.publish(packet)
     }
 }

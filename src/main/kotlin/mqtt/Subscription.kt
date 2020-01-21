@@ -2,20 +2,14 @@ package mqtt
 
 import mqtt.packets.MQTTSubscribe
 
-class Subscription( // TODO shared subscription
+class Subscription(
     val topicFilter: String,
     val options: MQTTSubscribe.Companion.SubscriptionOptions,
     val subscriptionIdentifier: UInt?
 ) {
-    fun isShared(): Boolean {
-        val split = topicFilter.split("/")
-        if (split.size != 3)
-            return false
-        if (split[0] == "\$share/" && split[1].isNotEmpty() && !split[1].contains("/") && !split[1].contains("+") && !split[1].contains(
-                "#"
-            ) && split[2].isValidTopic()
-        )
-            return true
-        return false
-    }
+    val matchTopicFilter = topicFilter.getSharedTopicFilter() ?: topicFilter
+    val shareName = topicFilter.getSharedTopicShareName()
+    var timestampShareSent: Long = 0
+
+    fun isShared(): Boolean = topicFilter.isSharedTopicFilter()
 }

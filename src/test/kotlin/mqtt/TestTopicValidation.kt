@@ -19,4 +19,9 @@ class TestTopicValidation {
         assertFalse { "sport+".isValidTopic() }
         assertTrue { "sport/+/player1".isValidTopic() }
     }
+
+    @Test
+    fun testSharedTopicFilter() {
+        assertTrue { "\$share/consumer1/sport/tennis/+".isSharedTopicFilter() }
+    }
 }

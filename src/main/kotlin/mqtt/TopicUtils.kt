@@ -63,3 +63,31 @@ fun String.matchesWildcard(wildcardTopic: String): Boolean {
 
     return curn == curnEnd && curf == curfEnd
 }
+
+fun String.isSharedTopicFilter(): Boolean {
+    val split = this.split("/")
+    if (split.size < 3)
+        return false
+    if (split[0] == "\$share" && split[1].isNotEmpty() && !split[1].contains("+") && !split[1].contains("#") && this.substringAfter(
+            split[1] + "/"
+        ).isValidTopic()
+    )
+        return true
+    return false
+}
+
+fun String.getSharedTopicFilter(): String? {
+    if (isSharedTopicFilter()) {
+        val split = this.split("/")
+        return this.substringAfter(split[1] + "/")
+    }
+    return null
+}
+
+fun String.getSharedTopicShareName(): String? {
+    if (isSharedTopicFilter()) {
+        val split = this.split("/")
+        return split[1]
+    }
+    return null
+}

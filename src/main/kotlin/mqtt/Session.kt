@@ -60,7 +60,14 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     private val subscriptions = mutableListOf<Subscription>()
 
     fun hasSubscriptionsMatching(topicName: String): List<Subscription> {
-        return subscriptions.filter { topicName.matchesWildcard(it.topicFilter) }
+        return subscriptions.filter { topicName.matchesWildcard(it.matchTopicFilter) }
+    }
+
+    fun hasSharedSubscriptionMatching(
+        shareName: String,
+        topicName: String
+    ): Subscription? { // TODO check if connected first
+        return subscriptions.firstOrNull { it.isShared() && it.shareName == shareName && topicName.matchesWildcard(it.matchTopicFilter) }
     }
 
     fun addSubscription(subscription: Subscription) {
@@ -71,6 +78,9 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     fun removeSubscription(topicFilter: String): Boolean {
         return subscriptions.removeIf { it.topicFilter == topicFilter }
     }
+
+    // TODO shared subscription note:
+    //  If the Server is in the process of sending a QoS 1 message to its chosen subscribing Client and the connection to that Client breaks before the Server has received an acknowledgement from the Client, the Server MAY wait for the Client to reconnect and retransmit the message to that Client. If the Client'sSession terminates before the Client reconnects, the Server SHOULD send the Application Message to another Client that is subscribed to the same Shared Subscription. It MAY attempt to send the message to another Client as soon as it loses its connection to the first Client.
 
     // TODO publish will when:
     //  An I/O error or network failure detected by the Server.

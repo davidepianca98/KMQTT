@@ -282,7 +282,7 @@ class ClientConnection(
 
     private fun handleSubscribe(packet: MQTTSubscribe) {
         val reasonCodes = packet.subscriptions.map { subscription ->
-            if (!subscription.topicFilter.isValidTopic())
+            if (!subscription.matchTopicFilter.isValidTopic())
                 return@map ReasonCode.TOPIC_FILTER_INVALID
 
             if (session.isPacketIdInUse(packet.packetIdentifier))
@@ -297,7 +297,7 @@ class ClientConnection(
             if (packet.properties.subscriptionIdentifier.getOrNull(0) != null && !broker.subscriptionIdentifiersAvailable)
                 return@map ReasonCode.SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED
 
-            if (!broker.wildcardSubscriptionAvailable && subscription.topicFilter.containsWildcard())
+            if (!broker.wildcardSubscriptionAvailable && subscription.matchTopicFilter.containsWildcard())
                 return@map ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
 
             session.addSubscription(subscription)
