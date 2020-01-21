@@ -9,7 +9,7 @@ data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
 class MQTTConnack(
     val connectAcknowledgeFlags: ConnectAcknowledgeFlags,
     val connectReasonCode: ReasonCode,
-    val properties: MQTTProperties
+    val properties: MQTTProperties = MQTTProperties()
 ) : MQTTPacket {
 
     override fun toByteArray(): ByteArray {

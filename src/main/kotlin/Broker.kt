@@ -1,3 +1,4 @@
+import mqtt.Authentication
 import mqtt.Session
 import mqtt.Subscription
 import mqtt.packets.MQTTProperties
@@ -9,10 +10,11 @@ import java.net.SocketAddress
 import kotlin.concurrent.thread
 import kotlin.math.min
 
-// TODO 4.10
+// TODO 4.12.1
 class Broker(
     local: SocketAddress,
     backlog: Int = 128,
+    val authentication: Authentication? = null,
     val maximumSessionExpiryInterval: UInt = 0xFFFFFFFFu,
     val receiveMaximum: Int? = null,
     val maximumQos: Qos? = null,

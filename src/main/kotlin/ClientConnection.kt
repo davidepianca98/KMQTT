@@ -100,8 +100,23 @@ class ClientConnection(
             sendQuota--
     }
 
+    private fun handleAuthentication(packet: MQTTConnect): Boolean {
+        if (packet.userName != null || packet.password != null) {
+            if (broker.authentication?.authenticate(packet.userName, packet.password) == false) {
+                val connack = MQTTConnack(ConnectAcknowledgeFlags(false), ReasonCode.NOT_AUTHORIZED)
+                writer.writePacket(connack)
+                close()
+                return false
+            }
+        }
+        // TODO enhanced authentication method/data in properties (section 4.12)
+        return true
+    }
+
     private fun handleConnect(packet: MQTTConnect) {
-        // TODO authentication first with username, password or authentication method/data in properties (section 4.12)
+        if (!handleAuthentication(packet))
+            return
+
         var sessionPresent = false
 
         val clientId = if (packet.clientID.isEmpty()) generateClientId() else packet.clientID
