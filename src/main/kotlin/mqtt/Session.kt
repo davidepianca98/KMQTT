@@ -7,9 +7,8 @@ import mqtt.packets.MQTTPubrel
 
 class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
-    var connected = false // true only after sending CONNACK
-    var destroySessionTimestamp: Long? =
-        null // TODO set it on disconnection from now + sessionExpiryInterval, then periodically check if passed time and delete after
+    private var connected = false // true only after sending CONNACK
+    var destroySessionTimestamp: Long? = null
 
     var clientId = packet.clientID
 
@@ -89,7 +88,6 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
     var will = Will.buildWill(packet)
 
-    // TODO if 0 delete session on disconnection else delete after timeout, if 0xFFFFFFFF never delete
     var sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
 
     fun generatePacketId(): UInt {
@@ -109,4 +107,19 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
             return true
         return false
     }
+
+    fun connected() {
+        connected = true
+        destroySessionTimestamp = null
+    }
+
+    fun disconnected() {
+        connected = false
+        destroySessionTimestamp = if (sessionExpiryInterval == 0xFFFFFFFFu)
+            null
+        else
+            System.currentTimeMillis() + (sessionExpiryInterval.toLong() * 1000)
+    }
+
+    fun isConnected() = connected
 }

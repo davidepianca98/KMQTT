@@ -21,7 +21,7 @@ class ClientConnection(
 
     private var clientId: String? = null
     private val session: Session =
-        broker.sessions[clientId] ?: throw Exception("Session not found")
+        broker.getSession(clientId) ?: throw Exception("Session not found")
 
     // Client connection state
     private var running = false
@@ -47,7 +47,7 @@ class ClientConnection(
             } catch (e: MQTTException) {
                 disconnect(e.reasonCode)
             } catch (e: SocketTimeoutException) {
-                if (session.connected) {
+                if (session.isConnected()) {
                     sendWill()
                     disconnect(ReasonCode.KEEP_ALIVE_TIMEOUT)
                 } else {
@@ -60,7 +60,7 @@ class ClientConnection(
                 disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
             }
         }
-        session.connected = false
+        session.disconnected()
     }
 
     private fun close() {
@@ -99,7 +99,7 @@ class ClientConnection(
             is MQTTPingreq -> handlePingreq()
             is MQTTDisconnect -> handleDisconnect(packet)
             is MQTTAuth -> handleAuth(packet)
-            else -> TODO("Error packet not supported")
+            else -> throw MQTTException(ReasonCode.PROTOCOL_ERROR)
         }
     }
 
@@ -212,7 +212,7 @@ class ClientConnection(
 
         var session = broker.sessions[clientId]
         if (session != null) {
-            if (session.connected) {
+            if (session.isConnected()) {
                 // Send disconnect to the old connection and close it
                 session.clientConnection.disconnect(ReasonCode.SESSION_TAKEN_OVER)
 
@@ -322,7 +322,7 @@ class ClientConnection(
         val connack = MQTTConnack(ConnectAcknowledgeFlags(sessionPresent), ReasonCode.SUCCESS, connackProperties)
         writer.writePacket(connack)
         this.clientId = clientId
-        session.connected = true
+        session.connected()
     }
 
     private fun checkAuthorization(topicName: String): Boolean {

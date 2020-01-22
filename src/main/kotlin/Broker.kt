@@ -150,4 +150,18 @@ class Broker(
         removeExpiredRetainedMessages()
         return retainedList.filter { it.key.matchesWildcard(topicFilter) }.map { it.value }
     }
+
+    fun getSession(clientId: String?): Session? {
+        deleteExpiredSessions()
+        return sessions[clientId]
+    }
+
+    private fun deleteExpiredSessions() {
+        sessions.filter {
+            val timestamp = it.value.destroySessionTimestamp
+            timestamp != null && timestamp < System.currentTimeMillis()
+        }.forEach {
+            sessions.remove(it.key)
+        }
+    }
 }
