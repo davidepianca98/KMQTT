@@ -1,19 +1,14 @@
 package mqtt.packets
 
-import mqtt.MQTTException
-import mqtt.Subscription
-import mqtt.isSharedTopicFilter
+import mqtt.*
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 class MQTTSubscribe(
     val packetIdentifier: UInt,
     val properties: MQTTProperties = MQTTProperties(),
     val subscriptions: List<Subscription>
 ) : MQTTPacket {
-
-    override fun toByteArray(): ByteArray {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     companion object : MQTTDeserializer {
 
@@ -50,7 +45,18 @@ class MQTTSubscribe(
             val noLocal: Boolean,
             val retainedAsPublished: Boolean,
             val retainHandling: UInt
-        )
+        ) {
+            fun toByte(): UInt {
+                if (retainHandling !in 0u..2u)
+                    throw MQTTException(ReasonCode.MALFORMED_PACKET)
+                val optionsByte = 0 or
+                        ((retainHandling.toInt() shl 4) and 0x30) or
+                        (((if (retainedAsPublished) 1 else 0) shl 3) and 0x8) or
+                        (((if (noLocal) 1 else 0) shl 2) and 0x4) or
+                        (qos.ordinal and 0x3)
+                return optionsByte.toUInt()
+            }
+        }
 
         private fun ByteArrayInputStream.deserializeSubscriptionOptions(): SubscriptionOptions {
             val subscriptionOptions = readByte()
@@ -74,5 +80,31 @@ class MQTTSubscribe(
             )
                 throw MQTTException(ReasonCode.MALFORMED_PACKET)
         }
+    }
+
+    override fun toByteArray(): ByteArray {
+        val outStream = ByteArrayOutputStream()
+
+        outStream.write2BytesInt(packetIdentifier)
+
+        if (properties.subscriptionIdentifier.size > 1)
+            throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        val subscriptionIdentifier = properties.subscriptionIdentifier.getOrNull(0)
+        if (subscriptionIdentifier != null && (subscriptionIdentifier == 0u || subscriptionIdentifier > 268435455u))
+            throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        outStream.writeBytes(properties.serializeProperties(validProperties))
+
+        subscriptions.forEach { subscription ->
+            if (subscription.topicFilter.isSharedTopicFilter() && subscription.options.noLocal)
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            outStream.writeUTF8String(subscription.topicFilter)
+            outStream.writeByte(subscription.options.toByte())
+        }
+
+        val result = ByteArrayOutputStream()
+        val fixedHeader = (MQTTControlPacketType.SUBSCRIBE.ordinal shl 4) and 0xF2
+        result.write(fixedHeader)
+        result.encodeVariableByteInteger(outStream.size().toUInt())
+        return result.toByteArray()
     }
 }

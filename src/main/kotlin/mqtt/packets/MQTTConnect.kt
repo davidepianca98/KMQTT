@@ -1,7 +1,10 @@
 package mqtt.packets
 
+import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
+import mqtt.encodeVariableByteInteger
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 class MQTTConnect(
     val protocolName: String,
@@ -48,7 +51,18 @@ class MQTTConnect(
             val willFlag: Boolean,
             val cleanStart: Boolean,
             val reserved: Boolean
-        )
+        ) {
+            fun toByte(): UInt {
+                val flags = (((if (userNameFlag) 1 else 0) shl 7) and 0x80) or
+                        (((if (passwordFlag) 1 else 0) shl 6) and 0x40) or
+                        (((if (willRetain) 1 else 0) shl 5) and 0x20) or
+                        (((willQos.ordinal) shl 3) and 0x18) or
+                        (((if (willFlag) 1 else 0) shl 2) and 0x4) or
+                        (((if (cleanStart) 1 else 0) shl 1) and 0x2) or
+                        ((if (reserved) 1 else 0) and 0x1)
+                return flags.toUInt()
+            }
+        }
 
         private fun connectFlags(byte: Int): ConnectFlags {
             val reserved = (byte and 1) == 1
@@ -121,6 +135,31 @@ class MQTTConnect(
     }
 
     override fun toByteArray(): ByteArray {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val outStream = ByteArrayOutputStream()
+        outStream.writeUTF8String("MQTT")
+        outStream.writeByte(5u)
+        outStream.writeByte(connectFlags.toByte())
+        outStream.write2BytesInt(keepAlive.toUInt())
+        outStream.writeBytes(properties.serializeProperties(validProperties))
+
+        // Payload
+        outStream.writeUTF8String(clientID)
+        if (connectFlags.willFlag) {
+            try {
+                outStream.writeBytes(willProperties!!.serializeProperties(validWillProperties))
+                outStream.writeUTF8String(willTopic!!)
+                outStream.writeBinaryData(willPayload!!)
+                outStream.writeUTF8String(userName!!)
+                outStream.writeBinaryData(password!!)
+            } catch (e: NullPointerException) {
+                throw MQTTException(ReasonCode.MALFORMED_PACKET)
+            }
+        }
+
+        val result = ByteArrayOutputStream()
+        val fixedHeader = (MQTTControlPacketType.CONNECT.ordinal shl 4) and 0xF0
+        result.write(fixedHeader)
+        result.encodeVariableByteInteger(outStream.size().toUInt())
+        return result.toByteArray()
     }
 }

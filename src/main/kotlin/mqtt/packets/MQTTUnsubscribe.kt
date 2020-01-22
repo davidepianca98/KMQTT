@@ -1,17 +1,16 @@
 package mqtt.packets
 
+import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
+import mqtt.encodeVariableByteInteger
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 class MQTTUnsubscribe(
     val packetIdentifier: UInt,
     val topicFilters: List<String>,
     val properties: MQTTProperties = MQTTProperties()
 ) : MQTTPacket {
-
-    override fun toByteArray(): ByteArray {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     companion object : MQTTDeserializer {
 
@@ -39,5 +38,22 @@ class MQTTUnsubscribe(
             )
                 throw MQTTException(ReasonCode.MALFORMED_PACKET)
         }
+    }
+
+    override fun toByteArray(): ByteArray {
+        val outStream = ByteArrayOutputStream()
+
+        outStream.write2BytesInt(packetIdentifier)
+        outStream.writeBytes(properties.serializeProperties(validProperties))
+
+        topicFilters.forEach {
+            outStream.writeUTF8String(it)
+        }
+
+        val result = ByteArrayOutputStream()
+        val fixedHeader = (MQTTControlPacketType.UNSUBSCRIBE.ordinal shl 4) and 0xF2
+        result.write(fixedHeader)
+        result.encodeVariableByteInteger(outStream.size().toUInt())
+        return result.toByteArray()
     }
 }

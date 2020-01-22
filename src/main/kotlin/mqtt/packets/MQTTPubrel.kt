@@ -22,7 +22,7 @@ class MQTTPubrel(
         outStream.writeBytes(properties.serializeProperties(validProperties))
 
         val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.PUBREL.ordinal shl 4) and 0xF0
+        val fixedHeader = (MQTTControlPacketType.PUBREL.ordinal shl 4) and 0xF2
         result.write(fixedHeader)
         result.encodeVariableByteInteger(outStream.size().toUInt())
         return result.toByteArray()

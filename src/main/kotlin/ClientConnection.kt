@@ -21,7 +21,7 @@ class ClientConnection(
 
     private var clientId: String? = null
     private val session: Session =
-        broker.sessions[clientId] ?: throw Exception("Session not found") // TODO throw exception correctly
+        broker.sessions[clientId] ?: throw Exception("Session not found")
 
     // Client connection state
     private var running = false
@@ -340,7 +340,6 @@ class ClientConnection(
     }
 
     private fun qos12ReasonCode(packet: MQTTPublish): ReasonCode {
-        // TODO check quota exceeded if necessary, topic name invalid
         val payloadFormatValid = packet.validatePayloadFormat()
         return if (!payloadFormatValid)
             ReasonCode.PAYLOAD_FORMAT_INVALID
@@ -424,8 +423,6 @@ class ClientConnection(
 
             if (session.isPacketIdInUse(packet.packetIdentifier))
                 return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
-
-            // TODO return quota exceeded if it happens
 
             val isShared = subscription.isShared()
             if (!broker.sharedSubscriptionsAvailable && isShared)
