@@ -56,7 +56,7 @@ class MQTTConnect(
                 val flags = (((if (userNameFlag) 1 else 0) shl 7) and 0x80) or
                         (((if (passwordFlag) 1 else 0) shl 6) and 0x40) or
                         (((if (willRetain) 1 else 0) shl 5) and 0x20) or
-                        (((willQos.ordinal) shl 3) and 0x18) or
+                        (((willQos.value) shl 3) and 0x18) or
                         (((if (willFlag) 1 else 0) shl 2) and 0x4) or
                         (((if (cleanStart) 1 else 0) shl 1) and 0x2) or
                         ((if (reserved) 1 else 0) and 0x1)
@@ -157,9 +157,10 @@ class MQTTConnect(
         }
 
         val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.CONNECT.ordinal shl 4) and 0xF0
+        val fixedHeader = (MQTTControlPacketType.CONNECT.value shl 4) and 0xF0
         result.write(fixedHeader)
         result.encodeVariableByteInteger(outStream.size().toUInt())
+        result.writeBytes(outStream.toByteArray())
         return result.toByteArray()
     }
 }

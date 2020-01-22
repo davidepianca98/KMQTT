@@ -85,12 +85,13 @@ class MQTTConnack(
         val outStream = ByteArrayOutputStream()
 
         outStream.write(if (connectAcknowledgeFlags.sessionPresentFlag && connectReasonCode == ReasonCode.SUCCESS) 1 else 0)
-        outStream.write(connectReasonCode.ordinal)
+        outStream.write(connectReasonCode.value)
         outStream.writeBytes(properties.serializeProperties(validProperties))
 
         val result = ByteArrayOutputStream()
-        result.write((MQTTControlPacketType.CONNACK.ordinal shl 4) and 0xF0)
+        result.write((MQTTControlPacketType.CONNACK.value shl 4) and 0xF0)
         result.encodeVariableByteInteger(outStream.size().toUInt())
+        result.writeBytes(outStream.toByteArray())
         return result.toByteArray()
     }
 }

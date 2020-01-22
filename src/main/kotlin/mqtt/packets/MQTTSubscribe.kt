@@ -53,7 +53,7 @@ class MQTTSubscribe(
                         ((retainHandling.toInt() shl 4) and 0x30) or
                         (((if (retainedAsPublished) 1 else 0) shl 3) and 0x8) or
                         (((if (noLocal) 1 else 0) shl 2) and 0x4) or
-                        (qos.ordinal and 0x3)
+                        (qos.value and 0x3)
                 return optionsByte.toUInt()
             }
         }
@@ -102,9 +102,10 @@ class MQTTSubscribe(
         }
 
         val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.SUBSCRIBE.ordinal shl 4) and 0xF2
+        val fixedHeader = (MQTTControlPacketType.SUBSCRIBE.value shl 4) and 0xF2
         result.write(fixedHeader)
         result.encodeVariableByteInteger(outStream.size().toUInt())
+        result.writeBytes(outStream.toByteArray())
         return result.toByteArray()
     }
 }

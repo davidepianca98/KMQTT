@@ -9,7 +9,7 @@ class MQTTPingresp : MQTTPacket {
 
     override fun toByteArray(): ByteArray {
         val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.PINGRESP.ordinal shl 4) and 0xF0
+        val fixedHeader = (MQTTControlPacketType.PINGRESP.value shl 4) and 0xF0
         result.write(fixedHeader)
         result.encodeVariableByteInteger(0u)
         return result.toByteArray()

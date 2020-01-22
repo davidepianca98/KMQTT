@@ -52,10 +52,12 @@ interface MQTTDeserializer {
 
     fun ByteArrayInputStream.deserializeProperties(validProperties: List<Property>): MQTTProperties {
         val propertyLength = decodeVariableByteInteger()
+        val initialTotalRemainingLength = available()
 
         val properties = MQTTProperties()
-        for (i in 0 until propertyLength.toInt()) {
-            val propertyId = Property.valueOf(decodeVariableByteInteger().toInt())
+        while (initialTotalRemainingLength - available() < propertyLength.toInt()) {
+            val propertyIdByte = decodeVariableByteInteger().toInt()
+            val propertyId = Property.valueOf(propertyIdByte)
             if (propertyId !in validProperties)
                 throw IllegalArgumentException()
             when (propertyId) { // TODO check for duplicates of certain properties that are not allowed

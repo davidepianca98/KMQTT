@@ -18,13 +18,14 @@ class MQTTPubrec(
         val outStream = ByteArrayOutputStream()
 
         outStream.write2BytesInt(packetId)
-        outStream.writeByte(reasonCode.ordinal.toUInt())
+        outStream.writeByte(reasonCode.value.toUInt())
         outStream.writeBytes(properties.serializeProperties(validProperties))
 
         val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.PUBREC.ordinal shl 4) and 0xF0
+        val fixedHeader = (MQTTControlPacketType.PUBREC.value shl 4) and 0xF0
         result.write(fixedHeader)
         result.encodeVariableByteInteger(outStream.size().toUInt())
+        result.writeBytes(outStream.toByteArray())
         return result.toByteArray()
     }
 

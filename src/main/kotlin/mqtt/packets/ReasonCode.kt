@@ -1,6 +1,6 @@
 package mqtt.packets
 
-enum class ReasonCode(value: Int) {
+enum class ReasonCode(val value: Int) {
     SUCCESS(0),
     NORMAL_DISCONNECTION(0),
     GRANTED_QOS0(0),
@@ -48,6 +48,6 @@ enum class ReasonCode(value: Int) {
     WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED(162);
 
     companion object {
-        fun valueOf(value: Int) = values().firstOrNull { it.ordinal == value }
+        fun valueOf(value: Int) = values().firstOrNull { it.value == value }
     }
 }

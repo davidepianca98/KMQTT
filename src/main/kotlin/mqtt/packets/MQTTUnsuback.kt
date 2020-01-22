@@ -57,13 +57,14 @@ class MQTTUnsuback(
         reasonCodes.forEach {
             if (it !in validReasonCodes)
                 throw IllegalArgumentException("Invalid reason code")
-            outStream.writeByte(it.ordinal.toUInt())
+            outStream.writeByte(it.value.toUInt())
         }
 
         val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.UNSUBACK.ordinal shl 4) and 0xF0
+        val fixedHeader = (MQTTControlPacketType.UNSUBACK.value shl 4) and 0xF0
         result.write(fixedHeader)
         result.encodeVariableByteInteger(outStream.size().toUInt())
+        result.writeBytes(outStream.toByteArray())
         return result.toByteArray()
     }
 }

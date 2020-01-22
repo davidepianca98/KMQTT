@@ -27,12 +27,13 @@ class MQTTPublish(
         payload?.let { outStream.writeBytes(it) }
 
         val result = ByteArrayOutputStream()
-        val fixedHeader = ((MQTTControlPacketType.PUBLISH.ordinal shl 4) and 0xF0) or
+        val fixedHeader = ((MQTTControlPacketType.PUBLISH.value shl 4) and 0xF0) or
                 (((if (dup) 1 else 0) shl 3) and 0x8) or
-                ((qos.ordinal shl 1) and 0x6) or
+                ((qos.value shl 1) and 0x6) or
                 ((if (retain) 1 else 0) and 0x1)
         result.write(fixedHeader)
         result.encodeVariableByteInteger(outStream.size().toUInt())
+        result.writeBytes(outStream.toByteArray())
         return result.toByteArray()
     }
 

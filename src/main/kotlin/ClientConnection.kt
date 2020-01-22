@@ -20,8 +20,8 @@ class ClientConnection(
     private val writer = MQTTOutputStream(client.getOutputStream())
 
     private var clientId: String? = null
-    private val session: Session =
-        broker.getSession(clientId) ?: throw Exception("Session not found")
+    private val session: Session
+        get() = broker.getSession(clientId) ?: throw Exception("Session not found")
 
     // Client connection state
     private var running = false
@@ -189,7 +189,7 @@ class ClientConnection(
     }
 
     private fun sendWill() {
-        val will = session.will ?: return
+        val will = broker.sessions[clientId]?.will ?: return
         val properties = MQTTProperties()
         properties.payloadFormatIndicator = will.payloadFormatIndicator
         properties.messageExpiryInterval = will.messageExpiryInterval
@@ -261,7 +261,7 @@ class ClientConnection(
         }
         broker.maximumQos?.let { maximumQos ->
             if (maximumQos == Qos.AT_MOST_ONCE || maximumQos == Qos.AT_LEAST_ONCE)
-                connackProperties.maximumQos = maximumQos.ordinal.toUInt()
+                connackProperties.maximumQos = maximumQos.value.toUInt()
             session.will?.qos?.let {
                 if (it > maximumQos)
                     throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
@@ -445,7 +445,7 @@ class ClientConnection(
                 val retainedMessage = pair.first
                 val clientId = pair.second
                 if (!(subscription.options.noLocal && session.clientId == clientId)) {
-                    val qos = Qos.valueOf(min(retainedMessage.qos.ordinal, subscription.options.qos.ordinal))
+                    val qos = Qos.valueOf(min(retainedMessage.qos.value, subscription.options.qos.value))
                     retainedMessagesList += MQTTPublish(
                         if (subscription.options.retainedAsPublished) retainedMessage.retain else false,
                         qos,
@@ -531,7 +531,7 @@ class ClientConnection(
     }
 
     private fun handleDisconnect(packet: MQTTDisconnect) {
-        if (session.sessionExpiryInterval == 0u && packet.properties.sessionExpiryInterval != 0u)
+        if (session.sessionExpiryInterval == 0u && packet.properties.sessionExpiryInterval != null && packet.properties.sessionExpiryInterval != 0u)
             disconnect(ReasonCode.PROTOCOL_ERROR)
         else {
             if (packet.reasonCode == ReasonCode.SUCCESS)

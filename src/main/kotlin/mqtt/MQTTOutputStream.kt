@@ -8,5 +8,6 @@ class MQTTOutputStream(outputStream: OutputStream) : DataOutputStream(outputStre
 
     fun writePacket(packet: MQTTSerializer) {
         write(packet.toByteArray())
+        flush()
     }
 }

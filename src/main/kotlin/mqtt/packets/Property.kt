@@ -1,6 +1,6 @@
 package mqtt.packets
 
-enum class Property(value: Int) {
+enum class Property(val value: Int) {
     PAYLOAD_FORMAT_INDICATOR(1),
     MESSAGE_EXPIRY_INTERVAL(2),
     CONTENT_TYPE(3),
@@ -30,6 +30,6 @@ enum class Property(value: Int) {
     SHARED_SUBSCRIPTION_AVAILABLE(42);
 
     companion object {
-        fun valueOf(value: Int) = values().firstOrNull { it.ordinal == value }
+        fun valueOf(value: Int) = values().firstOrNull { it.value == value }
     }
 }

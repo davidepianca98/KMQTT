@@ -19,10 +19,10 @@ class Will(
 ) {
     companion object {
         fun buildWill(packet: MQTTConnect): Will? {
-            val formatIndicator = packet.willProperties!!.payloadFormatIndicator ?: 0u
-            if (packet.willPayload?.validatePayloadFormat(formatIndicator) == false)
-                throw MQTTException(ReasonCode.PAYLOAD_FORMAT_INVALID)
-            return if (packet.connectFlags.willFlag)
+            return if (packet.connectFlags.willFlag) {
+                val formatIndicator = packet.willProperties!!.payloadFormatIndicator ?: 0u
+                if (packet.willPayload?.validatePayloadFormat(formatIndicator) == false)
+                    throw MQTTException(ReasonCode.PAYLOAD_FORMAT_INVALID)
                 Will(
                     packet.connectFlags.willRetain,
                     packet.connectFlags.willQos,
@@ -37,7 +37,7 @@ class Will(
                     packet.willProperties.correlationData,
                     packet.willProperties.userProperty
                 )
-            else
+            } else
                 null
         }
     }

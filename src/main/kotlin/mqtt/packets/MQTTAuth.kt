@@ -16,13 +16,14 @@ class MQTTAuth(
             throw IllegalArgumentException("Invalid reason code")
         val outStream = ByteArrayOutputStream()
 
-        outStream.writeByte(authenticateReasonCode.ordinal.toUInt())
+        outStream.writeByte(authenticateReasonCode.value.toUInt())
         outStream.writeBytes(properties.serializeProperties(validProperties))
 
         val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.AUTH.ordinal shl 4) and 0xF0
+        val fixedHeader = (MQTTControlPacketType.AUTH.value shl 4) and 0xF0
         result.write(fixedHeader)
         result.encodeVariableByteInteger(outStream.size().toUInt())
+        result.writeBytes(outStream.toByteArray())
         return result.toByteArray()
     }
 

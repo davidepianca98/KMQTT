@@ -51,9 +51,10 @@ class MQTTUnsubscribe(
         }
 
         val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.UNSUBSCRIBE.ordinal shl 4) and 0xF2
+        val fixedHeader = (MQTTControlPacketType.UNSUBSCRIBE.value shl 4) and 0xF2
         result.write(fixedHeader)
         result.encodeVariableByteInteger(outStream.size().toUInt())
+        result.writeBytes(outStream.toByteArray())
         return result.toByteArray()
     }
 }

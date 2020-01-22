@@ -118,7 +118,7 @@ class Broker(
         session.clientConnection.publish(
             retain,
             topicName,
-            Qos.valueOf(min(subscription.options.qos.ordinal, qos.ordinal)),
+            Qos.valueOf(min(subscription.options.qos.value, qos.value)),
             dup,
             properties,
             payload
