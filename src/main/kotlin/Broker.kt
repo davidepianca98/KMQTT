@@ -14,6 +14,7 @@ class Broker(
     local: SocketAddress,
     backlog: Int = 128,
     val authentication: Authentication? = null,
+    val authorization: Authorization? = null,
     val maximumSessionExpiryInterval: UInt = 0xFFFFFFFFu,
     val receiveMaximum: Int? = null,
     val maximumQos: Qos? = null,

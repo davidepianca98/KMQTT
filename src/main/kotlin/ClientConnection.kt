@@ -276,16 +276,23 @@ class ClientConnection(
         session.connected = true
     }
 
-    private fun handlePublish(packet: MQTTPublish) { // TODO handle topic authorization with interface in broker
+    private fun checkAuthorization(topicName: String): Boolean {
+        return broker.authorization?.authorize(topicName) != false
+    }
+
+    private fun handlePublish(packet: MQTTPublish) {
+        // Handle topic alias
+        val topic = getTopicOrAlias(packet)
+
+        if (!checkAuthorization(topic))
+            throw MQTTException(ReasonCode.NOT_AUTHORIZED)
+
         if (packet.qos > broker.maximumQos ?: Qos.EXACTLY_ONCE) {
             throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
         }
 
         if (!broker.retainedAvailable && packet.retain)
             throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
-
-        // Handle topic alias
-        val topic = getTopicOrAlias(packet)
 
         // Handle receive maximum
         if (packet.qos > Qos.AT_MOST_ONCE && broker.receiveMaximum != null) {
@@ -406,9 +413,12 @@ class ClientConnection(
         return retainedMessagesList
     }
 
-    private fun handleSubscribe(packet: MQTTSubscribe) { // TODO handle topic authorization with interface in broker
+    private fun handleSubscribe(packet: MQTTSubscribe) {
         val retainedMessagesList = mutableListOf<MQTTPublish>()
         val reasonCodes = packet.subscriptions.map { subscription ->
+            if (!checkAuthorization(subscription.topicFilter))
+                return@map ReasonCode.NOT_AUTHORIZED
+
             if (!subscription.matchTopicFilter.isValidTopic())
                 return@map ReasonCode.TOPIC_FILTER_INVALID
 
