@@ -54,6 +54,7 @@ class ClientConnection(
                     disconnect(ReasonCode.MAXIMUM_CONNECT_TIME)
                 }
             } catch (e: IOException) {
+                e.printStackTrace()
                 sendWill()
             } catch (e: Exception) {
                 e.printStackTrace()

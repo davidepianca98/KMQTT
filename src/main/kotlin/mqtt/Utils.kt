@@ -34,7 +34,7 @@ fun InputStream.decodeVariableByteInteger(): UInt {
 }
 
 fun MQTTPublish.messageExpiryIntervalExpired(): Boolean {
-    val expiry = properties.messageExpiryInterval?.toLong() ?: (Long.MAX_VALUE / 1000)
+    val expiry = properties.messageExpiryInterval?.toLong() ?: ((Long.MAX_VALUE / 1000) - timestamp)
     return ((expiry * 1000) + timestamp) < System.currentTimeMillis()
 }
 
