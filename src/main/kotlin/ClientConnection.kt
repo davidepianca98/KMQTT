@@ -43,7 +43,6 @@ class ClientConnection(
             try {
                 val packet = reader.readPacket()
                 handlePacket(packet)
-                // TODO if on pendingSendMessages try sending packet, checking if expired don't send
             } catch (e: MQTTException) {
                 disconnect(e.reasonCode)
             } catch (e: SocketTimeoutException) {
@@ -230,7 +229,7 @@ class ClientConnection(
                 session.clientConnection = this
                 session.will = Will.buildWill(packet)
                 session.sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
-                // TODO resend all unacknowledged PUBLISH and PUBREL, with dup = 1
+                // TODO resend all pendingAcknowledgeMessages, pendingAcknowledgePubrel, pendingSendMessages if not expired, with dup = 1
                 sessionPresent = true
             }
         } else {

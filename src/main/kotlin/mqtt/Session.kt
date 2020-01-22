@@ -23,7 +23,6 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
 
     fun sendQosBiggerThanZero(packet: MQTTPublish, block: (packet: MQTTPublish) -> Unit) {
-        // TODO maybe must be added to pending and sent later, check specification
         pendingSendMessages[packet.packetId!!] = packet
         block(packet)
         pendingSendMessages.remove(packet.packetId)
