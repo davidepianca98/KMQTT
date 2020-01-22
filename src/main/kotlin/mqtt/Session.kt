@@ -56,13 +56,17 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     private val subscriptions = mutableListOf<Subscription>()
 
     fun hasSubscriptionsMatching(topicName: String): List<Subscription> {
+        if (!connected)
+            return listOf()
         return subscriptions.filter { topicName.matchesWildcard(it.matchTopicFilter) }
     }
 
     fun hasSharedSubscriptionMatching(
         shareName: String,
         topicName: String
-    ): Subscription? { // TODO check if connected first
+    ): Subscription? {
+        if (!connected)
+            return null
         return subscriptions.firstOrNull { it.isShared() && it.shareName == shareName && topicName.matchesWildcard(it.matchTopicFilter) }
     }
 
