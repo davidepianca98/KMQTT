@@ -51,7 +51,8 @@ class ClientConnection(
             } catch (e: IOException) {
                 sendWill()
             } catch (e: Exception) {
-                // TODO handle generic exception
+                e.printStackTrace()
+                disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
             }
         }
         session.connected = false
@@ -259,7 +260,15 @@ class ClientConnection(
             }
         }
 
-        // TODO implement section 3.2.2.3.15, 3.2.2.3.16 maybe
+        packet.properties.requestResponseInformation?.let { requestResponseInformation ->
+            if (requestResponseInformation == 1u) {
+                broker.responseInformation?.let {
+                    connackProperties.responseInformation = it
+                }
+            }
+        }
+
+        // TODO implement section 3.2.2.3.16 and 4.11 for Server redirection
 
         val connack = MQTTConnack(ConnectAcknowledgeFlags(sessionPresent), ReasonCode.SUCCESS, connackProperties)
         writer.writePacket(connack)
@@ -267,7 +276,7 @@ class ClientConnection(
         session.connected = true
     }
 
-    private fun handlePublish(packet: MQTTPublish) {
+    private fun handlePublish(packet: MQTTPublish) { // TODO handle topic authorization with interface in broker
         if (packet.qos > broker.maximumQos ?: Qos.EXACTLY_ONCE) {
             throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
         }
@@ -397,7 +406,7 @@ class ClientConnection(
         return retainedMessagesList
     }
 
-    private fun handleSubscribe(packet: MQTTSubscribe) {
+    private fun handleSubscribe(packet: MQTTSubscribe) { // TODO handle topic authorization with interface in broker
         val retainedMessagesList = mutableListOf<MQTTPublish>()
         val reasonCodes = packet.subscriptions.map { subscription ->
             if (!subscription.matchTopicFilter.isValidTopic())

@@ -23,7 +23,8 @@ class Broker(
     val wildcardSubscriptionAvailable: Boolean = true,
     val subscriptionIdentifiersAvailable: Boolean = true,
     val sharedSubscriptionsAvailable: Boolean = true,
-    val serverKeepAlive: Int? = null
+    val serverKeepAlive: Int? = null,
+    val responseInformation: String? = null
 ) {
 
     constructor(port: Int = 1883, host: String = "127.0.0.1") : this(InetSocketAddress(host, port))
