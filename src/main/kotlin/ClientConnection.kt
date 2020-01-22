@@ -25,9 +25,14 @@ class ClientConnection(
 
     // Client connection state
     private var running = false
-    private val topicAliases = mutableMapOf<UInt, String>()
+    private val topicAliasesClient = mutableMapOf<UInt, String>()
+    private val topicAliasesServer = mutableMapOf<String, UInt>()
     private var maxSendQuota: UInt = DEFAULT_MAX_SEND_QUOTA // Client receive maximum
     private var sendQuota: UInt = DEFAULT_MAX_SEND_QUOTA
+    // TODO don't send packets larger than this, remove certain properties based on the specific packet if possible, if null no limit
+    private var maximumPacketSize: UInt? = null
+    private var topicAliasMaximum = 0u
+
     private var keepAlive = 0
     private var connectHandled = false
 
@@ -98,7 +103,40 @@ class ClientConnection(
         }
     }
 
-    fun publish(packet: MQTTPublish) {
+    fun publish(
+        retain: Boolean,
+        topicName: String,
+        qos: Qos,
+        dup: Boolean,
+        properties: MQTTProperties,
+        payload: ByteArray?
+    ) {
+        val packetId = if (qos >= Qos.AT_MOST_ONCE) session.generatePacketId() else null
+
+        var packetTopicName: String = topicName
+        if (topicAliasMaximum > 0u) {
+            topicAliasesServer[topicName]?.let {
+                packetTopicName = ""
+                properties.topicAlias = it
+            } ?: run {
+                if (topicAliasesServer.size < topicAliasMaximum.toInt() - 1) {
+                    topicAliasesServer[topicName] = topicAliasesServer.size.toUInt()
+                    packetTopicName = topicName
+                    properties.topicAlias = topicAliasesServer[topicName]
+                }
+            }
+        }
+
+        val packet = MQTTPublish(
+            retain,
+            qos,
+            dup,
+            packetTopicName,
+            packetId,
+            properties,
+            payload
+        )
+
         if (packet.messageExpiryIntervalExpired())
             return
         // Update the expiry interval if present
@@ -189,7 +227,8 @@ class ClientConnection(
             } else {
                 // Update the session with the new parameters
                 session.clientConnection = this
-                session.update(packet) // TODO maybe must not be done
+                session.will = Will.buildWill(packet)
+                session.sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
                 // TODO resend all unacknowledged PUBLISH and PUBREL, with dup = 1
                 sessionPresent = true
             }
@@ -203,6 +242,8 @@ class ClientConnection(
 
         sendQuota = packet.properties.receiveMaximum ?: DEFAULT_MAX_SEND_QUOTA
         maxSendQuota = packet.properties.receiveMaximum ?: DEFAULT_MAX_SEND_QUOTA
+        maximumPacketSize = packet.properties.maximumPacketSize
+        topicAliasMaximum = packet.properties.topicAliasMaximum ?: 0u
 
         //
         // CONNACK properties
@@ -261,11 +302,19 @@ class ClientConnection(
         }
 
         packet.properties.requestResponseInformation?.let { requestResponseInformation ->
+            if (requestResponseInformation !in 0u..1u)
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             if (requestResponseInformation == 1u) {
                 broker.responseInformation?.let {
                     connackProperties.responseInformation = it
                 }
             }
+        }
+
+        packet.properties.requestProblemInformation?.let { requestProblemInformation ->
+            if (requestProblemInformation !in 0u..1u)
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            // May send reason string here
         }
 
         // TODO implement section 3.2.2.3.16 and 4.11 for Server redirection
@@ -331,9 +380,9 @@ class ClientConnection(
             if (it == 0u || it > broker.maximumTopicAlias?.toUInt() ?: 0u)
                 throw MQTTException(ReasonCode.TOPIC_ALIAS_INVALID)
             if (packet.topicName.isNotEmpty()) {
-                topicAliases[it] = packet.topicName
+                topicAliasesClient[it] = packet.topicName
             }
-            topic = topicAliases[it] ?: throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            topic = topicAliasesClient[it] ?: throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             packet.properties.topicAlias = null
         }
         return topic

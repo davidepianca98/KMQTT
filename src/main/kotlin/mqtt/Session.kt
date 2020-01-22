@@ -4,7 +4,6 @@ import ClientConnection
 import mqtt.packets.MQTTConnect
 import mqtt.packets.MQTTPublish
 import mqtt.packets.MQTTPubrel
-import mqtt.packets.ReasonCode
 
 class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
@@ -88,54 +87,10 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     //  same Shared Subscription. It MAY attempt to send the message to another Client as soon as it loses its
     //  connection to the first Client.
 
-    var will = buildWill(packet)
+    var will = Will.buildWill(packet)
 
     // TODO if 0 delete session on disconnection else delete after timeout, if 0xFFFFFFFF never delete
     var sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
-    // TODO don't send packets larger than this, if null no limit
-    var maximumPacketSize = packet.properties.maximumPacketSize
-    // TODO if 0 don't send topic alias, otherwise maximum number of aliases
-    var topicAliasMaximum = packet.properties.topicAliasMaximum ?: 0u
-    // TODO if different from 0 or 1 protocol error, if 1 may return response information in connack
-    var requestResponseInformation = packet.properties.requestResponseInformation ?: 0u
-    // TODO if different from 0 or 1 protocol error, if 0 may send a reson string or user properties in connack or disconnect, but no reason string or user properties in any other packet than publish, connack, disconnect
-    var requestProblemInformation = packet.properties.requestProblemInformation ?: 1u
-    var userProperties = packet.properties.userProperty
-
-    private fun buildWill(packet: MQTTConnect): Will? {
-        val formatIndicator = packet.willProperties!!.payloadFormatIndicator ?: 0u
-        if (packet.willPayload?.validatePayloadFormat(formatIndicator) == false)
-            throw MQTTException(ReasonCode.PAYLOAD_FORMAT_INVALID)
-        return if (packet.connectFlags.willFlag)
-            Will(
-                packet.connectFlags.willRetain,
-                packet.connectFlags.willQos,
-                packet.willTopic!!,
-                packet.willPayload!!,
-                packet.willProperties.willDelayInterval
-                    ?: 0u, // TODO publish will after this interval or when the session ends, first to come, if client reconnects to session don't send
-                formatIndicator,
-                packet.willProperties.messageExpiryInterval,
-                packet.willProperties.contentType,
-                packet.willProperties.responseTopic,
-                packet.willProperties.correlationData,
-                packet.willProperties.userProperty
-            )
-        else
-            null
-    }
-
-    fun update(packet: MQTTConnect) { // TODO probably many of these settings must be in client connection and not in session
-        clientId = packet.clientID
-        will = buildWill(packet)
-
-        sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
-        maximumPacketSize = packet.properties.maximumPacketSize
-        topicAliasMaximum = packet.properties.topicAliasMaximum ?: 0u
-        requestResponseInformation = packet.properties.requestResponseInformation ?: 0u
-        requestProblemInformation = packet.properties.requestProblemInformation ?: 1u
-        userProperties = packet.properties.userProperty
-    }
 
     fun generatePacketId(): UInt {
         do {

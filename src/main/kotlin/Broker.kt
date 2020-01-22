@@ -115,16 +115,14 @@ class Broker(
             properties.subscriptionIdentifier.add(it)
         }
 
-        val packet = MQTTPublish(
+        session.clientConnection.publish(
             retain,
+            topicName,
             Qos.valueOf(min(subscription.options.qos.ordinal, qos.ordinal)),
             dup,
-            topicName, // TODO maybe use topic aliases
-            session.generatePacketId(),
             properties,
             payload
         )
-        session.clientConnection.publish(packet)
     }
 
     fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
