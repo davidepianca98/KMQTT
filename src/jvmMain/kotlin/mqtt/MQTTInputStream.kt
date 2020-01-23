@@ -1,7 +1,5 @@
-package mqtt.streams
+package mqtt
 
-import mqtt.MQTTControlPacketType
-import mqtt.MQTTException
 import mqtt.packets.*
 import java.io.DataInputStream
 import java.io.InputStream
@@ -9,12 +7,26 @@ import java.io.InputStream
 class MQTTInputStream(inputStream: InputStream, private val maximumPacketSize: UInt? = null) :
     DataInputStream(inputStream) {
 
+    fun decodeVariableByteInteger(): UInt { // TODO remove duplicate once the multiplatform port is completed
+        var multiplier = 1u
+        var value = 0u
+        do {
+            val encodedByte = read().toUInt()
+            value += (encodedByte and 127u) * multiplier
+            if (multiplier > 128u * 128u * 128u) {
+                throw Exception("Malformed Variable Byte Integer")
+            }
+            multiplier *= 128u
+        } while ((encodedByte and 128u) != 0u)
+        return value
+    }
+
     fun readPacket(): MQTTPacket {
         val byte1 = read()
         val mqttControlPacketType = (byte1 shr 4) and 0b1111
         val flags = byte1 and 0b1111
 
-        val type = MQTTControlPacketType.valueOf(mqttControlPacketType)
+        val type = MQTTControlPacketType.valueOf(mqttControlPacketType)!!
 
         val remainingLength = decodeVariableByteInteger().toInt()
 

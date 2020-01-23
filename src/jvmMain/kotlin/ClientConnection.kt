@@ -1,8 +1,6 @@
 import mqtt.*
 import mqtt.packets.*
 import mqtt.streams.EOFException
-import mqtt.streams.MQTTInputStream
-import mqtt.streams.MQTTOutputStream
 import java.io.IOException
 import java.net.Socket
 import java.net.SocketTimeoutException

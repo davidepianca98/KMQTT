@@ -43,9 +43,9 @@ fun MQTTPublish.messageExpiryIntervalExpired(): Boolean {
 fun UByteArray.validatePayloadFormat(indicator: UInt): Boolean {
     if (indicator == 1u) {
         return try {
-            Charset.forName("UTF-8").newDecoder().decode(ByteBuffer.wrap(this))
+            this.toByteArray().decodeToString().validateUTF8String()
             true
-        } catch (e: CharacterCodingException) {
+        } catch (e: MQTTException) {
             false
         }
     }
@@ -55,12 +55,12 @@ fun UByteArray.validatePayloadFormat(indicator: UInt): Boolean {
 fun String.validateUTF8String() { // Taken from Paho MQTT Java
     this.forEachIndexed { i, character ->
         var isBad = false
-        if (Character.isHighSurrogate(character)) {
+        if (character in '\uD800'..'\uDBFF') {
             if (i + 1 == this.length) {
                 isBad = true
             } else {
                 val c2 = this[i + 1]
-                if (!Character.isLowSurrogate(c2)) {
+                if (c2 !in '\uDC00'..'\uDFFF') {
                     isBad = true
                 } else {
                     val ch = ((character.toInt() and 0x3ff) shl 10) or (c2.toInt() and 0x3ff)
@@ -70,7 +70,9 @@ fun String.validateUTF8String() { // Taken from Paho MQTT Java
                 }
             }
         } else {
-            if (Character.isISOControl(character) || Character.isLowSurrogate(character)) {
+            if ((character.toInt() <= 0x9F &&
+                        (character.toInt() >= 0x7F || character.toInt() ushr 5 == 0)) || character in '\uDC00'..'\uDFFF'
+            ) {
                 isBad = true
             } else if (character.toInt() >= 0xfdd0 && (character.toInt() <= 0xfddf || character.toInt() >= 0xfffe)) {
                 isBad = true
