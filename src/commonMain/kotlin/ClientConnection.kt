@@ -1,10 +1,9 @@
 import mqtt.*
 import mqtt.packets.*
-import mqtt.streams.EOFException
-import java.io.IOException
-import java.net.Socket
-import java.net.SocketTimeoutException
-import java.util.*
+import socket.IOException
+import socket.Socket
+import socket.SocketTimeoutException
+import socket.streams.EOFException
 import kotlin.math.min
 
 
@@ -17,8 +16,7 @@ class ClientConnection(
         private const val DEFAULT_MAX_SEND_QUOTA = 65535u
     }
 
-    private val reader =
-        MQTTInputStream(client.getInputStream(), broker.maximumPacketSize)
+    private val reader = MQTTInputStream(client.getInputStream(), broker.maximumPacketSize)
     private val writer = MQTTOutputStream(client.getOutputStream())
 
     private var clientId: String? = null
@@ -57,10 +55,10 @@ class ClientConnection(
             } catch (e: EOFException) {
                 disconnect(ReasonCode.MALFORMED_PACKET)
             } catch (e: IOException) {
-                e.printStackTrace()
+                println(e.message)
                 sendWill()
             } catch (e: Exception) {
-                e.printStackTrace()
+                println(e.message)
                 disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
             }
         }
@@ -146,7 +144,7 @@ class ClientConnection(
         // Update the expiry interval if present
         packet.properties.messageExpiryInterval?.let {
             packet.properties.messageExpiryInterval =
-                it - ((System.currentTimeMillis() - packet.timestamp) / 1000).toUInt()
+                it - ((currentTimeMillis() - packet.timestamp) / 1000).toUInt()
         }
 
         if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
@@ -164,7 +162,7 @@ class ClientConnection(
     private fun generateClientId(): String {
         var id: String
         do {
-            id = UUID.randomUUID().toString()
+            id = generateRandomClientId()
         } while (broker.sessions[id] != null)
         return id
     }

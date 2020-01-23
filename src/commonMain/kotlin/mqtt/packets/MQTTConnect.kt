@@ -1,10 +1,9 @@
 package mqtt.packets
 
-import encodeVariableByteInteger
-import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.streams.ByteArrayInputStream
-import mqtt.streams.ByteArrayOutputStream
+import socket.streams.ByteArrayInputStream
+import socket.streams.ByteArrayOutputStream
+import socket.streams.encodeVariableByteInteger
 
 class MQTTConnect(
     val protocolName: String,
@@ -92,7 +91,7 @@ class MQTTConnect(
             )
         }
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTConnect {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTConnect {
             checkFlags(flags)
 
             val inStream = ByteArrayInputStream(data)
@@ -158,7 +157,7 @@ class MQTTConnect(
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.CONNECT.value shl 4) and 0xF0
-        result.write(fixedHeader.toUInt())
+        result.write(fixedHeader.toUByte())
         result.encodeVariableByteInteger(outStream.size().toUInt())
         result.write(outStream.toByteArray())
         return result.toByteArray()

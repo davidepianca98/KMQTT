@@ -1,12 +1,11 @@
 package mqtt.packets
 
 import currentTimeMillis
-import encodeVariableByteInteger
-import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
 import mqtt.containsWildcard
-import mqtt.streams.ByteArrayInputStream
-import mqtt.streams.ByteArrayOutputStream
+import socket.streams.ByteArrayInputStream
+import socket.streams.ByteArrayOutputStream
+import socket.streams.encodeVariableByteInteger
 import validatePayloadFormat
 
 
@@ -36,7 +35,7 @@ class MQTTPublish(
                 (((if (dup) 1 else 0) shl 3) and 0x8) or
                 ((qos.value shl 1) and 0x6) or
                 ((if (retain) 1 else 0) and 0x1)
-        result.write(fixedHeader.toUInt())
+        result.write(fixedHeader.toUByte())
         result.encodeVariableByteInteger(outStream.size().toUInt())
         result.write(outStream.toByteArray())
         return result.toByteArray()
@@ -62,7 +61,7 @@ class MQTTPublish(
             Property.USER_PROPERTY
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTPublish {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTPublish {
             checkFlags(flags)
             val retain = flags.flagsBit(0) == 1
             val qos = getQos(flags)

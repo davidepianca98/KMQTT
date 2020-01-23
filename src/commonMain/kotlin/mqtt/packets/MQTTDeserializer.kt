@@ -1,14 +1,14 @@
 package mqtt.packets
 
-import decodeVariableByteInteger
 import mqtt.MQTTException
 import mqtt.containsWildcard
-import mqtt.streams.ByteArrayInputStream
+import socket.streams.ByteArrayInputStream
+import socket.streams.decodeVariableByteInteger
 import validateUTF8String
 
 interface MQTTDeserializer {
 
-    fun fromByteArray(flags: Int, data: ByteArray): MQTTPacket
+    fun fromByteArray(flags: Int, data: UByteArray): MQTTPacket
 
     fun checkFlags(flags: Int) {
         if (flags.flagsBit(0) != 0 ||

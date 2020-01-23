@@ -1,6 +1,6 @@
-package mqtt.streams
+package socket.streams
 
-class ByteArrayOutputStream {
+class ByteArrayOutputStream : OutputStream {
 
     private var count = 0
     private var array: UByteArray = UByteArray(32)
@@ -10,9 +10,9 @@ class ByteArrayOutputStream {
             array = array.copyOf(array.size + length * 2)
     }
 
-    fun write(b: UInt) {
+    override fun write(b: UByte) {
         ensureCapacity(1)
-        array[count] = b.toUByte()
+        array[count] = b
         count += 1
     }
 
@@ -22,7 +22,7 @@ class ByteArrayOutputStream {
         count += len
     }
 
-    fun write(b: UByteArray) {
+    override fun write(b: UByteArray) {
         ensureCapacity(b.size)
         write(b, 0, b.size)
     }

@@ -1,16 +1,16 @@
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import mqtt.*
 import mqtt.packets.MQTTProperties
 import mqtt.packets.MQTTPublish
 import mqtt.packets.Qos
 import mqtt.packets.ReasonCode
-import java.net.InetSocketAddress
-import java.net.ServerSocket
-import java.net.SocketAddress
-import kotlin.concurrent.thread
+import socket.ServerSocket
 import kotlin.math.min
 
 class Broker(
-    local: SocketAddress,
+    port: Int = 1883,
+    host: String = "127.0.0.1",
     backlog: Int = 128,
     val authentication: Authentication? = null,
     val authorization: Authorization? = null,
@@ -27,12 +27,10 @@ class Broker(
     val responseInformation: String? = null
 ) {
 
-    constructor(port: Int = 1883, host: String = "127.0.0.1") : this(InetSocketAddress(host, port))
-
     // TODO support TLS with custom constructor with default port 8883
     // TODO support WebSocket, section 6
 
-    private val server = ServerSocket()
+    private val server = ServerSocket(host, port)
     val sessions = mutableMapOf<String, Session>()
     private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
 
@@ -41,14 +39,16 @@ class Broker(
             require(it in 0..65535)
         }
 
-        server.bind(local, backlog)
+        server.bind(backlog)
     }
 
     fun listen() {
         while (true) {
             val client = server.accept()
             client.soTimeout = 30000
-            thread { ClientConnection(client, this).run() }
+            GlobalScope.launch {
+                ClientConnection(client, this@Broker).run()
+            }
         }
     }
 
@@ -67,7 +67,7 @@ class Broker(
         }?.value
         session?.hasSharedSubscriptionMatching(shareName, topicName)?.let { subscription ->
             publish(retain, topicName, qos, dup, properties, payload, session, subscription)
-            subscription.timestampShareSent = System.currentTimeMillis()
+            subscription.timestampShareSent = currentTimeMillis()
         }
     }
 
@@ -159,7 +159,7 @@ class Broker(
     private fun deleteExpiredSessions() {
         sessions.filter {
             val timestamp = it.value.destroySessionTimestamp
-            timestamp != null && timestamp < System.currentTimeMillis()
+            timestamp != null && timestamp < currentTimeMillis()
         }.forEach {
             sessions.remove(it.key)
         }

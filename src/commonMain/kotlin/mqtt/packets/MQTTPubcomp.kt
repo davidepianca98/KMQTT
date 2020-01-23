@@ -1,10 +1,9 @@
 package mqtt.packets
 
-import encodeVariableByteInteger
-import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.streams.ByteArrayInputStream
-import mqtt.streams.ByteArrayOutputStream
+import socket.streams.ByteArrayInputStream
+import socket.streams.ByteArrayOutputStream
+import socket.streams.encodeVariableByteInteger
 
 class MQTTPubcomp(
     val packetId: UInt,
@@ -23,7 +22,7 @@ class MQTTPubcomp(
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.PUBCOMP.value shl 4) and 0xF0
-        result.write(fixedHeader.toUInt())
+        result.write(fixedHeader.toUByte())
         result.encodeVariableByteInteger(outStream.size().toUInt())
         result.write(outStream.toByteArray())
         return result.toByteArray()
@@ -41,7 +40,7 @@ class MQTTPubcomp(
             ReasonCode.PACKET_IDENTIFIER_NOT_FOUND
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTPubcomp {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTPubcomp {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val packetId = inStream.read2BytesInt()

@@ -1,10 +1,9 @@
 package mqtt.packets
 
-import encodeVariableByteInteger
-import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.streams.ByteArrayInputStream
-import mqtt.streams.ByteArrayOutputStream
+import socket.streams.ByteArrayInputStream
+import socket.streams.ByteArrayOutputStream
+import socket.streams.encodeVariableByteInteger
 
 class MQTTAuth(
     val authenticateReasonCode: ReasonCode,
@@ -21,7 +20,7 @@ class MQTTAuth(
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.AUTH.value shl 4) and 0xF0
-        result.write(fixedHeader.toUInt())
+        result.write(fixedHeader.toUByte())
         result.encodeVariableByteInteger(outStream.size().toUInt())
         result.write(outStream.toByteArray())
         return result.toByteArray()
@@ -42,7 +41,7 @@ class MQTTAuth(
             ReasonCode.RE_AUTHENTICATE
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTAuth {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTAuth {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val reasonCode =

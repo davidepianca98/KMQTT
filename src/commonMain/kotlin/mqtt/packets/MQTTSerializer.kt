@@ -1,7 +1,7 @@
 package mqtt.packets
 
-import encodeVariableByteInteger
-import mqtt.streams.ByteArrayOutputStream
+import socket.streams.ByteArrayOutputStream
+import socket.streams.encodeVariableByteInteger
 import validateUTF8String
 
 interface MQTTSerializer {
@@ -25,7 +25,7 @@ interface MQTTSerializer {
     }
 
     fun ByteArrayOutputStream.writeByte(value: UInt) {
-        write(value)
+        write(value.toUByte())
     }
 
     fun ByteArrayOutputStream.writeUTF8String(value: String) {
@@ -48,189 +48,189 @@ interface MQTTSerializer {
         val out = ByteArrayOutputStream()
         payloadFormatIndicator?.let {
             if (Property.PAYLOAD_FORMAT_INDICATOR in validProperties) {
-                out.write(Property.PAYLOAD_FORMAT_INDICATOR.value)
+                out.write(Property.PAYLOAD_FORMAT_INDICATOR.value.toUByte())
                 out.writeByte(it)
             }
         }
 
         messageExpiryInterval?.let {
             if (Property.MESSAGE_EXPIRY_INTERVAL in validProperties) {
-                out.write(Property.MESSAGE_EXPIRY_INTERVAL.value)
+                out.write(Property.MESSAGE_EXPIRY_INTERVAL.value.toUByte())
                 out.write4BytesInt(it)
             }
         }
 
         contentType?.let {
             if (Property.CONTENT_TYPE in validProperties) {
-                out.write(Property.CONTENT_TYPE.value)
+                out.write(Property.CONTENT_TYPE.value.toUByte())
                 out.writeUTF8String(it)
             }
         }
 
         responseTopic?.let {
             if (Property.RESPONSE_TOPIC in validProperties) {
-                out.write(Property.RESPONSE_TOPIC.value)
+                out.write(Property.RESPONSE_TOPIC.value.toUByte())
                 out.writeUTF8String(it)
             }
         }
 
         correlationData?.let {
             if (Property.CORRELATION_DATA in validProperties) {
-                out.write(Property.CORRELATION_DATA.value)
+                out.write(Property.CORRELATION_DATA.value.toUByte())
                 out.writeBinaryData(it)
             }
         }
 
         subscriptionIdentifier.forEach {
             if (Property.SUBSCRIPTION_IDENTIFIER in validProperties) {
-                out.write(Property.SUBSCRIPTION_IDENTIFIER.value)
+                out.write(Property.SUBSCRIPTION_IDENTIFIER.value.toUByte())
                 out.encodeVariableByteInteger(it)
             }
         }
 
         sessionExpiryInterval?.let {
             if (Property.SESSION_EXPIRY_INTERVAL in validProperties) {
-                out.write(Property.SESSION_EXPIRY_INTERVAL.value)
+                out.write(Property.SESSION_EXPIRY_INTERVAL.value.toUByte())
                 out.write4BytesInt(it)
             }
         }
 
         assignedClientIdentifier?.let {
             if (Property.ASSIGNED_CLIENT_IDENTIFIER in validProperties) {
-                out.write(Property.ASSIGNED_CLIENT_IDENTIFIER.value)
+                out.write(Property.ASSIGNED_CLIENT_IDENTIFIER.value.toUByte())
                 out.writeUTF8String(it)
             }
         }
 
         serverKeepAlive?.let {
             if (Property.SERVER_KEEP_ALIVE in validProperties) {
-                out.write(Property.SERVER_KEEP_ALIVE.value)
+                out.write(Property.SERVER_KEEP_ALIVE.value.toUByte())
                 out.write2BytesInt(it)
             }
         }
 
         authenticationMethod?.let {
             if (Property.AUTHENTICATION_METHOD in validProperties) {
-                out.write(Property.AUTHENTICATION_METHOD.value)
+                out.write(Property.AUTHENTICATION_METHOD.value.toUByte())
                 out.writeUTF8String(it)
             }
         }
 
         authenticationData?.let {
             if (Property.AUTHENTICATION_DATA in validProperties) {
-                out.write(Property.AUTHENTICATION_DATA.value)
+                out.write(Property.AUTHENTICATION_DATA.value.toUByte())
                 out.writeBinaryData(it)
             }
         }
 
         requestProblemInformation?.let {
             if (Property.REQUEST_PROBLEM_INFORMATION in validProperties) {
-                out.write(Property.REQUEST_PROBLEM_INFORMATION.value)
+                out.write(Property.REQUEST_PROBLEM_INFORMATION.value.toUByte())
                 out.writeByte(it)
             }
         }
 
         willDelayInterval?.let {
             if (Property.WILL_DELAY_INTERVAL in validProperties) {
-                out.write(Property.WILL_DELAY_INTERVAL.value)
+                out.write(Property.WILL_DELAY_INTERVAL.value.toUByte())
                 out.write4BytesInt(it)
             }
         }
 
         requestResponseInformation?.let {
             if (Property.REQUEST_RESPONSE_INFORMATION in validProperties) {
-                out.write(Property.REQUEST_RESPONSE_INFORMATION.value)
+                out.write(Property.REQUEST_RESPONSE_INFORMATION.value.toUByte())
                 out.writeByte(it)
             }
         }
 
         responseInformation?.let {
             if (Property.RESPONSE_INFORMATION in validProperties) {
-                out.write(Property.RESPONSE_INFORMATION.value)
+                out.write(Property.RESPONSE_INFORMATION.value.toUByte())
                 out.writeUTF8String(it)
             }
         }
 
         serverReference?.let {
             if (Property.SERVER_REFERENCE in validProperties) {
-                out.write(Property.SERVER_REFERENCE.value)
+                out.write(Property.SERVER_REFERENCE.value.toUByte())
                 out.writeUTF8String(it)
             }
         }
 
         reasonString?.let {
             if (Property.REASON_STRING in validProperties) {
-                out.write(Property.REASON_STRING.value)
+                out.write(Property.REASON_STRING.value.toUByte())
                 out.writeUTF8String(it)
             }
         }
 
         receiveMaximum?.let {
             if (Property.RECEIVE_MAXIMUM in validProperties) {
-                out.write(Property.RECEIVE_MAXIMUM.value)
+                out.write(Property.RECEIVE_MAXIMUM.value.toUByte())
                 out.write2BytesInt(it)
             }
         }
 
         topicAliasMaximum?.let {
             if (Property.TOPIC_ALIAS_MAXIMUM in validProperties) {
-                out.write(Property.TOPIC_ALIAS_MAXIMUM.value)
+                out.write(Property.TOPIC_ALIAS_MAXIMUM.value.toUByte())
                 out.write2BytesInt(it)
             }
         }
 
         topicAlias?.let {
             if (Property.TOPIC_ALIAS in validProperties) {
-                out.write(Property.TOPIC_ALIAS.value)
+                out.write(Property.TOPIC_ALIAS.value.toUByte())
                 out.write2BytesInt(it)
             }
         }
 
         maximumQos?.let {
             if (Property.MAXIMUM_QOS in validProperties) {
-                out.write(Property.MAXIMUM_QOS.value)
+                out.write(Property.MAXIMUM_QOS.value.toUByte())
                 out.writeByte(it)
             }
         }
 
         retainAvailable?.let {
             if (Property.RETAIN_AVAILABLE in validProperties) {
-                out.write(Property.RETAIN_AVAILABLE.value)
+                out.write(Property.RETAIN_AVAILABLE.value.toUByte())
                 out.writeByte(it)
             }
         }
 
         userProperty.forEach {
             if (Property.USER_PROPERTY in validProperties) {
-                out.write(Property.USER_PROPERTY.value)
+                out.write(Property.USER_PROPERTY.value.toUByte())
                 out.writeUTF8StringPair(it)
             }
         }
 
         maximumPacketSize?.let {
             if (Property.MAXIMUM_PACKET_SIZE in validProperties) {
-                out.write(Property.MAXIMUM_PACKET_SIZE.value)
+                out.write(Property.MAXIMUM_PACKET_SIZE.value.toUByte())
                 out.write4BytesInt(it)
             }
         }
 
         wildcardSubscriptionAvailable?.let {
             if (Property.WILDCARD_SUBSCRIPTION_AVAILABLE in validProperties) {
-                out.write(Property.WILDCARD_SUBSCRIPTION_AVAILABLE.value)
+                out.write(Property.WILDCARD_SUBSCRIPTION_AVAILABLE.value.toUByte())
                 out.writeByte(it)
             }
         }
 
         subscriptionIdentifierAvailable?.let {
             if (Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE in validProperties) {
-                out.write(Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE.value)
+                out.write(Property.SUBSCRIPTION_IDENTIFIER_AVAILABLE.value.toUByte())
                 out.writeByte(it)
             }
         }
 
         sharedSubscriptionAvailable?.let {
             if (Property.SHARED_SUBSCRIPTION_AVAILABLE in validProperties) {
-                out.write(Property.SHARED_SUBSCRIPTION_AVAILABLE.value)
+                out.write(Property.SHARED_SUBSCRIPTION_AVAILABLE.value.toUByte())
                 out.writeByte(it)
             }
         }

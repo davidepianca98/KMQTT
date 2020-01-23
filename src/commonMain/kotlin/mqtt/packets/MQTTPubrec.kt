@@ -1,10 +1,9 @@
 package mqtt.packets
 
-import encodeVariableByteInteger
-import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.streams.ByteArrayInputStream
-import mqtt.streams.ByteArrayOutputStream
+import socket.streams.ByteArrayInputStream
+import socket.streams.ByteArrayOutputStream
+import socket.streams.encodeVariableByteInteger
 
 class MQTTPubrec(
     val packetId: UInt,
@@ -23,7 +22,7 @@ class MQTTPubrec(
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.PUBREC.value shl 4) and 0xF0
-        result.write(fixedHeader.toUInt())
+        result.write(fixedHeader.toUByte())
         result.encodeVariableByteInteger(outStream.size().toUInt())
         result.write(outStream.toByteArray())
         return result.toByteArray()
@@ -48,7 +47,7 @@ class MQTTPubrec(
             ReasonCode.PAYLOAD_FORMAT_INVALID
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTPubrec {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTPubrec {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val packetId = inStream.read2BytesInt()

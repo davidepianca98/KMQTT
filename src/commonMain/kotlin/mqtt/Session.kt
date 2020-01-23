@@ -69,13 +69,13 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     }
 
     fun addSubscription(subscription: Subscription): Boolean {
-        val replaced = subscriptions.removeIf { it.topicFilter == subscription.topicFilter }
+        val replaced = subscriptions.removeAll { it.topicFilter == subscription.topicFilter }
         subscriptions += subscription
         return replaced
     }
 
     fun removeSubscription(topicFilter: String): Boolean {
-        return subscriptions.removeIf { it.topicFilter == topicFilter }
+        return subscriptions.removeAll { it.topicFilter == topicFilter }
     }
 
     // TODO shared subscription note:

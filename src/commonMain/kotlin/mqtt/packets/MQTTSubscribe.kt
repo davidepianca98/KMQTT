@@ -1,12 +1,11 @@
 package mqtt.packets
 
-import encodeVariableByteInteger
-import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
 import mqtt.Subscription
 import mqtt.isSharedTopicFilter
-import mqtt.streams.ByteArrayInputStream
-import mqtt.streams.ByteArrayOutputStream
+import socket.streams.ByteArrayInputStream
+import socket.streams.ByteArrayOutputStream
+import socket.streams.encodeVariableByteInteger
 
 class MQTTSubscribe(
     val packetIdentifier: UInt,
@@ -21,7 +20,7 @@ class MQTTSubscribe(
             Property.USER_PROPERTY
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTSubscribe {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTSubscribe {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val packetIdentifier = inStream.read2BytesInt()
@@ -107,7 +106,7 @@ class MQTTSubscribe(
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.SUBSCRIBE.value shl 4) and 0xF2
-        result.write(fixedHeader.toUInt())
+        result.write(fixedHeader.toUByte())
         result.encodeVariableByteInteger(outStream.size().toUInt())
         result.write(outStream.toByteArray())
         return result.toByteArray()

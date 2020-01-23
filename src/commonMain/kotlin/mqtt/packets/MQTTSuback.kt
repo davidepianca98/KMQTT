@@ -1,10 +1,9 @@
 package mqtt.packets
 
-import encodeVariableByteInteger
-import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.streams.ByteArrayInputStream
-import mqtt.streams.ByteArrayOutputStream
+import socket.streams.ByteArrayInputStream
+import socket.streams.ByteArrayOutputStream
+import socket.streams.encodeVariableByteInteger
 
 class MQTTSuback(
     val packetIdentifier: UInt,
@@ -34,7 +33,7 @@ class MQTTSuback(
             ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTSuback {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTSuback {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
 
@@ -67,7 +66,7 @@ class MQTTSuback(
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.SUBACK.value shl 4) and 0xF0
-        result.write(fixedHeader.toUInt())
+        result.write(fixedHeader.toUByte())
         result.encodeVariableByteInteger(outStream.size().toUInt())
         result.write(outStream.toByteArray())
         return result.toByteArray()

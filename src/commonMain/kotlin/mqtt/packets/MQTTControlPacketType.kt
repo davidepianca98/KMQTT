@@ -1,4 +1,4 @@
-package mqtt
+package mqtt.packets
 
 enum class MQTTControlPacketType(val value: Int) {
     Reserved(0),

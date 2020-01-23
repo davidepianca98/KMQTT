@@ -1,10 +1,9 @@
 package mqtt.packets
 
-import encodeVariableByteInteger
-import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.streams.ByteArrayInputStream
-import mqtt.streams.ByteArrayOutputStream
+import socket.streams.ByteArrayInputStream
+import socket.streams.ByteArrayOutputStream
+import socket.streams.encodeVariableByteInteger
 
 data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
 
@@ -61,7 +60,7 @@ class MQTTConnack(
             ReasonCode.CONNECTION_RATE_EXCEEDED
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTConnack {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTConnack {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
 
@@ -84,12 +83,14 @@ class MQTTConnack(
 
         val outStream = ByteArrayOutputStream()
 
-        outStream.write(if (connectAcknowledgeFlags.sessionPresentFlag && connectReasonCode == ReasonCode.SUCCESS) 1u else 0u)
-        outStream.write(connectReasonCode.value.toUInt())
+        val connectFlags =
+            if (connectAcknowledgeFlags.sessionPresentFlag && connectReasonCode == ReasonCode.SUCCESS) 1u else 0u
+        outStream.write(connectFlags.toUByte())
+        outStream.write(connectReasonCode.value.toUByte())
         outStream.write(properties.serializeProperties(validProperties))
 
         val result = ByteArrayOutputStream()
-        result.write(((MQTTControlPacketType.CONNACK.value shl 4) and 0xF0).toUInt())
+        result.write(((MQTTControlPacketType.CONNACK.value shl 4) and 0xF0).toUByte())
         result.encodeVariableByteInteger(outStream.size().toUInt())
         result.write(outStream.toByteArray())
         return result.toByteArray()
