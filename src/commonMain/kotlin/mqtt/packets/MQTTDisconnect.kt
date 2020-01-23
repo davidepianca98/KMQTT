@@ -1,29 +1,29 @@
 package mqtt.packets
 
+import encodeVariableByteInteger
 import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.encodeVariableByteInteger
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import mqtt.streams.ByteArrayInputStream
+import mqtt.streams.ByteArrayOutputStream
 
 class MQTTDisconnect(
     val reasonCode: ReasonCode,
     val properties: MQTTProperties = MQTTProperties()
 ) : MQTTPacket, MQTTSerializer {
 
-    override fun toByteArray(): ByteArray {
+    override fun toByteArray(): UByteArray {
         if (reasonCode !in validReasonCodes)
             throw IllegalArgumentException("Invalid reason code")
         val outStream = ByteArrayOutputStream()
 
         outStream.writeByte(reasonCode.value.toUInt())
-        outStream.writeBytes(properties.serializeProperties(validProperties))
+        outStream.write(properties.serializeProperties(validProperties))
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.DISCONNECT.value shl 4) and 0xF0
-        result.write(fixedHeader)
+        result.write(fixedHeader.toUInt())
         result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.writeBytes(outStream.toByteArray())
+        result.write(outStream.toByteArray())
         return result.toByteArray()
     }
 

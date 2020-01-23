@@ -1,11 +1,10 @@
 package mqtt.packets
 
+import decodeVariableByteInteger
 import mqtt.MQTTException
 import mqtt.containsWildcard
-import mqtt.decodeVariableByteInteger
-import mqtt.validateUTF8String
-import java.io.ByteArrayInputStream
-import java.nio.charset.StandardCharsets
+import mqtt.streams.ByteArrayInputStream
+import validateUTF8String
 
 interface MQTTDeserializer {
 
@@ -39,14 +38,14 @@ interface MQTTDeserializer {
 
     fun ByteArrayInputStream.readUTF8String(): String {
         val length = read2BytesInt().toInt()
-        val string = String(readNBytes(length), StandardCharsets.UTF_8)
+        val string = readBytes(length).toByteArray().decodeToString()
         string.validateUTF8String()
         return string
     }
 
-    fun ByteArrayInputStream.readBinaryData(): ByteArray {
+    fun ByteArrayInputStream.readBinaryData(): UByteArray {
         val length = read2BytesInt().toInt()
-        return readNBytes(length)
+        return readBytes(length)
     }
 
     fun ByteArrayInputStream.readUTF8StringPair(): Pair<String, String> {
@@ -59,7 +58,7 @@ interface MQTTDeserializer {
 
         val properties = MQTTProperties()
         while (initialTotalRemainingLength - available() < propertyLength.toInt()) {
-            val propertyIdByte = decodeVariableByteInteger().toInt()
+            val propertyIdByte = decodeVariableByteInteger()
             val propertyId = Property.valueOf(propertyIdByte)
             if (propertyId !in validProperties)
                 throw IllegalArgumentException()

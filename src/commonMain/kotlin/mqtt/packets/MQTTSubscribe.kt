@@ -1,8 +1,12 @@
 package mqtt.packets
 
-import mqtt.*
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import encodeVariableByteInteger
+import mqtt.MQTTControlPacketType
+import mqtt.MQTTException
+import mqtt.Subscription
+import mqtt.isSharedTopicFilter
+import mqtt.streams.ByteArrayInputStream
+import mqtt.streams.ByteArrayOutputStream
 
 class MQTTSubscribe(
     val packetIdentifier: UInt,
@@ -82,7 +86,7 @@ class MQTTSubscribe(
         }
     }
 
-    override fun toByteArray(): ByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.write2BytesInt(packetIdentifier)
@@ -92,7 +96,7 @@ class MQTTSubscribe(
         val subscriptionIdentifier = properties.subscriptionIdentifier.getOrNull(0)
         if (subscriptionIdentifier != null && (subscriptionIdentifier == 0u || subscriptionIdentifier > 268435455u))
             throw MQTTException(ReasonCode.PROTOCOL_ERROR)
-        outStream.writeBytes(properties.serializeProperties(validProperties))
+        outStream.write(properties.serializeProperties(validProperties))
 
         subscriptions.forEach { subscription ->
             if (subscription.topicFilter.isSharedTopicFilter() && subscription.options.noLocal)
@@ -103,9 +107,9 @@ class MQTTSubscribe(
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.SUBSCRIBE.value shl 4) and 0xF2
-        result.write(fixedHeader)
+        result.write(fixedHeader.toUInt())
         result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.writeBytes(outStream.toByteArray())
+        result.write(outStream.toByteArray())
         return result.toByteArray()
     }
 }

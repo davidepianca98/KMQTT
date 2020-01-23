@@ -7,6 +7,7 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 kotlin {
@@ -21,9 +22,16 @@ kotlin {
     linuxArm32Hfp()
 
     sourceSets {
+        all {
+            languageSettings {
+                useExperimentalAnnotation('kotlin.ExperimentalStdlibApi')
+                useExperimentalAnnotation('kotlin.ExperimentalUnsignedTypes')
+            }
+        }
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
+                implementation 'org.jetbrains.kotlinx:kotlinx-io:0.1.16'
             }
         }
         commonTest {
@@ -35,6 +43,7 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
+                implementation 'org.jetbrains.kotlinx:kotlinx-io-jvm:0.1.16'
             }
         }
         jvmTest {
@@ -44,6 +53,9 @@ kotlin {
             }
         }
         mingwMain {
+            dependencies {
+                implementation 'org.jetbrains.kotlinx:kotlinx-io-windowsx64:0.1.16'
+            }
         }
         mingwTest {
         }

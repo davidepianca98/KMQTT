@@ -1,5 +1,7 @@
-package mqtt
+package mqtt.streams
 
+import mqtt.MQTTControlPacketType
+import mqtt.MQTTException
 import mqtt.packets.*
 import java.io.DataInputStream
 import java.io.InputStream
@@ -12,7 +14,7 @@ class MQTTInputStream(inputStream: InputStream, private val maximumPacketSize: U
         val mqttControlPacketType = (byte1 shr 4) and 0b1111
         val flags = byte1 and 0b1111
 
-        val type = MQTTControlPacketType.valueOf(mqttControlPacketType)!!
+        val type = MQTTControlPacketType.valueOf(mqttControlPacketType)
 
         val remainingLength = decodeVariableByteInteger().toInt()
 
@@ -29,7 +31,9 @@ class MQTTInputStream(inputStream: InputStream, private val maximumPacketSize: U
     private fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: ByteArray): MQTTPacket {
         return when (type) {
             MQTTControlPacketType.CONNECT -> MQTTConnect.fromByteArray(flags, data)
-            MQTTControlPacketType.Reserved -> throw MQTTException(ReasonCode.MALFORMED_PACKET)
+            MQTTControlPacketType.Reserved -> throw MQTTException(
+                ReasonCode.MALFORMED_PACKET
+            )
             MQTTControlPacketType.CONNACK -> MQTTConnack.fromByteArray(flags, data)
             MQTTControlPacketType.PUBLISH -> MQTTPublish.fromByteArray(flags, data)
             MQTTControlPacketType.PUBACK -> MQTTPuback.fromByteArray(flags, data)

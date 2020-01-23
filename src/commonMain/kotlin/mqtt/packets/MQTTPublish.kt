@@ -1,8 +1,13 @@
 package mqtt.packets
 
-import mqtt.*
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import currentTimeMillis
+import encodeVariableByteInteger
+import mqtt.MQTTControlPacketType
+import mqtt.MQTTException
+import mqtt.containsWildcard
+import mqtt.streams.ByteArrayInputStream
+import mqtt.streams.ByteArrayOutputStream
+import validatePayloadFormat
 
 
 class MQTTPublish(
@@ -12,28 +17,28 @@ class MQTTPublish(
     val topicName: String,
     val packetId: UInt?,
     val properties: MQTTProperties,
-    val payload: ByteArray?,
-    val timestamp: Long = System.currentTimeMillis()
+    val payload: UByteArray?,
+    val timestamp: Long = currentTimeMillis()
 ) : MQTTPacket {
 
-    override fun toByteArray(): ByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.writeUTF8String(topicName)
         if (qos == Qos.AT_LEAST_ONCE || qos == Qos.EXACTLY_ONCE) {
             outStream.write2BytesInt(packetId!!)
         }
-        outStream.writeBytes(properties.serializeProperties(validProperties))
-        payload?.let { outStream.writeBytes(it) }
+        outStream.write(properties.serializeProperties(validProperties))
+        payload?.let { outStream.write(it) }
 
         val result = ByteArrayOutputStream()
         val fixedHeader = ((MQTTControlPacketType.PUBLISH.value shl 4) and 0xF0) or
                 (((if (dup) 1 else 0) shl 3) and 0x8) or
                 ((qos.value shl 1) and 0x6) or
                 ((if (retain) 1 else 0) and 0x1)
-        result.write(fixedHeader)
+        result.write(fixedHeader.toUInt())
         result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.writeBytes(outStream.toByteArray())
+        result.write(outStream.toByteArray())
         return result.toByteArray()
     }
 
@@ -75,7 +80,7 @@ class MQTTPublish(
 
             val properties = inStream.deserializeProperties(validProperties)
 
-            val payload = inStream.readAllBytes()
+            val payload = inStream.readRemaining()
 
             return MQTTPublish(retain, qos, dup, topicName, packetIdentifier, properties, payload)
         }

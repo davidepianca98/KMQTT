@@ -1,43 +1,42 @@
 package mqtt.packets
 
-import mqtt.encodeVariableByteInteger
-import mqtt.validateUTF8String
-import java.io.ByteArrayOutputStream
-import java.nio.charset.StandardCharsets
+import encodeVariableByteInteger
+import mqtt.streams.ByteArrayOutputStream
+import validateUTF8String
 
 interface MQTTSerializer {
 
-    fun toByteArray(): ByteArray
+    fun toByteArray(): UByteArray
 
     fun ByteArrayOutputStream.write4BytesInt(value: UInt) {
-        val byteArray = ByteArray(4)
-        byteArray[0] = ((value shr 24) and 0xFFu).toByte()
-        byteArray[1] = ((value shr 16) and 0xFFu).toByte()
-        byteArray[2] = ((value shr 8) and 0xFFu).toByte()
-        byteArray[3] = (value and 0xFFu).toByte()
+        val byteArray = UByteArray(4)
+        byteArray[0] = ((value shr 24) and 0xFFu).toUByte()
+        byteArray[1] = ((value shr 16) and 0xFFu).toUByte()
+        byteArray[2] = ((value shr 8) and 0xFFu).toUByte()
+        byteArray[3] = (value and 0xFFu).toUByte()
         write(byteArray)
     }
 
     fun ByteArrayOutputStream.write2BytesInt(value: UInt) {
-        val byteArray = ByteArray(2)
-        byteArray[0] = ((value shr 8) and 0xFFu).toByte()
-        byteArray[1] = (value and 0xFFu).toByte()
+        val byteArray = UByteArray(2)
+        byteArray[0] = ((value shr 8) and 0xFFu).toUByte()
+        byteArray[1] = (value and 0xFFu).toUByte()
         write(byteArray)
     }
 
     fun ByteArrayOutputStream.writeByte(value: UInt) {
-        write(value.toInt())
+        write(value)
     }
 
     fun ByteArrayOutputStream.writeUTF8String(value: String) {
         value.validateUTF8String()
         write2BytesInt(value.length.toUInt())
-        write(value.toByteArray(StandardCharsets.UTF_8))
+        write(value.encodeToByteArray().toUByteArray())
     }
 
-    fun ByteArrayOutputStream.writeBinaryData(data: ByteArray) {
+    fun ByteArrayOutputStream.writeBinaryData(data: UByteArray) {
         write2BytesInt(data.size.toUInt())
-        writeBytes(data)
+        write(data)
     }
 
     fun ByteArrayOutputStream.writeUTF8StringPair(value: Pair<String, String>) {
@@ -45,7 +44,7 @@ interface MQTTSerializer {
         writeUTF8String(value.second)
     }
 
-    fun MQTTProperties.serializeProperties(validProperties: List<Property>): ByteArray {
+    fun MQTTProperties.serializeProperties(validProperties: List<Property>): UByteArray {
         val out = ByteArrayOutputStream()
         payloadFormatIndicator?.let {
             if (Property.PAYLOAD_FORMAT_INDICATOR in validProperties) {
@@ -238,7 +237,7 @@ interface MQTTSerializer {
 
         val result = ByteArrayOutputStream()
         result.encodeVariableByteInteger(out.size().toUInt())
-        result.writeBytes(out.toByteArray())
+        result.write(out.toByteArray())
 
         return result.toByteArray()
     }

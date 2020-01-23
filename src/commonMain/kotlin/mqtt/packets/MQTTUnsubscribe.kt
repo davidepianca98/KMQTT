@@ -1,10 +1,10 @@
 package mqtt.packets
 
+import encodeVariableByteInteger
 import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.encodeVariableByteInteger
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import mqtt.streams.ByteArrayInputStream
+import mqtt.streams.ByteArrayOutputStream
 
 class MQTTUnsubscribe(
     val packetIdentifier: UInt,
@@ -40,11 +40,11 @@ class MQTTUnsubscribe(
         }
     }
 
-    override fun toByteArray(): ByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.write2BytesInt(packetIdentifier)
-        outStream.writeBytes(properties.serializeProperties(validProperties))
+        outStream.write(properties.serializeProperties(validProperties))
 
         topicFilters.forEach {
             outStream.writeUTF8String(it)
@@ -52,9 +52,9 @@ class MQTTUnsubscribe(
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.UNSUBSCRIBE.value shl 4) and 0xF2
-        result.write(fixedHeader)
+        result.write(fixedHeader.toUInt())
         result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.writeBytes(outStream.toByteArray())
+        result.write(outStream.toByteArray())
         return result.toByteArray()
     }
 }

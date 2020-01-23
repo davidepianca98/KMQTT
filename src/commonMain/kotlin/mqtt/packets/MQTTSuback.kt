@@ -1,12 +1,12 @@
 package mqtt.packets
 
+import encodeVariableByteInteger
 import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.encodeVariableByteInteger
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import mqtt.streams.ByteArrayInputStream
+import mqtt.streams.ByteArrayOutputStream
 
-class MQTTUnsuback(
+class MQTTSuback(
     val packetIdentifier: UInt,
     val reasonCodes: List<ReasonCode>,
     val properties: MQTTProperties = MQTTProperties()
@@ -20,16 +20,21 @@ class MQTTUnsuback(
         )
 
         val validReasonCodes = listOf(
-            ReasonCode.SUCCESS,
-            ReasonCode.NO_SUBSCRIPTION_EXISTED,
+            ReasonCode.GRANTED_QOS0,
+            ReasonCode.GRANTED_QOS1,
+            ReasonCode.GRANTED_QOS2,
             ReasonCode.UNSPECIFIED_ERROR,
             ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR,
             ReasonCode.NOT_AUTHORIZED,
             ReasonCode.TOPIC_FILTER_INVALID,
-            ReasonCode.PACKET_IDENTIFIER_IN_USE
+            ReasonCode.PACKET_IDENTIFIER_IN_USE,
+            ReasonCode.QUOTA_EXCEEDED,
+            ReasonCode.SHARED_SUBSCRIPTIONS_NOT_SUPPORTED,
+            ReasonCode.SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED,
+            ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
         )
 
-        override fun fromByteArray(flags: Int, data: ByteArray): MQTTUnsuback {
+        override fun fromByteArray(flags: Int, data: ByteArray): MQTTSuback {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
 
@@ -44,15 +49,15 @@ class MQTTUnsuback(
                 reasonCodes += reasonCode
             }
 
-            return MQTTUnsuback(packetIdentifier, reasonCodes, properties)
+            return MQTTSuback(packetIdentifier, reasonCodes, properties)
         }
     }
 
-    override fun toByteArray(): ByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.write2BytesInt(packetIdentifier)
-        outStream.writeBytes(properties.serializeProperties(validProperties))
+        outStream.write(properties.serializeProperties(validProperties))
 
         reasonCodes.forEach {
             if (it !in validReasonCodes)
@@ -61,10 +66,10 @@ class MQTTUnsuback(
         }
 
         val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.UNSUBACK.value shl 4) and 0xF0
-        result.write(fixedHeader)
+        val fixedHeader = (MQTTControlPacketType.SUBACK.value shl 4) and 0xF0
+        result.write(fixedHeader.toUInt())
         result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.writeBytes(outStream.toByteArray())
+        result.write(outStream.toByteArray())
         return result.toByteArray()
     }
 }

@@ -3,18 +3,19 @@ package mqtt
 import mqtt.packets.MQTTConnect
 import mqtt.packets.Qos
 import mqtt.packets.ReasonCode
+import validatePayloadFormat
 
 class Will(
     val retain: Boolean,
     val qos: Qos,
     val topic: String,
-    val payload: ByteArray,
+    val payload: UByteArray,
     val willDelayInterval: UInt,
     val payloadFormatIndicator: UInt,
     val messageExpiryInterval: UInt?,
     val contentType: String?,
     val responseTopic: String?,
-    val correlationData: ByteArray?,
+    val correlationData: UByteArray?,
     val userProperty: List<Pair<String, String>>
 ) {
     companion object {

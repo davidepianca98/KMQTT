@@ -1,5 +1,8 @@
 import mqtt.*
 import mqtt.packets.*
+import mqtt.streams.EOFException
+import mqtt.streams.MQTTInputStream
+import mqtt.streams.MQTTOutputStream
 import java.io.IOException
 import java.net.Socket
 import java.net.SocketTimeoutException
@@ -16,7 +19,8 @@ class ClientConnection(
         private const val DEFAULT_MAX_SEND_QUOTA = 65535u
     }
 
-    private val reader = MQTTInputStream(client.getInputStream(), broker.maximumPacketSize)
+    private val reader =
+        MQTTInputStream(client.getInputStream(), broker.maximumPacketSize)
     private val writer = MQTTOutputStream(client.getOutputStream())
 
     private var clientId: String? = null
@@ -52,6 +56,8 @@ class ClientConnection(
                 } else {
                     disconnect(ReasonCode.MAXIMUM_CONNECT_TIME)
                 }
+            } catch (e: EOFException) {
+                disconnect(ReasonCode.MALFORMED_PACKET)
             } catch (e: IOException) {
                 e.printStackTrace()
                 sendWill()
@@ -109,7 +115,7 @@ class ClientConnection(
         qos: Qos,
         dup: Boolean,
         properties: MQTTProperties,
-        payload: ByteArray?
+        payload: UByteArray?
     ) {
         val packetId = if (qos >= Qos.AT_MOST_ONCE) session.generatePacketId() else null
 

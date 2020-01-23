@@ -59,7 +59,7 @@ class Broker(
         qos: Qos,
         dup: Boolean,
         properties: MQTTProperties,
-        payload: ByteArray?
+        payload: UByteArray?
     ) {
         // Get the sessions which subscribe to this shared session and get the one which hasn't received a message for the longest time
         val session = sessions.minBy {
@@ -77,7 +77,7 @@ class Broker(
         qos: Qos,
         dup: Boolean,
         properties: MQTTProperties,
-        payload: ByteArray?
+        payload: UByteArray?
     ) {
         if (!retainedAvailable && retain)
             throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
@@ -106,7 +106,7 @@ class Broker(
         qos: Qos,
         dup: Boolean,
         properties: MQTTProperties,
-        payload: ByteArray?,
+        payload: UByteArray?,
         session: Session,
         subscription: Subscription
     ) {

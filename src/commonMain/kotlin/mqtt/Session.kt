@@ -1,6 +1,7 @@
 package mqtt
 
 import ClientConnection
+import currentTimeMillis
 import mqtt.packets.MQTTConnect
 import mqtt.packets.MQTTPublish
 import mqtt.packets.MQTTPubrel
@@ -117,7 +118,7 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
         destroySessionTimestamp = if (sessionExpiryInterval == 0xFFFFFFFFu)
             null
         else
-            System.currentTimeMillis() + (sessionExpiryInterval.toLong() * 1000)
+            currentTimeMillis() + (sessionExpiryInterval.toLong() * 1000)
     }
 
     fun isConnected() = connected

@@ -1,14 +1,11 @@
-package mqtt
-
+import mqtt.MQTTException
 import mqtt.packets.MQTTPublish
 import mqtt.packets.ReasonCode
-import java.io.InputStream
-import java.io.OutputStream
-import java.nio.ByteBuffer
-import java.nio.charset.CharacterCodingException
-import java.nio.charset.Charset
+import mqtt.streams.ByteArrayInputStream
+import mqtt.streams.ByteArrayOutputStream
 
-fun OutputStream.encodeVariableByteInteger(value: UInt) {
+fun ByteArrayOutputStream.encodeVariableByteInteger(value: UInt): Int {
+    var length = 0
     var x = value
     do {
         var encodedByte = x.rem(128u)
@@ -16,11 +13,13 @@ fun OutputStream.encodeVariableByteInteger(value: UInt) {
         if (x > 0u) {
             encodedByte = encodedByte or 128u
         }
-        write(encodedByte.toInt())
+        write(encodedByte)
+        length++
     } while (x > 0u)
+    return length
 }
 
-fun InputStream.decodeVariableByteInteger(): UInt {
+fun ByteArrayInputStream.decodeVariableByteInteger(): UInt {
     var multiplier = 1u
     var value = 0u
     do {
@@ -34,12 +33,14 @@ fun InputStream.decodeVariableByteInteger(): UInt {
     return value
 }
 
+expect fun currentTimeMillis(): Long
+
 fun MQTTPublish.messageExpiryIntervalExpired(): Boolean {
     val expiry = properties.messageExpiryInterval?.toLong() ?: ((Long.MAX_VALUE / 1000) - timestamp)
-    return ((expiry * 1000) + timestamp) < System.currentTimeMillis()
+    return ((expiry * 1000) + timestamp) < currentTimeMillis()
 }
 
-fun ByteArray.validatePayloadFormat(indicator: UInt): Boolean {
+fun UByteArray.validatePayloadFormat(indicator: UInt): Boolean {
     if (indicator == 1u) {
         return try {
             Charset.forName("UTF-8").newDecoder().decode(ByteBuffer.wrap(this))

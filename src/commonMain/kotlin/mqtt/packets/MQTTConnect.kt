@@ -1,10 +1,10 @@
 package mqtt.packets
 
+import encodeVariableByteInteger
 import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.encodeVariableByteInteger
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import mqtt.streams.ByteArrayInputStream
+import mqtt.streams.ByteArrayOutputStream
 
 class MQTTConnect(
     val protocolName: String,
@@ -15,9 +15,9 @@ class MQTTConnect(
     val clientID: String,
     val willProperties: MQTTProperties?,
     val willTopic: String?,
-    val willPayload: ByteArray?,
+    val willPayload: UByteArray?,
     val userName: String?,
-    val password: ByteArray?
+    val password: UByteArray?
 ) : MQTTPacket {
 
     companion object : MQTTDeserializer {
@@ -99,11 +99,11 @@ class MQTTConnect(
             val protocolName = inStream.readUTF8String()
             if (protocolName != "MQTT")
                 throw MQTTException(ReasonCode.UNSUPPORTED_PROTOCOL_VERSION)
-            val protocolVersion = inStream.read()
+            val protocolVersion = inStream.read().toInt()
             if (protocolVersion != 5)
                 throw MQTTException(ReasonCode.UNSUPPORTED_PROTOCOL_VERSION)
 
-            val connectFlags = connectFlags(inStream.read())
+            val connectFlags = connectFlags(inStream.read().toInt())
             val keepAlive = inStream.read2BytesInt()
 
             val properties = inStream.deserializeProperties(validProperties)
@@ -134,19 +134,19 @@ class MQTTConnect(
         }
     }
 
-    override fun toByteArray(): ByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
         outStream.writeUTF8String("MQTT")
         outStream.writeByte(5u)
         outStream.writeByte(connectFlags.toByte())
         outStream.write2BytesInt(keepAlive.toUInt())
-        outStream.writeBytes(properties.serializeProperties(validProperties))
+        outStream.write(properties.serializeProperties(validProperties))
 
         // Payload
         outStream.writeUTF8String(clientID)
         if (connectFlags.willFlag) {
             try {
-                outStream.writeBytes(willProperties!!.serializeProperties(validWillProperties))
+                outStream.write(willProperties!!.serializeProperties(validWillProperties))
                 outStream.writeUTF8String(willTopic!!)
                 outStream.writeBinaryData(willPayload!!)
                 outStream.writeUTF8String(userName!!)
@@ -158,9 +158,9 @@ class MQTTConnect(
 
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.CONNECT.value shl 4) and 0xF0
-        result.write(fixedHeader)
+        result.write(fixedHeader.toUInt())
         result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.writeBytes(outStream.toByteArray())
+        result.write(outStream.toByteArray())
         return result.toByteArray()
     }
 }

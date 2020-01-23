@@ -1,10 +1,10 @@
 package mqtt.packets
 
+import encodeVariableByteInteger
 import mqtt.MQTTControlPacketType
 import mqtt.MQTTException
-import mqtt.encodeVariableByteInteger
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
+import mqtt.streams.ByteArrayInputStream
+import mqtt.streams.ByteArrayOutputStream
 
 data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
 
@@ -78,20 +78,20 @@ class MQTTConnack(
         }
     }
 
-    override fun toByteArray(): ByteArray {
+    override fun toByteArray(): UByteArray {
         if (connectReasonCode !in validReasonCodes)
             throw IllegalArgumentException("Invalid reason code")
 
         val outStream = ByteArrayOutputStream()
 
-        outStream.write(if (connectAcknowledgeFlags.sessionPresentFlag && connectReasonCode == ReasonCode.SUCCESS) 1 else 0)
-        outStream.write(connectReasonCode.value)
-        outStream.writeBytes(properties.serializeProperties(validProperties))
+        outStream.write(if (connectAcknowledgeFlags.sessionPresentFlag && connectReasonCode == ReasonCode.SUCCESS) 1u else 0u)
+        outStream.write(connectReasonCode.value.toUInt())
+        outStream.write(properties.serializeProperties(validProperties))
 
         val result = ByteArrayOutputStream()
-        result.write((MQTTControlPacketType.CONNACK.value shl 4) and 0xF0)
+        result.write(((MQTTControlPacketType.CONNACK.value shl 4) and 0xF0).toUInt())
         result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.writeBytes(outStream.toByteArray())
+        result.write(outStream.toByteArray())
         return result.toByteArray()
     }
 }

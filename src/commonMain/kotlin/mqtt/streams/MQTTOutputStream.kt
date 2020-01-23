@@ -1,4 +1,4 @@
-package mqtt
+package mqtt.streams
 
 import mqtt.packets.MQTTSerializer
 import java.io.DataOutputStream
