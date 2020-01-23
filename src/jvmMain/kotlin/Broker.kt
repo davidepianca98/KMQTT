@@ -30,6 +30,7 @@ class Broker(
     constructor(port: Int = 1883, host: String = "127.0.0.1") : this(InetSocketAddress(host, port))
 
     // TODO support TLS with custom constructor with default port 8883
+    // TODO support WebSocket, section 6
 
     private val server = ServerSocket()
     val sessions = mutableMapOf<String, Session>()
