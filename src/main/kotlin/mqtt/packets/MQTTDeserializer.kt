@@ -3,6 +3,7 @@ package mqtt.packets
 import mqtt.MQTTException
 import mqtt.containsWildcard
 import mqtt.decodeVariableByteInteger
+import mqtt.validateUTF8String
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
 
@@ -38,7 +39,9 @@ interface MQTTDeserializer {
 
     fun ByteArrayInputStream.readUTF8String(): String {
         val length = read2BytesInt().toInt()
-        return String(readNBytes(length), StandardCharsets.UTF_8)
+        val string = String(readNBytes(length), StandardCharsets.UTF_8)
+        string.validateUTF8String()
+        return string
     }
 
     fun ByteArrayInputStream.readBinaryData(): ByteArray {

@@ -1,6 +1,7 @@
 package mqtt.packets
 
 import mqtt.encodeVariableByteInteger
+import mqtt.validateUTF8String
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
@@ -29,6 +30,7 @@ interface MQTTSerializer {
     }
 
     fun ByteArrayOutputStream.writeUTF8String(value: String) {
+        value.validateUTF8String()
         write2BytesInt(value.length.toUInt())
         write(value.toByteArray(StandardCharsets.UTF_8))
     }
