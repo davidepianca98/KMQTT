@@ -5,8 +5,17 @@ import kotlin.random.Random
 
 expect fun currentTimeMillis(): Long
 
+expect fun runCoroutine(block: suspend () -> Unit)
+
+expect suspend fun launchCoroutine(block: suspend () -> Unit)
+
 fun generateRandomClientId(): String {
-    return Random.Default.nextBytes(30).decodeToString()
+    val length = 30
+    val buffer = StringBuilder(length)
+    for (i in 0 until length) {
+        buffer.append(Random.Default.nextInt(97, 122).toChar())
+    }
+    return buffer.toString()
 }
 
 fun MQTTPublish.messageExpiryIntervalExpired(): Boolean {

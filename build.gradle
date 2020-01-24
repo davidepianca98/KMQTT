@@ -17,7 +17,11 @@ kotlin {
             jvmTarget = "1.8"
         }
     }
-    mingwX64("mingw")
+    mingwX64("mingw") {
+        binaries {
+            executable()
+        }
+    }
     linuxX64()
     linuxArm32Hfp()
 
@@ -59,9 +63,19 @@ kotlin {
         }
         mingwTest {
         }
-    }
-}
+        linuxX64Main {
+            dependencies {
+                implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-linuxx64:1.3.3'
+            }
+        }
+        linuxX64Test {
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.ExperimentalUnsignedTypes"]
+        }
+        linuxArm32HfpMain {
+
+        }
+        linuxArm32HfpTest {
+
+        }
+    }
 }

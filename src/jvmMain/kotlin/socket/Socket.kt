@@ -9,6 +9,7 @@ import java.net.Socket
 
 @ExperimentalUnsignedTypes
 actual class Socket(private val socket: Socket) {
+
     actual var soTimeout: Int
         get() = socket.soTimeout
         set(value) {
@@ -24,7 +25,7 @@ actual class Socket(private val socket: Socket) {
             tryJavaSocket {
                 result = dataInputStream.read().toUByte()
             }
-            return result ?: throw Exception()
+            return result ?: throw IOException()
         }
 
         override fun readBytes(length: Int): UByteArray {

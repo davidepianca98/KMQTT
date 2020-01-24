@@ -1,5 +1,3 @@
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import mqtt.*
 import mqtt.packets.MQTTProperties
 import mqtt.packets.MQTTPublish
@@ -30,26 +28,30 @@ class Broker(
     // TODO support TLS with custom constructor with default port 8883
     // TODO support WebSocket, section 6
 
-    private val server = ServerSocket(host, port)
+    private val server = ServerSocket(host, port, backlog)
     val sessions = mutableMapOf<String, Session>()
     private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
+    private var running = true
 
     init {
         receiveMaximum?.let {
             require(it in 0..65535)
         }
-
-        server.bind(backlog)
     }
 
-    fun listen() {
-        while (true) {
-            val client = server.accept()
-            client.soTimeout = 30000
-            GlobalScope.launch {
-                ClientConnection(client, this@Broker).run()
+    fun listen() = runCoroutine {
+        while (running) {
+            try {
+                val client = server.accept()
+                client.soTimeout = 30000
+                launchCoroutine {
+                    ClientConnection(client, this@Broker).run()
+                }
+            } catch (e: Exception) {
+                println(e.message)
             }
         }
+        server.close()
     }
 
     private fun publishShared(
@@ -163,5 +165,9 @@ class Broker(
         }.forEach {
             sessions.remove(it.key)
         }
+    }
+
+    fun stop() {
+        running = false
     }
 }

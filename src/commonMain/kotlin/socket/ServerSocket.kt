@@ -1,8 +1,8 @@
 package socket
 
-expect class ServerSocket(host: String, port: Int) {
+expect class ServerSocket(host: String, port: Int, backlog: Int) {
 
     fun accept(): Socket
 
-    fun bind(backlog: Int)
+    fun close()
 }

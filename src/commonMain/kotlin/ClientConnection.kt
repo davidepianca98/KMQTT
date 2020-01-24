@@ -56,6 +56,7 @@ class ClientConnection(
                 disconnect(ReasonCode.MALFORMED_PACKET)
             } catch (e: IOException) {
                 println(e.message)
+                close()
                 sendWill()
             } catch (e: Exception) {
                 println(e.message)
@@ -533,11 +534,16 @@ class ClientConnection(
     }
 
     private fun handleDisconnect(packet: MQTTDisconnect) {
-        if (session.sessionExpiryInterval == 0u && packet.properties.sessionExpiryInterval != null && packet.properties.sessionExpiryInterval != 0u)
+        val session = try {
+            session
+        } catch (e: Exception) {
+            null
+        }
+        if (session?.sessionExpiryInterval == 0u && packet.properties.sessionExpiryInterval != null && packet.properties.sessionExpiryInterval != 0u)
             disconnect(ReasonCode.PROTOCOL_ERROR)
         else {
             if (packet.reasonCode == ReasonCode.SUCCESS)
-                session.will = null
+                session?.will = null
             else
                 sendWill()
             close()
