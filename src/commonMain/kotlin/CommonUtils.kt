@@ -1,10 +1,13 @@
 import mqtt.MQTTException
 import mqtt.packets.MQTTPublish
 import mqtt.packets.ReasonCode
+import kotlin.random.Random
 
 expect fun currentTimeMillis(): Long
 
-expect fun generateRandomClientId(): String
+fun generateRandomClientId(): String {
+    return Random.Default.nextBytes(30).decodeToString()
+}
 
 fun MQTTPublish.messageExpiryIntervalExpired(): Boolean {
     val expiry = properties.messageExpiryInterval?.toLong() ?: ((Long.MAX_VALUE / 1000) - timestamp)

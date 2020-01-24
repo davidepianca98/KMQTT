@@ -1,7 +1,14 @@
-actual fun currentTimeMillis(): Long {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-}
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import platform.windows.FILETIME
+import platform.windows.GetSystemTimeAsFileTime
 
-actual fun generateRandomClientId(): String {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+actual fun currentTimeMillis(): Long {
+    memScoped {
+        val systemTime = alloc<FILETIME>()
+        GetSystemTimeAsFileTime(systemTime.ptr)
+        val millisFrom1601 = (((systemTime.dwHighDateTime shl 32) + systemTime.dwLowDateTime)) / 10000u
+        return (millisFrom1601 - 116444736000000000u).toLong()
+    }
 }
