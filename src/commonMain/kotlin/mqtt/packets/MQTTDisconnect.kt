@@ -10,7 +10,7 @@ class MQTTDisconnect(
     val properties: MQTTProperties = MQTTProperties()
 ) : MQTTPacket, MQTTSerializer {
 
-    override fun toByteArray(): UByteArray {
+    override suspend fun toByteArray(): UByteArray {
         if (reasonCode !in validReasonCodes)
             throw IllegalArgumentException("Invalid reason code")
         val outStream = ByteArrayOutputStream()
@@ -67,7 +67,7 @@ class MQTTDisconnect(
             ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
         )
 
-        override fun fromByteArray(flags: Int, data: UByteArray): MQTTDisconnect {
+        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTDisconnect {
             checkFlags(flags)
             return if (data.isEmpty()) {
                 MQTTDisconnect(ReasonCode.SUCCESS)

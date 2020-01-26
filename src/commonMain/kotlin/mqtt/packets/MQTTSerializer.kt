@@ -6,9 +6,9 @@ import validateUTF8String
 
 interface MQTTSerializer {
 
-    fun toByteArray(): UByteArray
+    suspend fun toByteArray(): UByteArray
 
-    fun ByteArrayOutputStream.write4BytesInt(value: UInt) {
+    suspend fun ByteArrayOutputStream.write4BytesInt(value: UInt) {
         val byteArray = UByteArray(4)
         byteArray[0] = ((value shr 24) and 0xFFu).toUByte()
         byteArray[1] = ((value shr 16) and 0xFFu).toUByte()
@@ -17,34 +17,34 @@ interface MQTTSerializer {
         write(byteArray)
     }
 
-    fun ByteArrayOutputStream.write2BytesInt(value: UInt) {
+    suspend fun ByteArrayOutputStream.write2BytesInt(value: UInt) {
         val byteArray = UByteArray(2)
         byteArray[0] = ((value shr 8) and 0xFFu).toUByte()
         byteArray[1] = (value and 0xFFu).toUByte()
         write(byteArray)
     }
 
-    fun ByteArrayOutputStream.writeByte(value: UInt) {
+    suspend fun ByteArrayOutputStream.writeByte(value: UInt) {
         write(value.toUByte())
     }
 
-    fun ByteArrayOutputStream.writeUTF8String(value: String) {
+    suspend fun ByteArrayOutputStream.writeUTF8String(value: String) {
         value.validateUTF8String()
         write2BytesInt(value.length.toUInt())
         write(value.encodeToByteArray().toUByteArray())
     }
 
-    fun ByteArrayOutputStream.writeBinaryData(data: UByteArray) {
+    suspend fun ByteArrayOutputStream.writeBinaryData(data: UByteArray) {
         write2BytesInt(data.size.toUInt())
         write(data)
     }
 
-    fun ByteArrayOutputStream.writeUTF8StringPair(value: Pair<String, String>) {
+    suspend fun ByteArrayOutputStream.writeUTF8StringPair(value: Pair<String, String>) {
         writeUTF8String(value.first)
         writeUTF8String(value.second)
     }
 
-    fun MQTTProperties.serializeProperties(validProperties: List<Property>): UByteArray {
+    suspend fun MQTTProperties.serializeProperties(validProperties: List<Property>): UByteArray {
         val out = ByteArrayOutputStream()
         payloadFormatIndicator?.let {
             if (Property.PAYLOAD_FORMAT_INDICATOR in validProperties) {

@@ -20,7 +20,7 @@ class MQTTSubscribe(
             Property.USER_PROPERTY
         )
 
-        override fun fromByteArray(flags: Int, data: UByteArray): MQTTSubscribe {
+        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTSubscribe {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val packetIdentifier = inStream.read2BytesInt()
@@ -61,7 +61,7 @@ class MQTTSubscribe(
             }
         }
 
-        private fun ByteArrayInputStream.deserializeSubscriptionOptions(): SubscriptionOptions {
+        private suspend fun ByteArrayInputStream.deserializeSubscriptionOptions(): SubscriptionOptions {
             val subscriptionOptions = readByte()
             val qos = Qos.valueOf((subscriptionOptions and 0x3u).toInt())
             val noLocal =
@@ -85,7 +85,7 @@ class MQTTSubscribe(
         }
     }
 
-    override fun toByteArray(): UByteArray {
+    override suspend fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.write2BytesInt(packetIdentifier)

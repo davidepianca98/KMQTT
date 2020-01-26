@@ -6,7 +6,7 @@ import socket.streams.decodeVariableByteInteger
 
 class MQTTInputStream(private val inputStream: InputStream, private val maximumPacketSize: UInt? = null) : InputStream {
 
-    fun readPacket(): MQTTPacket {
+    suspend fun readPacket(): MQTTPacket {
         val byte1 = read()
         val mqttControlPacketType = (byte1.toInt() shr 4) and 0b1111
         val flags = byte1 and 0b1111u
@@ -24,7 +24,7 @@ class MQTTInputStream(private val inputStream: InputStream, private val maximumP
         return parseMQTTPacket(type, flags.toInt(), packet)
     }
 
-    private fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: UByteArray): MQTTPacket {
+    private suspend fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: UByteArray): MQTTPacket {
         return when (type) {
             MQTTControlPacketType.CONNECT -> MQTTConnect.fromByteArray(flags, data)
             MQTTControlPacketType.Reserved -> throw MQTTException(
@@ -47,11 +47,11 @@ class MQTTInputStream(private val inputStream: InputStream, private val maximumP
         }
     }
 
-    override fun read(): UByte {
+    override suspend fun read(): UByte {
         return inputStream.read()
     }
 
-    override fun readBytes(length: Int): UByteArray {
+    override suspend fun readBytes(length: Int): UByteArray {
         return inputStream.readBytes(length)
     }
 }

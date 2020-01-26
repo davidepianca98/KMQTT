@@ -36,7 +36,7 @@ class ClientConnection(
     private var keepAlive = 0
     private var connectHandled = false
 
-    fun run() {
+    suspend fun run() {
         running = true
 
         while (running) {
@@ -46,6 +46,7 @@ class ClientConnection(
             } catch (e: MQTTException) {
                 disconnect(e.reasonCode)
             } catch (e: SocketTimeoutException) {
+                println(e.message)
                 if (session.isConnected()) {
                     sendWill()
                     disconnect(ReasonCode.KEEP_ALIVE_TIMEOUT)
@@ -53,13 +54,13 @@ class ClientConnection(
                     disconnect(ReasonCode.MAXIMUM_CONNECT_TIME)
                 }
             } catch (e: EOFException) {
-                disconnect(ReasonCode.MALFORMED_PACKET)
+                close()
             } catch (e: IOException) {
-                println(e.message)
+                println(e::class.qualifiedName)
                 close()
                 sendWill()
             } catch (e: Exception) {
-                println(e.message)
+                println(e::class.qualifiedName)
                 disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
             }
         }
@@ -71,14 +72,14 @@ class ClientConnection(
         client.close()
     }
 
-    private fun disconnect(reasonCode: ReasonCode) {
+    private suspend fun disconnect(reasonCode: ReasonCode) {
         writer.writePacket(MQTTDisconnect(reasonCode))
         close()
         if (reasonCode != ReasonCode.SUCCESS)
             sendWill()
     }
 
-    private fun handlePacket(packet: MQTTPacket) {
+    private suspend fun handlePacket(packet: MQTTPacket) {
         when (packet) {
             is MQTTConnect -> {
                 try {
@@ -106,7 +107,7 @@ class ClientConnection(
         }
     }
 
-    fun publish(
+    suspend fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,
@@ -178,7 +179,7 @@ class ClientConnection(
             sendQuota--
     }
 
-    private fun handleAuthentication(packet: MQTTConnect): Boolean {
+    private suspend fun handleAuthentication(packet: MQTTConnect): Boolean {
         if (packet.userName != null || packet.password != null) {
             if (broker.authentication?.authenticate(packet.userName, packet.password) == false) {
                 val connack = MQTTConnack(ConnectAcknowledgeFlags(false), ReasonCode.NOT_AUTHORIZED)
@@ -191,7 +192,7 @@ class ClientConnection(
         return true
     }
 
-    private fun sendWill() {
+    private suspend fun sendWill() {
         val will = broker.sessions[clientId]?.will ?: return
         val properties = MQTTProperties()
         properties.payloadFormatIndicator = will.payloadFormatIndicator
@@ -205,7 +206,7 @@ class ClientConnection(
         session.will = null
     }
 
-    private fun handleConnect(packet: MQTTConnect) {
+    private suspend fun handleConnect(packet: MQTTConnect) {
         if (!handleAuthentication(packet))
             return
 
@@ -332,7 +333,7 @@ class ClientConnection(
         return broker.authorization?.authorize(topicName) != false
     }
 
-    private fun handlePublish(packet: MQTTPublish) {
+    private suspend fun handlePublish(packet: MQTTPublish) {
         // Handle topic alias
         val topic = getTopicOrAlias(packet)
 
@@ -406,7 +407,7 @@ class ClientConnection(
         incrementSendQuota()
     }
 
-    private fun handlePubrec(packet: MQTTPubrec) {
+    private suspend fun handlePubrec(packet: MQTTPubrec) {
         if (packet.reasonCode >= ReasonCode.UNSPECIFIED_ERROR) {
             session.acknowledgePublish(packet.packetId)
             incrementSendQuota()
@@ -422,7 +423,7 @@ class ClientConnection(
         writer.writePacket(pubrel)
     }
 
-    private fun handlePubrel(packet: MQTTPubrel) {
+    private suspend fun handlePubrel(packet: MQTTPubrel) {
         if (packet.reasonCode != ReasonCode.SUCCESS)
             return
         session.qos2ListReceived.remove(packet.packetId)?.let {
@@ -464,7 +465,7 @@ class ClientConnection(
         return retainedMessagesList
     }
 
-    private fun handleSubscribe(packet: MQTTSubscribe) {
+    private suspend fun handleSubscribe(packet: MQTTSubscribe) {
         val retainedMessagesList = mutableListOf<MQTTPublish>()
         val reasonCodes = packet.subscriptions.map { subscription ->
             if (!checkAuthorization(subscription.topicFilter))
@@ -517,7 +518,7 @@ class ClientConnection(
         retainedMessagesList.forEach { writer.writePacket(it) }
     }
 
-    private fun handleUnsubscribe(packet: MQTTUnsubscribe) {
+    private suspend fun handleUnsubscribe(packet: MQTTUnsubscribe) {
         val reasonCodes = packet.topicFilters.map { topicFilter ->
             if (session.isPacketIdInUse(packet.packetIdentifier))
                 return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
@@ -529,11 +530,11 @@ class ClientConnection(
         writer.writePacket(MQTTUnsuback(packet.packetIdentifier, reasonCodes))
     }
 
-    private fun handlePingreq() {
+    private suspend fun handlePingreq() {
         writer.writePacket(MQTTPingresp())
     }
 
-    private fun handleDisconnect(packet: MQTTDisconnect) {
+    private suspend fun handleDisconnect(packet: MQTTDisconnect) {
         val session = try {
             session
         } catch (e: Exception) {

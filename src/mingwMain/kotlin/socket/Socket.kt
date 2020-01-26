@@ -25,7 +25,7 @@ actual class Socket(private val socket: ULong) {
 
     private val inputStream = object : InputStream {
 
-        private val buf = ByteArray(2048)
+        private val buf = ByteArray(8192)
         private var bufSize = 0
         private var position = 0
 
@@ -53,23 +53,23 @@ actual class Socket(private val socket: ULong) {
             return array
         }
 
-        override fun read(): UByte {
+        override suspend fun read(): UByte {
             return read(1)[0].toUByte()
         }
 
-        override fun readBytes(length: Int): UByteArray {
+        override suspend fun readBytes(length: Int): UByteArray {
             return read(length).toUByteArray()
         }
     }
 
     private val outputStream = object : OutputStream {
-        override fun write(b: UByte) {
+        override suspend fun write(b: UByte) {
             val array = UByteArray(1)
             array[0] = b
             write(array)
         }
 
-        override fun write(b: UByteArray) {
+        override suspend fun write(b: UByteArray) {
             b.toByteArray().usePinned { pinned ->
                 if (platform.posix.send(socket, pinned.addressOf(0), b.size, 0) == SOCKET_ERROR) {
                     throw IOException("Error in send ${WSAGetLastError()}")

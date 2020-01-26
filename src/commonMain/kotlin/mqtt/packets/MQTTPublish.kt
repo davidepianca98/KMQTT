@@ -20,7 +20,7 @@ class MQTTPublish(
     val timestamp: Long = currentTimeMillis()
 ) : MQTTPacket {
 
-    override fun toByteArray(): UByteArray {
+    override suspend fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.writeUTF8String(topicName)
@@ -61,7 +61,7 @@ class MQTTPublish(
             Property.USER_PROPERTY
         )
 
-        override fun fromByteArray(flags: Int, data: UByteArray): MQTTPublish {
+        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTPublish {
             checkFlags(flags)
             val retain = flags.flagsBit(0) == 1
             val qos = getQos(flags)

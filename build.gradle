@@ -23,7 +23,6 @@ kotlin {
         }
     }
     linuxX64()
-    linuxArm32Hfp()
 
     sourceSets {
         all {
@@ -69,12 +68,6 @@ kotlin {
             }
         }
         linuxX64Test {
-
-        }
-        linuxArm32HfpMain {
-
-        }
-        linuxArm32HfpTest {
 
         }
     }

@@ -2,7 +2,7 @@ package socket.streams
 
 interface OutputStream {
 
-    fun write(b: UByte)
+    suspend fun write(b: UByte)
 
-    fun write(b: UByteArray)
+    suspend fun write(b: UByteArray)
 }

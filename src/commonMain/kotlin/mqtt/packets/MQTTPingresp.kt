@@ -6,7 +6,7 @@ import socket.streams.encodeVariableByteInteger
 
 class MQTTPingresp : MQTTPacket {
 
-    override fun toByteArray(): UByteArray {
+    override suspend fun toByteArray(): UByteArray {
         val result = ByteArrayOutputStream()
         val fixedHeader = (MQTTControlPacketType.PINGRESP.value shl 4) and 0xF0
         result.write(fixedHeader.toUByte())
@@ -16,7 +16,7 @@ class MQTTPingresp : MQTTPacket {
 
     companion object : MQTTDeserializer {
 
-        override fun fromByteArray(flags: Int, data: UByteArray): MQTTPingresp {
+        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTPingresp {
             checkFlags(flags)
             if (data.isNotEmpty())
                 throw MQTTException(ReasonCode.MALFORMED_PACKET)

@@ -1,3 +1,4 @@
+import kotlinx.coroutines.CoroutineScope
 import mqtt.MQTTException
 import mqtt.packets.MQTTPublish
 import mqtt.packets.ReasonCode
@@ -5,9 +6,7 @@ import kotlin.random.Random
 
 expect fun currentTimeMillis(): Long
 
-expect fun runCoroutine(block: suspend () -> Unit)
-
-expect suspend fun launchCoroutine(block: suspend () -> Unit)
+expect fun runCoroutine(block: suspend CoroutineScope.() -> Unit)
 
 fun generateRandomClientId(): String {
     val length = 30

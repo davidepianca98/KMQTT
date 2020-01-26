@@ -1,3 +1,4 @@
+import kotlinx.coroutines.launch
 import mqtt.*
 import mqtt.packets.MQTTProperties
 import mqtt.packets.MQTTPublish
@@ -44,7 +45,7 @@ class Broker(
             try {
                 val client = server.accept()
                 client.soTimeout = 30000
-                launchCoroutine {
+                launch {
                     ClientConnection(client, this@Broker).run()
                 }
             } catch (e: Exception) {
@@ -54,7 +55,7 @@ class Broker(
         server.close()
     }
 
-    private fun publishShared(
+    private suspend fun publishShared(
         shareName: String,
         retain: Boolean,
         topicName: String,
@@ -73,14 +74,14 @@ class Broker(
         }
     }
 
-    fun publish(
+    suspend fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,
         dup: Boolean,
         properties: MQTTProperties,
         payload: UByteArray?
-    ) {
+    ) { // TODO something here not working in mingw
         if (!retainedAvailable && retain)
             throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
         maximumQos?.let {
@@ -102,7 +103,7 @@ class Broker(
         }
     }
 
-    private fun publish(
+    private suspend fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,

@@ -2,6 +2,7 @@ package mqtt
 
 import ClientConnection
 import currentTimeMillis
+import kotlinx.coroutines.coroutineScope
 import mqtt.packets.MQTTConnect
 import mqtt.packets.MQTTPublish
 import mqtt.packets.MQTTPubrel
@@ -23,12 +24,13 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     // QoS 2 messages which have been received from the Client that have not been completely acknowledged
     val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
 
-    fun sendQosBiggerThanZero(packet: MQTTPublish, block: (packet: MQTTPublish) -> Unit) {
-        pendingSendMessages[packet.packetId!!] = packet
-        block(packet)
-        pendingSendMessages.remove(packet.packetId)
-        pendingAcknowledgeMessages[packet.packetId] = packet
-    }
+    suspend fun sendQosBiggerThanZero(packet: MQTTPublish, block: suspend (packet: MQTTPublish) -> Unit) =
+        coroutineScope {
+            pendingSendMessages[packet.packetId!!] = packet
+            block(packet)
+            pendingSendMessages.remove(packet.packetId)
+            pendingAcknowledgeMessages[packet.packetId] = packet
+        }
 
     fun hasPendingAcknowledgeMessage(packetId: UInt): Boolean {
         return pendingAcknowledgeMessages[packetId] != null

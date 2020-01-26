@@ -91,7 +91,7 @@ class MQTTConnect(
             )
         }
 
-        override fun fromByteArray(flags: Int, data: UByteArray): MQTTConnect {
+        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTConnect {
             checkFlags(flags)
 
             val inStream = ByteArrayInputStream(data)
@@ -133,7 +133,7 @@ class MQTTConnect(
         }
     }
 
-    override fun toByteArray(): UByteArray {
+    override suspend fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
         outStream.writeUTF8String("MQTT")
         outStream.writeByte(5u)

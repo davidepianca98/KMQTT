@@ -1,8 +1,7 @@
 import kotlinx.cinterop.alloc
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 import platform.windows.FILETIME
 import platform.windows.GetSystemTimeAsFileTime
@@ -16,16 +15,8 @@ actual fun currentTimeMillis(): Long {
     }
 }
 
-actual fun runCoroutine(block: suspend () -> Unit) {
+actual fun runCoroutine(block: suspend CoroutineScope.() -> Unit) {
     runBlocking {
         block()
-    }
-}
-
-actual suspend fun launchCoroutine(block: suspend () -> Unit) {
-    coroutineScope {
-        launch {
-            block()
-        }
     }
 }

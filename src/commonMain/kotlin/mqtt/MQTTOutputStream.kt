@@ -5,15 +5,15 @@ import socket.streams.OutputStream
 
 class MQTTOutputStream(private val outputStream: OutputStream) : OutputStream {
 
-    fun writePacket(packet: MQTTSerializer) {
+    suspend fun writePacket(packet: MQTTSerializer) {
         write(packet.toByteArray().toUByteArray())
     }
 
-    override fun write(b: UByte) {
+    override suspend fun write(b: UByte) {
         outputStream.write(b)
     }
 
-    override fun write(b: UByteArray) {
+    override suspend fun write(b: UByteArray) {
         outputStream.write(b)
     }
 }

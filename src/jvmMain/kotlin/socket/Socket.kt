@@ -3,63 +3,82 @@ package socket
 import socket.streams.EOFException
 import socket.streams.InputStream
 import socket.streams.OutputStream
-import java.io.DataInputStream
-import java.io.DataOutputStream
-import java.net.Socket
+import java.nio.ByteBuffer
+import java.nio.channels.AsynchronousSocketChannel
+import java.nio.channels.CompletionHandler
+import java.nio.channels.InterruptedByTimeoutException
+import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 @ExperimentalUnsignedTypes
-actual class Socket(private val socket: Socket) {
+actual class Socket(private val socket: AsynchronousSocketChannel) {
 
-    actual var soTimeout: Int
-        get() = socket.soTimeout
-        set(value) {
-            socket.soTimeout = value
-        }
-
-    private val dataInputStream = DataInputStream(socket.getInputStream())
-    private val dataOutputStream = DataOutputStream(socket.getOutputStream())
+    actual var soTimeout: Int = 30000
 
     private val inputStream = object : InputStream {
-        override fun read(): UByte {
-            var result: UByte? = null
-            tryJavaSocket {
-                result = dataInputStream.read().toUByte()
-            }
-            return result ?: throw IOException()
+
+        private val buf = ByteBuffer.allocate(8192)
+        private var bufSize = 0
+        private var position = 0
+
+        override suspend fun read(): UByte {
+            return readBytes(1)[0]
         }
 
-        override fun readBytes(length: Int): UByteArray {
-            val data = ByteArray(length)
-            tryJavaSocket {
-                dataInputStream.read(data, 0, length)
+        override suspend fun readBytes(length: Int): UByteArray {
+            if (position == bufSize)
+                buf.clear()
+            if (position + length > bufSize) {
+                tryJavaSocket {
+                    bufSize = socket.readSuspend(buf)
+                    when {
+                        bufSize < 0 -> throw EOFException()
+                        bufSize >= 0 -> position = 0
+                    }
+                }
             }
-            return data.toUByteArray()
+
+            val array = buf.array().toUByteArray().copyOfRange(position, position + length)
+            position += length
+            return array
         }
+    }
+
+    private suspend fun AsynchronousSocketChannel.readSuspend(data: ByteBuffer) = suspendCoroutine<Int> { c ->
+        this.read(data, soTimeout.toLong(), TimeUnit.MILLISECONDS, Unit, object : CompletionHandler<Int, Unit> {
+            override fun completed(result: Int, attachment: Unit) = Unit.apply { c.resume(result) }
+            override fun failed(exc: Throwable, attachment: Unit) = Unit.apply { c.resumeWithException(exc) }
+        })
     }
 
     private val outputStream = object : OutputStream {
-        override fun write(b: UByte) {
-            tryJavaSocket {
-                dataOutputStream.write(b.toInt())
-                dataOutputStream.flush()
-            }
+        override suspend fun write(b: UByte) {
+            val array = UByteArray(1)
+            array[0] = b
+            write(array)
         }
 
-        override fun write(b: UByteArray) {
+        override suspend fun write(b: UByteArray) {
             tryJavaSocket {
-                dataOutputStream.write(b.toByteArray())
-                dataOutputStream.flush()
+                socket.writeSuspend(ByteBuffer.wrap(b.toByteArray()))
             }
         }
     }
 
-    fun tryJavaSocket(block: () -> Unit) {
+    private suspend fun AsynchronousSocketChannel.writeSuspend(data: ByteBuffer) = suspendCoroutine<Int> { c ->
+        this.write(data, soTimeout.toLong(), TimeUnit.MILLISECONDS, Unit, object : CompletionHandler<Int, Unit> {
+            override fun completed(result: Int, attachment: Unit) = Unit.apply { c.resume(result) }
+            override fun failed(exc: Throwable, attachment: Unit) = Unit.apply { c.resumeWithException(exc) }
+        })
+    }
+
+    suspend fun tryJavaSocket(block: suspend () -> Unit) {
         try {
             block()
-        } catch (e: java.net.SocketTimeoutException) {
+        } catch (e: InterruptedByTimeoutException) {
             throw SocketTimeoutException()
-        } catch (e: java.io.EOFException) {
-            throw EOFException()
         } catch (e: java.io.IOException) {
             throw IOException(e.message)
         } catch (e: Exception) {

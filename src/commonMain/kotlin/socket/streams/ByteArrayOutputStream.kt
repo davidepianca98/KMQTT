@@ -10,7 +10,7 @@ class ByteArrayOutputStream : OutputStream {
             array = array.copyOf(array.size + length * 2)
     }
 
-    override fun write(b: UByte) {
+    override suspend fun write(b: UByte) {
         ensureCapacity(1)
         array[count] = b
         count += 1
@@ -22,7 +22,7 @@ class ByteArrayOutputStream : OutputStream {
         count += len
     }
 
-    override fun write(b: UByteArray) {
+    override suspend fun write(b: UByteArray) {
         ensureCapacity(b.size)
         write(b, 0, b.size)
     }

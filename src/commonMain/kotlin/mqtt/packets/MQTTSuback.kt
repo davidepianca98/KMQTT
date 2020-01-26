@@ -33,7 +33,7 @@ class MQTTSuback(
             ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
         )
 
-        override fun fromByteArray(flags: Int, data: UByteArray): MQTTSuback {
+        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTSuback {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
 
@@ -52,7 +52,7 @@ class MQTTSuback(
         }
     }
 
-    override fun toByteArray(): UByteArray {
+    override suspend fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.write2BytesInt(packetIdentifier)
