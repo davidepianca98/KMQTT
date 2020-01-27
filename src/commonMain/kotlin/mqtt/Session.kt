@@ -2,15 +2,14 @@ package mqtt
 
 import ClientConnection
 import currentTimeMillis
-import kotlinx.coroutines.coroutineScope
 import mqtt.packets.MQTTConnect
 import mqtt.packets.MQTTPublish
 import mqtt.packets.MQTTPubrel
 
-class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
+class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
 
     private var connected = false // true only after sending CONNACK
-    var destroySessionTimestamp: Long? = null
+    var sessionDisconnectedTimestamp: Long? = null
 
     var clientId = packet.clientID
 
@@ -24,13 +23,12 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
     // QoS 2 messages which have been received from the Client that have not been completely acknowledged
     val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
 
-    suspend fun sendQosBiggerThanZero(packet: MQTTPublish, block: suspend (packet: MQTTPublish) -> Unit) =
-        coroutineScope {
-            pendingSendMessages[packet.packetId!!] = packet
-            block(packet)
-            pendingSendMessages.remove(packet.packetId)
-            pendingAcknowledgeMessages[packet.packetId] = packet
-        }
+    fun sendQosBiggerThanZero(packet: MQTTPublish, block: (packet: MQTTPublish) -> Unit) {
+        pendingSendMessages[packet.packetId!!] = packet
+        block(packet)
+        pendingSendMessages.remove(packet.packetId)
+        pendingAcknowledgeMessages[packet.packetId] = packet
+    }
 
     fun hasPendingAcknowledgeMessage(packetId: UInt): Boolean {
         return pendingAcknowledgeMessages[packetId] != null
@@ -112,12 +110,17 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection) {
 
     fun connected() {
         connected = true
-        destroySessionTimestamp = null
+        sessionDisconnectedTimestamp = null
     }
 
     fun disconnected() {
         connected = false
-        destroySessionTimestamp = if (sessionExpiryInterval == 0xFFFFFFFFu)
+        clientConnection = null
+        sessionDisconnectedTimestamp = currentTimeMillis()
+    }
+
+    fun getExpiryTime(): Long? {
+        return if (sessionExpiryInterval == 0xFFFFFFFFu)
             null
         else
             currentTimeMillis() + (sessionExpiryInterval.toLong() * 1000)

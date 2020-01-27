@@ -20,7 +20,7 @@ class MQTTPublish(
     val timestamp: Long = currentTimeMillis()
 ) : MQTTPacket {
 
-    override suspend fun toByteArray(): UByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.writeUTF8String(topicName)
@@ -61,10 +61,10 @@ class MQTTPublish(
             Property.USER_PROPERTY
         )
 
-        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTPublish {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTPublish {
             checkFlags(flags)
             val retain = flags.flagsBit(0) == 1
-            val qos = getQos(flags)
+            val qos = getQos(flags) ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
             val dup = flags.flagsBit(3) == 1
 
             if (qos == Qos.AT_MOST_ONCE && dup)
@@ -84,7 +84,7 @@ class MQTTPublish(
             return MQTTPublish(retain, qos, dup, topicName, packetIdentifier, properties, payload)
         }
 
-        private fun getQos(flags: Int): Qos = Qos.valueOf(flags.flagsBit(1) or (flags.flagsBit(2) shl 1))
+        private fun getQos(flags: Int): Qos? = Qos.valueOf(flags.flagsBit(1) or (flags.flagsBit(2) shl 1))
 
         override fun checkFlags(flags: Int) {
 

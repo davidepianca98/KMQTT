@@ -11,7 +11,7 @@ class MQTTPubcomp(
     val properties: MQTTProperties = MQTTProperties()
 ) : MQTTPacket {
 
-    override suspend fun toByteArray(): UByteArray {
+    override fun toByteArray(): UByteArray {
         if (reasonCode !in validReasonCodes)
             throw IllegalArgumentException("Invalid reason code")
         val outStream = ByteArrayOutputStream()
@@ -40,7 +40,7 @@ class MQTTPubcomp(
             ReasonCode.PACKET_IDENTIFIER_NOT_FOUND
         )
 
-        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTPubcomp {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTPubcomp {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val packetId = inStream.read2BytesInt()

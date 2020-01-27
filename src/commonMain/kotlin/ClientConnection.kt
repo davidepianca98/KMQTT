@@ -2,13 +2,12 @@ import mqtt.*
 import mqtt.packets.*
 import socket.IOException
 import socket.Socket
-import socket.SocketTimeoutException
 import socket.streams.EOFException
 import kotlin.math.min
 
 
 class ClientConnection(
-    private val client: Socket,
+    val client: Socket,
     private val broker: Broker
 ) {
 
@@ -16,15 +15,11 @@ class ClientConnection(
         private const val DEFAULT_MAX_SEND_QUOTA = 65535u
     }
 
-    private val reader = MQTTInputStream(client.getInputStream(), broker.maximumPacketSize)
-    private val writer = MQTTOutputStream(client.getOutputStream())
-
     private var clientId: String? = null
     private val session: Session
         get() = broker.getSession(clientId) ?: throw Exception("Session not found")
 
     // Client connection state
-    private var running = false
     private val topicAliasesClient = mutableMapOf<UInt, String>()
     private val topicAliasesServer = mutableMapOf<String, UInt>()
     private var maxSendQuota: UInt = DEFAULT_MAX_SEND_QUOTA // Client receive maximum
@@ -36,50 +31,68 @@ class ClientConnection(
     private var keepAlive = 0
     private var connectHandled = false
 
-    suspend fun run() {
-        running = true
+    private val currentReceivedPacket = MQTTCurrentPacket(broker.maximumPacketSize)
+    private var lastReceivedMessageTimestamp = currentTimeMillis()
 
-        while (running) {
-            try {
-                val packet = reader.readPacket()
-                handlePacket(packet)
-            } catch (e: MQTTException) {
-                disconnect(e.reasonCode)
-            } catch (e: SocketTimeoutException) {
-                println(e.message)
-                if (session.isConnected()) {
-                    sendWill()
-                    disconnect(ReasonCode.KEEP_ALIVE_TIMEOUT)
-                } else {
-                    disconnect(ReasonCode.MAXIMUM_CONNECT_TIME)
-                }
-            } catch (e: EOFException) {
-                close()
-            } catch (e: IOException) {
-                println(e::class.qualifiedName)
-                close()
-                sendWill()
-            } catch (e: Exception) {
-                println(e::class.qualifiedName)
-                disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+    fun checkKeepAliveExpired() {
+        val timeout = ((keepAlive * 1000).toDouble() * 1.5).toInt()
+        val expired = currentTimeMillis() > lastReceivedMessageTimestamp + timeout
+        if (expired) {
+            if (connectHandled) {
+                broker.sendWill(broker.sessions[clientId])
+                disconnect(ReasonCode.KEEP_ALIVE_TIMEOUT)
+            } else {
+                disconnect(ReasonCode.MAXIMUM_CONNECT_TIME)
             }
         }
-        session.disconnected()
+    }
+
+    fun dataReceived(data: UByteArray) {
+        lastReceivedMessageTimestamp = currentTimeMillis()
+        try {
+            currentReceivedPacket.addData(data)?.let {
+                handlePacket(it)
+            }
+        } catch (e: MQTTException) {
+            disconnect(e.reasonCode)
+        } catch (e: EOFException) {
+            close()
+        } catch (e: IOException) {
+            println(e.message)
+            close()
+            broker.sendWill(broker.sessions[clientId])
+        } catch (e: Exception) {
+            println(e.message)
+            disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+        }
+    }
+
+    private fun writePacket(packet: MQTTPacket) {
+        try {
+            client.send(packet.toByteArray())
+        } catch (e: IOException) {
+            close()
+            broker.sendWill(broker.sessions[clientId])
+        }
+    }
+
+    fun ioException() {
+        close()
+        broker.sendWill(broker.sessions[clientId])
     }
 
     private fun close() {
-        running = false
-        client.close()
+        session.disconnected()
     }
 
-    private suspend fun disconnect(reasonCode: ReasonCode) {
-        writer.writePacket(MQTTDisconnect(reasonCode))
+    private fun disconnect(reasonCode: ReasonCode) {
+        writePacket(MQTTDisconnect(reasonCode))
         close()
         if (reasonCode != ReasonCode.SUCCESS)
-            sendWill()
+            broker.sendWill(broker.sessions[clientId])
     }
 
-    private suspend fun handlePacket(packet: MQTTPacket) {
+    private fun handlePacket(packet: MQTTPacket) {
         when (packet) {
             is MQTTConnect -> {
                 try {
@@ -89,7 +102,7 @@ class ClientConnection(
                     } else
                         throw MQTTException(ReasonCode.PROTOCOL_ERROR)
                 } catch (e: MQTTException) {
-                    writer.writePacket(MQTTConnack(ConnectAcknowledgeFlags(false), e.reasonCode))
+                    writePacket(MQTTConnack(ConnectAcknowledgeFlags(false), e.reasonCode))
                     close()
                 }
             }
@@ -107,7 +120,7 @@ class ClientConnection(
         }
     }
 
-    suspend fun publish(
+    fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,
@@ -153,11 +166,11 @@ class ClientConnection(
             if (sendQuota <= 0u)
                 return
             session.sendQosBiggerThanZero(packet) {
-                writer.writePacket(packet)
+                writePacket(packet)
                 decrementSendQuota()
             }
         } else {
-            writer.writePacket(packet)
+            writePacket(packet)
         }
     }
 
@@ -179,11 +192,11 @@ class ClientConnection(
             sendQuota--
     }
 
-    private suspend fun handleAuthentication(packet: MQTTConnect): Boolean {
+    private fun handleAuthentication(packet: MQTTConnect): Boolean {
         if (packet.userName != null || packet.password != null) {
             if (broker.authentication?.authenticate(packet.userName, packet.password) == false) {
                 val connack = MQTTConnack(ConnectAcknowledgeFlags(false), ReasonCode.NOT_AUTHORIZED)
-                writer.writePacket(connack)
+                writePacket(connack)
                 close()
                 return false
             }
@@ -192,21 +205,7 @@ class ClientConnection(
         return true
     }
 
-    private suspend fun sendWill() {
-        val will = broker.sessions[clientId]?.will ?: return
-        val properties = MQTTProperties()
-        properties.payloadFormatIndicator = will.payloadFormatIndicator
-        properties.messageExpiryInterval = will.messageExpiryInterval
-        properties.contentType = will.contentType
-        properties.responseTopic = will.responseTopic
-        properties.correlationData = will.correlationData
-        properties.userProperty += will.userProperty
-        broker.publish(will.retain, will.topic, will.qos, false, properties, will.payload)
-        // The will must be removed after sending
-        session.will = null
-    }
-
-    private suspend fun handleConnect(packet: MQTTConnect) {
+    private fun handleConnect(packet: MQTTConnect) {
         if (!handleAuthentication(packet))
             return
 
@@ -218,11 +217,11 @@ class ClientConnection(
         if (session != null) {
             if (session.isConnected()) {
                 // Send disconnect to the old connection and close it
-                session.clientConnection.disconnect(ReasonCode.SESSION_TAKEN_OVER)
+                session.clientConnection?.disconnect(ReasonCode.SESSION_TAKEN_OVER)
 
                 // Send old will if present
                 if (session.will?.willDelayInterval == 0u || packet.connectFlags.cleanStart) {
-                    sendWill()
+                    broker.sendWill(session)
                 }
             }
             if (packet.connectFlags.cleanStart) {
@@ -242,7 +241,6 @@ class ClientConnection(
         }
 
         keepAlive = packet.keepAlive
-        client.soTimeout = ((keepAlive * 1000).toDouble() * 1.5).toInt()
 
         sendQuota = packet.properties.receiveMaximum ?: DEFAULT_MAX_SEND_QUOTA
         maxSendQuota = packet.properties.receiveMaximum ?: DEFAULT_MAX_SEND_QUOTA
@@ -278,9 +276,7 @@ class ClientConnection(
                 throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
         }
 
-        broker.maximumPacketSize?.let {
-            connackProperties.maximumPacketSize = it.toUInt()
-        }
+        connackProperties.maximumPacketSize = broker.maximumPacketSize
 
         if (packet.clientID.isEmpty())
             connackProperties.assignedClientIdentifier = clientId
@@ -324,7 +320,7 @@ class ClientConnection(
         // TODO implement section 3.2.2.3.16 and 4.11 for Server redirection
 
         val connack = MQTTConnack(ConnectAcknowledgeFlags(sessionPresent), ReasonCode.SUCCESS, connackProperties)
-        writer.writePacket(connack)
+        writePacket(connack)
         this.clientId = clientId
         session.connected()
     }
@@ -333,7 +329,7 @@ class ClientConnection(
         return broker.authorization?.authorize(topicName) != false
     }
 
-    private suspend fun handlePublish(packet: MQTTPublish) {
+    private fun handlePublish(packet: MQTTPublish) {
         // Handle topic alias
         val topic = getTopicOrAlias(packet)
 
@@ -360,13 +356,13 @@ class ClientConnection(
         when (packet.qos) {
             Qos.AT_LEAST_ONCE -> {
                 val reasonCode = qos12ReasonCode(packet)
-                writer.writePacket(MQTTPuback(packet.packetId!!, reasonCode))
+                writePacket(MQTTPuback(packet.packetId!!, reasonCode))
                 if (reasonCode != ReasonCode.SUCCESS)
                     return
             }
             Qos.EXACTLY_ONCE -> {
                 val reasonCode = qos12ReasonCode(packet)
-                writer.writePacket(MQTTPubrec(packet.packetId!!, reasonCode))
+                writePacket(MQTTPubrec(packet.packetId!!, reasonCode))
                 if (reasonCode == ReasonCode.SUCCESS)
                     session.qos2ListReceived[packet.packetId] = packet
                 return // Don't send the PUBLISH to other clients until PUBCOMP
@@ -407,7 +403,7 @@ class ClientConnection(
         incrementSendQuota()
     }
 
-    private suspend fun handlePubrec(packet: MQTTPubrec) {
+    private fun handlePubrec(packet: MQTTPubrec) {
         if (packet.reasonCode >= ReasonCode.UNSPECIFIED_ERROR) {
             session.acknowledgePublish(packet.packetId)
             incrementSendQuota()
@@ -420,17 +416,17 @@ class ClientConnection(
         }
         val pubrel = MQTTPubrel(packet.packetId, reasonCode)
         session.addPendingAcknowledgePubrel(pubrel)
-        writer.writePacket(pubrel)
+        writePacket(pubrel)
     }
 
-    private suspend fun handlePubrel(packet: MQTTPubrel) {
+    private fun handlePubrel(packet: MQTTPubrel) {
         if (packet.reasonCode != ReasonCode.SUCCESS)
             return
         session.qos2ListReceived.remove(packet.packetId)?.let {
-            writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.SUCCESS, packet.properties))
+            writePacket(MQTTPubcomp(packet.packetId, ReasonCode.SUCCESS, packet.properties))
             broker.publish(it.retain, getTopicOrAlias(it), Qos.EXACTLY_ONCE, false, packet.properties, it.payload)
         } ?: run {
-            writer.writePacket(MQTTPubcomp(packet.packetId, ReasonCode.PACKET_IDENTIFIER_NOT_FOUND, packet.properties))
+            writePacket(MQTTPubcomp(packet.packetId, ReasonCode.PACKET_IDENTIFIER_NOT_FOUND, packet.properties))
         }
     }
 
@@ -449,7 +445,7 @@ class ClientConnection(
                 val retainedMessage = pair.first
                 val clientId = pair.second
                 if (!(subscription.options.noLocal && session.clientId == clientId)) {
-                    val qos = Qos.valueOf(min(retainedMessage.qos.value, subscription.options.qos.value))
+                    val qos = Qos.valueOf(min(retainedMessage.qos.value, subscription.options.qos.value))!!
                     retainedMessagesList += MQTTPublish(
                         if (subscription.options.retainedAsPublished) retainedMessage.retain else false,
                         qos,
@@ -465,7 +461,7 @@ class ClientConnection(
         return retainedMessagesList
     }
 
-    private suspend fun handleSubscribe(packet: MQTTSubscribe) {
+    private fun handleSubscribe(packet: MQTTSubscribe) {
         val retainedMessagesList = mutableListOf<MQTTPublish>()
         val reasonCodes = packet.subscriptions.map { subscription ->
             if (!checkAuthorization(subscription.topicFilter))
@@ -513,12 +509,12 @@ class ClientConnection(
         }
 
         // Send SUBACK
-        writer.writePacket(MQTTSuback(packet.packetIdentifier, reasonCodes))
+        writePacket(MQTTSuback(packet.packetIdentifier, reasonCodes))
         // Send retained messages
-        retainedMessagesList.forEach { writer.writePacket(it) }
+        retainedMessagesList.forEach { writePacket(it) }
     }
 
-    private suspend fun handleUnsubscribe(packet: MQTTUnsubscribe) {
+    private fun handleUnsubscribe(packet: MQTTUnsubscribe) {
         val reasonCodes = packet.topicFilters.map { topicFilter ->
             if (session.isPacketIdInUse(packet.packetIdentifier))
                 return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
@@ -527,14 +523,14 @@ class ClientConnection(
             else
                 return@map ReasonCode.NO_SUBSCRIPTION_EXISTED
         }
-        writer.writePacket(MQTTUnsuback(packet.packetIdentifier, reasonCodes))
+        writePacket(MQTTUnsuback(packet.packetIdentifier, reasonCodes))
     }
 
-    private suspend fun handlePingreq() {
-        writer.writePacket(MQTTPingresp())
+    private fun handlePingreq() {
+        writePacket(MQTTPingresp())
     }
 
-    private suspend fun handleDisconnect(packet: MQTTDisconnect) {
+    private fun handleDisconnect(packet: MQTTDisconnect) {
         val session = try {
             session
         } catch (e: Exception) {
@@ -546,7 +542,7 @@ class ClientConnection(
             if (packet.reasonCode == ReasonCode.SUCCESS)
                 session?.will = null
             else
-                sendWill()
+                broker.sendWill(broker.sessions[clientId])
             close()
         }
     }

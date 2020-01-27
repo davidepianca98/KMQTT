@@ -29,8 +29,7 @@ class Will(
                     packet.connectFlags.willQos,
                     packet.willTopic!!,
                     packet.willPayload!!,
-                    packet.willProperties.willDelayInterval
-                        ?: 0u, // TODO publish will after this interval or when the session ends, first to come, if client reconnects to session don't send
+                    packet.willProperties.willDelayInterval ?: 0u,
                     formatIndicator,
                     packet.willProperties.messageExpiryInterval,
                     packet.willProperties.contentType,

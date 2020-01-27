@@ -1,3 +1,4 @@
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import mqtt.*
 import mqtt.packets.MQTTProperties
@@ -17,7 +18,7 @@ class Broker(
     val receiveMaximum: Int? = null,
     val maximumQos: Qos? = null,
     val retainedAvailable: Boolean = true,
-    val maximumPacketSize: UInt? = null,
+    val maximumPacketSize: UInt = 32768u,
     val maximumTopicAlias: Int? = null,
     val wildcardSubscriptionAvailable: Boolean = true,
     val subscriptionIdentifiersAvailable: Boolean = true,
@@ -29,10 +30,9 @@ class Broker(
     // TODO support TLS with custom constructor with default port 8883
     // TODO support WebSocket, section 6
 
-    private val server = ServerSocket(host, port, backlog)
+    private val server = ServerSocket(host, port, backlog, this)
     val sessions = mutableMapOf<String, Session>()
     private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
-    private var running = true
 
     init {
         receiveMaximum?.let {
@@ -40,22 +40,12 @@ class Broker(
         }
     }
 
-    fun listen() = runCoroutine {
-        while (running) {
-            try {
-                val client = server.accept()
-                client.soTimeout = 30000
-                launch {
-                    ClientConnection(client, this@Broker).run()
-                }
-            } catch (e: Exception) {
-                println(e.message)
-            }
-        }
-        server.close()
+    fun listen() {
+        GlobalScope.launch { cleanUpOperations() }
+        server.run()
     }
 
-    private suspend fun publishShared(
+    private fun publishShared(
         shareName: String,
         retain: Boolean,
         topicName: String,
@@ -74,7 +64,21 @@ class Broker(
         }
     }
 
-    suspend fun publish(
+    fun sendWill(session: Session?) {
+        val will = session?.will ?: return
+        val properties = MQTTProperties()
+        properties.payloadFormatIndicator = will.payloadFormatIndicator
+        properties.messageExpiryInterval = will.messageExpiryInterval
+        properties.contentType = will.contentType
+        properties.responseTopic = will.responseTopic
+        properties.correlationData = will.correlationData
+        properties.userProperty += will.userProperty
+        publish(will.retain, will.topic, will.qos, false, properties, will.payload)
+        // The will must be removed after sending
+        session.will = null
+    }
+
+    fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,
@@ -103,7 +107,7 @@ class Broker(
         }
     }
 
-    private suspend fun publish(
+    private fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,
@@ -118,10 +122,10 @@ class Broker(
             properties.subscriptionIdentifier.add(it)
         }
 
-        session.clientConnection.publish(
+        session.clientConnection?.publish(
             retain,
             topicName,
-            Qos.valueOf(min(subscription.options.qos.value, qos.value)),
+            Qos.valueOf(min(subscription.options.qos.value, qos.value))!!,
             dup,
             properties,
             payload
@@ -161,14 +165,30 @@ class Broker(
 
     private fun deleteExpiredSessions() {
         sessions.filter {
-            val timestamp = it.value.destroySessionTimestamp
+            val timestamp = it.value.getExpiryTime()
             timestamp != null && timestamp < currentTimeMillis()
-        }.forEach {
-            sessions.remove(it.key)
+        }.forEach { session ->
+            session.value.will?.let {
+                sendWill(session.value)
+            }
+            sessions.remove(session.key)
+        }
+    }
+
+    private fun cleanUpOperations() {
+        sessions.forEach { session ->
+            if (session.value.isConnected()) {
+                session.value.clientConnection!!.checkKeepAliveExpired()
+            } else {
+                session.value.will?.let {
+                    if (session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L) > currentTimeMillis())
+                        sendWill(session.value)
+                }
+            }
         }
     }
 
     fun stop() {
-        running = false
+        server.close()
     }
 }

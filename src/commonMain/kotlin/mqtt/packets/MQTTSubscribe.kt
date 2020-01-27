@@ -20,7 +20,7 @@ class MQTTSubscribe(
             Property.USER_PROPERTY
         )
 
-        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTSubscribe {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTSubscribe {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val packetIdentifier = inStream.read2BytesInt()
@@ -61,9 +61,10 @@ class MQTTSubscribe(
             }
         }
 
-        private suspend fun ByteArrayInputStream.deserializeSubscriptionOptions(): SubscriptionOptions {
+        private fun ByteArrayInputStream.deserializeSubscriptionOptions(): SubscriptionOptions {
             val subscriptionOptions = readByte()
-            val qos = Qos.valueOf((subscriptionOptions and 0x3u).toInt())
+            val qos =
+                Qos.valueOf((subscriptionOptions and 0x3u).toInt()) ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
             val noLocal =
                 ((subscriptionOptions and 0x4u) shr 2) == 1u
             val retainedAsPublished =
@@ -85,7 +86,7 @@ class MQTTSubscribe(
         }
     }
 
-    override suspend fun toByteArray(): UByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.write2BytesInt(packetIdentifier)

@@ -10,7 +10,7 @@ class MQTTAuth(
     val properties: MQTTProperties = MQTTProperties()
 ) : MQTTPacket {
 
-    override suspend fun toByteArray(): UByteArray {
+    override fun toByteArray(): UByteArray {
         if (authenticateReasonCode !in validReasonCodes)
             throw IllegalArgumentException("Invalid reason code")
         val outStream = ByteArrayOutputStream()
@@ -41,7 +41,7 @@ class MQTTAuth(
             ReasonCode.RE_AUTHENTICATE
         )
 
-        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTAuth {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTAuth {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val reasonCode =

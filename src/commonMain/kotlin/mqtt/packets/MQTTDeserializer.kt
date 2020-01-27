@@ -8,7 +8,7 @@ import validateUTF8String
 
 interface MQTTDeserializer {
 
-    suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTPacket
+    fun fromByteArray(flags: Int, data: UByteArray): MQTTPacket
 
     fun checkFlags(flags: Int) {
         if (flags.flagsBit(0) != 0 ||
@@ -24,35 +24,35 @@ interface MQTTDeserializer {
         return (this shr bit) and 0b1
     }
 
-    suspend fun ByteArrayInputStream.read4BytesInt(): UInt {
+    fun ByteArrayInputStream.read4BytesInt(): UInt {
         return (read().toUInt() shl 24) or (read().toUInt() shl 16) or (read().toUInt() shl 8) or read().toUInt()
     }
 
-    suspend fun ByteArrayInputStream.read2BytesInt(): UInt {
+    fun ByteArrayInputStream.read2BytesInt(): UInt {
         return (read().toUInt() shl 8) or read().toUInt()
     }
 
-    suspend fun ByteArrayInputStream.readByte(): UInt {
+    fun ByteArrayInputStream.readByte(): UInt {
         return read().toUInt()
     }
 
-    suspend fun ByteArrayInputStream.readUTF8String(): String {
+    fun ByteArrayInputStream.readUTF8String(): String {
         val length = read2BytesInt().toInt()
         val string = readBytes(length).toByteArray().decodeToString()
         string.validateUTF8String()
         return string
     }
 
-    suspend fun ByteArrayInputStream.readBinaryData(): UByteArray {
+    fun ByteArrayInputStream.readBinaryData(): UByteArray {
         val length = read2BytesInt().toInt()
         return readBytes(length)
     }
 
-    suspend fun ByteArrayInputStream.readUTF8StringPair(): Pair<String, String> {
+    fun ByteArrayInputStream.readUTF8StringPair(): Pair<String, String> {
         return Pair(readUTF8String(), readUTF8String())
     }
 
-    suspend fun ByteArrayInputStream.deserializeProperties(validProperties: List<Property>): MQTTProperties {
+    fun ByteArrayInputStream.deserializeProperties(validProperties: List<Property>): MQTTProperties {
         val propertyLength = decodeVariableByteInteger()
         val initialTotalRemainingLength = available()
 

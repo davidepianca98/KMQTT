@@ -1,15 +1,8 @@
 package socket
 
-import socket.streams.InputStream
-import socket.streams.OutputStream
-
 expect class Socket {
 
-    var soTimeout: Int
-
-    fun close()
-    fun getInputStream(): InputStream
-    fun getOutputStream(): OutputStream
+    fun send(data: UByteArray)
 }
 
 open class IOException(message: String? = null) : Exception(message)

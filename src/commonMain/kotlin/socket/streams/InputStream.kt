@@ -2,7 +2,7 @@ package socket.streams
 
 interface InputStream {
 
-    suspend fun read(): UByte
+    fun read(): UByte
 
-    suspend fun readBytes(length: Int): UByteArray
+    fun readBytes(length: Int): UByteArray
 }

@@ -28,7 +28,7 @@ class MQTTUnsuback(
             ReasonCode.PACKET_IDENTIFIER_IN_USE
         )
 
-        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTUnsuback {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTUnsuback {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
 
@@ -47,7 +47,7 @@ class MQTTUnsuback(
         }
     }
 
-    override suspend fun toByteArray(): UByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.write2BytesInt(packetIdentifier)

@@ -84,14 +84,14 @@ class MQTTConnect(
                 ((byte shl 7) and 1) == 1,
                 ((byte shl 6) and 1) == 1,
                 willRetain,
-                Qos.valueOf(willQos),
+                Qos.valueOf(willQos)!!,
                 willFlag,
                 ((byte shl 1) and 1) == 1,
                 reserved
             )
         }
 
-        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTConnect {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTConnect {
             checkFlags(flags)
 
             val inStream = ByteArrayInputStream(data)
@@ -133,7 +133,7 @@ class MQTTConnect(
         }
     }
 
-    override suspend fun toByteArray(): UByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
         outStream.writeUTF8String("MQTT")
         outStream.writeByte(5u)

@@ -8,6 +8,14 @@ expect fun currentTimeMillis(): Long
 
 expect fun runCoroutine(block: suspend CoroutineScope.() -> Unit)
 
+fun UByteArray.leftShift(shift: Int) {
+    forEachIndexed { index, value ->
+        if (index > shift) {
+            this[index - shift] = value
+        }
+    }
+}
+
 fun generateRandomClientId(): String {
     val length = 30
     val buffer = StringBuilder(length)

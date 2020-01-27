@@ -1,30 +1,43 @@
 package mqtt
 
 import mqtt.packets.*
-import socket.streams.InputStream
+import socket.streams.DynamicByteBuffer
+import socket.streams.EOFException
 import socket.streams.decodeVariableByteInteger
 
-class MQTTInputStream(private val inputStream: InputStream, private val maximumPacketSize: UInt? = null) : InputStream {
+class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
 
-    suspend fun readPacket(): MQTTPacket {
-        val byte1 = read()
+    private val currentReceivedData = DynamicByteBuffer()
+
+    fun addData(data: UByteArray): MQTTPacket? {
+        return try {
+            currentReceivedData.write(data)
+            readPacket()
+        } catch (e: EOFException) {
+            currentReceivedData.clearReadCounter()
+            null
+        }
+    }
+
+    private fun readPacket(): MQTTPacket {
+        val byte1 = currentReceivedData.read()
         val mqttControlPacketType = (byte1.toInt() shr 4) and 0b1111
         val flags = byte1 and 0b1111u
 
         val type = MQTTControlPacketType.valueOf(mqttControlPacketType)!!
 
-        val remainingLength = decodeVariableByteInteger().toInt()
+        val remainingLength = currentReceivedData.decodeVariableByteInteger().toInt()
 
-        maximumPacketSize?.let {
-            if (remainingLength + 2 > it.toInt())
-                throw MQTTException(ReasonCode.PACKET_TOO_LARGE)
-        }
+        if (remainingLength + 2 > maximumPacketSize.toInt())
+            throw MQTTException(ReasonCode.PACKET_TOO_LARGE)
 
-        val packet = readBytes(remainingLength)
-        return parseMQTTPacket(type, flags.toInt(), packet)
+        val packetData = currentReceivedData.readBytes(remainingLength)
+        val packet = parseMQTTPacket(type, flags.toInt(), packetData)
+        currentReceivedData.shift()
+        return packet
     }
 
-    private suspend fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: UByteArray): MQTTPacket {
+    private fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: UByteArray): MQTTPacket {
         return when (type) {
             MQTTControlPacketType.CONNECT -> MQTTConnect.fromByteArray(flags, data)
             MQTTControlPacketType.Reserved -> throw MQTTException(
@@ -47,11 +60,4 @@ class MQTTInputStream(private val inputStream: InputStream, private val maximumP
         }
     }
 
-    override suspend fun read(): UByte {
-        return inputStream.read()
-    }
-
-    override suspend fun readBytes(length: Int): UByteArray {
-        return inputStream.readBytes(length)
-    }
 }

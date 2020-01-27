@@ -17,7 +17,7 @@ class MQTTUnsubscribe(
             Property.USER_PROPERTY
         )
 
-        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTUnsubscribe {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTUnsubscribe {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val packetIdentifier = inStream.read2BytesInt()
@@ -39,7 +39,7 @@ class MQTTUnsubscribe(
         }
     }
 
-    override suspend fun toByteArray(): UByteArray {
+    override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
 
         outStream.write2BytesInt(packetIdentifier)

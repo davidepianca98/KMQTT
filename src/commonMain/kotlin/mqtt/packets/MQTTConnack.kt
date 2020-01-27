@@ -60,7 +60,7 @@ class MQTTConnack(
             ReasonCode.CONNECTION_RATE_EXCEEDED
         )
 
-        override suspend fun fromByteArray(flags: Int, data: UByteArray): MQTTConnack {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTConnack {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
 
@@ -77,7 +77,7 @@ class MQTTConnack(
         }
     }
 
-    override suspend fun toByteArray(): UByteArray {
+    override fun toByteArray(): UByteArray {
         if (connectReasonCode !in validReasonCodes)
             throw IllegalArgumentException("Invalid reason code")
 

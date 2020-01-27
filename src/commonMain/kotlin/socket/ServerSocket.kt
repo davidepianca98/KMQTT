@@ -1,8 +1,10 @@
 package socket
 
-expect class ServerSocket(host: String, port: Int, backlog: Int) {
+import Broker
 
-    suspend fun accept(): Socket
+expect class ServerSocket(host: String, port: Int, backlog: Int, broker: Broker) {
+
+    fun run()
 
     fun close()
 }

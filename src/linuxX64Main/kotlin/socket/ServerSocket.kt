@@ -1,11 +1,13 @@
 package socket
 
-actual class ServerSocket actual constructor(host: String, port: Int) {
-    actual fun accept(): Socket {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+import Broker
+
+actual class ServerSocket actual constructor(host: String, port: Int, backlog: Int, private val broker: Broker) {
+
+    actual fun run() {
     }
 
-    actual fun bind(backlog: Int) {
+    actual fun close() {
     }
 
 }
