@@ -82,7 +82,7 @@ class ClientConnection(
     }
 
     private fun close() {
-        session.disconnected()
+        broker.sessions[clientId]?.disconnected()
     }
 
     private fun disconnect(reasonCode: ReasonCode) {

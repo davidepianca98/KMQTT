@@ -9,7 +9,7 @@ class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
 
     private val currentReceivedData = DynamicByteBuffer()
 
-    fun addData(data: UByteArray): MQTTPacket? {
+    fun addData(data: UByteArray): MQTTPacket? { // TODO optimize packet reception and handling
         return try {
             currentReceivedData.write(data)
             readPacket()

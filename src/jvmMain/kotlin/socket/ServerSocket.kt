@@ -41,7 +41,7 @@ actual class ServerSocket actual constructor(host: String, port: Int, backlog: I
         try {
             val channel = (channel() as ServerSocketChannel).accept()
             channel.configureBlocking(false)
-            val socket = Socket(broker.maximumPacketSize)
+            val socket = Socket()
             val clientConnection = ClientConnection(socket, broker)
             val key = channel.register(selector, SelectionKey.OP_READ, clientConnection)
             socket.key = key
@@ -74,14 +74,16 @@ actual class ServerSocket actual constructor(host: String, port: Int, backlog: I
 
     private fun SelectionKey.write() {
         (attachment() as ClientConnection).client.sendRemaining()
+        interestOps(SelectionKey.OP_READ)
     }
 
     private fun handleKey(key: SelectionKey) {
-        when {
-            key.isAcceptable -> key.accept()
-            key.isReadable -> key.read()
-            key.isWritable -> key.write()
-        }
+        if (key.isAcceptable)
+            key.accept()
+        if (key.isWritable)
+            key.write()
+        if (key.isReadable)
+            key.read()
     }
 
     actual fun close() {

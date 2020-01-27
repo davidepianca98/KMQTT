@@ -10,8 +10,8 @@ actual fun currentTimeMillis(): Long {
     memScoped {
         val systemTime = alloc<FILETIME>()
         GetSystemTimeAsFileTime(systemTime.ptr)
-        val millisFrom1601 = (((systemTime.dwHighDateTime shl 32) + systemTime.dwLowDateTime)) / 10000u
-        return (millisFrom1601 - 116444736000000000u).toLong()
+        val millisFrom1601 = (systemTime.dwHighDateTime.toULong() shl 32) + systemTime.dwLowDateTime.toULong()
+        return ((millisFrom1601 - 116444736000000000u) / 10000u).toLong()
     }
 }
 

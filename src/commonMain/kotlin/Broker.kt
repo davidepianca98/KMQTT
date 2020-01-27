@@ -1,4 +1,5 @@
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mqtt.*
 import mqtt.packets.MQTTProperties
@@ -40,7 +41,7 @@ class Broker(
         }
     }
 
-    fun listen() {
+    fun listen() = runCoroutine {
         GlobalScope.launch { cleanUpOperations() }
         server.run()
     }
@@ -85,13 +86,14 @@ class Broker(
         dup: Boolean,
         properties: MQTTProperties,
         payload: UByteArray?
-    ) { // TODO something here not working in mingw
+    ) {
         if (!retainedAvailable && retain)
             throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
         maximumQos?.let {
             if (qos > it)
                 throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
         }
+
         val sharedDone = mutableListOf<String>()
         sessions.forEach { session ->
             session.value.hasSubscriptionsMatching(topicName).forEach { subscription ->
@@ -175,16 +177,19 @@ class Broker(
         }
     }
 
-    private fun cleanUpOperations() {
-        sessions.forEach { session ->
-            if (session.value.isConnected()) {
-                session.value.clientConnection!!.checkKeepAliveExpired()
-            } else {
-                session.value.will?.let {
-                    if (session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L) > currentTimeMillis())
-                        sendWill(session.value)
+    private suspend fun cleanUpOperations() {
+        while (true) {
+            sessions.forEach { session ->
+                if (session.value.isConnected()) {
+                    session.value.clientConnection!!.checkKeepAliveExpired()
+                } else {
+                    session.value.will?.let {
+                        if (session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L) > currentTimeMillis())
+                            sendWill(session.value)
+                    }
                 }
             }
+            delay(10000)
         }
     }
 

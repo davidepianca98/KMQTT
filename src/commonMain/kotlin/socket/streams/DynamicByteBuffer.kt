@@ -10,7 +10,7 @@ class DynamicByteBuffer : InputStream, OutputStream {
 
     private fun ensureCapacity(length: Int) {
         if (writePosition + length > array.size)
-            array = array.copyOf(array.size + length * 2)
+            array = array.copyOf(array.size + (length * 2))
     }
 
     override fun read(): UByte {
