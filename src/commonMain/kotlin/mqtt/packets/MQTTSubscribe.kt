@@ -5,7 +5,6 @@ import mqtt.Subscription
 import mqtt.isSharedTopicFilter
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
-import socket.streams.encodeVariableByteInteger
 
 class MQTTSubscribe(
     val packetIdentifier: UInt,
@@ -105,11 +104,6 @@ class MQTTSubscribe(
             outStream.writeByte(subscription.options.toByte())
         }
 
-        val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.SUBSCRIBE.value shl 4) and 0xF2
-        result.write(fixedHeader.toUByte())
-        result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.write(outStream.toByteArray())
-        return result.toByteArray()
+        return outStream.wrapWithFixedHeader(MQTTControlPacketType.SUBSCRIBE, 2)
     }
 }

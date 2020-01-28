@@ -8,6 +8,16 @@ interface MQTTSerializer {
 
     fun toByteArray(): UByteArray
 
+    fun ByteArrayOutputStream.wrapWithFixedHeader(packetType: MQTTControlPacketType, flags: Int): UByteArray {
+        require(flags in 0..15)
+        val result = ByteArrayOutputStream()
+        val fixedHeader = ((packetType.value shl 4) and 0xF0) or flags
+        result.write(fixedHeader.toUByte())
+        result.encodeVariableByteInteger(this.size().toUInt())
+        result.write(this.toByteArray())
+        return result.toByteArray()
+    }
+
     fun ByteArrayOutputStream.write4BytesInt(value: UInt) {
         val byteArray = UByteArray(4)
         byteArray[0] = ((value shr 24) and 0xFFu).toUByte()

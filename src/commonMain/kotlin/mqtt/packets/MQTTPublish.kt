@@ -5,7 +5,6 @@ import mqtt.MQTTException
 import mqtt.containsWildcard
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
-import socket.streams.encodeVariableByteInteger
 import validatePayloadFormat
 
 
@@ -30,15 +29,10 @@ class MQTTPublish(
         outStream.write(properties.serializeProperties(validProperties))
         payload?.let { outStream.write(it) }
 
-        val result = ByteArrayOutputStream()
-        val fixedHeader = ((MQTTControlPacketType.PUBLISH.value shl 4) and 0xF0) or
-                (((if (dup) 1 else 0) shl 3) and 0x8) or
+        val flags = (((if (dup) 1 else 0) shl 3) and 0x8) or
                 ((qos.value shl 1) and 0x6) or
                 ((if (retain) 1 else 0) and 0x1)
-        result.write(fixedHeader.toUByte())
-        result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.write(outStream.toByteArray())
-        return result.toByteArray()
+        return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBLISH, flags)
     }
 
     fun validatePayloadFormat(): Boolean {

@@ -3,7 +3,6 @@ package mqtt.packets
 import mqtt.MQTTException
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
-import socket.streams.encodeVariableByteInteger
 
 class MQTTSuback(
     val packetIdentifier: UInt,
@@ -64,11 +63,6 @@ class MQTTSuback(
             outStream.writeByte(it.value.toUInt())
         }
 
-        val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.SUBACK.value shl 4) and 0xF0
-        result.write(fixedHeader.toUByte())
-        result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.write(outStream.toByteArray())
-        return result.toByteArray()
+        return outStream.wrapWithFixedHeader(MQTTControlPacketType.SUBACK, 0)
     }
 }

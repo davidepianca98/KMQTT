@@ -3,7 +3,6 @@ package mqtt.packets
 import mqtt.MQTTException
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
-import socket.streams.encodeVariableByteInteger
 
 data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
 
@@ -89,10 +88,6 @@ class MQTTConnack(
         outStream.write(connectReasonCode.value.toUByte())
         outStream.write(properties.serializeProperties(validProperties))
 
-        val result = ByteArrayOutputStream()
-        result.write(((MQTTControlPacketType.CONNACK.value shl 4) and 0xF0).toUByte())
-        result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.write(outStream.toByteArray())
-        return result.toByteArray()
+        return outStream.wrapWithFixedHeader(MQTTControlPacketType.CONNACK, 0)
     }
 }

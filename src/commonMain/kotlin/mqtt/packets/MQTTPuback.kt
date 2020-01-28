@@ -3,7 +3,6 @@ package mqtt.packets
 import mqtt.MQTTException
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
-import socket.streams.encodeVariableByteInteger
 
 class MQTTPuback(
     val packetId: UInt,
@@ -20,12 +19,7 @@ class MQTTPuback(
         outStream.writeByte(reasonCode.value.toUInt())
         outStream.write(properties.serializeProperties(validProperties))
 
-        val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.PUBACK.value shl 4) and 0xF0
-        result.write(fixedHeader.toUByte())
-        result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.write(outStream.toByteArray())
-        return result.toByteArray()
+        return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBACK, 0)
     }
 
     companion object : MQTTDeserializer {

@@ -3,7 +3,6 @@ package mqtt.packets
 import mqtt.MQTTException
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
-import socket.streams.encodeVariableByteInteger
 
 class MQTTUnsubscribe(
     val packetIdentifier: UInt,
@@ -49,11 +48,6 @@ class MQTTUnsubscribe(
             outStream.writeUTF8String(it)
         }
 
-        val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.UNSUBSCRIBE.value shl 4) and 0xF2
-        result.write(fixedHeader.toUByte())
-        result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.write(outStream.toByteArray())
-        return result.toByteArray()
+        return outStream.wrapWithFixedHeader(MQTTControlPacketType.UNSUBSCRIBE, 2)
     }
 }

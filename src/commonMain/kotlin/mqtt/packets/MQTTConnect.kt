@@ -3,7 +3,6 @@ package mqtt.packets
 import mqtt.MQTTException
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
-import socket.streams.encodeVariableByteInteger
 
 class MQTTConnect(
     val protocolName: String,
@@ -155,11 +154,6 @@ class MQTTConnect(
             }
         }
 
-        val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.CONNECT.value shl 4) and 0xF0
-        result.write(fixedHeader.toUByte())
-        result.encodeVariableByteInteger(outStream.size().toUInt())
-        result.write(outStream.toByteArray())
-        return result.toByteArray()
+        return outStream.wrapWithFixedHeader(MQTTControlPacketType.CONNECT, 0)
     }
 }

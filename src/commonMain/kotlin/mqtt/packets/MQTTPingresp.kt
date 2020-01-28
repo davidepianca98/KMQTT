@@ -2,16 +2,11 @@ package mqtt.packets
 
 import mqtt.MQTTException
 import socket.streams.ByteArrayOutputStream
-import socket.streams.encodeVariableByteInteger
 
 class MQTTPingresp : MQTTPacket {
 
     override fun toByteArray(): UByteArray {
-        val result = ByteArrayOutputStream()
-        val fixedHeader = (MQTTControlPacketType.PINGRESP.value shl 4) and 0xF0
-        result.write(fixedHeader.toUByte())
-        result.encodeVariableByteInteger(0u)
-        return result.toByteArray()
+        return ByteArrayOutputStream().wrapWithFixedHeader(MQTTControlPacketType.PINGRESP, 0)
     }
 
     companion object : MQTTDeserializer {
