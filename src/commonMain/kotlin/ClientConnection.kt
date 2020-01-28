@@ -30,6 +30,10 @@ class ClientConnection(
 
     private var keepAlive = 0
     private var connectHandled = false
+    private var connectCompleted = false
+    private var authenticationMethod: String? = null
+    private var connectPacket: MQTTConnect? = null
+    private var packetsReceivedBeforeConnack = mutableListOf<MQTTPacket>()
 
     private val currentReceivedPacket = MQTTCurrentPacket(broker.maximumPacketSize)
     private var lastReceivedMessageTimestamp = currentTimeMillis()
@@ -84,26 +88,28 @@ class ClientConnection(
     }
 
     private fun disconnect(reasonCode: ReasonCode) {
-        writePacket(MQTTDisconnect(reasonCode))
+        if (!connectCompleted) {
+            writePacket(MQTTConnack(ConnectAcknowledgeFlags(false), reasonCode))
+        } else {
+            writePacket(MQTTDisconnect(reasonCode))
+            if (reasonCode != ReasonCode.SUCCESS)
+                broker.sendWill(broker.sessions[clientId])
+        }
         close()
-        if (reasonCode != ReasonCode.SUCCESS)
-            broker.sendWill(broker.sessions[clientId])
     }
 
     private fun handlePacket(packet: MQTTPacket) {
-        when (packet) {
-            is MQTTConnect -> {
-                try {
-                    if (!connectHandled) {
-                        handleConnect(packet)
-                        connectHandled = true
-                    } else
-                        throw MQTTException(ReasonCode.PROTOCOL_ERROR)
-                } catch (e: MQTTException) {
-                    writePacket(MQTTConnack(ConnectAcknowledgeFlags(false), e.reasonCode))
-                    close()
-                }
+        if (packet is MQTTConnect) {
+            if (!connectHandled) {
+                handleConnect(packet)
+                connectHandled = true
+                return
             }
+        } else {
+            if (!connectHandled) // If first packet is not CONNECT, send Protocol Error
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        }
+        when (packet) {
             is MQTTPublish -> handlePublish(packet)
             is MQTTPuback -> handlePuback(packet)
             is MQTTPubrec -> handlePubrec(packet)
@@ -190,26 +196,66 @@ class ClientConnection(
             sendQuota--
     }
 
-    private fun handleAuthentication(packet: MQTTConnect): Boolean {
+    private fun handleAuthentication(packet: MQTTConnect) {
         if (packet.userName != null || packet.password != null) {
             if (broker.authentication?.authenticate(packet.userName, packet.password) == false) {
-                val connack = MQTTConnack(ConnectAcknowledgeFlags(false), ReasonCode.NOT_AUTHORIZED)
-                writePacket(connack)
-                close()
-                return false
+                throw MQTTException(ReasonCode.NOT_AUTHORIZED)
             }
         }
-        // TODO enhanced authentication method/data in properties (section 4.12)
-        return true
+    }
+
+    private fun enhancedAuthenticationResult(
+        result: EnhancedAuthenticationProvider.Result,
+        authenticationMethod: String,
+        authenticationData: UByteArray?
+    ) {
+        if (result == EnhancedAuthenticationProvider.Result.NEEDS_MORE) {
+            val properties = MQTTProperties()
+            properties.authenticationMethod = authenticationMethod
+            properties.authenticationData = authenticationData
+            val auth = MQTTAuth(ReasonCode.CONTINUE_AUTHENTICATION, properties)
+            writePacket(auth)
+        } else {
+            if (result == EnhancedAuthenticationProvider.Result.SUCCESS) {
+                connectPacket?.let { initSessionAndSendConnack(it) }
+                    ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+            } else if (result == EnhancedAuthenticationProvider.Result.ERROR) {
+                throw MQTTException(ReasonCode.NOT_AUTHORIZED)
+            }
+        }
+    }
+
+    private fun handleEnhancedAuthentication(
+        clientId: String,
+        authenticationMethod: String,
+        authenticationData: UByteArray?
+    ) {
+        val provider = broker.enhancedAuthenticationProviders[authenticationMethod]
+        if (provider == null) {
+            throw MQTTException(ReasonCode.BAD_AUTHENTICATION_METHOD)
+        } else {
+            this.authenticationMethod = authenticationMethod
+            provider.authReceived(clientId, authenticationData) { result, data ->
+                enhancedAuthenticationResult(result, authenticationMethod, data)
+            }
+        }
     }
 
     private fun handleConnect(packet: MQTTConnect) {
-        if (!handleAuthentication(packet))
-            return
-
-        var sessionPresent = false
+        connectPacket = packet
+        handleAuthentication(packet)
 
         val clientId = if (packet.clientID.isEmpty()) generateClientId() else packet.clientID
+        this.clientId = clientId
+
+        packet.properties.authenticationMethod?.let { authenticationMethod ->
+            handleEnhancedAuthentication(clientId, authenticationMethod, packet.properties.authenticationData)
+        } ?: initSessionAndSendConnack(packet)
+    }
+
+    private fun initSessionAndSendConnack(packet: MQTTConnect) {
+        var sessionPresent = false
+        val clientId = this.clientId ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
 
         var session = broker.sessions[clientId]
         if (session != null) {
@@ -321,8 +367,21 @@ class ClientConnection(
 
         val connack = MQTTConnack(ConnectAcknowledgeFlags(sessionPresent), ReasonCode.SUCCESS, connackProperties)
         writePacket(connack)
-        this.clientId = clientId
+        connectCompleted = true
         session.connected()
+
+        handlePacketsReceivedBeforeConnack()
+    }
+
+    private fun handlePacketsReceivedBeforeConnack() {
+        packetsReceivedBeforeConnack.forEach { packet ->
+            if (packet is MQTTPublish) {
+                handlePublish(packet)
+            } else if (packet is MQTTSubscribe) {
+                handleSubscribe(packet)
+            }
+        }
+        packetsReceivedBeforeConnack.clear()
     }
 
     private fun checkAuthorization(topicName: String): Boolean {
@@ -330,6 +389,11 @@ class ClientConnection(
     }
 
     private fun handlePublish(packet: MQTTPublish) {
+        if (!connectCompleted) {
+            packetsReceivedBeforeConnack.add(packet)
+            return
+        }
+
         // Handle topic alias
         val topic = getTopicOrAlias(packet)
 
@@ -462,6 +526,11 @@ class ClientConnection(
     }
 
     private fun handleSubscribe(packet: MQTTSubscribe) {
+        if (!connectCompleted) {
+            packetsReceivedBeforeConnack.add(packet)
+            return
+        }
+
         val retainedMessagesList = mutableListOf<MQTTPublish>()
         val reasonCodes = packet.subscriptions.map { subscription ->
             if (!checkAuthorization(subscription.topicFilter))
@@ -548,6 +617,17 @@ class ClientConnection(
     }
 
     private fun handleAuth(packet: MQTTAuth) {
-        TODO("handle auth")
+        if (!connectCompleted) {
+            val authenticationMethod = packet.properties.authenticationMethod
+            val clientId = this.clientId ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+            if (packet.authenticateReasonCode != ReasonCode.CONTINUE_AUTHENTICATION) {
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            } else if (authenticationMethod == null || authenticationMethod != this.authenticationMethod) {
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            } else {
+                handleEnhancedAuthentication(clientId, authenticationMethod, packet.properties.authenticationData)
+            }
+        }
+        // TODO handle enhanced re-authentication (section 4.12.1)
     }
 }

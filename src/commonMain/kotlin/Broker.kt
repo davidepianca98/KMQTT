@@ -14,6 +14,7 @@ class Broker(
     host: String = "127.0.0.1",
     backlog: Int = 128,
     val authentication: Authentication? = null,
+    val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
     val authorization: Authorization? = null,
     val maximumSessionExpiryInterval: UInt = 0xFFFFFFFFu,
     val receiveMaximum: Int? = null,
