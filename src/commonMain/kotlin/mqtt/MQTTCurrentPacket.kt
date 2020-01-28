@@ -9,14 +9,17 @@ class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
 
     private val currentReceivedData = DynamicByteBuffer()
 
-    fun addData(data: UByteArray): MQTTPacket? { // TODO optimize packet reception and handling
-        return try {
-            currentReceivedData.write(data)
-            readPacket()
+    fun addData(data: UByteArray): List<MQTTPacket> {
+        val packets = mutableListOf<MQTTPacket>()
+        currentReceivedData.write(data)
+        try {
+            while (true) {
+                packets += readPacket()
+            }
         } catch (e: EOFException) {
             currentReceivedData.clearReadCounter()
-            null
         }
+        return packets
     }
 
     private fun readPacket(): MQTTPacket {

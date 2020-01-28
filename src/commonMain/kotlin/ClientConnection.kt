@@ -50,7 +50,7 @@ class ClientConnection(
     fun dataReceived(data: UByteArray) {
         lastReceivedMessageTimestamp = currentTimeMillis()
         try {
-            currentReceivedPacket.addData(data)?.let {
+            currentReceivedPacket.addData(data).forEach {
                 handlePacket(it)
             }
         } catch (e: MQTTException) {

@@ -1,51 +1,47 @@
 package socket.streams
 
-import leftShift
-
 class DynamicByteBuffer : InputStream, OutputStream {
 
     private var writePosition = 0
     private var readCounter = 0
+    private var lastReadComplete = 0
     private var array: UByteArray = UByteArray(32)
 
     private fun ensureCapacity(length: Int) {
         if (writePosition + length > array.size)
-            array = array.copyOf(array.size + (length * 2))
+            array = array.copyOf((array.size + length) * 2)
     }
 
     override fun read(): UByte {
-        if (writePosition == 0)
+        if (readCounter >= writePosition)
             throw EOFException()
-        val byte = array[readCounter]
-        readCounter++
-        return byte
+        return array[readCounter++]
     }
 
     override fun readBytes(length: Int): UByteArray {
-        val result = UByteArray(length)
-        for (i in 0 until length)
-            result[i] = read()
-        return result
+        val endIndex = readCounter + length
+        if (endIndex > writePosition)
+            throw EOFException()
+        val data = array.copyOfRange(readCounter, endIndex)
+        readCounter = endIndex
+        return data
     }
 
     fun clearReadCounter() {
-        readCounter = 0
+        readCounter = lastReadComplete
     }
 
     fun shift() {
         if (readCounter == writePosition) {
             writePosition = 0
-        } else {
-            array.leftShift(readCounter)
-            writePosition -= readCounter
+            readCounter = 0
         }
-        clearReadCounter()
+        lastReadComplete = readCounter
     }
 
     override fun write(b: UByte) {
         ensureCapacity(1)
-        array[writePosition] = b
-        writePosition += 1
+        array[writePosition++] = b
     }
 
     private fun write(b: UByteArray, off: Int, len: Int) {
