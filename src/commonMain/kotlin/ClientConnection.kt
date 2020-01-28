@@ -59,8 +59,7 @@ class ClientConnection(
             close()
         } catch (e: IOException) {
             println(e.message)
-            close()
-            broker.sendWill(broker.sessions[clientId])
+            closeWithException()
         } catch (e: Exception) {
             println(e.message)
             disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
@@ -71,12 +70,11 @@ class ClientConnection(
         try {
             client.send(packet.toByteArray())
         } catch (e: IOException) {
-            close()
-            broker.sendWill(broker.sessions[clientId])
+            closeWithException()
         }
     }
 
-    fun ioException() {
+    fun closeWithException() {
         close()
         broker.sendWill(broker.sessions[clientId])
     }

@@ -68,13 +68,18 @@ actual class ServerSocket actual constructor(host: String, port: Int, backlog: I
         } catch (e: java.io.IOException) {
             cancel()
             channel.close()
-            clientConnection?.ioException()
+            clientConnection?.closeWithException()
         }
     }
 
     private fun SelectionKey.write() {
-        (attachment() as ClientConnection).client.sendRemaining()
-        interestOps(SelectionKey.OP_READ)
+        val clientConnection = (attachment() as ClientConnection?)
+        try {
+            clientConnection?.client?.sendRemaining()
+            interestOps(SelectionKey.OP_READ)
+        } catch (e: java.io.IOException) {
+            clientConnection?.closeWithException()
+        }
     }
 
     private fun handleKey(key: SelectionKey) {

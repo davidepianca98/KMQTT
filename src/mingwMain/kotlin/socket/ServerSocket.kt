@@ -4,15 +4,8 @@ import Broker
 import ClientConnection
 import kotlinx.cinterop.*
 import platform.posix.*
-import platform.posix.WSACleanup
-import platform.posix.WSAStartup
-import platform.windows.*
-import platform.windows.AF_INET
-import platform.windows.SOCK_STREAM
-import platform.windows.accept
-import platform.windows.bind
-import platform.windows.listen
-import platform.windows.socket
+import platform.windows.select
+
 
 actual class ServerSocket actual constructor(
     host: String,
@@ -46,12 +39,7 @@ actual class ServerSocket actual constructor(
 
             val on = alloc<uint32_tVar>()
             on.value = 1u
-            if (platform.posix.ioctlsocket(
-                    serverSocket,
-                    platform.posix.FIONBIO.toInt(),
-                    on.ptr.reinterpret()
-                ) == SOCKET_ERROR
-            ) {
+            if (ioctlsocket(serverSocket, FIONBIO.toInt(), on.ptr.reinterpret()) == SOCKET_ERROR) {
                 WSACleanup()
                 throw IOException("Failed ioctlsocket")
             }
@@ -63,42 +51,78 @@ actual class ServerSocket actual constructor(
 
             val clients = mutableMapOf<SOCKET, ClientConnection>()
             val buffer = ByteArray(broker.maximumPacketSize.toInt())
+            val writeRequest = mutableListOf<SOCKET>()
 
             val readfds = alloc<fd_set>()
+            val writefds = alloc<fd_set>()
+            val errorfds = alloc<fd_set>()
             while (true) {
                 posix_FD_ZERO(readfds.ptr)
+                posix_FD_ZERO(writefds.ptr)
+                posix_FD_ZERO(errorfds.ptr)
                 posix_FD_SET(serverSocket.convert(), readfds.ptr)
                 clients.forEach {
                     posix_FD_SET(it.key.convert(), readfds.ptr)
+                    posix_FD_SET(it.key.convert(), errorfds.ptr)
                 }
-                select(0, readfds.ptr, null, null, null)
+                writeRequest.forEach {
+                    posix_FD_SET(it.convert(), writefds.ptr)
+                }
+                select(0, readfds.ptr, writefds.ptr, errorfds.ptr, null)
+
                 if (posix_FD_ISSET(serverSocket.convert(), readfds.ptr) == 1) {
                     val newSocket = accept(serverSocket, null, null)
                     if (newSocket == INVALID_SOCKET) {
                         throw IOException("Invalid socket")
                     }
-                    clients[newSocket] = ClientConnection(Socket(newSocket), broker)
+                    clients[newSocket] = ClientConnection(Socket(newSocket, writeRequest), broker)
                 } else {
                     clients.forEach { socket ->
-                        if (posix_FD_ISSET(socket.key.convert(), readfds.ptr) == 1) {
-                            posix_FD_SET(socket.key.convert(), readfds.ptr)
-                            buffer.usePinned { pinned ->
-                                val length =
-                                    platform.posix.recv(socket.key.convert(), pinned.addressOf(0), buffer.size, 0)
-                                when {
-                                    length == 0 -> {
-                                        // TODO disconnection
-                                        clients.remove(socket.key)
-                                        platform.posix.shutdown(socket.key, SD_SEND)
-                                        platform.posix.closesocket(socket.key)
-                                    }
-                                    length > 0 -> {
-                                        socket.value.dataReceived(pinned.get().toUByteArray().copyOfRange(0, length))
-                                    }
-                                    else -> {
-                                        // TODO error
+                        when {
+                            posix_FD_ISSET(socket.key.convert(), readfds.ptr) == 1 -> {
+                                buffer.usePinned { pinned ->
+                                    val length = recv(socket.key.convert(), pinned.addressOf(0), buffer.size, 0)
+                                    when {
+                                        length == 0 -> {
+                                            clients.remove(socket.key)
+                                            shutdown(socket.key, SD_SEND)
+                                            closesocket(socket.key)
+                                        }
+                                        length > 0 -> {
+                                            socket.value.dataReceived(
+                                                pinned.get().toUByteArray().copyOfRange(
+                                                    0,
+                                                    length
+                                                )
+                                            )
+                                        }
+                                        else -> {
+                                            if (WSAGetLastError() != WSAEWOULDBLOCK) {
+                                                clients.remove(socket.key)
+                                                shutdown(socket.key, SD_SEND)
+                                                closesocket(socket.key)
+                                                socket.value.closeWithException()
+                                            } else {
+
+                                            }
+                                        }
                                     }
                                 }
+                            }
+                            posix_FD_ISSET(socket.key.convert(), writefds.ptr) == 1 -> {
+                                writeRequest.remove(socket.key)
+                                try {
+                                    socket.value.client.sendRemaining()
+                                } catch (e: IOException) {
+                                    clients.remove(socket.key)
+                                    socket.value.closeWithException()
+                                }
+                            }
+                            posix_FD_ISSET(socket.key.convert(), errorfds.ptr) == 1 -> {
+                                clients.remove(socket.key)
+                                shutdown(socket.key, SD_SEND)
+                                closesocket(socket.key)
+                                socket.value.closeWithException()
                             }
                         }
                     }

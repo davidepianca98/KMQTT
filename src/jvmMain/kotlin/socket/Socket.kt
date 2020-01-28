@@ -16,8 +16,8 @@ actual class Socket {
         val channel = selectionKey.channel() as SocketChannel
         try {
             val count = channel.write(ByteBuffer.wrap(data.toByteArray()))
-            if (count == 0) {
-                pendingSendData.add(data)
+            if (count < data.size) {
+                pendingSendData.add(data.copyOfRange(count, data.size))
                 selectionKey.interestOps(SelectionKey.OP_READ or SelectionKey.OP_WRITE)
             }
         } catch (e: java.io.IOException) {
