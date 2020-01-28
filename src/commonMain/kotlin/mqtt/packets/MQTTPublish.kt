@@ -42,6 +42,10 @@ class MQTTPublish(
         return true
     }
 
+    fun setDuplicate(): MQTTPublish {
+        return MQTTPublish(retain, qos, true, topicName, packetId, properties, payload, timestamp)
+    }
+
     companion object : MQTTDeserializer {
 
         private val validProperties = listOf(

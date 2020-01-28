@@ -2,7 +2,9 @@ package mqtt
 
 import ClientConnection
 import currentTimeMillis
+import messageExpiryIntervalExpired
 import mqtt.packets.MQTTConnect
+import mqtt.packets.MQTTPacket
 import mqtt.packets.MQTTPublish
 import mqtt.packets.MQTTPubrel
 
@@ -42,12 +44,22 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
         pendingAcknowledgePubrel[packet.packetId] = packet
     }
 
-    fun hasPendingAcknowledgePubrel(packetId: UInt): Boolean {
-        return pendingAcknowledgePubrel[packetId] != null
-    }
-
     fun acknowledgePubrel(packetId: UInt) {
         pendingAcknowledgePubrel.remove(packetId)
+    }
+
+    fun resendPending(sendPacket: (packet: MQTTPacket) -> Unit) {
+        pendingAcknowledgeMessages.forEach {
+            if (!it.value.messageExpiryIntervalExpired())
+                sendPacket(it.value.setDuplicate())
+        }
+        pendingAcknowledgePubrel.forEach {
+            sendPacket(it.value)
+        }
+        pendingSendMessages.forEach {
+            if (!it.value.messageExpiryIntervalExpired())
+                sendPacket(it.value)
+        }
     }
 
     // The Clients subscriptions, including any Subscription Identifiers

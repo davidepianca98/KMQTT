@@ -232,7 +232,9 @@ class ClientConnection(
                 session.clientConnection = this
                 session.will = Will.buildWill(packet)
                 session.sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
-                // TODO resend all pendingAcknowledgeMessages, pendingAcknowledgePubrel, pendingSendMessages if not expired, with dup = 1
+                session.resendPending {
+                    writePacket(it)
+                }
                 sessionPresent = true
             }
         } else {
