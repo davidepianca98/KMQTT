@@ -105,6 +105,8 @@ class MQTTConnect(
             val keepAlive = inStream.read2BytesInt()
 
             val properties = inStream.deserializeProperties(validProperties)
+            if (properties.authenticationData != null && properties.authenticationMethod == null)
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
 
             // Payload
             val clientID = inStream.readUTF8String()
