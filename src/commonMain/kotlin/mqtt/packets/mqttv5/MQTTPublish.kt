@@ -1,8 +1,10 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 import currentTimeMillis
 import mqtt.MQTTException
 import mqtt.containsWildcard
+import mqtt.packets.MQTTControlPacketType
+import mqtt.packets.Qos
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 import validatePayloadFormat
@@ -43,7 +45,16 @@ class MQTTPublish(
     }
 
     fun setDuplicate(): MQTTPublish {
-        return MQTTPublish(retain, qos, true, topicName, packetId, properties, payload, timestamp)
+        return MQTTPublish(
+            retain,
+            qos,
+            true,
+            topicName,
+            packetId,
+            properties,
+            payload,
+            timestamp
+        )
     }
 
     companion object : MQTTDeserializer {
@@ -79,10 +90,19 @@ class MQTTPublish(
 
             val payload = inStream.readRemaining()
 
-            return MQTTPublish(retain, qos, dup, topicName, packetIdentifier, properties, payload)
+            return MQTTPublish(
+                retain,
+                qos,
+                dup,
+                topicName,
+                packetIdentifier,
+                properties,
+                payload
+            )
         }
 
-        private fun getQos(flags: Int): Qos? = Qos.valueOf(flags.flagsBit(1) or (flags.flagsBit(2) shl 1))
+        private fun getQos(flags: Int): Qos? =
+            Qos.valueOf(flags.flagsBit(1) or (flags.flagsBit(2) shl 1))
 
         override fun checkFlags(flags: Int) {
 

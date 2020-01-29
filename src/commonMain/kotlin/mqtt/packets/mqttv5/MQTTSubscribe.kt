@@ -1,8 +1,10 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
 import mqtt.Subscription
 import mqtt.isSharedTopicFilter
+import mqtt.packets.MQTTControlPacketType
+import mqtt.packets.Qos
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
@@ -72,7 +74,12 @@ class MQTTSubscribe(
             if (retainHandling == 3u) throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             val reserved = (subscriptionOptions and 0xC0u) shr 6
             if (reserved != 0u) throw MQTTException(ReasonCode.MALFORMED_PACKET)
-            return SubscriptionOptions(qos, noLocal, retainedAsPublished, retainHandling)
+            return SubscriptionOptions(
+                qos,
+                noLocal,
+                retainedAsPublished,
+                retainHandling
+            )
         }
 
         override fun checkFlags(flags: Int) {

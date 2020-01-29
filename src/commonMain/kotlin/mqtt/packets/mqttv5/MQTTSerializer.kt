@@ -1,5 +1,6 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
+import mqtt.packets.MQTTControlPacketType
 import socket.streams.ByteArrayOutputStream
 import socket.streams.encodeVariableByteInteger
 import validateUTF8String

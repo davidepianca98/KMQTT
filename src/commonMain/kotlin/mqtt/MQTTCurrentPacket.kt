@@ -1,6 +1,7 @@
 package mqtt
 
 import mqtt.packets.*
+import mqtt.packets.mqttv5.*
 import socket.streams.DynamicByteBuffer
 import socket.streams.EOFException
 import socket.streams.decodeVariableByteInteger

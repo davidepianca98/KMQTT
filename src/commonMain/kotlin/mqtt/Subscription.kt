@@ -1,6 +1,6 @@
 package mqtt
 
-import mqtt.packets.MQTTSubscribe
+import mqtt.packets.mqttv5.MQTTSubscribe
 
 class Subscription(
     val topicFilter: String,

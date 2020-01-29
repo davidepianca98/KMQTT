@@ -1,4 +1,4 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 class MQTTProperties(
     var payloadFormatIndicator: UInt? = null,

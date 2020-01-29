@@ -1,10 +1,11 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
+import mqtt.packets.MQTTControlPacketType
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTTSuback(
+class MQTTUnsuback(
     val packetIdentifier: UInt,
     val reasonCodes: List<ReasonCode>,
     val properties: MQTTProperties = MQTTProperties()
@@ -18,21 +19,16 @@ class MQTTSuback(
         )
 
         val validReasonCodes = listOf(
-            ReasonCode.GRANTED_QOS0,
-            ReasonCode.GRANTED_QOS1,
-            ReasonCode.GRANTED_QOS2,
+            ReasonCode.SUCCESS,
+            ReasonCode.NO_SUBSCRIPTION_EXISTED,
             ReasonCode.UNSPECIFIED_ERROR,
             ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR,
             ReasonCode.NOT_AUTHORIZED,
             ReasonCode.TOPIC_FILTER_INVALID,
-            ReasonCode.PACKET_IDENTIFIER_IN_USE,
-            ReasonCode.QUOTA_EXCEEDED,
-            ReasonCode.SHARED_SUBSCRIPTIONS_NOT_SUPPORTED,
-            ReasonCode.SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED,
-            ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
+            ReasonCode.PACKET_IDENTIFIER_IN_USE
         )
 
-        override fun fromByteArray(flags: Int, data: UByteArray): MQTTSuback {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTUnsuback {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
 
@@ -41,13 +37,14 @@ class MQTTSuback(
             val reasonCodes = mutableListOf<ReasonCode>()
             while (inStream.available() > 0) {
                 val reasonCode =
-                    ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+                    ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(
+                        ReasonCode.PROTOCOL_ERROR)
                 if (reasonCode !in validReasonCodes)
                     throw MQTTException(ReasonCode.PROTOCOL_ERROR)
                 reasonCodes += reasonCode
             }
 
-            return MQTTSuback(packetIdentifier, reasonCodes, properties)
+            return MQTTUnsuback(packetIdentifier, reasonCodes, properties)
         }
     }
 
@@ -63,6 +60,6 @@ class MQTTSuback(
             outStream.writeByte(it.value.toUInt())
         }
 
-        return outStream.wrapWithFixedHeader(MQTTControlPacketType.SUBACK, 0)
+        return outStream.wrapWithFixedHeader(MQTTControlPacketType.UNSUBACK, 0)
     }
 }

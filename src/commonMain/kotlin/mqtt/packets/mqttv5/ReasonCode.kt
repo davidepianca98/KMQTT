@@ -1,4 +1,4 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 enum class ReasonCode(val value: Int) {
     SUCCESS(0),

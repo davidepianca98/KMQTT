@@ -1,5 +1,10 @@
-import mqtt.*
+package mqtt
+
+import currentTimeMillis
+import generateRandomClientId
+import messageExpiryIntervalExpired
 import mqtt.packets.*
+import mqtt.packets.mqttv5.*
 import socket.IOException
 import socket.Socket
 import socket.streams.EOFException
@@ -22,7 +27,8 @@ class ClientConnection(
     // Client connection state
     private val topicAliasesClient = mutableMapOf<UInt, String>()
     private val topicAliasesServer = mutableMapOf<String, UInt>()
-    private var maxSendQuota: UInt = DEFAULT_MAX_SEND_QUOTA // Client receive maximum
+    private var maxSendQuota: UInt =
+        DEFAULT_MAX_SEND_QUOTA // Client receive maximum
     private var sendQuota: UInt = DEFAULT_MAX_SEND_QUOTA
     // TODO don't send packets larger than this, remove certain properties based on the specific packet if possible, if null no limit
     private var maximumPacketSize: UInt? = null
@@ -89,7 +95,13 @@ class ClientConnection(
 
     private fun disconnect(reasonCode: ReasonCode) {
         if (!connectCompleted) {
-            writePacket(MQTTConnack(ConnectAcknowledgeFlags(false), reasonCode))
+            writePacket(
+                MQTTConnack(
+                    ConnectAcknowledgeFlags(
+                        false
+                    ), reasonCode
+                )
+            )
         } else {
             writePacket(MQTTDisconnect(reasonCode))
             if (reasonCode != ReasonCode.SUCCESS)
@@ -371,7 +383,11 @@ class ClientConnection(
 
         // TODO implement section 3.2.2.3.16 and 4.11 for Server redirection
 
-        val connack = MQTTConnack(ConnectAcknowledgeFlags(sessionPresent), ReasonCode.SUCCESS, connackProperties)
+        val connack = MQTTConnack(
+            ConnectAcknowledgeFlags(sessionPresent),
+            ReasonCode.SUCCESS,
+            connackProperties
+        )
         writePacket(connack)
         connectCompleted = true
         session.connected()
@@ -493,10 +509,22 @@ class ClientConnection(
         if (packet.reasonCode != ReasonCode.SUCCESS)
             return
         session.qos2ListReceived.remove(packet.packetId)?.let {
-            writePacket(MQTTPubcomp(packet.packetId, ReasonCode.SUCCESS, packet.properties))
+            writePacket(
+                MQTTPubcomp(
+                    packet.packetId,
+                    ReasonCode.SUCCESS,
+                    packet.properties
+                )
+            )
             broker.publish(it.retain, getTopicOrAlias(it), Qos.EXACTLY_ONCE, false, packet.properties, it.payload)
         } ?: run {
-            writePacket(MQTTPubcomp(packet.packetId, ReasonCode.PACKET_IDENTIFIER_NOT_FOUND, packet.properties))
+            writePacket(
+                MQTTPubcomp(
+                    packet.packetId,
+                    ReasonCode.PACKET_IDENTIFIER_NOT_FOUND,
+                    packet.properties
+                )
+            )
         }
     }
 

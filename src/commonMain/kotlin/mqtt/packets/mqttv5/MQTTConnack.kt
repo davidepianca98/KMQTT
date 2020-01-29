@@ -1,6 +1,7 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
+import mqtt.packets.MQTTControlPacketType
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
@@ -69,10 +70,16 @@ class MQTTConnack(
                 else -> throw MQTTException(ReasonCode.MALFORMED_PACKET)
             }
             val connectReasonCode =
-                ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+                ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(
+                    ReasonCode.PROTOCOL_ERROR
+                )
             val properties = inStream.deserializeProperties(validProperties)
 
-            return MQTTConnack(connectAcknowledgeFlags, connectReasonCode, properties)
+            return MQTTConnack(
+                connectAcknowledgeFlags,
+                connectReasonCode,
+                properties
+            )
         }
     }
 

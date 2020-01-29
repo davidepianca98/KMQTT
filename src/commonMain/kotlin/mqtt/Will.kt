@@ -1,8 +1,8 @@
 package mqtt
 
-import mqtt.packets.MQTTConnect
+import mqtt.packets.mqttv5.MQTTConnect
 import mqtt.packets.Qos
-import mqtt.packets.ReasonCode
+import mqtt.packets.mqttv5.ReasonCode
 import validatePayloadFormat
 
 class Will(

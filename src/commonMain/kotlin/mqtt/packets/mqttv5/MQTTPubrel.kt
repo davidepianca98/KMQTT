@@ -1,10 +1,11 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
+import mqtt.packets.MQTTControlPacketType
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTTPubrec(
+class MQTTPubrel(
     val packetId: UInt,
     val reasonCode: ReasonCode = ReasonCode.SUCCESS,
     val properties: MQTTProperties = MQTTProperties()
@@ -19,7 +20,7 @@ class MQTTPubrec(
         outStream.writeByte(reasonCode.value.toUInt())
         outStream.write(properties.serializeProperties(validProperties))
 
-        return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBREC, 0)
+        return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBREL, 2)
     }
 
     companion object : MQTTDeserializer {
@@ -31,30 +32,33 @@ class MQTTPubrec(
 
         val validReasonCodes = listOf(
             ReasonCode.SUCCESS,
-            ReasonCode.NO_MATCHING_SUBSCRIBERS,
-            ReasonCode.UNSPECIFIED_ERROR,
-            ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR,
-            ReasonCode.NOT_AUTHORIZED,
-            ReasonCode.TOPIC_NAME_INVALID,
-            ReasonCode.PACKET_IDENTIFIER_IN_USE,
-            ReasonCode.QUOTA_EXCEEDED,
-            ReasonCode.PAYLOAD_FORMAT_INVALID
+            ReasonCode.PACKET_IDENTIFIER_NOT_FOUND
         )
 
-        override fun fromByteArray(flags: Int, data: UByteArray): MQTTPubrec {
+        override fun fromByteArray(flags: Int, data: UByteArray): MQTTPubrel {
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val packetId = inStream.read2BytesInt()
             return if (inStream.available() == 0) { // Reason code and properties omitted
-                MQTTPubrec(packetId)
+                MQTTPubrel(packetId)
             } else {
                 val reasonCode =
-                    ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
+                    ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(
+                        ReasonCode.MALFORMED_PACKET)
                 if (reasonCode !in validReasonCodes)
                     throw MQTTException(ReasonCode.PROTOCOL_ERROR)
                 val properties = inStream.deserializeProperties(validProperties)
-                MQTTPubrec(packetId, reasonCode, properties)
+                MQTTPubrel(packetId, reasonCode, properties)
             }
+        }
+
+        override fun checkFlags(flags: Int) {
+            if (flags.flagsBit(0) != 0 ||
+                flags.flagsBit(1) != 1 ||
+                flags.flagsBit(2) != 0 ||
+                flags.flagsBit(3) != 0
+            )
+                throw MQTTException(ReasonCode.MALFORMED_PACKET)
         }
     }
 }

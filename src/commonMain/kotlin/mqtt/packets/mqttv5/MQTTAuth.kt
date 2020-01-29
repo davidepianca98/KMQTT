@@ -1,6 +1,7 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
+import mqtt.packets.MQTTControlPacketType
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
@@ -39,7 +40,9 @@ class MQTTAuth(
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val reasonCode =
-                ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
+                ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(
+                    ReasonCode.MALFORMED_PACKET
+                )
             if (reasonCode !in validReasonCodes)
                 throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             val properties = inStream.deserializeProperties(validProperties)

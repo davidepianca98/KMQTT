@@ -1,20 +1,12 @@
 import kotlinx.coroutines.CoroutineScope
 import mqtt.MQTTException
-import mqtt.packets.MQTTPublish
-import mqtt.packets.ReasonCode
+import mqtt.packets.mqttv5.MQTTPublish
+import mqtt.packets.mqttv5.ReasonCode
 import kotlin.random.Random
 
 expect fun currentTimeMillis(): Long
 
 expect fun runCoroutine(block: suspend CoroutineScope.() -> Unit)
-
-fun UByteArray.leftShift(shift: Int) {
-    forEachIndexed { index, value ->
-        if (index > shift) {
-            this[index - shift] = value
-        }
-    }
-}
 
 fun generateRandomClientId(): String {
     val length = 30
@@ -72,3 +64,5 @@ fun String.validateUTF8String() { // Taken from Paho MQTT Java
             throw MQTTException(ReasonCode.MALFORMED_PACKET)
     }
 }
+
+fun UByteArray.toHexString() = joinToString("") { it.toString(16).padStart(2, '0') }

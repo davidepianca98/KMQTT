@@ -1,17 +1,21 @@
+package mqtt
+
+import currentTimeMillis
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mqtt.*
-import mqtt.packets.MQTTProperties
-import mqtt.packets.MQTTPublish
+import messageExpiryIntervalExpired
+import mqtt.packets.mqttv5.MQTTProperties
+import mqtt.packets.mqttv5.MQTTPublish
 import mqtt.packets.Qos
-import mqtt.packets.ReasonCode
+import mqtt.packets.mqttv5.ReasonCode
+import runCoroutine
 import socket.ServerSocket
 import kotlin.math.min
 
 class Broker(
-    port: Int = 1883,
-    host: String = "127.0.0.1",
+    val port: Int = 1883,
+    val host: String = "127.0.0.1",
     backlog: Int = 128,
     val authentication: Authentication? = null,
     val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
@@ -27,7 +31,8 @@ class Broker(
     val sharedSubscriptionsAvailable: Boolean = true,
     val serverKeepAlive: Int? = null,
     val responseInformation: String? = null
-) {
+) { // TODO general refactoring of Session, mqtt.Broker, mqtt.ClientConnection and maybe abstraction of Socket and TLSSocket
+    //      Integration and Unit tests
 
     // TODO support TLS with custom constructor with default port 8883
     // TODO support WebSocket, section 6

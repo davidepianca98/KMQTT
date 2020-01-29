@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class TestTopicValidation {
+class TestTopicUtils {
 
     @Test
     fun testTopicValidation() {

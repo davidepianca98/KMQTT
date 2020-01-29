@@ -1,4 +1,4 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 enum class Property(val value: UInt) {
     PAYLOAD_FORMAT_INDICATOR(1u),

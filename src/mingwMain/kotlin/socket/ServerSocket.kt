@@ -1,7 +1,7 @@
 package socket
 
-import Broker
-import ClientConnection
+import mqtt.Broker
+import mqtt.ClientConnection
 import kotlinx.cinterop.*
 import platform.posix.*
 import platform.windows.select
@@ -75,7 +75,8 @@ actual class ServerSocket actual constructor(
                     if (newSocket == INVALID_SOCKET) {
                         throw IOException("Invalid socket")
                     }
-                    clients[newSocket] = ClientConnection(Socket(newSocket, writeRequest), broker)
+                    clients[newSocket] =
+                        ClientConnection(Socket(newSocket, writeRequest), broker)
                 } else {
                     clients.forEach { socket ->
                         when {

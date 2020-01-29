@@ -1,12 +1,11 @@
 package mqtt
 
-import ClientConnection
 import currentTimeMillis
 import messageExpiryIntervalExpired
-import mqtt.packets.MQTTConnect
-import mqtt.packets.MQTTPacket
-import mqtt.packets.MQTTPublish
-import mqtt.packets.MQTTPubrel
+import mqtt.packets.mqttv5.MQTTConnect
+import mqtt.packets.mqttv5.MQTTPacket
+import mqtt.packets.mqttv5.MQTTPublish
+import mqtt.packets.mqttv5.MQTTPubrel
 
 class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
 

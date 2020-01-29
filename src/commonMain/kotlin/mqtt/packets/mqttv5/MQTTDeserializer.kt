@@ -1,4 +1,4 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
 import mqtt.containsWildcard

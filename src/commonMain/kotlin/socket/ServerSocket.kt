@@ -1,6 +1,6 @@
 package socket
 
-import Broker
+import mqtt.Broker
 
 expect class ServerSocket(host: String, port: Int, backlog: Int, broker: Broker) {
 

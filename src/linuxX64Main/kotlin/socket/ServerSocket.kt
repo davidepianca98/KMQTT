@@ -1,6 +1,6 @@
 package socket
 
-import Broker
+import mqtt.Broker
 
 actual class ServerSocket actual constructor(host: String, port: Int, backlog: Int, private val broker: Broker) {
 

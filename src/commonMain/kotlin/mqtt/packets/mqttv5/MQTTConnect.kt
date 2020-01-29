@@ -1,6 +1,7 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
+import mqtt.packets.*
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
@@ -9,13 +10,13 @@ class MQTTConnect(
     val protocolVersion: Int,
     val connectFlags: ConnectFlags,
     val keepAlive: Int,
-    val properties: MQTTProperties,
-    val clientID: String,
-    val willProperties: MQTTProperties?,
-    val willTopic: String?,
-    val willPayload: UByteArray?,
-    val userName: String?,
-    val password: UByteArray?
+    val clientID: String = "",
+    val properties: MQTTProperties = MQTTProperties(),
+    val willProperties: MQTTProperties? = null,
+    val willTopic: String? = null,
+    val willPayload: UByteArray? = null,
+    val userName: String? = null,
+    val password: UByteArray? = null
 ) : MQTTPacket {
 
     companion object : MQTTDeserializer {
@@ -101,7 +102,8 @@ class MQTTConnect(
             if (protocolVersion != 5)
                 throw MQTTException(ReasonCode.UNSUPPORTED_PROTOCOL_VERSION)
 
-            val connectFlags = connectFlags(inStream.read().toInt())
+            val connectFlags =
+                connectFlags(inStream.read().toInt())
             val keepAlive = inStream.read2BytesInt()
 
             val properties = inStream.deserializeProperties(validProperties)
@@ -123,8 +125,8 @@ class MQTTConnect(
                 protocolVersion,
                 connectFlags,
                 keepAlive.toInt(),
-                properties,
                 clientID,
+                properties,
                 willProperties,
                 willTopic,
                 willPayload,
