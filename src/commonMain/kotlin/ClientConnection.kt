@@ -204,24 +204,30 @@ class ClientConnection(
         }
     }
 
+    private fun sendAuth(reasonCode: ReasonCode, authenticationMethod: String, authenticationData: UByteArray?) {
+        val properties = MQTTProperties()
+        properties.authenticationMethod = authenticationMethod
+        properties.authenticationData = authenticationData
+        val auth = MQTTAuth(reasonCode, properties)
+        writePacket(auth)
+    }
+
     private fun enhancedAuthenticationResult(
         result: EnhancedAuthenticationProvider.Result,
         authenticationMethod: String,
         authenticationData: UByteArray?
     ) {
         if (result == EnhancedAuthenticationProvider.Result.NEEDS_MORE) {
-            val properties = MQTTProperties()
-            properties.authenticationMethod = authenticationMethod
-            properties.authenticationData = authenticationData
-            val auth = MQTTAuth(ReasonCode.CONTINUE_AUTHENTICATION, properties)
-            writePacket(auth)
-        } else {
-            if (result == EnhancedAuthenticationProvider.Result.SUCCESS) {
+            sendAuth(ReasonCode.CONTINUE_AUTHENTICATION, authenticationMethod, authenticationData)
+        } else if (result == EnhancedAuthenticationProvider.Result.SUCCESS) {
+            if (!connectCompleted) {
                 connectPacket?.let { initSessionAndSendConnack(it) }
                     ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
-            } else if (result == EnhancedAuthenticationProvider.Result.ERROR) {
-                throw MQTTException(ReasonCode.NOT_AUTHORIZED)
+            } else {
+                sendAuth(ReasonCode.SUCCESS, authenticationMethod, authenticationData)
             }
+        } else if (result == EnhancedAuthenticationProvider.Result.ERROR) {
+            throw MQTTException(ReasonCode.NOT_AUTHORIZED)
         }
     }
 
@@ -617,17 +623,14 @@ class ClientConnection(
     }
 
     private fun handleAuth(packet: MQTTAuth) {
-        if (!connectCompleted) {
-            val authenticationMethod = packet.properties.authenticationMethod
-            val clientId = this.clientId ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
-            if (packet.authenticateReasonCode != ReasonCode.CONTINUE_AUTHENTICATION) {
-                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
-            } else if (authenticationMethod == null || authenticationMethod != this.authenticationMethod) {
-                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
-            } else {
-                handleEnhancedAuthentication(clientId, authenticationMethod, packet.properties.authenticationData)
-            }
+        val authenticationMethod = packet.properties.authenticationMethod
+        val clientId = this.clientId ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+        if (!connectCompleted && packet.authenticateReasonCode != ReasonCode.CONTINUE_AUTHENTICATION) {
+            throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        } else if (authenticationMethod == null || authenticationMethod != this.authenticationMethod) {
+            throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        } else {
+            handleEnhancedAuthentication(clientId, authenticationMethod, packet.properties.authenticationData)
         }
-        // TODO handle enhanced re-authentication (section 4.12.1)
     }
 }
