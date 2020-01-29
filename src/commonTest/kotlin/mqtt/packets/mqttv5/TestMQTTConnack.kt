@@ -1,9 +1,5 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
-import mqtt.packets.mqttv5.ConnectAcknowledgeFlags
-import mqtt.packets.mqttv5.MQTTConnack
-import mqtt.packets.mqttv5.MQTTProperties
-import mqtt.packets.mqttv5.ReasonCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

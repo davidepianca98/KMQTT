@@ -19,7 +19,7 @@ class MQTTSuback(
         )
 
         val validReasonCodes = listOf(
-            ReasonCode.GRANTED_QOS0,
+            ReasonCode.SUCCESS,
             ReasonCode.GRANTED_QOS1,
             ReasonCode.GRANTED_QOS2,
             ReasonCode.UNSPECIFIED_ERROR,

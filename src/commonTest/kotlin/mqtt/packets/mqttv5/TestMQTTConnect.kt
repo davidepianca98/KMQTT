@@ -1,6 +1,6 @@
-package mqtt.packets
+package mqtt.packets.mqttv5
 
-import mqtt.packets.mqttv5.MQTTConnect
+import mqtt.packets.Qos
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

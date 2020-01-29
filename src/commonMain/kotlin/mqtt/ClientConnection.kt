@@ -3,7 +3,7 @@ package mqtt
 import currentTimeMillis
 import generateRandomClientId
 import messageExpiryIntervalExpired
-import mqtt.packets.*
+import mqtt.packets.Qos
 import mqtt.packets.mqttv5.*
 import socket.IOException
 import socket.Socket
@@ -593,7 +593,7 @@ class ClientConnection(
             retainedMessagesList += prepareRetainedMessages(subscription, replaced)
 
             when (subscription.options.qos) {
-                Qos.AT_MOST_ONCE -> ReasonCode.GRANTED_QOS0
+                Qos.AT_MOST_ONCE -> ReasonCode.SUCCESS
                 Qos.AT_LEAST_ONCE -> ReasonCode.GRANTED_QOS1
                 Qos.EXACTLY_ONCE -> ReasonCode.GRANTED_QOS2
             }

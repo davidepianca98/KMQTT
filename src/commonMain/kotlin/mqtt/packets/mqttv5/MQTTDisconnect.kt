@@ -31,7 +31,7 @@ class MQTTDisconnect(
         )
 
         val validReasonCodes = listOf(
-            ReasonCode.NORMAL_DISCONNECTION,
+            ReasonCode.SUCCESS,
             ReasonCode.DISCONNECT_WITH_WILL_MESSAGE,
             ReasonCode.UNSPECIFIED_ERROR,
             ReasonCode.MALFORMED_PACKET,
@@ -69,9 +69,7 @@ class MQTTDisconnect(
             } else {
                 val inStream = ByteArrayInputStream(data)
                 val reasonCode =
-                    ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(
-                        ReasonCode.MALFORMED_PACKET
-                    )
+                    ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
                 if (reasonCode !in validReasonCodes)
                     throw MQTTException(ReasonCode.PROTOCOL_ERROR)
                 val properties = inStream.deserializeProperties(validProperties)

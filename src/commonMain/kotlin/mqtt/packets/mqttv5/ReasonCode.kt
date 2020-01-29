@@ -1,9 +1,7 @@
 package mqtt.packets.mqttv5
 
 enum class ReasonCode(val value: Int) {
-    SUCCESS(0),
-    NORMAL_DISCONNECTION(0),
-    GRANTED_QOS0(0),
+    SUCCESS(0), // NORMAL_DISCONNECTION, GRANTED_QOS0
     GRANTED_QOS1(1),
     GRANTED_QOS2(2),
     DISCONNECT_WITH_WILL_MESSAGE(4),
