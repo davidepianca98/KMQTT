@@ -28,7 +28,7 @@ class Broker(
     val serverKeepAlive: Int? = null,
     val responseInformation: String? = null
 ) { // TODO general refactoring of Session, mqtt.Broker, mqtt.ClientConnection
-    //      Integration and Unit tests
+    //      Integration tests
 
     // TODO support TLS with custom constructor with default port 8883
     // TODO support WebSocket, section 6

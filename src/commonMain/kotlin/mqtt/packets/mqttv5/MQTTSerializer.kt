@@ -1,5 +1,6 @@
 package mqtt.packets.mqttv5
 
+import mqtt.MQTTException
 import mqtt.packets.MQTTControlPacketType
 import socket.streams.ByteArrayOutputStream
 import socket.streams.encodeVariableByteInteger
@@ -40,7 +41,8 @@ interface MQTTSerializer {
     }
 
     fun ByteArrayOutputStream.writeUTF8String(value: String) {
-        value.validateUTF8String()
+        if (!value.validateUTF8String())
+            throw MQTTException(ReasonCode.MALFORMED_PACKET)
         write2BytesInt(value.length.toUInt())
         write(value.encodeToByteArray().toUByteArray())
     }

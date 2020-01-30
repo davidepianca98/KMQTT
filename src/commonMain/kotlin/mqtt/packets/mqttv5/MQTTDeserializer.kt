@@ -39,7 +39,8 @@ interface MQTTDeserializer {
     fun ByteArrayInputStream.readUTF8String(): String {
         val length = read2BytesInt().toInt()
         val string = readBytes(length).toByteArray().decodeToString()
-        string.validateUTF8String()
+        if (!string.validateUTF8String())
+            throw MQTTException(ReasonCode.MALFORMED_PACKET)
         return string
     }
 
