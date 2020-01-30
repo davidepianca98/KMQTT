@@ -1,16 +1,12 @@
 package mqtt
 
 import currentTimeMillis
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import messageExpiryIntervalExpired
+import mqtt.packets.Qos
 import mqtt.packets.mqttv5.MQTTProperties
 import mqtt.packets.mqttv5.MQTTPublish
-import mqtt.packets.Qos
 import mqtt.packets.mqttv5.ReasonCode
-import runCoroutine
-import socket.ServerSocket
+import socket.ServerSocketLoop
 import kotlin.math.min
 
 class Broker(
@@ -31,13 +27,13 @@ class Broker(
     val sharedSubscriptionsAvailable: Boolean = true,
     val serverKeepAlive: Int? = null,
     val responseInformation: String? = null
-) { // TODO general refactoring of Session, mqtt.Broker, mqtt.ClientConnection and maybe abstraction of Socket and TLSSocket
+) { // TODO general refactoring of Session, mqtt.Broker, mqtt.ClientConnection
     //      Integration and Unit tests
 
     // TODO support TLS with custom constructor with default port 8883
     // TODO support WebSocket, section 6
 
-    private val server = ServerSocket(host, port, backlog, this)
+    private val server = ServerSocketLoop(host, port, backlog, this)
     val sessions = mutableMapOf<String, Session>()
     private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
 
@@ -47,8 +43,7 @@ class Broker(
         }
     }
 
-    fun listen() = runCoroutine {
-        GlobalScope.launch { cleanUpOperations() }
+    fun listen() {
         server.run()
     }
 
@@ -183,23 +178,20 @@ class Broker(
         }
     }
 
-    private suspend fun cleanUpOperations() {
-        while (true) {
-            sessions.forEach { session ->
-                if (session.value.isConnected()) {
-                    session.value.clientConnection!!.checkKeepAliveExpired()
-                } else {
-                    session.value.will?.let {
-                        if (session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L) > currentTimeMillis())
-                            sendWill(session.value)
-                    }
+    fun cleanUpOperations() {
+        sessions.forEach { session ->
+            if (session.value.isConnected()) {
+                session.value.clientConnection!!.checkKeepAliveExpired()
+            } else {
+                session.value.will?.let {
+                    if (session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L) > currentTimeMillis())
+                        sendWill(session.value)
                 }
             }
-            delay(10000)
         }
     }
 
     fun stop() {
-        server.close()
+        server.stop()
     }
 }

@@ -10,6 +10,7 @@ actual class Socket {
     var key: SelectionKey? = null
 
     private val pendingSendData = mutableListOf<UByteArray>()
+    private val buf = ByteBuffer.allocate(4096)
 
     actual fun send(data: UByteArray) {
         val selectionKey = key!!
@@ -19,6 +20,8 @@ actual class Socket {
             if (count < data.size) {
                 pendingSendData.add(data.copyOfRange(count, data.size))
                 selectionKey.interestOps(SelectionKey.OP_READ or SelectionKey.OP_WRITE)
+            } else {
+                selectionKey.interestOps(SelectionKey.OP_READ)
             }
         } catch (e: java.io.IOException) {
             selectionKey.cancel()
@@ -27,7 +30,29 @@ actual class Socket {
         }
     }
 
-    fun sendRemaining() {
+    actual fun read(): UByteArray? {
+        val channel = key?.channel() as SocketChannel
+        buf.clear()
+        try {
+            val length = channel.read(buf)
+            return if (length >= 0) {
+                buf.flip()
+                val array = ByteArray(length)
+                buf.get(array, 0, length)
+                array.toUByteArray()
+            } else {
+                key?.cancel()
+                channel.close()
+                throw SocketClosedException()
+            }
+        } catch (e: java.io.IOException) {
+            key?.cancel()
+            channel.close()
+            throw IOException()
+        }
+    }
+
+    actual fun sendRemaining() {
         pendingSendData.forEach {
             send(it)
         }

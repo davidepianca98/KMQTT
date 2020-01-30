@@ -1,6 +1,7 @@
 package socket
 
 import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.convert
 import kotlinx.cinterop.usePinned
 import platform.posix.*
 
@@ -29,9 +30,35 @@ actual class Socket(private val socket: SOCKET, private val writeRequest: Mutabl
         }
     }
 
-    fun sendRemaining() {
+    actual fun sendRemaining() {
         pendingSendData.forEach {
             send(it)
+        }
+    }
+
+    actual fun read(): UByteArray? {
+        val buffer = ByteArray(4096)
+        buffer.usePinned { pinned ->
+            val length = recv(socket.convert(), pinned.addressOf(0), buffer.size, 0)
+            when {
+                length == 0 -> {
+                    shutdown(socket, SD_SEND)
+                    closesocket(socket)
+                    throw SocketClosedException()
+                }
+                length > 0 -> {
+                    return pinned.get().toUByteArray().copyOfRange(0, length)
+                }
+                else -> {
+                    if (WSAGetLastError() != WSAEWOULDBLOCK) {
+                        shutdown(socket, SD_SEND)
+                        closesocket(socket)
+                        throw IOException()
+                    } else {
+                        return null
+                    }
+                }
+            }
         }
     }
 
