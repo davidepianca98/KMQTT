@@ -10,8 +10,8 @@ import socket.streams.ByteArrayOutputStream
 
 class MQTTSubscribe(
     val packetIdentifier: UInt,
-    val properties: MQTTProperties = MQTTProperties(),
-    val subscriptions: List<Subscription>
+    val subscriptions: List<Subscription>,
+    val properties: MQTTProperties = MQTTProperties()
 ) : MQTTPacket {
 
     companion object : MQTTDeserializer {
@@ -41,7 +41,7 @@ class MQTTSubscribe(
                     throw MQTTException(ReasonCode.PROTOCOL_ERROR)
                 subscriptions += subscription
             }
-            return MQTTSubscribe(packetIdentifier, properties, subscriptions)
+            return MQTTSubscribe(packetIdentifier, subscriptions, properties)
         }
 
         class SubscriptionOptions(

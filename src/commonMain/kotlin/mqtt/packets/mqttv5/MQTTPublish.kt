@@ -16,8 +16,8 @@ class MQTTPublish(
     val dup: Boolean = false,
     val topicName: String,
     val packetId: UInt?,
-    val properties: MQTTProperties,
-    val payload: UByteArray?,
+    val properties: MQTTProperties = MQTTProperties(),
+    val payload: UByteArray? = null,
     val timestamp: Long = currentTimeMillis()
 ) : MQTTPacket {
 

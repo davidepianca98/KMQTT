@@ -5,7 +5,7 @@ import mqtt.packets.mqttv5.MQTTSubscribe
 class Subscription(
     val topicFilter: String,
     val options: MQTTSubscribe.Companion.SubscriptionOptions,
-    val subscriptionIdentifier: UInt?
+    val subscriptionIdentifier: UInt? = null
 ) {
     val matchTopicFilter = topicFilter.getSharedTopicFilter() ?: topicFilter
     val shareName = topicFilter.getSharedTopicShareName()
