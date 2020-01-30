@@ -5,12 +5,11 @@ import java.nio.channels.SelectionKey
 import java.nio.channels.SocketChannel
 
 @ExperimentalUnsignedTypes
-actual class Socket {
+actual class Socket(private val buf: ByteBuffer) {
 
     var key: SelectionKey? = null
 
     private val pendingSendData = mutableListOf<UByteArray>()
-    private val buf = ByteBuffer.allocate(4096)
 
     actual fun send(data: UByteArray) {
         val selectionKey = key!!

@@ -5,7 +5,11 @@ import kotlinx.cinterop.convert
 import kotlinx.cinterop.usePinned
 import platform.posix.*
 
-actual class Socket(private val socket: SOCKET, private val writeRequest: MutableList<SOCKET>) {
+actual class Socket(
+    private val socket: SOCKET,
+    private val writeRequest: MutableList<SOCKET>,
+    private val buffer: ByteArray
+) {
 
     private val pendingSendData = mutableListOf<UByteArray>()
 
@@ -37,7 +41,6 @@ actual class Socket(private val socket: SOCKET, private val writeRequest: Mutabl
     }
 
     actual fun read(): UByteArray? {
-        val buffer = ByteArray(4096)
         buffer.usePinned { pinned ->
             val length = recv(socket.convert(), pinned.addressOf(0), buffer.size, 0)
             when {

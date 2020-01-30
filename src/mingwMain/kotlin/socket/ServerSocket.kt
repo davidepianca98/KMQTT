@@ -20,6 +20,8 @@ actual class ServerSocket actual constructor(
     private val clients = mutableMapOf<SOCKET, ClientConnection>()
     private val writeRequest = mutableListOf<SOCKET>()
 
+    private val buffer = ByteArray(broker.maximumPacketSize.toInt())
+
     private val readfds = nativeHeap.alloc<fd_set>()
     private val writefds = nativeHeap.alloc<fd_set>()
     private val errorfds = nativeHeap.alloc<fd_set>()
@@ -99,7 +101,7 @@ actual class ServerSocket actual constructor(
                 if (newSocket == INVALID_SOCKET) {
                     throw IOException("Invalid socket")
                 }
-                clients[newSocket] = ClientConnection(Socket(newSocket, writeRequest), broker)
+                clients[newSocket] = ClientConnection(Socket(newSocket, writeRequest, buffer), broker)
             } else {
                 clients.forEach { socket ->
                     when {
@@ -116,7 +118,7 @@ actual class ServerSocket actual constructor(
                             clients.remove(socket.key)
                             shutdown(socket.key, SD_SEND)
                             closesocket(socket.key)
-                            socket.value.closeWithException()
+                            socket.value.closedWithException()
                         }
                     }
                 }

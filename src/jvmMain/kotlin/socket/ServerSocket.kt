@@ -3,6 +3,7 @@ package socket
 import mqtt.Broker
 import mqtt.ClientConnection
 import java.net.InetSocketAddress
+import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
@@ -12,6 +13,7 @@ actual class ServerSocket actual constructor(host: String, port: Int, backlog: I
 
     private val socket = ServerSocketChannel.open()
     private val selector = Selector.open()
+    private val buf = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
 
     init {
         socket.configureBlocking(false)
@@ -23,7 +25,7 @@ actual class ServerSocket actual constructor(host: String, port: Int, backlog: I
         try {
             val channel = (channel() as ServerSocketChannel).accept()
             channel.configureBlocking(false)
-            val socket = Socket()
+            val socket = Socket(buf)
             val clientConnection = ClientConnection(socket, broker)
             val key = channel.register(selector, SelectionKey.OP_READ, clientConnection)
             socket.key = key
