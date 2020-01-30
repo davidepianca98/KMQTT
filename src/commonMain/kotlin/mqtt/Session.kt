@@ -125,9 +125,11 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
     }
 
     fun disconnected() {
-        connected = false
-        clientConnection = null
-        sessionDisconnectedTimestamp = currentTimeMillis()
+        if (connected) {
+            connected = false
+            clientConnection = null
+            sessionDisconnectedTimestamp = currentTimeMillis()
+        }
     }
 
     fun getExpiryTime(): Long? {

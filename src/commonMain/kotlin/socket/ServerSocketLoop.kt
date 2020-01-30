@@ -22,9 +22,10 @@ class ServerSocketLoop(host: String, port: Int, backlog: Int, private val broker
                     }
                     return@select true
                 } catch (e: SocketClosedException) {
+                    clientConnection.closedGracefully()
                     return@select false
                 } catch (e: IOException) {
-                    clientConnection.closeWithException()
+                    clientConnection.closedWithException()
                     return@select false
                 }
             }
