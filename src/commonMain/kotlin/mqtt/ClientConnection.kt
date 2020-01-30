@@ -90,7 +90,7 @@ class ClientConnection(
     }
 
     fun closedGracefully() {
-        broker.sessions[clientId]?.disconnected()
+        close()
     }
 
     private fun close() {

@@ -26,7 +26,16 @@ kotlin {
             executable()
         }
     }
-    linuxX64()
+    linuxX64() {
+        binaries {
+            executable()
+        }
+    }
+    linuxArm32Hfp() {
+        binaries {
+            executable()
+        }
+    }
 
     sourceSets {
         all {
@@ -38,7 +47,6 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
-                implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.3'
             }
         }
         commonTest {
@@ -50,7 +58,6 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
-                implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.3'
             }
         }
         jvmTest {
@@ -61,18 +68,21 @@ kotlin {
             }
         }
         mingwMain {
-            dependencies {
-                implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-mingwx64:1.3.3'
-            }
+
         }
         mingwTest {
+
         }
         linuxX64Main {
-            dependencies {
-                implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core-linuxx64:1.3.3'
-            }
+
         }
         linuxX64Test {
+
+        }
+        linuxArm32HfpMain {
+
+        }
+        linuxArm32HfpTest {
 
         }
     }
