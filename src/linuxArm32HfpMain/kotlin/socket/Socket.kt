@@ -1,6 +1,6 @@
 package socket
 
-actual class Socket {
+actual open class Socket {
     actual fun send(data: UByteArray) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

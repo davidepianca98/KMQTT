@@ -3,7 +3,7 @@ package socket
 import mqtt.Broker
 import mqtt.ClientConnection
 
-actual class ServerSocket actual constructor(
+actual open class ServerSocket actual constructor(
     host: String,
     port: Int,
     backlog: Int,

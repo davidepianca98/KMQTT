@@ -1,25 +1,18 @@
 package socket
 
 import mqtt.Broker
+import mqtt.ClientConnection
+import socket.tls.TLSServerSocket
 
-class ServerSocketLoop(host: String, port: Int, backlog: Int, private val broker: Broker) {
+open class ServerSocketLoop(private val broker: Broker) {
 
-    private val serverSocket = ServerSocket(host, port, backlog, broker)
+    private val serverSocket = if (broker.tlsSettings == null) ServerSocket(broker) else TLSServerSocket(broker)
 
     fun run() {
         while (serverSocket.isRunning()) {
             serverSocket.select(500) { clientConnection, state ->
                 try {
-                    when (state) {
-                        SocketState.READ -> {
-                            clientConnection.client.read()?.let {
-                                clientConnection.dataReceived(it)
-                            }
-                        }
-                        SocketState.WRITE -> {
-                            clientConnection.client.sendRemaining()
-                        }
-                    }
+                    handleEvent(clientConnection, state)
                     return@select true
                 } catch (e: SocketClosedException) {
                     clientConnection.closedGracefully()
@@ -30,6 +23,19 @@ class ServerSocketLoop(host: String, port: Int, backlog: Int, private val broker
                 }
             }
             broker.cleanUpOperations()
+        }
+    }
+
+    private fun handleEvent(clientConnection: ClientConnection, state: SocketState) {
+        when (state) {
+            SocketState.READ -> {
+                clientConnection.client.read()?.let {
+                    clientConnection.dataReceived(it)
+                }
+            }
+            SocketState.WRITE -> {
+                clientConnection.client.sendRemaining()
+            }
         }
     }
 

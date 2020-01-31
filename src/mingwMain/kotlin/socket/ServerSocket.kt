@@ -7,7 +7,7 @@ import platform.posix.*
 import platform.windows.select
 
 
-actual class ServerSocket actual constructor(
+actual open class ServerSocket actual constructor(
     host: String,
     private val port: Int,
     private val backlog: Int,

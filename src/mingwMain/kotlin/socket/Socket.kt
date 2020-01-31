@@ -5,7 +5,7 @@ import kotlinx.cinterop.convert
 import kotlinx.cinterop.usePinned
 import platform.posix.*
 
-actual class Socket(
+actual open class Socket(
     private val socket: SOCKET,
     private val writeRequest: MutableList<SOCKET>,
     private val buffer: ByteArray

@@ -9,26 +9,31 @@ import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
 
 
-actual class ServerSocket actual constructor(host: String, port: Int, backlog: Int, private val broker: Broker) {
+actual open class ServerSocket actual constructor(private val broker: Broker) : ServerSocketImpl {
 
     private val socket = ServerSocketChannel.open()
-    private val selector = Selector.open()
-    private val buf = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
+    protected val selector: Selector = Selector.open()
+
+    protected var sendBuffer: ByteBuffer = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
+    protected var receiveBuffer: ByteBuffer = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
 
     init {
         socket.configureBlocking(false)
-        socket.bind(InetSocketAddress(host, port), backlog)
+        socket.bind(InetSocketAddress(broker.host, broker.port), broker.backlog)
         socket.register(selector, SelectionKey.OP_ACCEPT)
     }
 
-    private fun SelectionKey.accept() {
+    override fun accept(key: SelectionKey) {
         try {
-            val channel = (channel() as ServerSocketChannel).accept()
+            val channel = (key.channel() as ServerSocketChannel).accept()
             channel.configureBlocking(false)
-            val socket = Socket(buf)
+
+            val socket = Socket(sendBuffer, receiveBuffer)
+
             val clientConnection = ClientConnection(socket, broker)
-            val key = channel.register(selector, SelectionKey.OP_READ, clientConnection)
-            socket.key = key
+
+            val socketKey = channel.register(selector, SelectionKey.OP_READ, clientConnection)
+            socket.key = socketKey
         } catch (e: java.io.IOException) {
             e.printStackTrace()
         }
@@ -55,7 +60,7 @@ actual class ServerSocket actual constructor(host: String, port: Int, backlog: I
                     if (key.isValid) {
                         val clientConnection = (key.attachment() as ClientConnection?)
                         when {
-                            key.isAcceptable -> key.accept()
+                            key.isAcceptable -> accept(key)
                             key.isReadable -> block(clientConnection!!, ServerSocketLoop.SocketState.READ)
                             key.isWritable -> block(clientConnection!!, ServerSocketLoop.SocketState.WRITE)
                         }

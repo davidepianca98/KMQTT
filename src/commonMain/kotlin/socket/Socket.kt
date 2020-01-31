@@ -1,12 +1,12 @@
 package socket
 
-expect class Socket {
+expect open class Socket : SocketImpl {
 
-    fun send(data: UByteArray)
+    override fun send(data: UByteArray)
 
-    fun sendRemaining()
+    override fun sendRemaining()
 
-    fun read(): UByteArray?
+    override fun read(): UByteArray?
 }
 
 open class IOException(message: String? = null) : Exception(message)

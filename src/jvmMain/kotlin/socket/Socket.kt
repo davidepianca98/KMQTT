@@ -1,60 +1,83 @@
 package socket
 
+import toUByteArray
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.SocketChannel
 
 @ExperimentalUnsignedTypes
-actual class Socket(private val buf: ByteBuffer) {
+actual open class Socket(private val sendBuffer: ByteBuffer, private val receiveBuffer: ByteBuffer) : SocketImpl {
 
     var key: SelectionKey? = null
 
-    private val pendingSendData = mutableListOf<UByteArray>()
+    private val pendingSendData = mutableListOf<ByteArray>()
 
-    actual fun send(data: UByteArray) {
+    actual override fun send(data: UByteArray) {
+        sendBuffer.clear()
+        sendBuffer.put(data.toByteArray())
+        sendFromBuffer()
+    }
+
+    private fun send(data: ByteArray) {
+        sendBuffer.clear()
+        sendBuffer.put(data)
+        sendFromBuffer()
+    }
+
+    protected fun sendFromBuffer() {
+        sendBuffer.flip()
         val selectionKey = key!!
         val channel = selectionKey.channel() as SocketChannel
+        val size = sendBuffer.remaining()
         try {
-            val count = channel.write(ByteBuffer.wrap(data.toByteArray()))
-            if (count < data.size) {
-                pendingSendData.add(data.copyOfRange(count, data.size))
+            val count = channel.write(sendBuffer)
+            if (count < size) {
+                val array = ByteArray(sendBuffer.remaining())
+                sendBuffer.get(array)
+                pendingSendData.add(array)
                 selectionKey.interestOps(SelectionKey.OP_READ or SelectionKey.OP_WRITE)
             } else {
                 selectionKey.interestOps(SelectionKey.OP_READ)
             }
         } catch (e: java.io.IOException) {
-            selectionKey.cancel()
-            channel.close()
+            close()
             throw IOException()
         }
     }
 
-    actual fun read(): UByteArray? {
+    protected fun readToBuffer() {
         val channel = key?.channel() as SocketChannel
-        buf.clear()
+        receiveBuffer.clear()
         try {
-            val length = channel.read(buf)
-            return if (length >= 0) {
-                buf.flip()
-                val array = ByteArray(length)
-                buf.get(array, 0, length)
-                array.toUByteArray()
+            val length = channel.read(receiveBuffer)
+            if (length >= 0) {
+                receiveBuffer.flip()
             } else {
-                key?.cancel()
-                channel.close()
+                close()
                 throw SocketClosedException()
             }
         } catch (e: java.io.IOException) {
-            key?.cancel()
-            channel.close()
+            close()
             throw IOException()
         }
     }
 
-    actual fun sendRemaining() {
+    actual override fun read(): UByteArray? {
+        readToBuffer()
+        return receiveBuffer.toUByteArray()
+    }
+
+    fun close() {
+        val channel = key?.channel() as SocketChannel
+        key?.cancel()
+        channel.close()
+    }
+
+    actual override fun sendRemaining() {
         pendingSendData.forEach {
             send(it)
         }
     }
 
 }
+

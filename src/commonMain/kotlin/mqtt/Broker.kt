@@ -6,12 +6,14 @@ import mqtt.packets.mqttv5.MQTTProperties
 import mqtt.packets.mqttv5.MQTTPublish
 import mqtt.packets.mqttv5.ReasonCode
 import socket.ServerSocketLoop
+import socket.tls.TLSSettings
 import kotlin.math.min
 
 class Broker(
     val port: Int = 1883,
     val host: String = "127.0.0.1",
-    backlog: Int = 128,
+    val backlog: Int = 128,
+    val tlsSettings: TLSSettings? = null,
     val authentication: Authentication? = null,
     val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
     val authorization: Authorization? = null,
@@ -30,7 +32,7 @@ class Broker(
     // TODO support TLS with custom constructor with default port 8883
     // TODO support WebSocket, section 6
 
-    private val server = ServerSocketLoop(host, port, backlog, this)
+    private val server = ServerSocketLoop(this)
     val sessions = mutableMapOf<String, Session>()
     private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
 
