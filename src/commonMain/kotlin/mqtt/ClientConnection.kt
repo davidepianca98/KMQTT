@@ -237,7 +237,7 @@ class ClientConnection(
             sendAuth(ReasonCode.CONTINUE_AUTHENTICATION, authenticationMethod, authenticationData)
         } else if (result == EnhancedAuthenticationProvider.Result.SUCCESS) {
             if (!connectCompleted) {
-                connectPacket?.let { initSessionAndSendConnack(it) }
+                connectPacket?.let { initSessionAndSendConnack(it, authenticationData) }
                     ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
             } else {
                 sendAuth(ReasonCode.SUCCESS, authenticationMethod, authenticationData)
@@ -272,10 +272,10 @@ class ClientConnection(
 
         packet.properties.authenticationMethod?.let { authenticationMethod ->
             handleEnhancedAuthentication(clientId, authenticationMethod, packet.properties.authenticationData)
-        } ?: initSessionAndSendConnack(packet)
+        } ?: initSessionAndSendConnack(packet, null)
     }
 
-    private fun initSessionAndSendConnack(packet: MQTTConnect) {
+    private fun initSessionAndSendConnack(packet: MQTTConnect, authenticationData: UByteArray?) {
         var sessionPresent = false
         val clientId = this.clientId ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
 
@@ -383,6 +383,14 @@ class ClientConnection(
             if (requestProblemInformation !in 0u..1u)
                 throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             // May send reason string here
+        }
+
+        this.authenticationMethod?.let {
+            connackProperties.authenticationMethod = it
+        }
+
+        authenticationData?.let {
+            connackProperties.authenticationData = it
         }
 
         // TODO implement section 3.2.2.3.16 and 4.11 for Server redirection

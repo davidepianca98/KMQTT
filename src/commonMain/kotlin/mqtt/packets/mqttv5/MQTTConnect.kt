@@ -1,7 +1,8 @@
 package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
-import mqtt.packets.*
+import mqtt.packets.MQTTControlPacketType
+import mqtt.packets.Qos
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
@@ -67,9 +68,9 @@ class MQTTConnect(
             val reserved = (byte and 1) == 1
             if (reserved)
                 throw MQTTException(ReasonCode.MALFORMED_PACKET)
-            val willFlag = ((byte shl 2) and 1) == 1
-            val willQos = ((byte shl 4) and 1) or ((byte shl 3) and 1)
-            val willRetain = ((byte shl 5) and 1) == 1
+            val willFlag = ((byte shr 2) and 1) == 1
+            val willQos = ((byte shr 4) and 1) or ((byte shl 3) and 1)
+            val willRetain = ((byte shr 5) and 1) == 1
             if (willFlag) {
                 if (willQos == 3)
                     throw MQTTException(ReasonCode.MALFORMED_PACKET)
@@ -81,12 +82,12 @@ class MQTTConnect(
             }
 
             return ConnectFlags(
-                ((byte shl 7) and 1) == 1,
-                ((byte shl 6) and 1) == 1,
+                ((byte shr 7) and 1) == 1,
+                ((byte shr 6) and 1) == 1,
                 willRetain,
                 Qos.valueOf(willQos)!!,
                 willFlag,
-                ((byte shl 1) and 1) == 1,
+                ((byte shr 1) and 1) == 1,
                 reserved
             )
         }

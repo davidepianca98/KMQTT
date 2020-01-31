@@ -1,15 +1,23 @@
 package socket
 
 import mqtt.Broker
+import mqtt.ClientConnection
 
 actual class ServerSocket actual constructor(host: String, port: Int, backlog: Int, private val broker: Broker) {
 
-    actual fun run() {
-        TODO()
+    actual fun isRunning(): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    actual fun select(
+        timeout: Long,
+        block: (socket: ClientConnection, state: ServerSocketLoop.SocketState) -> Boolean
+    ) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     actual fun close() {
-        TODO()
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }
