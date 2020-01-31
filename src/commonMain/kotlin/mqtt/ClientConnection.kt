@@ -452,7 +452,7 @@ class ClientConnection(
 
         // Handle receive maximum
         if (packet.qos > Qos.AT_MOST_ONCE && broker.receiveMaximum != null) {
-            if (session.qos2ListReceived.size + 1 > broker.receiveMaximum)
+            if (session.qos2ListReceived.size + 1 > broker.receiveMaximum.toInt())
                 throw MQTTException(ReasonCode.RECEIVE_MAXIMUM_EXCEEDED)
         }
 

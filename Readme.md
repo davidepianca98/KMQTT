@@ -19,7 +19,17 @@ fun main() {
 TODO
 
 #### Authentication code example
-TODO
+```kotlin
+fun main() {
+    val broker = Broker(authentication = object : Authentication {
+        override fun authenticate(username: String?, password: UByteArray?): Boolean {
+            // TODO Implement your authentication method    
+            return username == "user" && password?.toByteArray()?.decodeToString() == "pass"
+        }
+    })
+    broker.listen()
+}
+```
 
 ## Features
 | Platform    | MQTT 3.1.1 | MQTT 5.0           | TCP                | TLS   | Websocket |

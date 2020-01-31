@@ -16,7 +16,7 @@ class Broker(
     val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
     val authorization: Authorization? = null,
     val maximumSessionExpiryInterval: UInt = 0xFFFFFFFFu,
-    val receiveMaximum: Int? = null,
+    val receiveMaximum: UShort? = null,
     val maximumQos: Qos? = null,
     val retainedAvailable: Boolean = true,
     val maximumPacketSize: UInt = 32768u,
@@ -33,12 +33,6 @@ class Broker(
     private val server = ServerSocketLoop(host, port, backlog, this)
     val sessions = mutableMapOf<String, Session>()
     private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
-
-    init {
-        receiveMaximum?.let {
-            require(it in 0..65535)
-        }
-    }
 
     fun listen() {
         server.run()
