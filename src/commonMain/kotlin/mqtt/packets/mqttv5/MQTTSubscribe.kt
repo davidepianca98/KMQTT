@@ -12,7 +12,7 @@ class MQTTSubscribe(
     val packetIdentifier: UInt,
     val subscriptions: List<Subscription>,
     val properties: MQTTProperties = MQTTProperties()
-) : MQTTPacket {
+) : MQTT5Packet(properties) {
 
     companion object : MQTTDeserializer {
 

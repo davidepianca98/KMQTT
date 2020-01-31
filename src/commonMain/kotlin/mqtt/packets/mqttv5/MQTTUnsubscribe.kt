@@ -9,7 +9,7 @@ class MQTTUnsubscribe(
     val packetIdentifier: UInt,
     val topicFilters: List<String>,
     val properties: MQTTProperties = MQTTProperties()
-) : MQTTPacket {
+) : MQTT5Packet(properties) {
 
     companion object : MQTTDeserializer {
 

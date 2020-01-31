@@ -2,7 +2,6 @@ package mqtt
 
 import currentTimeMillis
 import generateRandomClientId
-import messageExpiryIntervalExpired
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.*
 import socket.IOException
@@ -30,7 +29,6 @@ class ClientConnection(
     private var maxSendQuota: UInt =
         DEFAULT_MAX_SEND_QUOTA // Client receive maximum
     private var sendQuota: UInt = DEFAULT_MAX_SEND_QUOTA
-    // TODO don't send packets larger than this, remove certain properties based on the specific packet if possible, if null no limit
     private var maximumPacketSize: UInt? = null
     private var topicAliasMaximum = 0u
 
@@ -39,7 +37,7 @@ class ClientConnection(
     private var connectCompleted = false
     private var authenticationMethod: String? = null
     private var connectPacket: MQTTConnect? = null
-    private var packetsReceivedBeforeConnack = mutableListOf<MQTTPacket>()
+    private var packetsReceivedBeforeConnack = mutableListOf<MQTT5Packet>()
 
     private val currentReceivedPacket = MQTTCurrentPacket(broker.maximumPacketSize)
     private var lastReceivedMessageTimestamp = currentTimeMillis()
@@ -76,9 +74,10 @@ class ClientConnection(
         }
     }
 
-    private fun writePacket(packet: MQTTPacket) {
+    private fun writePacket(packet: MQTT5Packet) {
         try {
-            client.send(packet.toByteArray())
+            if (maximumPacketSize?.let { packet.resizeIfTooBig(it) } != false)
+                client.send(packet.toByteArray())
         } catch (e: IOException) {
             closedWithException()
         }
@@ -101,7 +100,7 @@ class ClientConnection(
         if (!connectCompleted) {
             writePacket(
                 MQTTConnack(
-                    ConnectAcknowledgeFlags(
+                    MQTTConnack.ConnectAcknowledgeFlags(
                         false
                     ), reasonCode
                 )
@@ -114,7 +113,7 @@ class ClientConnection(
         close()
     }
 
-    private fun handlePacket(packet: MQTTPacket) {
+    private fun handlePacket(packet: MQTT5Packet) {
         if (packet is MQTTConnect) {
             if (!connectHandled) {
                 handleConnect(packet)
@@ -140,16 +139,12 @@ class ClientConnection(
         }
     }
 
-    fun publish(
-        retain: Boolean,
-        topicName: String,
-        qos: Qos,
-        dup: Boolean,
-        properties: MQTTProperties,
-        payload: UByteArray?
-    ) {
-        val packetId = if (qos >= Qos.AT_MOST_ONCE) session.generatePacketId() else null
-
+    /**
+     * Either generates a new topic alias or uses an existing one, if they are enabled in the connection
+     * @param topicName to send the message to
+     * @param properties the publish properties, will get modified if topic aliases enabled
+     */
+    private fun getPublishTopicAlias(topicName: String, properties: MQTTProperties): String {
         var packetTopicName: String = topicName
         if (topicAliasMaximum > 0u) {
             topicAliasesServer[topicName]?.let {
@@ -163,6 +158,20 @@ class ClientConnection(
                 }
             }
         }
+        return packetTopicName
+    }
+
+    fun publish(
+        retain: Boolean,
+        topicName: String,
+        qos: Qos,
+        dup: Boolean,
+        properties: MQTTProperties,
+        payload: UByteArray?
+    ) {
+        val packetId = if (qos >= Qos.AT_MOST_ONCE) session.generatePacketId() else null
+
+        val packetTopicName = getPublishTopicAlias(topicName, properties)
 
         val packet = MQTTPublish(
             retain,
@@ -177,10 +186,9 @@ class ClientConnection(
         if (packet.messageExpiryIntervalExpired())
             return
         // Update the expiry interval if present
-        packet.properties.messageExpiryInterval?.let {
-            packet.properties.messageExpiryInterval =
-                it - ((currentTimeMillis() - packet.timestamp) / 1000).toUInt()
-        }
+        packet.updateMessageExpiryInterval()
+
+        maximumPacketSize?.let { packet.resizeIfTooBig(it) }
 
         if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
             if (sendQuota <= 0u)
@@ -396,10 +404,11 @@ class ClientConnection(
         // TODO implement section 3.2.2.3.16 and 4.11 for Server redirection
 
         val connack = MQTTConnack(
-            ConnectAcknowledgeFlags(sessionPresent),
+            MQTTConnack.ConnectAcknowledgeFlags(sessionPresent),
             ReasonCode.SUCCESS,
             connackProperties
         )
+
         writePacket(connack)
         connectCompleted = true
         session.connected()

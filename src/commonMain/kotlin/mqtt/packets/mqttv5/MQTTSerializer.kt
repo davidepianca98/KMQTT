@@ -10,6 +10,8 @@ interface MQTTSerializer {
 
     fun toByteArray(): UByteArray
 
+    fun size(): UInt = toByteArray().size.toUInt()
+
     fun ByteArrayOutputStream.wrapWithFixedHeader(packetType: MQTTControlPacketType, flags: Int): UByteArray {
         require(flags in 0..15)
         val result = ByteArrayOutputStream()

@@ -1,9 +1,8 @@
 package mqtt
 
 import currentTimeMillis
-import messageExpiryIntervalExpired
+import mqtt.packets.mqttv5.MQTT5Packet
 import mqtt.packets.mqttv5.MQTTConnect
-import mqtt.packets.mqttv5.MQTTPacket
 import mqtt.packets.mqttv5.MQTTPublish
 import mqtt.packets.mqttv5.MQTTPubrel
 
@@ -47,7 +46,7 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
         pendingAcknowledgePubrel.remove(packetId)
     }
 
-    fun resendPending(sendPacket: (packet: MQTTPacket) -> Unit) {
+    fun resendPending(sendPacket: (packet: MQTT5Packet) -> Unit) {
         pendingAcknowledgeMessages.forEach {
             if (!it.value.messageExpiryIntervalExpired())
                 sendPacket(it.value.setDuplicate())

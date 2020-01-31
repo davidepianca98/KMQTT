@@ -1,6 +1,6 @@
 package mqtt
 
-import mqtt.packets.*
+import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.mqttv5.*
 import socket.streams.DynamicByteBuffer
 import socket.streams.EOFException
@@ -10,8 +10,8 @@ class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
 
     private val currentReceivedData = DynamicByteBuffer()
 
-    fun addData(data: UByteArray): List<MQTTPacket> {
-        val packets = mutableListOf<MQTTPacket>()
+    fun addData(data: UByteArray): List<MQTT5Packet> {
+        val packets = mutableListOf<MQTT5Packet>()
         currentReceivedData.write(data)
         try {
             while (true) {
@@ -23,7 +23,7 @@ class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
         return packets
     }
 
-    private fun readPacket(): MQTTPacket {
+    private fun readPacket(): MQTT5Packet {
         val byte1 = currentReceivedData.read()
         val mqttControlPacketType = (byte1.toInt() shr 4) and 0b1111
         val flags = byte1 and 0b1111u
@@ -41,7 +41,7 @@ class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
         return packet
     }
 
-    private fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: UByteArray): MQTTPacket {
+    private fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: UByteArray): MQTT5Packet {
         return when (type) {
             MQTTControlPacketType.CONNECT -> MQTTConnect.fromByteArray(flags, data)
             MQTTControlPacketType.Reserved -> throw MQTTException(

@@ -8,7 +8,7 @@ import socket.streams.ByteArrayOutputStream
 class MQTTDisconnect(
     val reasonCode: ReasonCode,
     val properties: MQTTProperties = MQTTProperties()
-) : MQTTPacket, MQTTSerializer {
+) : MQTT5Packet(properties), MQTTSerializer {
 
     override fun toByteArray(): UByteArray {
         if (reasonCode !in validReasonCodes)

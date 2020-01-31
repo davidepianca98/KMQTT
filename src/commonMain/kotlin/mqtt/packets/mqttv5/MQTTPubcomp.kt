@@ -9,7 +9,7 @@ class MQTTPubcomp(
     val packetId: UInt,
     val reasonCode: ReasonCode = ReasonCode.SUCCESS,
     val properties: MQTTProperties = MQTTProperties()
-) : MQTTPacket {
+) : MQTT5Packet(properties) {
 
     override fun toByteArray(): UByteArray {
         if (reasonCode !in validReasonCodes)

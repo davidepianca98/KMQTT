@@ -8,7 +8,7 @@ import socket.streams.ByteArrayOutputStream
 class MQTTAuth(
     val authenticateReasonCode: ReasonCode,
     val properties: MQTTProperties = MQTTProperties()
-) : MQTTPacket {
+) : MQTT5Packet(properties) {
 
     override fun toByteArray(): UByteArray {
         if (authenticateReasonCode !in validReasonCodes)

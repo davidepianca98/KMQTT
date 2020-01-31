@@ -19,7 +19,7 @@ class MQTTPublish(
     val properties: MQTTProperties = MQTTProperties(),
     val payload: UByteArray? = null,
     val timestamp: Long = currentTimeMillis()
-) : MQTTPacket {
+) : MQTT5Packet(properties) {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
@@ -55,6 +55,22 @@ class MQTTPublish(
             payload,
             timestamp
         )
+    }
+
+    fun messageExpiryIntervalExpired(): Boolean {
+        val expiry = properties.messageExpiryInterval?.toLong() ?: ((Long.MAX_VALUE / 1000) - timestamp)
+        return ((expiry * 1000) + timestamp) < currentTimeMillis()
+    }
+
+    fun updateMessageExpiryInterval() {
+        properties.messageExpiryInterval?.let {
+            properties.messageExpiryInterval =
+                it - ((currentTimeMillis() - timestamp) / 1000).toUInt()
+        }
+    }
+
+    override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
+        return size() <= maximumPacketSize
     }
 
     companion object : MQTTDeserializer {

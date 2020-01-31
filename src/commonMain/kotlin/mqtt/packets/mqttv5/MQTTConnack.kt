@@ -5,13 +5,13 @@ import mqtt.packets.MQTTControlPacketType
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
-
 class MQTTConnack(
     val connectAcknowledgeFlags: ConnectAcknowledgeFlags,
     val connectReasonCode: ReasonCode,
     val properties: MQTTProperties = MQTTProperties()
-) : MQTTPacket {
+) : MQTT5Packet(properties) {
+
+    data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
 
     companion object : MQTTDeserializer {
 

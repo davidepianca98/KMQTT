@@ -9,7 +9,7 @@ class MQTTSuback(
     val packetIdentifier: UInt,
     val reasonCodes: List<ReasonCode>,
     val properties: MQTTProperties = MQTTProperties()
-) : MQTTPacket {
+) : MQTT5Packet(properties) {
 
     companion object : MQTTDeserializer {
 

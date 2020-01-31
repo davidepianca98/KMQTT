@@ -4,7 +4,7 @@ import mqtt.MQTTException
 import mqtt.packets.MQTTControlPacketType
 import socket.streams.ByteArrayOutputStream
 
-class MQTTPingreq : MQTTPacket {
+class MQTTPingreq : MQTT5Packet(MQTTProperties()) {
 
     override fun toByteArray(): UByteArray {
         return ByteArrayOutputStream().wrapWithFixedHeader(MQTTControlPacketType.PINGREQ, 0)

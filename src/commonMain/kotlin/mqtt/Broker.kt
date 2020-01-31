@@ -1,7 +1,6 @@
 package mqtt
 
 import currentTimeMillis
-import messageExpiryIntervalExpired
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.MQTTProperties
 import mqtt.packets.mqttv5.MQTTPublish
@@ -27,9 +26,7 @@ class Broker(
     val sharedSubscriptionsAvailable: Boolean = true,
     val serverKeepAlive: Int? = null,
     val responseInformation: String? = null
-) { // TODO general refactoring of Session, mqtt.Broker, mqtt.ClientConnection
-    //      Integration tests
-
+) {
     // TODO support TLS with custom constructor with default port 8883
     // TODO support WebSocket, section 6
 
@@ -147,11 +144,10 @@ class Broker(
     }
 
     private fun removeExpiredRetainedMessages() {
-        val expired = retainedList.filter {
+        retainedList.filter {
             val message = it.value.first
             message.messageExpiryIntervalExpired()
-        }
-        expired.forEach {
+        }.forEach {
             retainedList.remove(it.key)
         }
     }
@@ -171,6 +167,7 @@ class Broker(
             val timestamp = it.value.getExpiryTime()
             timestamp != null && timestamp < currentTimeMillis()
         }.forEach { session ->
+            // Expired sessions
             session.value.will?.let {
                 sendWill(session.value)
             }
@@ -180,10 +177,11 @@ class Broker(
 
     fun cleanUpOperations() {
         sessions.forEach { session ->
-            if (session.value.isConnected()) {
+            if (session.value.isConnected()) { // Check the keep alive timer is being respected
                 session.value.clientConnection!!.checkKeepAliveExpired()
             } else {
                 session.value.will?.let {
+                    // Check if the will delay interval has expired, if yes send the will
                     if (session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L) > currentTimeMillis())
                         sendWill(session.value)
                 }

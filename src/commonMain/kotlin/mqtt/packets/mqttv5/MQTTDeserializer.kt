@@ -8,7 +8,7 @@ import validateUTF8String
 
 interface MQTTDeserializer {
 
-    fun fromByteArray(flags: Int, data: UByteArray): MQTTPacket
+    fun fromByteArray(flags: Int, data: UByteArray): MQTT5Packet
 
     fun checkFlags(flags: Int) {
         if (flags.flagsBit(0) != 0 ||

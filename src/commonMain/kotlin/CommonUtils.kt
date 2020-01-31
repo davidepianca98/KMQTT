@@ -1,4 +1,3 @@
-import mqtt.packets.mqttv5.MQTTPublish
 import kotlin.random.Random
 
 expect fun currentTimeMillis(): Long
@@ -10,11 +9,6 @@ fun generateRandomClientId(): String {
         buffer.append(Random.Default.nextInt(97, 122).toChar())
     }
     return buffer.toString()
-}
-
-fun MQTTPublish.messageExpiryIntervalExpired(): Boolean {
-    val expiry = properties.messageExpiryInterval?.toLong() ?: ((Long.MAX_VALUE / 1000) - timestamp)
-    return ((expiry * 1000) + timestamp) < currentTimeMillis()
 }
 
 fun UByteArray.validatePayloadFormat(indicator: UInt): Boolean {

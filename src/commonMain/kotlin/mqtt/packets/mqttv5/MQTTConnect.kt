@@ -18,7 +18,7 @@ class MQTTConnect(
     val willPayload: UByteArray? = null,
     val userName: String? = null,
     val password: UByteArray? = null
-) : MQTTPacket {
+) : MQTT5Packet(properties) {
 
     companion object : MQTTDeserializer {
         private val validProperties = listOf(
