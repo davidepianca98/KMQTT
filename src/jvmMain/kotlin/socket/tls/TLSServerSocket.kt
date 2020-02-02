@@ -4,12 +4,17 @@ import mqtt.Broker
 import mqtt.ClientConnection
 import socket.ServerSocket
 import java.io.ByteArrayInputStream
+import java.io.File
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.ServerSocketChannel
+import java.security.KeyFactory
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
+import java.security.spec.PKCS8EncodedKeySpec
+import java.security.spec.X509EncodedKeySpec
+import javax.net.ssl.KeyManager
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.X509TrustManager
@@ -18,33 +23,35 @@ import javax.net.ssl.X509TrustManager
 actual class TLSServerSocket actual constructor(private val broker: Broker) : ServerSocket(broker) {
 
     private val sslContext = SSLContext.getInstance(broker.tlsSettings!!.version)
-    private var sendAppBuffer = ByteBuffer.allocate(0)
-    private var receiveAppBuffer = ByteBuffer.allocate(0)
+    private val sendAppBuffer: ByteBuffer
+    private val receiveAppBuffer: ByteBuffer
 
-    init { // TODO generate test localhost certificate and put it in tlsSettings
-        val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
-        keyStore.load(null)
-        val certificateFactory = CertificateFactory.getInstance("X.509")
-        val certificate = certificateFactory.generateCertificate(ByteArrayInputStream(broker.tlsSettings!!.certificate))
-        keyStore.setCertificateEntry("main", certificate)
+    init {
+        val keyStore = KeyStore.getInstance("JKS") // TODO use PKCS12
+        File(broker.tlsSettings!!.keyStoreFilePath).inputStream().use {
+            keyStore.load(it, broker.tlsSettings.keyStorePassword?.toCharArray())
+        }
+        val keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+        keyManagerFactory.init(keyStore, broker.tlsSettings.keyStorePassword?.toCharArray())
 
-        val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
-        kmf.init(keyStore, null)
+        sslContext.init(
+            keyManagerFactory.keyManagers,
+            arrayOf(object : X509TrustManager { // TODO implement correct trust manager
+                override fun checkClientTrusted(p0: Array<out X509Certificate>?, p1: String?) {
 
-        sslContext.init(kmf.keyManagers, arrayOf(object : X509TrustManager { // TODO implement correct trust manager
-            override fun checkClientTrusted(p0: Array<out X509Certificate>?, p1: String?) {
+                }
 
+                override fun checkServerTrusted(p0: Array<out X509Certificate>?, p1: String?) {
+
+                }
+
+                override fun getAcceptedIssuers(): Array<X509Certificate>? {
+                    return null
             }
 
-            override fun checkServerTrusted(p0: Array<out X509Certificate>?, p1: String?) {
-
-            }
-
-            override fun getAcceptedIssuers(): Array<X509Certificate>? {
-                return null
-            }
-
-        }), null)
+            }),
+            null
+        )
 
         val initSession = sslContext.createSSLEngine().session
         sendBuffer = ByteBuffer.allocate(initSession.packetBufferSize)
@@ -52,6 +59,31 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
         sendAppBuffer = ByteBuffer.allocate(initSession.applicationBufferSize + 50)
         receiveAppBuffer = ByteBuffer.allocate(initSession.applicationBufferSize + 50)
         initSession.invalidate()
+    }
+
+    private fun buildKeyManagers(
+        certificateBytes: ByteArray,
+        keyAlgorithm: String,
+        privateKeyBytes: ByteArray,
+        publicKeyBytes: ByteArray,
+        privateKeyPassword: String?
+    ): Array<KeyManager> {
+        val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+        keyStore.load(null)
+        val certificateFactory = CertificateFactory.getInstance("X.509")
+        val certificate = certificateFactory.generateCertificate(ByteArrayInputStream(certificateBytes))
+
+        val keyFactory = KeyFactory.getInstance(keyAlgorithm)
+        val privateKey = keyFactory.generatePrivate(PKCS8EncodedKeySpec(privateKeyBytes))
+        val publicKey = keyFactory.generatePublic(X509EncodedKeySpec(publicKeyBytes))
+        certificate.verify(publicKey)
+
+        keyStore.setCertificateEntry("main", certificate)
+        keyStore.setKeyEntry("main", privateKey, privateKeyPassword?.toCharArray(), arrayOf(certificate))
+
+        val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+        kmf.init(keyStore, null)
+        return kmf.keyManagers
     }
 
     override fun accept(key: SelectionKey) {
