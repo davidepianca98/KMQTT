@@ -15,7 +15,7 @@ fun ByteBuffer.toUByteArray(): UByteArray {
 
 fun main() {
     Broker(
-        tlsSettings = TLSSettings(keyStoreFilePath = "temporary.jks", keyStorePassword = "changeit"),
+        tlsSettings = TLSSettings(keyStoreFilePath = "keyStore.p12", keyStorePassword = "changeit"),
         port = 8883
     ).listen()
 }

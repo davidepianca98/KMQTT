@@ -16,7 +16,16 @@ fun main() {
 ```
 
 #### TLS code example
-TODO
+The keystore must be in PKCS12 format, the keystore password can be null
+```kotlin
+fun main() {
+    val broker = Broker(
+        tlsSettings = TLSSettings(keyStoreFilePath = "keyStore.p12", keyStorePassword = "password"),
+        port = 8883
+    ).listen()
+    broker.listen()
+}
+```
 
 #### Authentication code example
 ```kotlin
@@ -32,9 +41,9 @@ fun main() {
 ```
 
 ## Features
-| Platform    | MQTT 3.1.1 | MQTT 5.0           | TCP                | TLS   | Websocket |
-|   :---:     |    :---:   |  :---:             | :---:              | :---: | :---:     |
-| JVM         | TODO       | :heavy_check_mark: | :heavy_check_mark: | WIP   | TODO      |
-| Windows     | TODO       | :heavy_check_mark: | :heavy_check_mark: | TODO  | TODO      |
-| Linux X64   | TODO       | :heavy_check_mark: | TODO               | TODO  | TODO      |
-| Linux ARM32 | TODO       | :heavy_check_mark: | TODO               | TODO  | TODO      |
+| Platform    | MQTT 3.1.1 | MQTT 5.0           | TCP                | TLS                | Websocket |
+|   :---:     |    :---:   |  :---:             | :---:              | :---:              | :---:     |
+| JVM         | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
+| Windows     | TODO       | :heavy_check_mark: | :heavy_check_mark: | TODO               | TODO      |
+| Linux X64   | TODO       | :heavy_check_mark: | TODO               | TODO               | TODO      |
+| Linux ARM32 | TODO       | :heavy_check_mark: | TODO               | TODO               | TODO      |

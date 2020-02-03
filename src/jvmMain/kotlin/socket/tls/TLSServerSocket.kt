@@ -23,11 +23,11 @@ import javax.net.ssl.X509TrustManager
 actual class TLSServerSocket actual constructor(private val broker: Broker) : ServerSocket(broker) {
 
     private val sslContext = SSLContext.getInstance(broker.tlsSettings!!.version)
-    private val sendAppBuffer: ByteBuffer
-    private val receiveAppBuffer: ByteBuffer
+    private var sendAppBuffer: ByteBuffer
+    private var receiveAppBuffer: ByteBuffer
 
     init {
-        val keyStore = KeyStore.getInstance("JKS") // TODO use PKCS12
+        val keyStore = KeyStore.getInstance("PKCS12")
         File(broker.tlsSettings!!.keyStoreFilePath).inputStream().use {
             keyStore.load(it, broker.tlsSettings.keyStorePassword?.toCharArray())
         }
@@ -47,7 +47,7 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
 
                 override fun getAcceptedIssuers(): Array<X509Certificate>? {
                     return null
-            }
+                }
 
             }),
             null
@@ -56,8 +56,8 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
         val initSession = sslContext.createSSLEngine().session
         sendBuffer = ByteBuffer.allocate(initSession.packetBufferSize)
         receiveBuffer = ByteBuffer.allocate(initSession.packetBufferSize)
-        sendAppBuffer = ByteBuffer.allocate(initSession.applicationBufferSize + 50)
-        receiveAppBuffer = ByteBuffer.allocate(initSession.applicationBufferSize + 50)
+        sendAppBuffer = ByteBuffer.allocate(initSession.applicationBufferSize)
+        receiveAppBuffer = ByteBuffer.allocate(initSession.applicationBufferSize)
         initSession.invalidate()
     }
 
