@@ -29,7 +29,6 @@ class Broker(
     val serverKeepAlive: Int? = null,
     val responseInformation: String? = null
 ) {
-    // TODO support TLS with custom constructor with default port 8883
     // TODO support WebSocket, section 6
 
     private val server = ServerSocketLoop(this)

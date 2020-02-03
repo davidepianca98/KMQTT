@@ -9,7 +9,7 @@ import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
 
 
-actual open class ServerSocket actual constructor(private val broker: Broker) : ServerSocketImpl {
+actual open class ServerSocket actual constructor(private val broker: Broker) : ServerSocketInterface {
 
     private val socket = ServerSocketChannel.open()
     protected val selector: Selector = Selector.open()

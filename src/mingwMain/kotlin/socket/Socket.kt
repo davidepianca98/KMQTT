@@ -9,11 +9,11 @@ actual open class Socket(
     private val socket: SOCKET,
     private val writeRequest: MutableList<SOCKET>,
     private val buffer: ByteArray
-) {
+) : SocketInterface {
 
     private val pendingSendData = mutableListOf<UByteArray>()
 
-    actual fun send(data: UByteArray) {
+    actual override fun send(data: UByteArray) {
         data.toByteArray().usePinned { pinned ->
             val length = send(socket, pinned.addressOf(0), data.size, 0)
             if (length == SOCKET_ERROR) {
@@ -34,13 +34,13 @@ actual open class Socket(
         }
     }
 
-    actual fun sendRemaining() {
+    actual override fun sendRemaining() {
         pendingSendData.forEach {
             send(it)
         }
     }
 
-    actual fun read(): UByteArray? {
+    actual override fun read(): UByteArray? {
         buffer.usePinned { pinned ->
             val length = recv(socket.convert(), pinned.addressOf(0), buffer.size, 0)
             when {

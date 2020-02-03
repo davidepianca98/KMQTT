@@ -6,7 +6,7 @@ import java.nio.channels.SelectionKey
 import java.nio.channels.SocketChannel
 
 @ExperimentalUnsignedTypes
-actual open class Socket(private val sendBuffer: ByteBuffer, private val receiveBuffer: ByteBuffer) : SocketImpl {
+actual open class Socket(private val sendBuffer: ByteBuffer, private val receiveBuffer: ByteBuffer) : SocketInterface {
 
     var key: SelectionKey? = null
 

@@ -7,12 +7,7 @@ import platform.posix.*
 import platform.windows.select
 
 
-actual open class ServerSocket actual constructor(
-    host: String,
-    private val port: Int,
-    private val backlog: Int,
-    private val broker: Broker
-) {
+actual open class ServerSocket actual constructor(private val broker: Broker) {
 
     private var running = true
     private var serverSocket = INVALID_SOCKET
@@ -42,7 +37,7 @@ actual open class ServerSocket actual constructor(
             memset(serverAddress.ptr, 0, sockaddr_in.size.convert())
             serverAddress.sin_family = AF_INET.convert()
             serverAddress.sin_addr.S_un.S_addr = posix_htons(0).convert()
-            serverAddress.sin_port = posix_htons(port.convert()).convert()
+            serverAddress.sin_port = posix_htons(broker.port.convert()).convert()
 
             if (bind(serverSocket, serverAddress.ptr.reinterpret(), sockaddr_in.size.convert()) == SOCKET_ERROR) {
                 WSACleanup()
@@ -56,7 +51,7 @@ actual open class ServerSocket actual constructor(
                 throw IOException("Failed ioctlsocket")
             }
 
-            if (listen(serverSocket, backlog) == SOCKET_ERROR) {
+            if (listen(serverSocket, broker.backlog) == SOCKET_ERROR) {
                 WSACleanup()
                 throw IOException("Failed listen")
             }

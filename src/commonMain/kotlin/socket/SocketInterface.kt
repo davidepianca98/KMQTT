@@ -1,6 +1,6 @@
 package socket
 
-interface SocketImpl {
+interface SocketInterface {
 
     fun send(data: UByteArray)
 

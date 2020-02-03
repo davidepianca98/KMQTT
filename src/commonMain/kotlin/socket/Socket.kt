@@ -1,6 +1,6 @@
 package socket
 
-expect open class Socket : SocketImpl {
+expect open class Socket : SocketInterface {
 
     override fun send(data: UByteArray)
 

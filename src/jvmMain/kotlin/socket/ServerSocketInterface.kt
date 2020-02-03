@@ -2,7 +2,7 @@ package socket
 
 import java.nio.channels.SelectionKey
 
-interface ServerSocketImpl {
+interface ServerSocketInterface {
 
     fun accept(key: SelectionKey)
 }
