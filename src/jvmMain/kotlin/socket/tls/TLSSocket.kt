@@ -104,10 +104,11 @@ actual class TLSSocket(
                         task?.run()
                     } while (task != null)
                     if (engine.handshakeStatus == SSLEngineResult.HandshakeStatus.NEED_TASK) {
-                        throw Exception("handshake shouldn't need additional tasks")
+                        throw Exception("Handshake shouldn't need additional tasks")
                     }
                 }
-                SSLEngineResult.HandshakeStatus.NEED_UNWRAP, SSLEngineResult.HandshakeStatus.NEED_UNWRAP_AGAIN -> return false
+                SSLEngineResult.HandshakeStatus.NEED_UNWRAP -> return false
+                else -> throw Exception("Unknown Hanshake Status")
             }
         }
         return true
