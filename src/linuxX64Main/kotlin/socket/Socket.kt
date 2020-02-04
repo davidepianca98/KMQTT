@@ -1,16 +1,16 @@
 package socket
 
-actual open class Socket {
+actual open class Socket : SocketInterface {
 
-    actual fun send(data: UByteArray) {
+    actual override fun send(data: UByteArray) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    actual fun sendRemaining() {
+    actual override fun sendRemaining() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    actual fun read(): UByteArray? {
+    actual override fun read(): UByteArray? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

@@ -3,7 +3,7 @@ package socket
 import mqtt.Broker
 import mqtt.ClientConnection
 
-actual open class ServerSocket actual constructor(host: String, port: Int, backlog: Int, private val broker: Broker) {
+actual open class ServerSocket actual constructor(private val broker: Broker) {
 
     actual fun isRunning(): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

@@ -33,7 +33,7 @@ class TestAuthentication {
         val brokerThread = BrokerThread(broker)
         brokerThread.start()
 
-        client.connect().whenComplete { t, u ->
+        client.connect().whenComplete { t, _ ->
             connackReceived(t)
             completed = true
             client.disconnect()
