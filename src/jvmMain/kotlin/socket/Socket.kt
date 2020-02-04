@@ -45,17 +45,20 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
         }
     }
 
-    protected fun readToBuffer() {
+    protected fun readToBuffer(): Int {
         val channel = key?.channel() as SocketChannel
         receiveBuffer.clear()
         try {
             val length = channel.read(receiveBuffer)
-            if (length >= 0) {
-                receiveBuffer.flip()
-            } else {
-                close()
-                throw SocketClosedException()
+            when {
+                length > 0 -> receiveBuffer.flip()
+                length == 0 -> return length
+                else -> {
+                    close()
+                    throw SocketClosedException()
+                }
             }
+            return length
         } catch (e: java.io.IOException) {
             close()
             throw IOException()
@@ -63,8 +66,9 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
     }
 
     actual override fun read(): UByteArray? {
-        readToBuffer()
-        return receiveBuffer.toUByteArray()
+        return if (readToBuffer() > 0)
+            receiveBuffer.toUByteArray()
+        else null
     }
 
     fun close() {

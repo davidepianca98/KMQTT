@@ -4,6 +4,7 @@ import socket.IOException
 import socket.Socket
 import socket.SocketClosedException
 import toUByteArray
+import java.nio.BufferOverflowException
 import java.nio.ByteBuffer
 import javax.net.ssl.SSLEngine
 import javax.net.ssl.SSLEngineResult
@@ -18,40 +19,36 @@ actual class TLSSocket(
     private val engine: SSLEngine
 ) : Socket(sendBuffer, receiveBuffer) {
 
+    private var cacheReceiveBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
+    private var cacheBufferReadMode = false
+
     init {
         engine.useClientMode = false
         engine.beginHandshake()
     }
 
     private fun handleReceiveBufferUnderflow() {
-        if (engine.session.packetBufferSize > receiveBuffer.capacity()) {
-            receiveBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
-        } else {
-            receiveBuffer.compact()
+        if (engine.session.packetBufferSize > receiveAppBuffer.capacity()) {
+            val newBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
+            receiveBuffer.flip()
+            newBuffer.put(receiveBuffer)
+            receiveBuffer = newBuffer
         }
     }
 
     private fun handleReceiveBufferOverflow() {
-        if (engine.session.applicationBufferSize > receiveAppBuffer.capacity()) {
-            receiveAppBuffer = ByteBuffer.allocate(engine.session.applicationBufferSize)
-        } else {
-            receiveAppBuffer.compact()
-        }
-    }
-
-    private fun handleSendBufferUnderflow() {
-        if (engine.session.packetBufferSize > sendBuffer.capacity()) {
-            sendBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
-        } else {
-            sendBuffer.compact()
-        }
+        val size = engine.session.applicationBufferSize + receiveAppBuffer.position()
+        val newBuffer = ByteBuffer.allocate(size)
+        receiveAppBuffer.flip()
+        newBuffer.put(receiveAppBuffer)
+        receiveAppBuffer = newBuffer
     }
 
     private fun handleSendBufferOverflow() {
-        if (engine.session.applicationBufferSize > sendAppBuffer.capacity()) {
-            sendAppBuffer = ByteBuffer.allocate(engine.session.applicationBufferSize)
+        sendBuffer = if (engine.session.packetBufferSize > sendBuffer.capacity()) {
+            ByteBuffer.allocate(engine.session.applicationBufferSize)
         } else {
-            sendAppBuffer.compact()
+            ByteBuffer.allocate(sendBuffer.capacity() * 2)
         }
     }
 
@@ -66,8 +63,7 @@ actual class TLSSocket(
                 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
                 when (result.status) {
                     SSLEngineResult.Status.BUFFER_UNDERFLOW -> {
-                        handleSendBufferUnderflow()
-                        send(data)
+                        throw SSLException("Buffer Underflow in wrap")
                     }
                     SSLEngineResult.Status.BUFFER_OVERFLOW -> {
                         handleSendBufferOverflow()
@@ -96,7 +92,10 @@ actual class TLSSocket(
         ) {
             @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
             when (engine.handshakeStatus) {
-                SSLEngineResult.HandshakeStatus.NEED_WRAP -> send(UByteArray(0))
+                SSLEngineResult.HandshakeStatus.NEED_WRAP -> {
+                    send(UByteArray(0))
+                    runHandshake()
+                }
                 SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING -> return true
                 SSLEngineResult.HandshakeStatus.FINISHED -> return true
                 SSLEngineResult.HandshakeStatus.NEED_TASK -> {
@@ -114,33 +113,63 @@ actual class TLSSocket(
         return true
     }
 
+    private fun putOrEnlarge() {
+        var exception: Boolean
+        var array = ByteArray(0)
+        var putArrayDone = false
+        do {
+            exception = try {
+                if (cacheBufferReadMode) {
+                    array = ByteArray(cacheReceiveBuffer.remaining())
+                    cacheReceiveBuffer.get(array, 0, cacheReceiveBuffer.remaining())
+                    cacheReceiveBuffer.clear()
+                    cacheBufferReadMode = false
+                }
+                if (!putArrayDone) {
+                    cacheReceiveBuffer.put(array)
+                    putArrayDone = true
+                }
+                cacheReceiveBuffer.put(receiveBuffer)
+                false
+            } catch (e: BufferOverflowException) {
+                val newBuffer = ByteBuffer.allocate(cacheReceiveBuffer.capacity() + receiveBuffer.remaining())
+                cacheReceiveBuffer.flip()
+                newBuffer.put(cacheReceiveBuffer)
+                cacheReceiveBuffer = newBuffer
+                true
+            }
+        } while (exception)
+    }
+
     override fun read(): UByteArray? {
         try {
-            super.readToBuffer()
+            if (super.readToBuffer() == 0)
+                return null
 
-            while (receiveBuffer.hasRemaining()) {
-                receiveAppBuffer.clear()
+            receiveAppBuffer.clear()
+            putOrEnlarge()
+
+            cacheReceiveBuffer.flip()
+            cacheBufferReadMode = true
+            while (cacheReceiveBuffer.hasRemaining()) {
                 try {
-                    val result = engine.unwrap(receiveBuffer, receiveAppBuffer)
+                    val result = engine.unwrap(cacheReceiveBuffer, receiveAppBuffer)
                     @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
                     when (result.status) {
                         SSLEngineResult.Status.OK -> {
-                            if (runHandshake()) {
-                                receiveAppBuffer.flip()
-                                return receiveAppBuffer.toUByteArray()
-                            }
+                            runHandshake()
                         }
                         SSLEngineResult.Status.BUFFER_UNDERFLOW -> {
                             handleReceiveBufferUnderflow()
-                            return read()
+                            return null
                         }
                         SSLEngineResult.Status.BUFFER_OVERFLOW -> {
                             handleReceiveBufferOverflow()
-                            return read()
                         }
                         SSLEngineResult.Status.CLOSED -> {
                             engine.closeOutbound()
                             close()
+                            return null
                         }
                     }
                 } catch (e: SSLException) {
@@ -149,6 +178,10 @@ actual class TLSSocket(
                     close()
                     throw IOException()
                 }
+            }
+            if (runHandshake()) {
+                receiveAppBuffer.flip()
+                return receiveAppBuffer.toUByteArray()
             }
         } catch (e: SocketClosedException) {
             engine.closeOutbound()
