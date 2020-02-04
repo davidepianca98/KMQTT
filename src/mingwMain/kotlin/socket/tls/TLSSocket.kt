@@ -7,4 +7,6 @@ actual class TLSSocket(
     private val socket: SOCKET,
     private val writeRequest: MutableList<SOCKET>,
     private val buffer: ByteArray
-) : Socket(socket, writeRequest, buffer)
+) : Socket(socket, writeRequest, buffer) {
+    // TODO call OpenSSL write and read
+}

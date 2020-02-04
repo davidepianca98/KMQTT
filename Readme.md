@@ -44,6 +44,6 @@ fun main() {
 | Platform    | MQTT 3.1.1 | MQTT 5.0           | TCP                | TLS                | Websocket |
 |   :---:     |    :---:   |  :---:             | :---:              | :---:              | :---:     |
 | JVM         | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
-| Windows     | TODO       | :heavy_check_mark: | :heavy_check_mark: | TODO               | TODO      |
+| Windows     | TODO       | :heavy_check_mark: | :heavy_check_mark: | WIP                | TODO      |
 | Linux X64   | TODO       | :heavy_check_mark: | TODO               | TODO               | TODO      |
 | Linux ARM32 | TODO       | :heavy_check_mark: | TODO               | TODO               | TODO      |

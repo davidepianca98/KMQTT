@@ -22,8 +22,17 @@ kotlin {
         }
     }
     mingwX64("mingw") {
+        compilations.main {
+            cinterops {
+                openssl {
+                    packageName 'openssl'
+                }
+            }
+        }
         binaries {
-            executable()
+            executable() {
+                linkerOpts = ['-L/msys64/home/39340/openssl-1.1.1d/dist/lib', '-lssl', '-lcrypto']
+            }
         }
     }
     linuxX64() {

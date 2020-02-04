@@ -36,7 +36,7 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
 
         sslContext.init(
             keyManagerFactory.keyManagers,
-            arrayOf(object : X509TrustManager { // TODO implement correct trust manager
+            arrayOf(object : X509TrustManager { // TODO add to tlssettings a callback to verify the client certificate
                 override fun checkClientTrusted(p0: Array<out X509Certificate>?, p1: String?) {
 
                 }

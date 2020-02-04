@@ -1,0 +1,6 @@
+headers = openssl/ssl.h openssl/err.h openssl/bio.h openssl/pem.h openssl/pkcs12.h
+headerFilter = openssl/*
+package = openssl
+staticLibraries = libssl.a libcrypto.a
+compilerOpts = -I\\msys64\\home\\39340\\openssl-1.1.1d\\dist\\include
+libraryPaths = \\msys64\\home\\39340\\openssl-1.1.1d\\dist\\lib

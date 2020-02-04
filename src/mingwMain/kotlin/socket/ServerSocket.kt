@@ -58,7 +58,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) {
         }
     }
 
-    actual fun close() {
+    actual open fun close() {
         running = false
         nativeHeap.free(readfds)
         nativeHeap.free(writefds)
