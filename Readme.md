@@ -4,6 +4,20 @@
 
 ## Getting Started
 
+### Executables
+You can download the executables for your platform under the release tab
+
+#### Program Arguments
+| Argument          | Default Value | Description                                                                                                             |
+| :---:             | :---:         | :---:                                                                                                                   |
+| -h                | 127.0.0.1     | Interface address to bind the server to                                                                                 |
+| -p                | 1883          | Server port to listen to                                                                                                |
+| --max-connections | 128           | The maximum number of TCP connections to support                                                                        |
+| --key-store       | null          | The path to the PKCS12 keystore containing the private key and the certificate for TLS, if null TLS is disabled         |
+| --key-store-psw   | null          | The password of the PKCS12 keystore indicated in --key-store, if the keystore has no password set, don't set the option |
+
+### Library
+
 #### Gradle Maven
 TODO
 
