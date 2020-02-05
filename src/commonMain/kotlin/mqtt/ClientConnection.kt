@@ -478,7 +478,7 @@ class ClientConnection(
             }
         }
 
-        broker.publish(packet.retain, topic, packet.qos, false, packet.properties, packet.payload)
+        broker.publish(session.clientId, packet.retain, topic, packet.qos, false, packet.properties, packet.payload)
     }
 
     private fun getTopicOrAlias(packet: MQTTPublish): String {
@@ -537,7 +537,15 @@ class ClientConnection(
                     packet.properties
                 )
             )
-            broker.publish(it.retain, getTopicOrAlias(it), Qos.EXACTLY_ONCE, false, packet.properties, it.payload)
+            broker.publish(
+                session.clientId,
+                it.retain,
+                getTopicOrAlias(it),
+                Qos.EXACTLY_ONCE,
+                false,
+                packet.properties,
+                it.payload
+            )
         } ?: run {
             writePacket(
                 MQTTPubcomp(

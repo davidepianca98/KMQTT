@@ -40,6 +40,7 @@ class Broker(
     }
 
     private fun publishShared(
+        publisherClientId: String,
         shareName: String,
         retain: Boolean,
         topicName: String,
@@ -53,7 +54,7 @@ class Broker(
             it.value.hasSharedSubscriptionMatching(shareName, topicName)?.timestampShareSent ?: Long.MAX_VALUE
         }?.value
         session?.hasSharedSubscriptionMatching(shareName, topicName)?.let { subscription ->
-            publish(retain, topicName, qos, dup, properties, payload, session, subscription)
+            publish(publisherClientId, retain, topicName, qos, dup, properties, payload, session, subscription)
             subscription.timestampShareSent = currentTimeMillis()
         }
     }
@@ -67,12 +68,13 @@ class Broker(
         properties.responseTopic = will.responseTopic
         properties.correlationData = will.correlationData
         properties.userProperty += will.userProperty
-        publish(will.retain, will.topic, will.qos, false, properties, will.payload)
+        publish(session.clientId, will.retain, will.topic, will.qos, false, properties, will.payload)
         // The will must be removed after sending
         session.will = null
     }
 
     fun publish(
+        publisherClientId: String,
         retain: Boolean,
         topicName: String,
         qos: Qos,
@@ -92,17 +94,37 @@ class Broker(
             session.value.hasSubscriptionsMatching(topicName).forEach { subscription ->
                 if (subscription.isShared()) {
                     if (subscription.shareName!! !in sharedDone && sharedSubscriptionsAvailable) { // Check we only publish once per shared subscription
-                        publishShared(subscription.shareName, retain, topicName, qos, dup, properties, payload)
+                        publishShared(
+                            publisherClientId,
+                            subscription.shareName,
+                            retain,
+                            topicName,
+                            qos,
+                            dup,
+                            properties,
+                            payload
+                        )
                         sharedDone += subscription.shareName
                     }
                 } else {
-                    publish(retain, topicName, qos, dup, properties, payload, session.value, subscription)
+                    publish(
+                        publisherClientId,
+                        retain,
+                        topicName,
+                        qos,
+                        dup,
+                        properties,
+                        payload,
+                        session.value,
+                        subscription
+                    )
                 }
             }
         }
     }
 
     private fun publish(
+        publisherClientId: String,
         retain: Boolean,
         topicName: String,
         qos: Qos,
@@ -112,6 +134,10 @@ class Broker(
         session: Session,
         subscription: Subscription
     ) {
+        if (subscription.options.noLocal && publisherClientId == session.clientId) {
+            return
+        }
+
         subscription.subscriptionIdentifier?.let {
             properties.subscriptionIdentifier.clear()
             properties.subscriptionIdentifier.add(it)
