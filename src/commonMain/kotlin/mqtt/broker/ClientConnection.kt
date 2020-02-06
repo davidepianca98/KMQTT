@@ -119,25 +119,25 @@ class ClientConnection(
             if (!connectHandled) {
                 handleConnect(packet)
                 connectHandled = true
-                return
             }
         } else {
             if (!connectHandled) // If first packet is not CONNECT, send Protocol Error
                 throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            when (packet) {
+                is MQTTPublish -> handlePublish(packet)
+                is MQTTPuback -> handlePuback(packet)
+                is MQTTPubrec -> handlePubrec(packet)
+                is MQTTPubrel -> handlePubrel(packet)
+                is MQTTPubcomp -> handlePubcomp(packet)
+                is MQTTSubscribe -> handleSubscribe(packet)
+                is MQTTUnsubscribe -> handleUnsubscribe(packet)
+                is MQTTPingreq -> handlePingreq()
+                is MQTTDisconnect -> handleDisconnect(packet)
+                is MQTTAuth -> handleAuth(packet)
+                else -> throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            }
         }
-        when (packet) {
-            is MQTTPublish -> handlePublish(packet)
-            is MQTTPuback -> handlePuback(packet)
-            is MQTTPubrec -> handlePubrec(packet)
-            is MQTTPubrel -> handlePubrel(packet)
-            is MQTTPubcomp -> handlePubcomp(packet)
-            is MQTTSubscribe -> handleSubscribe(packet)
-            is MQTTUnsubscribe -> handleUnsubscribe(packet)
-            is MQTTPingreq -> handlePingreq()
-            is MQTTDisconnect -> handleDisconnect(packet)
-            is MQTTAuth -> handleAuth(packet)
-            else -> throw MQTTException(ReasonCode.PROTOCOL_ERROR)
-        }
+        broker.packetInterceptor?.packetReceived(packet)
     }
 
     /**

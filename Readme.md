@@ -54,6 +54,21 @@ fun main() {
 }
 ```
 
+#### Message interceptor code example
+```kotlin
+fun main() {
+    val broker = Broker(packetInterceptor = object : PacketInterceptor {
+        override fun packetReceived(packet: MQTT5Packet) {
+            when(packet) {
+                is MQTTConnect -> println(packet.protocolName)
+                is MQTTPublish -> println(packet.topicName)
+            }
+        }
+    })
+    broker.listen()
+}
+```
+
 ## Features
 | Platform    | MQTT 3.1.1 | MQTT 5.0           | TCP                | TLS                | Websocket |
 |   :---:     |    :---:   |  :---:             | :---:              | :---:              | :---:     |

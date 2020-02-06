@@ -1,7 +1,9 @@
 package mqtt.broker
 
 import currentTimeMillis
-import mqtt.*
+import mqtt.MQTTException
+import mqtt.Subscription
+import mqtt.matchesWildcard
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.MQTTProperties
 import mqtt.packets.mqttv5.MQTTPublish
@@ -28,7 +30,8 @@ class Broker(
     val subscriptionIdentifiersAvailable: Boolean = true,
     val sharedSubscriptionsAvailable: Boolean = true,
     val serverKeepAlive: Int? = null,
-    val responseInformation: String? = null
+    val responseInformation: String? = null,
+    val packetInterceptor: PacketInterceptor? = null
 ) {
     // TODO support WebSocket, section 6
 
