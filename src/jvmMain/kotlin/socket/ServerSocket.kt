@@ -9,7 +9,8 @@ import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
 
 
-actual open class ServerSocket actual constructor(private val broker: Broker) : ServerSocketInterface {
+actual open class ServerSocket actual constructor(private val broker: Broker) :
+    ServerSocketInterface {
 
     private val socket = ServerSocketChannel.open()
     protected val selector: Selector = Selector.open()
@@ -23,17 +24,17 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
         socket.register(selector, SelectionKey.OP_ACCEPT)
     }
 
-    override fun accept(key: SelectionKey) {
+    override fun accept(socket: Any) {
         try {
-            val channel = (key.channel() as ServerSocketChannel).accept()
+            val channel = ((socket as SelectionKey).channel() as ServerSocketChannel).accept()
             channel.configureBlocking(false)
 
-            val socket = Socket(sendBuffer, receiveBuffer)
+            val socketObj = Socket(sendBuffer, receiveBuffer)
 
-            val clientConnection = ClientConnection(socket, broker)
+            val clientConnection = ClientConnection(socketObj, broker)
 
             val socketKey = channel.register(selector, SelectionKey.OP_READ, clientConnection)
-            socket.key = socketKey
+            socketObj.key = socketKey
         } catch (e: java.io.IOException) {
             e.printStackTrace()
         }

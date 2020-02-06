@@ -135,7 +135,7 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
     }
 
     fun getExpiryTime(): Long? {
-        return if (sessionExpiryInterval == 0xFFFFFFFFu)
+        return if (sessionExpiryInterval == 0xFFFFFFFFu || connected) // If connected it doesn't expire
             null
         else
             currentTimeMillis() + (sessionExpiryInterval.toLong() * 1000)

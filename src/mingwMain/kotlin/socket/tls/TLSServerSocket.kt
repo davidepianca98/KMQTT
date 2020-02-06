@@ -3,7 +3,10 @@ package socket.tls
 import cnames.structs.stack_st_X509
 import kotlinx.cinterop.*
 import mqtt.broker.Broker
+import mqtt.broker.ClientConnection
 import openssl.*
+import platform.posix.SOCKET
+import platform.posix.closesocket
 import platform.posix.fclose
 import platform.posix.fopen
 import socket.ServerSocket
@@ -45,7 +48,37 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
                 throw Exception("Error checking private key match with the public certificate")
             }
         }
-        // TODO implement accept and instatiate TLSSocket
+    }
+
+    override fun accept(socket: Any) {
+        val newSocket = socket as SOCKET
+
+        val readBio = BIO_new(BIO_s_mem())
+        if (readBio == null) {
+            closesocket(newSocket)
+            return
+        }
+        val writeBio = BIO_new(BIO_s_mem())
+        if (writeBio == null) {
+            closesocket(newSocket)
+            BIO_free(readBio)
+            return
+        }
+
+        val clientContext = SSL_new(sslContext)
+        if (clientContext == null) {
+            closesocket(newSocket)
+            BIO_free(readBio)
+            BIO_free(writeBio)
+            return
+        }
+
+        SSL_set_accept_state(clientContext)
+        SSL_set_bio(clientContext, readBio, writeBio)
+
+        val engine = TLSSocket.OpenSSLEngine(clientContext, readBio, writeBio)
+
+        clients[newSocket] = ClientConnection(TLSSocket(newSocket, engine, writeRequest, buffer), broker)
     }
 
     override fun close() {

@@ -3,7 +3,7 @@ package socket
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
 
-expect open class ServerSocket(broker: Broker) {
+expect open class ServerSocket(broker: Broker) : ServerSocketInterface {
 
     fun isRunning(): Boolean
 

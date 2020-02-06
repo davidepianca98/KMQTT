@@ -7,15 +7,15 @@ import platform.posix.*
 import platform.windows.select
 
 
-actual open class ServerSocket actual constructor(private val broker: Broker) {
+actual open class ServerSocket actual constructor(private val broker: Broker) : ServerSocketInterface {
 
     private var running = true
     private var serverSocket = INVALID_SOCKET
 
-    private val clients = mutableMapOf<SOCKET, ClientConnection>()
-    private val writeRequest = mutableListOf<SOCKET>()
+    protected val clients = mutableMapOf<SOCKET, ClientConnection>()
+    protected val writeRequest = mutableListOf<SOCKET>()
 
-    private val buffer = ByteArray(broker.maximumPacketSize.toInt())
+    protected val buffer = ByteArray(broker.maximumPacketSize.toInt())
 
     private val readfds = nativeHeap.alloc<fd_set>()
     private val writefds = nativeHeap.alloc<fd_set>()
@@ -96,8 +96,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) {
                 if (newSocket == INVALID_SOCKET) {
                     throw IOException("Invalid socket")
                 }
-                clients[newSocket] =
-                    ClientConnection(Socket(newSocket, writeRequest, buffer), broker)
+                accept(newSocket)
             } else {
                 clients.forEach { socket ->
                     when {
@@ -120,6 +119,11 @@ actual open class ServerSocket actual constructor(private val broker: Broker) {
                 }
             }
         }
+    }
+
+    override fun accept(socket: Any) {
+        val newSocket = socket as SOCKET
+        clients[newSocket] = ClientConnection(Socket(newSocket, writeRequest, buffer), broker)
     }
 
 }

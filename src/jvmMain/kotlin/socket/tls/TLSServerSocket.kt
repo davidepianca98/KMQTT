@@ -86,18 +86,18 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
         return kmf.keyManagers
     }
 
-    override fun accept(key: SelectionKey) {
+    override fun accept(socket: Any) {
         try {
-            val channel = (key.channel() as ServerSocketChannel).accept()
+            val channel = ((socket as SelectionKey).channel() as ServerSocketChannel).accept()
             channel.configureBlocking(false)
 
             val engine = sslContext.createSSLEngine()
-            val socket = TLSSocket(sendBuffer, receiveBuffer, sendAppBuffer, receiveAppBuffer, engine)
+            val tlsSocket = TLSSocket(sendBuffer, receiveBuffer, sendAppBuffer, receiveAppBuffer, engine)
 
-            val clientConnection = ClientConnection(socket, broker)
+            val clientConnection = ClientConnection(tlsSocket, broker)
 
             val socketKey = channel.register(selector, SelectionKey.OP_READ, clientConnection)
-            socket.key = socketKey
+            tlsSocket.key = socketKey
         } catch (e: java.io.IOException) {
             e.printStackTrace()
         }

@@ -22,7 +22,7 @@ actual open class Socket(
                     pendingSendData.add(data)
                     writeRequest.add(socket)
                 } else {
-                    closesocket(socket)
+                    close()
                     throw IOException("Error in send $error")
                 }
             } else if (length < data.size) {
@@ -45,8 +45,7 @@ actual open class Socket(
             val length = recv(socket.convert(), pinned.addressOf(0), buffer.size, 0)
             when {
                 length == 0 -> {
-                    shutdown(socket, SD_SEND)
-                    closesocket(socket)
+                    close()
                     throw SocketClosedException()
                 }
                 length > 0 -> {
@@ -54,8 +53,7 @@ actual open class Socket(
                 }
                 else -> {
                     if (WSAGetLastError() != WSAEWOULDBLOCK) {
-                        shutdown(socket, SD_SEND)
-                        closesocket(socket)
+                        close()
                         throw IOException()
                     } else {
                         return null
@@ -63,6 +61,11 @@ actual open class Socket(
                 }
             }
         }
+    }
+
+    open fun close() {
+        shutdown(socket, SD_SEND)
+        closesocket(socket)
     }
 
 }
