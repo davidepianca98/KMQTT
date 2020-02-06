@@ -3,7 +3,7 @@ package integration
 import com.hivemq.client.mqtt.datatypes.MqttQos
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish
-import mqtt.Broker
+import mqtt.broker.Broker
 import org.junit.Test
 import kotlin.test.assertEquals
 

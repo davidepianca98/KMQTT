@@ -1,6 +1,6 @@
 package integration
 
-import mqtt.Broker
+import mqtt.broker.Broker
 
 class BrokerThread(private val broker: Broker = Broker()) : Thread() {
 

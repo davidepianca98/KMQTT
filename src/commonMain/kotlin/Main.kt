@@ -1,4 +1,4 @@
-import mqtt.Broker
+import mqtt.broker.Broker
 import socket.tls.TLSSettings
 
 fun main(args: Array<String>) {

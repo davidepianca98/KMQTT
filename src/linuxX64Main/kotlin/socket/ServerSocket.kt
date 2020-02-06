@@ -1,7 +1,7 @@
 package socket
 
-import mqtt.Broker
-import mqtt.ClientConnection
+import mqtt.broker.Broker
+import mqtt.broker.ClientConnection
 
 actual open class ServerSocket actual constructor(private val broker: Broker) {
 

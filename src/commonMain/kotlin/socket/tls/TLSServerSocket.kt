@@ -1,6 +1,6 @@
 package socket.tls
 
-import mqtt.Broker
+import mqtt.broker.Broker
 import socket.ServerSocket
 
 expect class TLSServerSocket(broker: Broker) : ServerSocket

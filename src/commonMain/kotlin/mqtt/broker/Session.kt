@@ -1,6 +1,9 @@
-package mqtt
+package mqtt.broker
 
 import currentTimeMillis
+import mqtt.Subscription
+import mqtt.Will
+import mqtt.matchesWildcard
 import mqtt.packets.mqttv5.MQTT5Packet
 import mqtt.packets.mqttv5.MQTTConnect
 import mqtt.packets.mqttv5.MQTTPublish

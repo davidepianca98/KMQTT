@@ -1,7 +1,7 @@
 package socket.tls
 
-import mqtt.Broker
-import mqtt.ClientConnection
+import mqtt.broker.Broker
+import mqtt.broker.ClientConnection
 import socket.ServerSocket
 import java.io.ByteArrayInputStream
 import java.io.File

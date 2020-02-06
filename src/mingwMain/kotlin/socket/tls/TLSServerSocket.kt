@@ -2,7 +2,7 @@ package socket.tls
 
 import cnames.structs.stack_st_X509
 import kotlinx.cinterop.*
-import mqtt.Broker
+import mqtt.broker.Broker
 import openssl.*
 import platform.posix.fclose
 import platform.posix.fopen

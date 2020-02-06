@@ -12,9 +12,9 @@ import com.hivemq.client.mqtt.mqtt5.message.connect.Mqtt5Connect
 import com.hivemq.client.mqtt.mqtt5.message.connect.connack.Mqtt5ConnAck
 import com.hivemq.client.mqtt.mqtt5.message.connect.connack.Mqtt5ConnAckReasonCode
 import com.hivemq.client.mqtt.mqtt5.message.disconnect.Mqtt5Disconnect
-import mqtt.Authentication
-import mqtt.Broker
-import mqtt.EnhancedAuthenticationProvider
+import mqtt.broker.Authentication
+import mqtt.broker.Broker
+import mqtt.broker.EnhancedAuthenticationProvider
 import org.junit.Test
 import java.util.concurrent.CompletableFuture
 import kotlin.test.assertEquals
@@ -139,7 +139,8 @@ class TestAuthentication {
     @Test
     fun testEnhancedAuthentication() {
         val broker =
-            Broker(enhancedAuthenticationProviders = mapOf("TEST-EN-AUTH" to object : EnhancedAuthenticationProvider {
+            Broker(enhancedAuthenticationProviders = mapOf("TEST-EN-AUTH" to object :
+                EnhancedAuthenticationProvider {
                 var counter = 0
                 override fun authReceived(
                     clientId: String,

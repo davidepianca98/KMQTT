@@ -1,7 +1,8 @@
-package mqtt
+package mqtt.broker
 
 import currentTimeMillis
 import generateRandomClientId
+import mqtt.*
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.*
 import socket.IOException

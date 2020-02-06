@@ -1,6 +1,7 @@
-package mqtt
+package mqtt.broker
 
 import currentTimeMillis
+import mqtt.*
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.MQTTProperties
 import mqtt.packets.mqttv5.MQTTPublish

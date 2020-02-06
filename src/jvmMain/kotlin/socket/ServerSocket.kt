@@ -1,7 +1,7 @@
 package socket
 
-import mqtt.Broker
-import mqtt.ClientConnection
+import mqtt.broker.Broker
+import mqtt.broker.ClientConnection
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey

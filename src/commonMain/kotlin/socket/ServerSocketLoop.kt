@@ -1,7 +1,7 @@
 package socket
 
-import mqtt.Broker
-import mqtt.ClientConnection
+import mqtt.broker.Broker
+import mqtt.broker.ClientConnection
 import socket.tls.TLSServerSocket
 
 open class ServerSocketLoop(private val broker: Broker) {

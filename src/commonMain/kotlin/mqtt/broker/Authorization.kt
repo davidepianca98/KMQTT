@@ -1,4 +1,4 @@
-package mqtt
+package mqtt.broker
 
 interface Authorization {
 
