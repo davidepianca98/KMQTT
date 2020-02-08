@@ -33,6 +33,13 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                 throw IOException("Invalid socket")
             }
 
+            val reuseAddr = alloc<uint32_tVar>()
+            reuseAddr.value = 1u
+            if (setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, reuseAddr.ptr.toString(), 4) == SOCKET_ERROR) {
+                WSACleanup()
+                throw IOException("Setsockopt")
+            }
+
             val serverAddress = alloc<sockaddr_in>()
             memset(serverAddress.ptr, 0, sockaddr_in.size.convert())
             serverAddress.sin_family = AF_INET.convert()

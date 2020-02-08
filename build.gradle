@@ -35,7 +35,7 @@ kotlin {
         }
         binaries {
             executable() {
-                linkerOpts = ['-L/msys64/home/39340/openssl-1.1.1d/dist/lib', '-lssl', '-lcrypto']
+                linkerOpts = ['-Lsrc/nativeInterop/cinterop/opensslLibs/mingwX64', '-lssl', '-lcrypto']
             }
         }
     }
@@ -87,13 +87,17 @@ kotlin {
 
         }
         linuxX64Main {
-
+            dependencies {
+                implementation files('src/nativeInterop/openssl-linux-x64.klib')
+            }
         }
         linuxX64Test {
 
         }
         linuxArm32HfpMain {
-
+            dependencies {
+                implementation files('src/nativeInterop/openssl-linux-arm32-hfp.klib')
+            }
         }
         linuxArm32HfpTest {
 

@@ -1,6 +1,5 @@
 @file:kotlinx.cinterop.InteropStubs
 @file:Suppress("UNUSED_VARIABLE", "UNUSED_EXPRESSION")
-
 package openssl
 
 import cnames.structs.ASN1_ITEM_st
@@ -1719,7 +1718,6 @@ enum class BIO_hostserv_priorities(override val value: UInt) : CEnum {
 
     class Var(rawPtr: NativePtr) : CEnumVar(rawPtr) {
         companion object : Type(UIntVar.size.toInt())
-
         var value: BIO_hostserv_priorities
             get() = byValue(this.reinterpret<UIntVar>().value)
             set(value) {
@@ -1740,7 +1738,6 @@ enum class BIO_lookup_type(override val value: UInt) : CEnum {
 
     class Var(rawPtr: NativePtr) : CEnumVar(rawPtr) {
         companion object : Type(UIntVar.size.toInt())
-
         var value: BIO_lookup_type
             get() = byValue(this.reinterpret<UIntVar>().value)
             set(value) {
@@ -1760,7 +1757,6 @@ enum class BIO_sock_info_type(override val value: UInt) : CEnum {
 
     class Var(rawPtr: NativePtr) : CEnumVar(rawPtr) {
         companion object : Type(UIntVar.size.toInt())
-
         var value: BIO_sock_info_type
             get() = byValue(this.reinterpret<UIntVar>().value)
             set(value) {
@@ -1783,7 +1779,6 @@ enum class sct_source_t(override val value: UInt) : CEnum {
 
     class Var(rawPtr: NativePtr) : CEnumVar(rawPtr) {
         companion object : Type(UIntVar.size.toInt())
-
         var value: sct_source_t
             get() = byValue(this.reinterpret<UIntVar>().value)
             set(value) {
@@ -1808,7 +1803,6 @@ enum class sct_validation_status_t(override val value: UInt) : CEnum {
 
     class Var(rawPtr: NativePtr) : CEnumVar(rawPtr) {
         companion object : Type(UIntVar.size.toInt())
-
         var value: sct_validation_status_t
             get() = byValue(this.reinterpret<UIntVar>().value)
             set(value) {
@@ -1877,7 +1871,6 @@ enum class OSSL_HANDSHAKE_STATE(override val value: UInt) : CEnum {
 
     class Var(rawPtr: NativePtr) : CEnumVar(rawPtr) {
         companion object : Type(UIntVar.size.toInt())
-
         var value: OSSL_HANDSHAKE_STATE
             get() = byValue(this.reinterpret<UIntVar>().value)
             set(value) {
@@ -19504,7 +19497,7 @@ val SHLIB_VERSION_NUMBER: String get() = "1.1"
 
 const val OPENSSL_SYS_MINGW64: Int = 1
 
-val OPENSSL_FILE: String get() = "C:\u005CUsers\u005C39340\u005CAppData\u005CLocal\u005CTemp\u005Ctmp2427815957784384771.c"
+val OPENSSL_FILE: String get() = "C:\u005CUsers\u005C39340\u005CAppData\u005CLocal\u005CTemp\u005Ctmp9438139213998447045.c"
 
 const val OPENSSL_LINE: Int = 110
 
@@ -36006,300 +35999,201 @@ val SSL_CT_VALIDATION_PERMISSIVE: UInt get() = 0u
 val SSL_CT_VALIDATION_STRICT: UInt get() = 1u
 @SymbolName("openssl_kniBridge0")
 private external fun kniBridge0(): NativePtr
-
 @SymbolName("openssl_kniBridge1")
 private external fun kniBridge1(): NativePtr
-
 @SymbolName("openssl_kniBridge2")
 private external fun kniBridge2(): NativePtr
-
 @SymbolName("openssl_kniBridge3")
 private external fun kniBridge3(): NativePtr
-
 @SymbolName("openssl_kniBridge4")
 private external fun kniBridge4(): NativePtr
-
 @SymbolName("openssl_kniBridge5")
 private external fun kniBridge5(): NativePtr
-
 @SymbolName("openssl_kniBridge6")
 private external fun kniBridge6(): NativePtr
-
 @SymbolName("openssl_kniBridge7")
 private external fun kniBridge7(): NativePtr
-
 @SymbolName("openssl_kniBridge8")
 private external fun kniBridge8(): NativePtr
-
 @SymbolName("openssl_kniBridge9")
 private external fun kniBridge9(): NativePtr
-
 @SymbolName("openssl_kniBridge10")
 private external fun kniBridge10(): NativePtr
-
 @SymbolName("openssl_kniBridge11")
 private external fun kniBridge11(): NativePtr
-
 @SymbolName("openssl_kniBridge12")
 private external fun kniBridge12(): NativePtr
-
 @SymbolName("openssl_kniBridge13")
 private external fun kniBridge13(): NativePtr
-
 @SymbolName("openssl_kniBridge14")
 private external fun kniBridge14(): NativePtr
-
 @SymbolName("openssl_kniBridge15")
 private external fun kniBridge15(): NativePtr
-
 @SymbolName("openssl_kniBridge16")
 private external fun kniBridge16(): NativePtr
-
 @SymbolName("openssl_kniBridge17")
 private external fun kniBridge17(): NativePtr
-
 @SymbolName("openssl_kniBridge18")
 private external fun kniBridge18(): NativePtr
-
 @SymbolName("openssl_kniBridge19")
 private external fun kniBridge19(): NativePtr
-
 @SymbolName("openssl_kniBridge20")
 private external fun kniBridge20(): NativePtr
-
 @SymbolName("openssl_kniBridge21")
 private external fun kniBridge21(): NativePtr
-
 @SymbolName("openssl_kniBridge22")
 private external fun kniBridge22(): NativePtr
-
 @SymbolName("openssl_kniBridge23")
 private external fun kniBridge23(): NativePtr
-
 @SymbolName("openssl_kniBridge24")
 private external fun kniBridge24(): NativePtr
-
 @SymbolName("openssl_kniBridge25")
 private external fun kniBridge25(): NativePtr
-
 @SymbolName("openssl_kniBridge26")
 private external fun kniBridge26(): NativePtr
-
 @SymbolName("openssl_kniBridge27")
 private external fun kniBridge27(): NativePtr
-
 @SymbolName("openssl_kniBridge28")
 private external fun kniBridge28(): NativePtr
-
 @SymbolName("openssl_kniBridge29")
 private external fun kniBridge29(): NativePtr
-
 @SymbolName("openssl_kniBridge30")
 private external fun kniBridge30(): NativePtr
-
 @SymbolName("openssl_kniBridge31")
 private external fun kniBridge31(): NativePtr
-
 @SymbolName("openssl_kniBridge32")
 private external fun kniBridge32(): NativePtr
-
 @SymbolName("openssl_kniBridge33")
 private external fun kniBridge33(): NativePtr
-
 @SymbolName("openssl_kniBridge34")
 private external fun kniBridge34(): NativePtr
-
 @SymbolName("openssl_kniBridge35")
 private external fun kniBridge35(): NativePtr
-
 @SymbolName("openssl_kniBridge36")
 private external fun kniBridge36(): NativePtr
-
 @SymbolName("openssl_kniBridge37")
 private external fun kniBridge37(): NativePtr
-
 @SymbolName("openssl_kniBridge38")
 private external fun kniBridge38(): NativePtr
-
 @SymbolName("openssl_kniBridge39")
 private external fun kniBridge39(): NativePtr
-
 @SymbolName("openssl_kniBridge40")
 private external fun kniBridge40(): NativePtr
-
 @SymbolName("openssl_kniBridge41")
 private external fun kniBridge41(): NativePtr
-
 @SymbolName("openssl_kniBridge42")
 private external fun kniBridge42(): NativePtr
-
 @SymbolName("openssl_kniBridge43")
 private external fun kniBridge43(): NativePtr
-
 @SymbolName("openssl_kniBridge44")
 private external fun kniBridge44(): NativePtr
-
 @SymbolName("openssl_kniBridge45")
 private external fun kniBridge45(): NativePtr
-
 @SymbolName("openssl_kniBridge46")
 private external fun kniBridge46(): NativePtr
-
 @SymbolName("openssl_kniBridge47")
 private external fun kniBridge47(): NativePtr
-
 @SymbolName("openssl_kniBridge48")
 private external fun kniBridge48(): NativePtr
-
 @SymbolName("openssl_kniBridge49")
 private external fun kniBridge49(): NativePtr
-
 @SymbolName("openssl_kniBridge50")
 private external fun kniBridge50(): NativePtr
-
 @SymbolName("openssl_kniBridge51")
 private external fun kniBridge51(): NativePtr
-
 @SymbolName("openssl_kniBridge52")
 private external fun kniBridge52(): NativePtr
-
 @SymbolName("openssl_kniBridge53")
 private external fun kniBridge53(): NativePtr
-
 @SymbolName("openssl_kniBridge54")
 private external fun kniBridge54(): NativePtr
-
 @SymbolName("openssl_kniBridge55")
 private external fun kniBridge55(): NativePtr
-
 @SymbolName("openssl_kniBridge56")
 private external fun kniBridge56(): NativePtr
-
 @SymbolName("openssl_kniBridge57")
 private external fun kniBridge57(): NativePtr
-
 @SymbolName("openssl_kniBridge58")
 private external fun kniBridge58(): NativePtr
-
 @SymbolName("openssl_kniBridge59")
 private external fun kniBridge59(): NativePtr
-
 @SymbolName("openssl_kniBridge60")
 private external fun kniBridge60(): NativePtr
-
 @SymbolName("openssl_kniBridge61")
 private external fun kniBridge61(): NativePtr
-
 @SymbolName("openssl_kniBridge62")
 private external fun kniBridge62(): NativePtr
-
 @SymbolName("openssl_kniBridge63")
 private external fun kniBridge63(): NativePtr
-
 @SymbolName("openssl_kniBridge64")
 private external fun kniBridge64(): NativePtr
-
 @SymbolName("openssl_kniBridge65")
 private external fun kniBridge65(): NativePtr
-
 @SymbolName("openssl_kniBridge66")
 private external fun kniBridge66(): NativePtr
-
 @SymbolName("openssl_kniBridge67")
 private external fun kniBridge67(): NativePtr
-
 @SymbolName("openssl_kniBridge68")
 private external fun kniBridge68(): NativePtr
-
 @SymbolName("openssl_kniBridge69")
 private external fun kniBridge69(): NativePtr
-
 @SymbolName("openssl_kniBridge70")
 private external fun kniBridge70(): NativePtr
-
 @SymbolName("openssl_kniBridge71")
 private external fun kniBridge71(): NativePtr
-
 @SymbolName("openssl_kniBridge72")
 private external fun kniBridge72(): NativePtr
-
 @SymbolName("openssl_kniBridge73")
 private external fun kniBridge73(): NativePtr
-
 @SymbolName("openssl_kniBridge74")
 private external fun kniBridge74(): NativePtr
-
 @SymbolName("openssl_kniBridge75")
 private external fun kniBridge75(): NativePtr
-
 @SymbolName("openssl_kniBridge76")
 private external fun kniBridge76(): NativePtr
-
 @SymbolName("openssl_kniBridge77")
 private external fun kniBridge77(): NativePtr
-
 @SymbolName("openssl_kniBridge78")
 private external fun kniBridge78(): NativePtr
-
 @SymbolName("openssl_kniBridge79")
 private external fun kniBridge79(): NativePtr
-
 @SymbolName("openssl_kniBridge80")
 private external fun kniBridge80(): NativePtr
-
 @SymbolName("openssl_kniBridge81")
 private external fun kniBridge81(): NativePtr
-
 @SymbolName("openssl_kniBridge82")
 private external fun kniBridge82(): NativePtr
-
 @SymbolName("openssl_kniBridge83")
 private external fun kniBridge83(): NativePtr
-
 @SymbolName("openssl_kniBridge84")
 private external fun kniBridge84(): NativePtr
-
 @SymbolName("openssl_kniBridge85")
 private external fun kniBridge85(): NativePtr
-
 @SymbolName("openssl_kniBridge86")
 private external fun kniBridge86(): NativePtr
-
 @SymbolName("openssl_kniBridge87")
 private external fun kniBridge87(): NativePtr
-
 @SymbolName("openssl_kniBridge88")
 private external fun kniBridge88(): NativePtr
-
 @SymbolName("openssl_kniBridge89")
 private external fun kniBridge89(): NativePtr
-
 @SymbolName("openssl_kniBridge90")
 private external fun kniBridge90(): NativePtr
-
 @SymbolName("openssl_kniBridge91")
 private external fun kniBridge91(): NativePtr
-
 @SymbolName("openssl_kniBridge92")
 private external fun kniBridge92(): NativePtr
-
 @SymbolName("openssl_kniBridge93")
 private external fun kniBridge93(): NativePtr
-
 @SymbolName("openssl_kniBridge94")
 private external fun kniBridge94(): NativePtr
-
 @SymbolName("openssl_kniBridge95")
 private external fun kniBridge95(): NativePtr
-
 @SymbolName("openssl_kniBridge96")
 private external fun kniBridge96(): NativePtr
-
 @SymbolName("openssl_kniBridge97")
 private external fun kniBridge97(): NativePtr
-
 @SymbolName("openssl_kniBridge98")
 private external fun kniBridge98(): NativePtr
-
 @SymbolName("openssl_kniBridge99")
 private external fun kniBridge99(): NativePtr
