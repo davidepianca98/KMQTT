@@ -1,6 +1,16 @@
 # KMQTT
 
+[![Release](https://jitpack.io/v/davidepianca98/KMQTT.svg)](https://jitpack.io/#davidepianca98/KMQTT)
+
 **KMQTT** is a Kotlin Multiplatform MQTT 5.0 Broker, with the objective of targeting the most possible build targets.
+
+## Features
+| Platform    | MQTT 3.1.1 | MQTT 5.0           | TCP                | TLS                | Websocket |
+|   :---:     |    :---:   |  :---:             | :---:              | :---:              | :---:     |
+| JVM         | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
+| Windows X64 | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
+| Linux X64   | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
+| Linux ARM32 | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
 
 ## Getting Started
 
@@ -19,7 +29,38 @@ You can download the executables for your platform under the release tab
 ### Library
 
 #### Gradle Maven
-TODO
+
+##### Global dependencies
+```gradle
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+dependencies {
+    implementation 'com.github.davidepianca98:KMQTT:0.0.4'
+}
+```
+
+##### Kotlin Multiplatform plugin
+On the Kotlin Multiplatform plugin you only need to require the dependency on the common source set and the platform specific parts will automatically be required
+```gradle
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
+kotlin {
+    jvm()
+    mingwX64("mingw")
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation 'com.github.davidepianca98:KMQTT:0.0.4'
+            }
+        }
+    }
+}
+```
 
 #### Quick start code example
 This code starts the MQTT broker on port 1883 without TLS encryption. You can play with Broker() constructor parameters to set the various settings
@@ -68,11 +109,3 @@ fun main() {
     broker.listen()
 }
 ```
-
-## Features
-| Platform    | MQTT 3.1.1 | MQTT 5.0           | TCP                | TLS                | Websocket |
-|   :---:     |    :---:   |  :---:             | :---:              | :---:              | :---:     |
-| JVM         | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
-| Windows X64 | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
-| Linux X64   | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
-| Linux ARM32 | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
