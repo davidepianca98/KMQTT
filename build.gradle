@@ -6,7 +6,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-group 'io.kmqtt'
+group 'com.github.davidepianca98'
 version '0.0.3'
 
 repositories {
