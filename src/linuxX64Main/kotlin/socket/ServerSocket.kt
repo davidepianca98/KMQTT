@@ -9,6 +9,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
 
     private var running = true
     private var serverSocket = -1
+    private var maxFd = 0
 
     protected val clients = mutableMapOf<Int, ClientConnection>()
     protected val writeRequest = mutableListOf<Int>()
@@ -22,9 +23,10 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
     init {
         memScoped {
             serverSocket = socket(AF_INET, SOCK_STREAM, 0)
-            if (serverSocket < 0) {
+            if (serverSocket == -1) {
                 throw IOException("Invalid socket: error $errno")
             }
+            maxFd = serverSocket
 
             val reuseAddr = alloc<uint32_tVar>()
             reuseAddr.value = 1u
@@ -81,7 +83,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                 val timeoutStruct = alloc<timeval>()
                 timeoutStruct.tv_sec = 0
                 timeoutStruct.tv_usec = timeout * 1000
-                select(0, readfds.ptr, writefds.ptr, errorfds.ptr, timeoutStruct.ptr)
+                select(maxFd + 1, readfds.ptr, writefds.ptr, errorfds.ptr, timeoutStruct.ptr)
             }
 
             if (posix_FD_ISSET(serverSocket.convert(), readfds.ptr) == 1) {
@@ -89,8 +91,14 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                 if (newSocket == -1) {
                     if (errno != EAGAIN && errno != EWOULDBLOCK)
                         throw IOException("Invalid socket: error $errno")
+                } else {
+                    if (fcntl(newSocket, F_SETFL, O_NONBLOCK) == -1) {
+                        throw IOException("Failure setting client socket non blocking")
+                    }
+                    if (maxFd < newSocket)
+                        maxFd = newSocket
+                    accept(newSocket)
                 }
-                accept(newSocket)
             } else {
                 clients.forEach { socket ->
                     when {
