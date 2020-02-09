@@ -75,4 +75,4 @@ fun main() {
 | JVM         | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
 | Windows X64 | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
 | Linux X64   | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |
-| Linux ARM32 | TODO       | :heavy_check_mark: | TODO               | TODO               | TODO      |
+| Linux ARM32 | TODO       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | TODO      |

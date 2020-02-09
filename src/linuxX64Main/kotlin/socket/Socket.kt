@@ -28,9 +28,8 @@ actual open class Socket(
             } else if (length < data.size) {
                 pendingSendData.add(data.copyOfRange(length.toInt(), data.size))
                 writeRequest.add(socket)
-            } else {
-
             }
+            pinned
         }
     }
 
@@ -42,7 +41,6 @@ actual open class Socket(
 
     actual override fun read(): UByteArray? {
         buffer.usePinned { pinned ->
-            // TODO check why stuck on recv (also on arm32)
             val length = recv(socket.convert(), pinned.addressOf(0), buffer.size.convert(), 0)
             when {
                 length == 0L -> {
