@@ -1,5 +1,4 @@
 import mqtt.broker.Broker
-import socket.tls.TLSSettings
 import java.nio.ByteBuffer
 
 actual fun currentTimeMillis(): Long {
@@ -15,7 +14,7 @@ fun ByteBuffer.toUByteArray(): UByteArray {
 
 fun main() {
     Broker(
-        tlsSettings = TLSSettings(keyStoreFilePath = "keyStore.p12", keyStorePassword = "changeit"),
-        port = 8883
+        //tlsSettings = TLSSettings(keyStoreFilePath = "keyStore.p12", keyStorePassword = "changeit"),
+        //port = 8883
     ).listen()
 }

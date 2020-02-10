@@ -215,6 +215,9 @@ class Broker(
     }
 
     fun stop() {
+        sessions.filter { it.value.isConnected() }.forEach {
+            it.value.clientConnection?.disconnect(ReasonCode.SERVER_SHUTTING_DOWN)
+        }
         server.stop()
     }
 }

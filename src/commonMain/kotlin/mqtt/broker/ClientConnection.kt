@@ -97,7 +97,7 @@ class ClientConnection(
         broker.sessions[clientId]?.disconnected()
     }
 
-    private fun disconnect(reasonCode: ReasonCode) {
+    fun disconnect(reasonCode: ReasonCode) {
         if (!connectCompleted) {
             writePacket(
                 MQTTConnack(
@@ -108,7 +108,13 @@ class ClientConnection(
             )
         } else {
             writePacket(MQTTDisconnect(reasonCode))
-            if (reasonCode != ReasonCode.SUCCESS)
+            if (reasonCode !in listOf(
+                    ReasonCode.SUCCESS,
+                    ReasonCode.SERVER_SHUTTING_DOWN,
+                    ReasonCode.USE_ANOTHER_SERVER,
+                    ReasonCode.SERVER_MOVED
+                )
+            )
                 broker.sendWill(broker.sessions[clientId])
         }
         close()

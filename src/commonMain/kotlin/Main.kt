@@ -23,10 +23,16 @@ fun main(args: Array<String>) {
         TLSSettings(keyStoreFilePath = it, keyStorePassword = argumentsMap["keyStorePassword"])
     }
 
-    Broker(
+    val broker = Broker(
         port = port,
         host = host,
         backlog = backlog,
         tlsSettings = tlsSettings
-    ).listen()
+    )
+
+    setShutdownHook {
+        broker.stop()
+    }
+
+    broker.listen()
 }
