@@ -22,11 +22,6 @@ actual class TLSSocket(
     private var cacheReceiveBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
     private var cacheBufferReadMode = false
 
-    init {
-        engine.useClientMode = false
-        engine.beginHandshake()
-    }
-
     private fun handleReceiveBufferUnderflow() {
         if (engine.session.packetBufferSize > receiveAppBuffer.capacity()) {
             val newBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)

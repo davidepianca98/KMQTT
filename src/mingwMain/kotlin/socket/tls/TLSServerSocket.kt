@@ -20,7 +20,9 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
         val method = TLS_server_method()
         sslContext = SSL_CTX_new(method)!!
 
-        // TODO add callback for client cert verification with SSL_CTX_set_verify
+        if (broker.tlsSettings?.requireClientCertificate == true) {
+            SSL_CTX_set_verify(sslContext, SSL_VERIFY_PEER or SSL_VERIFY_FAIL_IF_NO_PEER_CERT, null)
+        }
 
         val pkcs12File =
             fopen(broker.tlsSettings!!.keyStoreFilePath, "rb") ?: throw Exception("PKCS12 keystore not found")

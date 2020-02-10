@@ -11,13 +11,11 @@ import java.nio.channels.ServerSocketChannel
 import java.security.KeyFactory
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
-import java.security.cert.X509Certificate
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import javax.net.ssl.KeyManager
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
-import javax.net.ssl.X509TrustManager
 
 
 actual class TLSServerSocket actual constructor(private val broker: Broker) : ServerSocket(broker) {
@@ -34,24 +32,7 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
         val keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
         keyManagerFactory.init(keyStore, broker.tlsSettings.keyStorePassword?.toCharArray())
 
-        sslContext.init(
-            keyManagerFactory.keyManagers,
-            arrayOf(object : X509TrustManager { // TODO add to tlssettings a callback to verify the client certificate
-                override fun checkClientTrusted(p0: Array<out X509Certificate>?, p1: String?) {
-
-                }
-
-                override fun checkServerTrusted(p0: Array<out X509Certificate>?, p1: String?) {
-
-                }
-
-                override fun getAcceptedIssuers(): Array<X509Certificate>? {
-                    return null
-                }
-
-            }),
-            null
-        )
+        sslContext.init(keyManagerFactory.keyManagers, null, null)
 
         val initSession = sslContext.createSSLEngine().session
         sendBuffer = ByteBuffer.allocate(initSession.packetBufferSize)
@@ -92,6 +73,11 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
             channel.configureBlocking(false)
 
             val engine = sslContext.createSSLEngine()
+            engine.useClientMode = false
+            if (broker.tlsSettings?.requireClientCertificate == true) {
+                engine.needClientAuth = true
+            }
+            engine.beginHandshake()
             val tlsSocket = TLSSocket(sendBuffer, receiveBuffer, sendAppBuffer, receiveAppBuffer, engine)
 
             val clientConnection = ClientConnection(tlsSocket, broker)

@@ -2,8 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="com.github.davidepianca98.KMQTT.jvmMain" target="1.8" />
-      <module name="com.github.davidepianca98.KMQTT.jvmTest" target="1.8" />
       <module name="KMQTT.main" target="11" />
       <module name="KMQTT.test" target="11" />
     </bytecodeTargetLevel>
