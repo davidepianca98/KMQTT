@@ -6,7 +6,7 @@ class MQTTProperties(
     var contentType: String? = null,
     var responseTopic: String? = null,
     var correlationData: UByteArray? = null,
-    var subscriptionIdentifier: MutableList<UInt> = mutableListOf(),
+    val subscriptionIdentifier: MutableList<UInt> = mutableListOf(),
     var sessionExpiryInterval: UInt? = null,
     var assignedClientIdentifier: String? = null,
     var serverKeepAlive: UInt? = null,

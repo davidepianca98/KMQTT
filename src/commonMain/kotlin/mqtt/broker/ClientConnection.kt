@@ -97,25 +97,26 @@ class ClientConnection(
         broker.sessions[clientId]?.disconnected()
     }
 
-    fun disconnect(reasonCode: ReasonCode) {
+    fun disconnect(reasonCode: ReasonCode, serverReference: String? = null) {
         if (!connectCompleted) {
-            writePacket(
-                MQTTConnack(
-                    MQTTConnack.ConnectAcknowledgeFlags(
-                        false
-                    ), reasonCode
-                )
-            )
+            val connack = MQTTConnack(
+                MQTTConnack.ConnectAcknowledgeFlags(false),
+                reasonCode,
+                MQTTProperties().apply { this.serverReference = serverReference })
+            writePacket(connack)
         } else {
-            writePacket(MQTTDisconnect(reasonCode))
+            val disconnect =
+                MQTTDisconnect(reasonCode, MQTTProperties().apply { this.serverReference = serverReference })
+            writePacket(disconnect)
             if (reasonCode !in listOf(
                     ReasonCode.SUCCESS,
                     ReasonCode.SERVER_SHUTTING_DOWN,
                     ReasonCode.USE_ANOTHER_SERVER,
                     ReasonCode.SERVER_MOVED
                 )
-            )
+            ) {
                 broker.sendWill(broker.sessions[clientId])
+            }
         }
         close()
     }
@@ -407,8 +408,6 @@ class ClientConnection(
         authenticationData?.let {
             connackProperties.authenticationData = it
         }
-
-        // TODO implement section 3.2.2.3.16 and 4.11 for Server redirection
 
         val connack = MQTTConnack(
             MQTTConnack.ConnectAcknowledgeFlags(sessionPresent),

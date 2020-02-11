@@ -214,9 +214,18 @@ class Broker(
         }
     }
 
-    fun stop() {
+    fun stop(serverReference: String? = null, temporarilyMoved: Boolean = false) {
+        val reasonCode = if (serverReference != null) {
+            if (temporarilyMoved) {
+                ReasonCode.USE_ANOTHER_SERVER
+            } else {
+                ReasonCode.SERVER_MOVED
+            }
+        } else {
+            ReasonCode.SERVER_SHUTTING_DOWN
+        }
         sessions.filter { it.value.isConnected() }.forEach {
-            it.value.clientConnection?.disconnect(ReasonCode.SERVER_SHUTTING_DOWN)
+            it.value.clientConnection?.disconnect(reasonCode, serverReference)
         }
         server.stop()
     }
