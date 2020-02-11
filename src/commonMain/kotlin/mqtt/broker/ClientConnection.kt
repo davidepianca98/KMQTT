@@ -65,12 +65,13 @@ class ClientConnection(
         } catch (e: MQTTException) {
             disconnect(e.reasonCode)
         } catch (e: EOFException) {
+            println("EOF")
             close()
         } catch (e: IOException) {
-            println(e.message)
+            println("IOException ${e.message}")
             closedWithException()
         } catch (e: Exception) {
-            println(e.message)
+            println("Exception ${e.message} ${e.cause?.message}")
             disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
         }
     }
@@ -195,8 +196,6 @@ class ClientConnection(
             return
         // Update the expiry interval if present
         packet.updateMessageExpiryInterval()
-
-        maximumPacketSize?.let { packet.resizeIfTooBig(it) }
 
         if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
             if (sendQuota <= 0u)

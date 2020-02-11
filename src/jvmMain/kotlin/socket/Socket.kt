@@ -10,7 +10,7 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
 
     var key: SelectionKey? = null
 
-    private val pendingSendData = mutableListOf<ByteArray>()
+    private var pendingSendData = mutableListOf<ByteArray>()
 
     actual override fun send(data: UByteArray) {
         sendBuffer.clear()
@@ -41,7 +41,7 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
             }
         } catch (e: java.io.IOException) {
             close()
-            throw IOException()
+            throw IOException(e.message)
         }
     }
 
@@ -61,7 +61,7 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
             return length
         } catch (e: java.io.IOException) {
             close()
-            throw IOException()
+            throw IOException(e.message)
         }
     }
 
@@ -78,7 +78,9 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
     }
 
     actual override fun sendRemaining() {
-        pendingSendData.forEach {
+        val sendData = pendingSendData
+        pendingSendData = mutableListOf()
+        sendData.forEach {
             send(it)
         }
     }

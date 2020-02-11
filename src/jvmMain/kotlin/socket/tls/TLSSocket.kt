@@ -76,7 +76,7 @@ actual class TLSSocket(
                 e.printStackTrace()
                 engine.closeOutbound()
                 close()
-                throw IOException()
+                throw IOException(e.message)
             }
         } while (sendAppBuffer.hasRemaining())
     }
@@ -172,7 +172,7 @@ actual class TLSSocket(
                     e.printStackTrace()
                     engine.closeOutbound()
                     close()
-                    throw IOException()
+                    throw IOException(e.message)
                 }
             }
             if (runHandshake()) {

@@ -40,6 +40,17 @@ class TestTopicUtils {
         assertTrue { "sport/test/1/2".matchesWildcard("sport/+/1/2") }
         assertTrue { "sport".matchesWildcard("+") }
         assertFalse { "sport/1".matchesWildcard("+") }
+
+        assertTrue { "/test0".matchesWildcard("/test0") }
+        assertFalse { "/test0".matchesWildcard("/test1") }
+        assertFalse { "/test0".matchesWildcard("/test01") }
+        assertFalse { "/test4".matchesWildcard("/test10") }
+        assertFalse { "/test22".matchesWildcard("/test10") }
+    }
+
+    @Test
+    fun testMatchesWildcardBug() {
+        assertFalse { "/test22".matchesWildcard("/test10") }
     }
 
     @Test

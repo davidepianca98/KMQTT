@@ -47,13 +47,13 @@ actual class TLSSocket(
                                 socketSend(pinnedEncryptedBuf.get().toUByteArray().copyOfRange(0, number))
                             } else if (BIO_test_flags(engine.writeBio, BIO_FLAGS_SHOULD_RETRY) == 0) {
                                 close()
-                                throw IOException()
+                                throw IOException("OpenSSL shouldn't retry to read BIO")
                             }
                         } while (number > 0)
                     }
                 } else if (status == SSL_ERROR_ZERO_RETURN || status == SSL_ERROR_SYSCALL) {
                     close()
-                    throw IOException()
+                    throw IOException("OpenSSL error $status")
                 } else if (result == 0) {
                     break
                 }
@@ -80,7 +80,7 @@ actual class TLSSocket(
                 length -= n
                 if (SSL_is_init_finished(engine.context) == 0) {
                     val acceptResult = SSL_accept(engine.context)
-                    when (SSL_get_error(engine.context, acceptResult)) {
+                    when (val status = SSL_get_error(engine.context, acceptResult)) {
                         SSL_ERROR_WANT_READ -> {
                             buf.usePinned { pinnedBuf ->
                                 do {
@@ -89,14 +89,14 @@ actual class TLSSocket(
                                         socketSend(pinnedBuf.get().toUByteArray().copyOfRange(0, number))
                                     } else if (BIO_test_flags(engine.writeBio, BIO_FLAGS_SHOULD_RETRY) == 0) {
                                         close()
-                                        throw IOException()
+                                        throw IOException("OpenSSL shouldn't retry to read BIO")
                                     }
                                 } while (number > 0)
                             }
                         }
                         SSL_ERROR_ZERO_RETURN, SSL_ERROR_SYSCALL -> {
                             close()
-                            throw IOException()
+                            throw IOException("OpenSSL error $status")
                         }
                     }
 
@@ -117,7 +117,7 @@ actual class TLSSocket(
                         }
                     } while (number > 0)
 
-                    when (SSL_get_error(engine.context, number)) {
+                    when (val status = SSL_get_error(engine.context, number)) {
                         SSL_ERROR_WANT_READ -> {
                             do {
                                 val result = BIO_read(engine.writeBio, pinnedBuf.addressOf(0), buf.size)
@@ -125,13 +125,13 @@ actual class TLSSocket(
                                     socketSend(pinnedBuf.get().toUByteArray().copyOfRange(0, result))
                                 } else if (BIO_test_flags(engine.writeBio, BIO_FLAGS_SHOULD_RETRY) == 0) {
                                     close()
-                                    throw IOException()
+                                    throw IOException("OpenSSL shouldn't retry to read BIO")
                                 }
                             } while (result > 0)
                         }
                         SSL_ERROR_ZERO_RETURN, SSL_ERROR_SYSCALL -> {
                             close()
-                            throw IOException()
+                            throw IOException("OpenSSL error $status")
                         }
                     }
                 }

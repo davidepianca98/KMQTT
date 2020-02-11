@@ -11,7 +11,7 @@ actual open class Socket(
     private val buffer: ByteArray
 ) : SocketInterface {
 
-    private val pendingSendData = mutableListOf<UByteArray>()
+    private var pendingSendData = mutableListOf<UByteArray>()
 
     actual override fun send(data: UByteArray) {
         data.toByteArray().usePinned { pinned ->
@@ -35,7 +35,9 @@ actual open class Socket(
     }
 
     actual override fun sendRemaining() {
-        pendingSendData.forEach {
+        val sendData = pendingSendData
+        pendingSendData = mutableListOf()
+        sendData.forEach {
             send(it)
         }
     }
@@ -52,9 +54,10 @@ actual open class Socket(
                     return pinned.get().toUByteArray().copyOfRange(0, length)
                 }
                 else -> {
-                    if (WSAGetLastError() != WSAEWOULDBLOCK) {
+                    val error = WSAGetLastError()
+                    if (error != WSAEWOULDBLOCK) {
                         close()
-                        throw IOException()
+                        throw IOException("Recv error: $error")
                     } else {
                         return null
                     }

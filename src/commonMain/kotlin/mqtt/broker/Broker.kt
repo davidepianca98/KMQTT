@@ -15,7 +15,7 @@ import kotlin.math.min
 class Broker(
     val port: Int = 1883,
     val host: String = "127.0.0.1",
-    val backlog: Int = 128,
+    val backlog: Int = 10000,
     val tlsSettings: TLSSettings? = null,
     val authentication: Authentication? = null,
     val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
@@ -94,6 +94,7 @@ class Broker(
         }
 
         val sharedDone = mutableListOf<String>()
+
         sessions.forEach { session ->
             session.value.hasSubscriptionsMatching(topicName).forEach { subscription ->
                 if (subscription.isShared()) {

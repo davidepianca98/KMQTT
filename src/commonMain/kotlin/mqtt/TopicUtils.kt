@@ -48,23 +48,25 @@ fun String.matchesWildcard(wildcardTopic: String): Boolean {
             positionTopic++
             positionTopicFilter++
             continue
-        }
-        if (wildcardTopic[positionTopicFilter] == '#') {
+        } else if (wildcardTopic[positionTopicFilter] != '#' && wildcardTopic[positionTopicFilter] != '+') {
             break
+        }
+
+        if (wildcardTopic[positionTopicFilter] == '#') {
+            return true
         } else if (wildcardTopic[positionTopicFilter] == '+') {
             while (positionTopic < this.length && this[positionTopic] != '/') {
                 positionTopic++
             }
-            if (positionTopic == this.length)
-                break
-            else if (wildcardTopic.getOrNull(positionTopicFilter + 1) == '/')
-                positionTopicFilter++
-            else
-                return false
+            when {
+                positionTopic == this.length -> return true
+                wildcardTopic.getOrNull(positionTopicFilter + 1) == '/' -> positionTopicFilter++
+                else -> return false
+            }
         }
     }
 
-    return true
+    return positionTopic == this.length && positionTopicFilter == wildcardTopic.length
 }
 
 fun String.isSharedTopicFilter(): Boolean {
