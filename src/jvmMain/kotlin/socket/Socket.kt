@@ -78,8 +78,9 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
     }
 
     actual override fun sendRemaining() {
-        val sendData = pendingSendData
-        pendingSendData = mutableListOf()
+        val sendData = mutableListOf<ByteArray>()
+        sendData.addAll(pendingSendData)
+        pendingSendData.clear()
         sendData.forEach {
             send(it)
         }

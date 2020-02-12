@@ -34,8 +34,9 @@ actual open class Socket(
     }
 
     actual override fun sendRemaining() {
-        val sendData = pendingSendData
-        pendingSendData = mutableListOf()
+        val sendData = mutableListOf<UByteArray>()
+        sendData.addAll(pendingSendData)
+        pendingSendData.clear()
         sendData.forEach {
             send(it)
         }

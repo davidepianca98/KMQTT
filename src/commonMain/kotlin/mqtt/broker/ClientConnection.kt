@@ -21,8 +21,7 @@ class ClientConnection(
     }
 
     private var clientId: String? = null
-    private val session: Session
-        get() = broker.getSession(clientId) ?: throw Exception("Session not found")
+    private var session: Session? = null
 
     // Client connection state
     private val topicAliasesClient = mutableMapOf<UInt, String>()
@@ -178,7 +177,7 @@ class ClientConnection(
         properties: MQTTProperties,
         payload: UByteArray?
     ) {
-        val packetId = if (qos >= Qos.AT_MOST_ONCE) session.generatePacketId() else null
+        val packetId = if (qos >= Qos.AT_MOST_ONCE) session!!.generatePacketId() else null
 
         val packetTopicName = getPublishTopicAlias(topicName, properties)
 
@@ -200,7 +199,7 @@ class ClientConnection(
         if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
             if (sendQuota <= 0u)
                 return
-            session.sendQosBiggerThanZero(packet) {
+            session!!.sendQosBiggerThanZero(packet) {
                 writePacket(packet)
                 decrementSendQuota()
             }
@@ -308,6 +307,7 @@ class ClientConnection(
             if (packet.connectFlags.cleanStart) {
                 session = Session(packet, this)
                 broker.sessions[clientId] = session
+                this.session = session
             } else {
                 // Update the session with the new parameters
                 session.clientConnection = this
@@ -321,6 +321,7 @@ class ClientConnection(
         } else {
             session = Session(packet, this)
             broker.sessions[clientId] = session
+            this.session = session
         }
 
         keepAlive = packet.keepAlive
@@ -457,12 +458,12 @@ class ClientConnection(
 
         // Handle receive maximum
         if (packet.qos > Qos.AT_MOST_ONCE && broker.receiveMaximum != null) {
-            if (session.qos2ListReceived.size + 1 > broker.receiveMaximum.toInt())
+            if (session!!.qos2ListReceived.size + 1 > broker.receiveMaximum.toInt())
                 throw MQTTException(ReasonCode.RECEIVE_MAXIMUM_EXCEEDED)
         }
 
         if (packet.retain) {
-            broker.setRetained(packet.topicName, packet, session.clientId)
+            broker.setRetained(packet.topicName, packet, session!!.clientId)
         }
 
         when (packet.qos) {
@@ -476,14 +477,14 @@ class ClientConnection(
                 val reasonCode = qos12ReasonCode(packet)
                 writePacket(MQTTPubrec(packet.packetId!!, reasonCode))
                 if (reasonCode == ReasonCode.SUCCESS)
-                    session.qos2ListReceived[packet.packetId] = packet
+                    session!!.qos2ListReceived[packet.packetId] = packet
                 return // Don't send the PUBLISH to other clients until PUBCOMP
             }
             else -> {
             }
         }
 
-        broker.publish(session.clientId, packet.retain, topic, packet.qos, false, packet.properties, packet.payload)
+        broker.publish(session!!.clientId, packet.retain, topic, packet.qos, false, packet.properties, packet.payload)
     }
 
     private fun getTopicOrAlias(packet: MQTTPublish): String {
@@ -504,37 +505,37 @@ class ClientConnection(
         val payloadFormatValid = packet.validatePayloadFormat()
         return if (!payloadFormatValid)
             ReasonCode.PAYLOAD_FORMAT_INVALID
-        else if (session.isPacketIdInUse(packet.packetId!!))
+        else if (session!!.isPacketIdInUse(packet.packetId!!))
             ReasonCode.PACKET_IDENTIFIER_IN_USE
         else
             ReasonCode.SUCCESS
     }
 
     private fun handlePuback(packet: MQTTPuback) {
-        session.acknowledgePublish(packet.packetId)
+        session!!.acknowledgePublish(packet.packetId)
         incrementSendQuota()
     }
 
     private fun handlePubrec(packet: MQTTPubrec) {
         if (packet.reasonCode >= ReasonCode.UNSPECIFIED_ERROR) {
-            session.acknowledgePublish(packet.packetId)
+            session!!.acknowledgePublish(packet.packetId)
             incrementSendQuota()
             return
         }
-        val reasonCode = if (session.hasPendingAcknowledgeMessage(packet.packetId)) {
+        val reasonCode = if (session!!.hasPendingAcknowledgeMessage(packet.packetId)) {
             ReasonCode.SUCCESS
         } else {
             ReasonCode.PACKET_IDENTIFIER_NOT_FOUND
         }
         val pubrel = MQTTPubrel(packet.packetId, reasonCode)
-        session.addPendingAcknowledgePubrel(pubrel)
+        session!!.addPendingAcknowledgePubrel(pubrel)
         writePacket(pubrel)
     }
 
     private fun handlePubrel(packet: MQTTPubrel) {
         if (packet.reasonCode != ReasonCode.SUCCESS)
             return
-        session.qos2ListReceived.remove(packet.packetId)?.let {
+        session!!.qos2ListReceived.remove(packet.packetId)?.let {
             writePacket(
                 MQTTPubcomp(
                     packet.packetId,
@@ -543,7 +544,7 @@ class ClientConnection(
                 )
             )
             broker.publish(
-                session.clientId,
+                session!!.clientId,
                 it.retain,
                 getTopicOrAlias(it),
                 Qos.EXACTLY_ONCE,
@@ -563,7 +564,7 @@ class ClientConnection(
     }
 
     private fun handlePubcomp(packet: MQTTPubcomp) {
-        session.acknowledgePubrel(packet.packetId)
+        session!!.acknowledgePubrel(packet.packetId)
         incrementSendQuota()
     }
 
@@ -576,14 +577,14 @@ class ClientConnection(
             broker.getRetained(subscription.topicFilter).forEach { pair ->
                 val retainedMessage = pair.first
                 val clientId = pair.second
-                if (!(subscription.options.noLocal && session.clientId == clientId)) {
+                if (!(subscription.options.noLocal && session!!.clientId == clientId)) {
                     val qos = Qos.valueOf(min(retainedMessage.qos.value, subscription.options.qos.value))!!
                     retainedMessagesList += MQTTPublish(
                         if (subscription.options.retainedAsPublished) retainedMessage.retain else false,
                         qos,
                         false,
                         retainedMessage.topicName,
-                        if (qos > Qos.AT_MOST_ONCE) session.generatePacketId() else null,
+                        if (qos > Qos.AT_MOST_ONCE) session!!.generatePacketId() else null,
                         retainedMessage.properties,
                         retainedMessage.payload
                     )
@@ -607,7 +608,7 @@ class ClientConnection(
             if (!subscription.matchTopicFilter.isValidTopic())
                 return@map ReasonCode.TOPIC_FILTER_INVALID
 
-            if (session.isPacketIdInUse(packet.packetIdentifier))
+            if (session!!.isPacketIdInUse(packet.packetIdentifier))
                 return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
 
             val isShared = subscription.isShared()
@@ -623,7 +624,7 @@ class ClientConnection(
             if (!broker.wildcardSubscriptionAvailable && subscription.matchTopicFilter.containsWildcard())
                 return@map ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
 
-            val replaced = session.addSubscription(subscription)
+            val replaced = session!!.addSubscription(subscription)
             retainedMessagesList += prepareRetainedMessages(subscription, replaced)
 
             when (subscription.options.qos) {
@@ -653,9 +654,9 @@ class ClientConnection(
 
     private fun handleUnsubscribe(packet: MQTTUnsubscribe) {
         val reasonCodes = packet.topicFilters.map { topicFilter ->
-            if (session.isPacketIdInUse(packet.packetIdentifier))
+            if (session!!.isPacketIdInUse(packet.packetIdentifier))
                 return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
-            if (session.removeSubscription(topicFilter))
+            if (session!!.removeSubscription(topicFilter))
                 return@map ReasonCode.SUCCESS
             else
                 return@map ReasonCode.NO_SUBSCRIPTION_EXISTED

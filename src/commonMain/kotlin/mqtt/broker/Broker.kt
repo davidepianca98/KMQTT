@@ -8,6 +8,7 @@ import mqtt.packets.Qos
 import mqtt.packets.mqttv5.MQTTProperties
 import mqtt.packets.mqttv5.MQTTPublish
 import mqtt.packets.mqttv5.ReasonCode
+import removeIf
 import socket.ServerSocketLoop
 import socket.tls.TLSSettings
 import kotlin.math.min
@@ -170,11 +171,9 @@ class Broker(
     }
 
     private fun removeExpiredRetainedMessages() {
-        retainedList.filter {
+        retainedList.removeIf {
             val message = it.value.first
             message.messageExpiryIntervalExpired()
-        }.forEach {
-            retainedList.remove(it.key)
         }
     }
 
@@ -183,33 +182,29 @@ class Broker(
         return retainedList.filter { it.key.matchesWildcard(topicFilter) }.map { it.value }
     }
 
-    fun getSession(clientId: String?): Session? {
-        deleteExpiredSessions()
-        return sessions[clientId]
-    }
-
-    private fun deleteExpiredSessions() {
-        sessions.filter {
-            val timestamp = it.value.getExpiryTime()
-            timestamp != null && timestamp < currentTimeMillis()
-        }.forEach { session ->
-            // Expired sessions
-            session.value.will?.let {
-                sendWill(session.value)
-            }
-            sessions.remove(session.key)
-        }
+    private fun Session.isExpired(): Boolean {
+        val timestamp = getExpiryTime()
+        return timestamp != null && timestamp < currentTimeMillis()
     }
 
     fun cleanUpOperations() {
-        sessions.forEach { session ->
+        val iterator = sessions.iterator()
+        while (iterator.hasNext()) {
+            val session = iterator.next()
             if (session.value.isConnected()) { // Check the keep alive timer is being respected
                 session.value.clientConnection!!.checkKeepAliveExpired()
             } else {
-                session.value.will?.let {
-                    // Check if the will delay interval has expired, if yes send the will
-                    if (session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L) > currentTimeMillis())
+                if (session.value.isExpired()) {
+                    session.value.will?.let {
                         sendWill(session.value)
+                    }
+                    iterator.remove()
+                } else {
+                    session.value.will?.let {
+                        // Check if the will delay interval has expired, if yes send the will
+                        if (session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L) > currentTimeMillis())
+                            sendWill(session.value)
+                    }
                 }
             }
         }

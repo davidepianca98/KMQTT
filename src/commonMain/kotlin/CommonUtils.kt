@@ -35,3 +35,16 @@ fun String.validateUTF8String(): Boolean {
 }
 
 fun UByteArray.toHexString() = joinToString("") { it.toString(16).padStart(2, '0') }
+
+fun <K, V> MutableMap<K, V>.removeIf(predicate: (MutableMap.MutableEntry<K, V>) -> Boolean): Boolean {
+    var removed = false
+    val iterator = iterator()
+    while (iterator.hasNext()) {
+        val next = iterator.next()
+        if (predicate(next)) {
+            iterator.remove()
+            removed = true
+        }
+    }
+    return removed
+}
