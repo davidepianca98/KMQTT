@@ -37,7 +37,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    implementation 'com.github.davidepianca98:KMQTT:0.0.4'
+    implementation 'com.github.davidepianca98:KMQTT:0.0.5'
 }
 ```
 
