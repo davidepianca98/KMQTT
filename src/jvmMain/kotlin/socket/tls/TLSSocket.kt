@@ -20,7 +20,7 @@ actual class TLSSocket(
     private val engine: SSLEngine
 ) : Socket(sendBuffer, receiveBuffer) {
 
-    private var cacheReceiveBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
+    private var cacheReceiveBuffer = ByteBuffer.allocate(1024)
     private var cacheBufferReadMode = false
     private val readClearTextData = mutableListOf<UByteArray>()
 
