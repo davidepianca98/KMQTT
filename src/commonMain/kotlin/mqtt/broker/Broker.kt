@@ -31,7 +31,8 @@ class Broker(
     val sharedSubscriptionsAvailable: Boolean = true,
     val serverKeepAlive: Int? = null,
     val responseInformation: String? = null,
-    val packetInterceptor: PacketInterceptor? = null
+    val packetInterceptor: PacketInterceptor? = null,
+    val bytesMetrics: BytesMetrics? = null
 ) {
     // TODO support WebSocket, section 6
 
