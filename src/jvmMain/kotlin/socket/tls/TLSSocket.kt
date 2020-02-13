@@ -72,7 +72,7 @@ actual class TLSSocket(
                     SSLEngineResult.Status.CLOSED -> {
                         engine.closeOutbound()
                         close()
-                        return
+                        throw SocketClosedException()
                     }
                 }
             } catch (e: SSLException) {
@@ -158,7 +158,7 @@ actual class TLSSocket(
                         SSLEngineResult.Status.CLOSED -> {
                             engine.closeOutbound()
                             close()
-                            return null
+                            throw SocketClosedException()
                         }
                     }
                 } catch (e: SSLException) {

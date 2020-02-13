@@ -11,6 +11,7 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
     var key: SelectionKey? = null
 
     private var pendingSendData = mutableListOf<ByteArray>()
+    private var canWrite = true
 
     actual override fun send(data: UByteArray) {
         sendBuffer.clear()
@@ -24,18 +25,29 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
         sendFromBuffer()
     }
 
+    private fun addToPending() {
+        val array = ByteArray(sendBuffer.remaining())
+        sendBuffer.get(array)
+        pendingSendData.add(array)
+    }
+
     protected fun sendFromBuffer() {
         sendBuffer.flip()
+
+        if (!canWrite) {
+            addToPending()
+            return
+        }
+
         val selectionKey = key!!
         val channel = selectionKey.channel() as SocketChannel
         val size = sendBuffer.remaining()
         try {
             val count = channel.write(sendBuffer)
             if (count < size) {
-                val array = ByteArray(sendBuffer.remaining())
-                sendBuffer.get(array)
-                pendingSendData.add(array)
-                selectionKey.interestOps(SelectionKey.OP_READ or SelectionKey.OP_WRITE)
+                canWrite = false
+                addToPending()
+                selectionKey.interestOps(SelectionKey.OP_WRITE)
             } else {
                 selectionKey.interestOps(SelectionKey.OP_READ)
             }
@@ -78,6 +90,7 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
     }
 
     actual override fun sendRemaining() {
+        canWrite = true
         val sendData = mutableListOf<ByteArray>()
         sendData.addAll(pendingSendData)
         pendingSendData.clear()
