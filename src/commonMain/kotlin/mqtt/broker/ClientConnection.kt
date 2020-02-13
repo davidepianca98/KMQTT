@@ -41,9 +41,6 @@ class ClientConnection(
     private val currentReceivedPacket = MQTTCurrentPacket(broker.maximumPacketSize)
     private var lastReceivedMessageTimestamp = currentTimeMillis()
 
-    private var bytesSent = 0L
-    private var bytesReceived = 0L
-
     fun checkKeepAliveExpired() {
         val timeout = ((keepAlive * 1000).toDouble() * 1.5).toInt()
         val expired = currentTimeMillis() > lastReceivedMessageTimestamp + timeout
@@ -60,7 +57,9 @@ class ClientConnection(
     fun dataReceived(data: UByteArray) {
         lastReceivedMessageTimestamp = currentTimeMillis()
         try {
-            bytesReceived += data.size
+            clientId?.let {
+                broker.bytesMetrics?.received(it, data.size.toLong())
+            }
             currentReceivedPacket.addData(data).forEach {
                 handlePacket(it)
             }
@@ -83,7 +82,9 @@ class ClientConnection(
             if (maximumPacketSize?.let { packet.resizeIfTooBig(it) } != false) {
                 val packetBytes = packet.toByteArray()
                 client.send(packetBytes)
-                bytesSent += packetBytes.size
+                clientId?.let {
+                    broker.bytesMetrics?.sent(it, packetBytes.size.toLong())
+                }
             }
         } catch (e: IOException) {
             closedWithException()
@@ -100,7 +101,6 @@ class ClientConnection(
     }
 
     private fun close() {
-        broker.bytesMetrics?.connectionClosed(clientId!!, bytesSent, bytesReceived)
         broker.sessions[clientId]?.disconnected()
     }
 

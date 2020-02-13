@@ -2,5 +2,7 @@ package mqtt.broker
 
 interface BytesMetrics {
 
-    fun connectionClosed(clientId: String, bytesSent: Long, bytesReceived: Long)
+    fun received(clientId: String, bytesCount: Long)
+
+    fun sent(clientId: String, bytesCount: Long)
 }
