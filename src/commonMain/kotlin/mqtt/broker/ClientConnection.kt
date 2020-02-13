@@ -312,7 +312,9 @@ class ClientConnection(
                 }
             }
             if (packet.connectFlags.cleanStart) {
-                session = Session(packet, this)
+                session = Session(packet, this) { id, sess ->
+                    broker.sessionPersistence?.persist(id, sess)
+                }
                 broker.sessions[clientId] = session
                 this.session = session
             } else {
@@ -326,7 +328,9 @@ class ClientConnection(
                 sessionPresent = true
             }
         } else {
-            session = Session(packet, this)
+            session = Session(packet, this) { id, sess ->
+                broker.sessionPersistence?.persist(id, sess)
+            }
             broker.sessions[clientId] = session
             this.session = session
         }

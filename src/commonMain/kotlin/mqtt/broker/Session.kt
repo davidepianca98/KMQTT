@@ -9,7 +9,11 @@ import mqtt.packets.mqttv5.MQTTConnect
 import mqtt.packets.mqttv5.MQTTPublish
 import mqtt.packets.mqttv5.MQTTPubrel
 
-class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
+class Session(
+    packet: MQTTConnect,
+    var clientConnection: ClientConnection?,
+    private val persist: (clientId: String, session: Session) -> Unit
+) {
 
     private var connected = false // true only after sending CONNACK
     var sessionDisconnectedTimestamp: Long? = null
@@ -26,11 +30,22 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
     // QoS 2 messages which have been received from the Client that have not been completely acknowledged
     val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
 
+    init {
+        persist()
+    }
+
+    private fun persist() {
+        this.persist(clientId, this)
+    }
+
     fun sendQosBiggerThanZero(packet: MQTTPublish, block: (packet: MQTTPublish) -> Unit) {
         pendingSendMessages[packet.packetId!!] = packet
+        persist()
         block(packet)
         pendingSendMessages.remove(packet.packetId)
+        persist()
         pendingAcknowledgeMessages[packet.packetId] = packet
+        persist()
     }
 
     fun hasPendingAcknowledgeMessage(packetId: UInt): Boolean {
@@ -39,14 +54,17 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
 
     fun acknowledgePublish(packetId: UInt) {
         pendingAcknowledgeMessages.remove(packetId)
+        persist()
     }
 
     fun addPendingAcknowledgePubrel(packet: MQTTPubrel) {
         pendingAcknowledgePubrel[packet.packetId] = packet
+        persist()
     }
 
     fun acknowledgePubrel(packetId: UInt) {
         pendingAcknowledgePubrel.remove(packetId)
+        persist()
     }
 
     fun resendPending(sendPacket: (packet: MQTT5Packet) -> Unit) {
@@ -84,11 +102,14 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
     fun addSubscription(subscription: Subscription): Boolean {
         val replaced = subscriptions.removeAll { it.topicFilter == subscription.topicFilter }
         subscriptions += subscription
+        persist()
         return replaced
     }
 
     fun removeSubscription(topicFilter: String): Boolean {
-        return subscriptions.removeAll { it.topicFilter == topicFilter }
+        val result = subscriptions.removeAll { it.topicFilter == topicFilter }
+        persist()
+        return result
     }
 
     // TODO shared subscription note:
@@ -109,6 +130,7 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
             if (packetIdentifier > 65535u)
                 packetIdentifier = 1u
         } while (isPacketIdInUse(packetIdentifier))
+        persist()
 
         return packetIdentifier
     }
@@ -124,6 +146,7 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
     fun connected() {
         connected = true
         sessionDisconnectedTimestamp = null
+        persist()
     }
 
     fun disconnected() {
@@ -132,6 +155,7 @@ class Session(packet: MQTTConnect, var clientConnection: ClientConnection?) {
             clientConnection = null
             sessionDisconnectedTimestamp = currentTimeMillis()
         }
+        persist()
     }
 
     fun getExpiryTime(): Long? {

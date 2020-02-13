@@ -32,12 +32,13 @@ class Broker(
     val serverKeepAlive: Int? = null,
     val responseInformation: String? = null,
     val packetInterceptor: PacketInterceptor? = null,
-    val bytesMetrics: BytesMetrics? = null
+    val bytesMetrics: BytesMetrics? = null,
+    val sessionPersistence: SessionPersistence? = null
 ) {
     // TODO support WebSocket, section 6
 
     private val server = ServerSocketLoop(this)
-    val sessions = mutableMapOf<String, Session>()
+    val sessions = sessionPersistence?.getAll() ?: mutableMapOf()
     private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
 
     fun listen() {
@@ -198,6 +199,7 @@ class Broker(
                     session.value.will?.let {
                         sendWill(session.value)
                     }
+                    sessionPersistence?.remove(session.key)
                     iterator.remove()
                 } else {
                     session.value.will?.let {
