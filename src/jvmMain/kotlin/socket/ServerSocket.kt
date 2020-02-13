@@ -60,11 +60,11 @@ actual open class ServerSocket actual constructor(private val broker: Broker) :
                     iterator.remove()
                     if (key.isValid) {
                         val clientConnection = (key.attachment() as ClientConnection?)
-                        if (key.isAcceptable)
+                        if (key.isValid && key.isAcceptable)
                             accept(key)
-                        if (key.isWritable)
+                        if (key.isValid && key.isWritable)
                             block(clientConnection!!, ServerSocketLoop.SocketState.WRITE)
-                        if (key.isReadable)
+                        if (key.isValid && key.isReadable)
                             block(clientConnection!!, ServerSocketLoop.SocketState.READ)
                     }
                 }
