@@ -11,7 +11,6 @@ import mqtt.packets.mqttv5.ReasonCode
 import removeIf
 import socket.ServerSocketLoop
 import socket.tls.TLSSettings
-import kotlin.math.min
 
 class Broker(
     val port: Int = 1883,
@@ -98,8 +97,8 @@ class Broker(
 
         sessions.forEach { session ->
             session.value.hasSubscriptionsMatching(topicName).forEach { subscription ->
-                if (subscription.isShared()) {
-                    if (subscription.shareName!! !in sharedDone && sharedSubscriptionsAvailable) { // Check we only publish once per shared subscription
+                if (subscription.isShared() && sharedSubscriptionsAvailable) {
+                    if (subscription.shareName!! !in sharedDone) { // Check we only publish once per shared subscription
                         publishShared(
                             publisherClientId,
                             subscription.shareName,
@@ -152,7 +151,7 @@ class Broker(
         session.clientConnection?.publish(
             retain,
             topicName,
-            Qos.valueOf(min(subscription.options.qos.value, qos.value))!!,
+            Qos.min(subscription.options.qos, qos),
             dup,
             properties,
             payload

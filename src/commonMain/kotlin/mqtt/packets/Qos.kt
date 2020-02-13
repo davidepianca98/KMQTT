@@ -7,5 +7,7 @@ enum class Qos(val value: Int) {
 
     companion object {
         fun valueOf(value: Int) = values().firstOrNull { it.value == value }
+
+        fun min(qos1: Qos, qos2: Qos) = valueOf(kotlin.math.min(qos1.value, qos2.value))!!
     }
 }

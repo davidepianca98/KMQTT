@@ -8,7 +8,6 @@ import mqtt.packets.mqttv5.*
 import socket.IOException
 import socket.Socket
 import socket.streams.EOFException
-import kotlin.math.min
 
 
 class ClientConnection(
@@ -578,7 +577,7 @@ class ClientConnection(
                 val retainedMessage = pair.first
                 val clientId = pair.second
                 if (!(subscription.options.noLocal && session!!.clientId == clientId)) {
-                    val qos = Qos.valueOf(min(retainedMessage.qos.value, subscription.options.qos.value))!!
+                    val qos = Qos.min(retainedMessage.qos, subscription.options.qos)
                     retainedMessagesList += MQTTPublish(
                         if (subscription.options.retainedAsPublished) retainedMessage.retain else false,
                         qos,
