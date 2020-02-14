@@ -207,11 +207,15 @@ class ClientConnection(
             if (sendQuota <= 0u)
                 return
             session!!.sendQosBiggerThanZero(packet) {
-                writePacket(packet)
-                decrementSendQuota()
+                if (session?.isConnected() == true) {
+                    writePacket(packet)
+                    decrementSendQuota()
+                }
             }
         } else {
-            writePacket(packet)
+            if (session?.isConnected() == true) {
+                writePacket(packet)
+            }
         }
     }
 

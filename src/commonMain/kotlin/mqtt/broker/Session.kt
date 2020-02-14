@@ -41,11 +41,13 @@ class Session(
     fun sendQosBiggerThanZero(packet: MQTTPublish, block: (packet: MQTTPublish) -> Unit) {
         pendingSendMessages[packet.packetId!!] = packet
         persist()
-        block(packet)
-        pendingSendMessages.remove(packet.packetId)
-        persist()
-        pendingAcknowledgeMessages[packet.packetId] = packet
-        persist()
+        if (connected) {
+            block(packet)
+            pendingSendMessages.remove(packet.packetId)
+            persist()
+            pendingAcknowledgeMessages[packet.packetId] = packet
+            persist()
+        }
     }
 
     fun hasPendingAcknowledgeMessage(packetId: UInt): Boolean {
@@ -85,17 +87,10 @@ class Session(
     private val subscriptions = mutableListOf<Subscription>()
 
     fun hasSubscriptionsMatching(topicName: String): List<Subscription> {
-        if (!connected)
-            return listOf()
         return subscriptions.filter { topicName.matchesWildcard(it.matchTopicFilter) }
     }
 
-    fun hasSharedSubscriptionMatching(
-        shareName: String,
-        topicName: String
-    ): Subscription? {
-        if (!connected)
-            return null
+    fun hasSharedSubscriptionMatching(shareName: String, topicName: String): Subscription? {
         return subscriptions.firstOrNull { it.isShared() && it.shareName == shareName && topicName.matchesWildcard(it.matchTopicFilter) }
     }
 
