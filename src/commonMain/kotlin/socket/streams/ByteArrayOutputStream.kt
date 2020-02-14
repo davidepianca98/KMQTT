@@ -3,7 +3,7 @@ package socket.streams
 class ByteArrayOutputStream : OutputStream {
 
     private var count = 0
-    private var array: UByteArray = UByteArray(32)
+    private var array: UByteArray = UByteArray(1024)
 
     private fun ensureCapacity(length: Int) {
         if (count + length > array.size)

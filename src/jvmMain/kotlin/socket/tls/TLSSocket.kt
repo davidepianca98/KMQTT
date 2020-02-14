@@ -51,7 +51,13 @@ actual class TLSSocket(
 
     override fun send(data: UByteArray) {
         sendAppBuffer.clear()
-        sendAppBuffer.put(data.toByteArray())
+        val dataByteArray = data.toByteArray()
+        try {
+            sendAppBuffer.put(dataByteArray)
+        } catch (e: BufferOverflowException) {
+            sendAppBuffer = ByteBuffer.allocate(sendAppBuffer.capacity() + dataByteArray.size)
+            sendAppBuffer.put(dataByteArray)
+        }
         sendAppBuffer.flip()
         do {
             try {
