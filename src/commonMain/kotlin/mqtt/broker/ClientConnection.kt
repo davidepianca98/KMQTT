@@ -238,8 +238,12 @@ class ClientConnection(
     }
 
     private fun handleAuthentication(packet: MQTTConnect) {
-        if (packet.userName != null || packet.password != null) {
-            if (broker.authentication?.authenticate(packet.userName, packet.password) == false) {
+        if (broker.authentication != null) {
+            if (packet.userName != null || packet.password != null) {
+                if (!broker.authentication.authenticate(packet.userName, packet.password)) {
+                    throw MQTTException(ReasonCode.NOT_AUTHORIZED)
+                }
+            } else {
                 throw MQTTException(ReasonCode.NOT_AUTHORIZED)
             }
         }
