@@ -2,5 +2,5 @@ package mqtt.broker
 
 interface Authorization {
 
-    fun authorize(topicName: String): Boolean
+    fun authorize(clientId: String, topicName: String): Boolean
 }

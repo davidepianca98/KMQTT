@@ -453,7 +453,7 @@ class ClientConnection(
     }
 
     private fun checkAuthorization(topicName: String): Boolean {
-        return broker.authorization?.authorize(topicName) != false
+        return broker.authorization?.authorize(clientId!!, topicName) != false
     }
 
     private fun handlePublish(packet: MQTTPublish) {
