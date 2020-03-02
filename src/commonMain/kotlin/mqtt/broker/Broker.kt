@@ -65,7 +65,7 @@ class Broker(
         }
     }
 
-    fun sendWill(session: Session?) {
+    internal fun sendWill(session: Session?) {
         val will = session?.will ?: return
         val properties = MQTTProperties()
         properties.payloadFormatIndicator = will.payloadFormatIndicator
@@ -79,7 +79,7 @@ class Broker(
         session.will = null
     }
 
-    fun publish(
+    internal fun publish(
         publisherClientId: String,
         retain: Boolean,
         topicName: String,
@@ -160,7 +160,17 @@ class Broker(
         )
     }
 
-    fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
+    fun publish(
+        retain: Boolean,
+        topicName: String,
+        qos: Qos,
+        properties: MQTTProperties,
+        payload: UByteArray?
+    ) {
+        publish("", retain, topicName, qos, false, properties, payload)
+    }
+
+    internal fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
         if (retainedAvailable) {
             if (message.payload?.isNotEmpty() == true)
                 retainedList[topicName] = Pair(message, clientId)
@@ -178,7 +188,7 @@ class Broker(
         }
     }
 
-    fun getRetained(topicFilter: String): List<Pair<MQTTPublish, String>> {
+    internal fun getRetained(topicFilter: String): List<Pair<MQTTPublish, String>> {
         removeExpiredRetainedMessages()
         return retainedList.filter { it.key.matchesWildcard(topicFilter) }.map { it.value }
     }
@@ -188,7 +198,7 @@ class Broker(
         return timestamp != null && timestamp < currentTimeMillis()
     }
 
-    fun cleanUpOperations() {
+    internal fun cleanUpOperations() {
         val iterator = sessions.iterator()
         while (iterator.hasNext()) {
             val session = iterator.next()

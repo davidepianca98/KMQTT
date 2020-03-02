@@ -452,8 +452,8 @@ class ClientConnection(
         packetsReceivedBeforeConnack.clear()
     }
 
-    private fun checkAuthorization(topicName: String): Boolean {
-        return broker.authorization?.authorize(clientId!!, topicName) != false
+    private fun checkAuthorization(topicName: String, isSubscription: Boolean): Boolean {
+        return broker.authorization?.authorize(clientId!!, topicName, isSubscription) != false
     }
 
     private fun handlePublish(packet: MQTTPublish) {
@@ -465,7 +465,7 @@ class ClientConnection(
         // Handle topic alias
         val topic = getTopicOrAlias(packet)
 
-        if (!checkAuthorization(topic))
+        if (!checkAuthorization(topic, false))
             throw MQTTException(ReasonCode.NOT_AUTHORIZED)
 
         if (packet.qos > broker.maximumQos ?: Qos.EXACTLY_ONCE) {
@@ -621,7 +621,7 @@ class ClientConnection(
 
         val retainedMessagesList = mutableListOf<MQTTPublish>()
         val reasonCodes = packet.subscriptions.map { subscription ->
-            if (!checkAuthorization(subscription.topicFilter))
+            if (!checkAuthorization(subscription.topicFilter, true))
                 return@map ReasonCode.NOT_AUTHORIZED
 
             if (!subscription.matchTopicFilter.isValidTopic())
