@@ -7,4 +7,6 @@ interface SocketInterface {
     fun sendRemaining()
 
     fun read(): UByteArray?
+
+    fun close()
 }

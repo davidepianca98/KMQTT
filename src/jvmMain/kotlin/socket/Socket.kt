@@ -83,7 +83,7 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
         else null
     }
 
-    fun close() {
+    actual override fun close() {
         val channel = key?.channel() as SocketChannel
         key?.cancel()
         channel.close()

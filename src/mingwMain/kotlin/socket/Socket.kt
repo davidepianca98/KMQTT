@@ -67,7 +67,7 @@ actual open class Socket(
         }
     }
 
-    open fun close() {
+    actual override fun close() {
         shutdown(socket, SD_SEND)
         closesocket(socket)
     }
