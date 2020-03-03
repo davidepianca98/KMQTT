@@ -98,6 +98,7 @@ class ClientConnection(
 
     fun closedGracefully() {
         close()
+        broker.sendWill(broker.sessions[clientId])
     }
 
     private fun close() {
