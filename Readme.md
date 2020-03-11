@@ -37,7 +37,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    implementation 'com.github.davidepianca98:KMQTT:0.1.1'
+    implementation 'com.github.davidepianca98:KMQTT:0.1.2'
 }
 ```
 
@@ -55,7 +55,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation 'com.github.davidepianca98:KMQTT:0.1.1'
+                implementation 'com.github.davidepianca98:KMQTT:0.1.2'
             }
         }
     }
@@ -106,6 +106,21 @@ fun main() {
             }
         }
     })
+    broker.listen()
+}
+```
+
+#### Internal publish code example
+```kotlin
+fun main() {
+    val broker = Broker()
+    broker.publish(
+        retain = false,
+        topicName = "test/",
+        qos = Qos.AT_MOST_ONCE,
+        properties = MQTTProperties(),
+        "testPayload".toByteArray().toUByteArray()
+    )
     broker.listen()
 }
 ```
