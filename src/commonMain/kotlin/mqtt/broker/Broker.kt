@@ -60,7 +60,7 @@ class Broker(
             it.value.hasSharedSubscriptionMatching(shareName, topicName)?.timestampShareSent ?: Long.MAX_VALUE
         }?.value
         session?.hasSharedSubscriptionMatching(shareName, topicName)?.let { subscription ->
-            publish(publisherClientId, retain, topicName, qos, dup, properties, payload, session, subscription)
+            publishNormal(publisherClientId, retain, topicName, qos, dup, properties, payload, session, subscription)
             subscription.timestampShareSent = currentTimeMillis()
         }
     }
@@ -77,6 +77,36 @@ class Broker(
         publish(session.clientId, will.retain, will.topic, will.qos, false, properties, will.payload)
         // The will must be removed after sending
         session.will = null
+    }
+
+    private fun publishNormal(
+        publisherClientId: String,
+        retain: Boolean,
+        topicName: String,
+        qos: Qos,
+        dup: Boolean,
+        properties: MQTTProperties,
+        payload: UByteArray?,
+        session: Session,
+        subscription: Subscription
+    ) {
+        if (subscription.options.noLocal && publisherClientId == session.clientId) {
+            return
+        }
+
+        subscription.subscriptionIdentifier?.let {
+            properties.subscriptionIdentifier.clear()
+            properties.subscriptionIdentifier.add(it)
+        }
+
+        session.clientConnection?.publish(
+            retain,
+            topicName,
+            Qos.min(subscription.options.qos, qos),
+            dup,
+            properties,
+            payload
+        )
     }
 
     internal fun publish(
@@ -114,7 +144,7 @@ class Broker(
                         sharedDone += subscription.shareName
                     }
                 } else {
-                    publish(
+                    publishNormal(
                         publisherClientId,
                         retain,
                         topicName,
@@ -130,44 +160,33 @@ class Broker(
         }
     }
 
-    private fun publish(
-        publisherClientId: String,
-        retain: Boolean,
-        topicName: String,
-        qos: Qos,
-        dup: Boolean,
-        properties: MQTTProperties,
-        payload: UByteArray?,
-        session: Session,
-        subscription: Subscription
-    ) {
-        if (subscription.options.noLocal && publisherClientId == session.clientId) {
-            return
-        }
-
-        subscription.subscriptionIdentifier?.let {
-            properties.subscriptionIdentifier.clear()
-            properties.subscriptionIdentifier.add(it)
-        }
-
-        session.clientConnection?.publish(
-            retain,
-            topicName,
-            Qos.min(subscription.options.qos, qos),
-            dup,
-            properties,
-            payload
-        )
-    }
-
     fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,
         properties: MQTTProperties,
         payload: UByteArray?
-    ) {
+    ): Boolean {
+        if (maximumQos != null && qos > maximumQos) {
+            return false
+        }
+        if (retain) {
+            if (!retainedAvailable) {
+                return false
+            }
+            val packet = MQTTPublish(
+                retain,
+                qos,
+                false,
+                topicName,
+                null,
+                properties,
+                payload
+            )
+            setRetained(topicName, packet, "")
+        }
         publish("", retain, topicName, qos, false, properties, payload)
+        return true
     }
 
     internal fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
