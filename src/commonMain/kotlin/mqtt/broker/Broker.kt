@@ -74,7 +74,7 @@ class Broker(
         properties.responseTopic = will.responseTopic
         properties.correlationData = will.correlationData
         properties.userProperty += will.userProperty
-        publish(session.clientId, will.retain, will.topic, will.qos, false, properties, will.payload)
+        publish(session.clientId, will.retain, will.topic, will.qos, properties, will.payload)
         // The will must be removed after sending
         session.will = null
     }
@@ -160,7 +160,8 @@ class Broker(
         }
     }
 
-    fun publish(
+    private fun publish(
+        publisherClientId: String,
         retain: Boolean,
         topicName: String,
         qos: Qos,
@@ -185,8 +186,18 @@ class Broker(
             )
             setRetained(topicName, packet, "")
         }
-        publish("", retain, topicName, qos, false, properties, payload)
+        publish(publisherClientId, retain, topicName, qos, false, properties, payload)
         return true
+    }
+
+    fun publish(
+        retain: Boolean,
+        topicName: String,
+        qos: Qos,
+        properties: MQTTProperties,
+        payload: UByteArray?
+    ): Boolean {
+        return publish("", retain, topicName, qos, properties, payload)
     }
 
     internal fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
