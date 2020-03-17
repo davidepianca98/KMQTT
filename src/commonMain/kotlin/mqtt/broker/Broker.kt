@@ -184,7 +184,7 @@ class Broker(
                 properties,
                 payload
             )
-            setRetained(topicName, packet, "")
+            setRetained(topicName, packet, publisherClientId)
         }
         publish(publisherClientId, retain, topicName, qos, false, properties, payload)
         return true
