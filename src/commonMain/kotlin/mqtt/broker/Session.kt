@@ -57,15 +57,19 @@ class Session(
 
     fun resendPending(sendPacket: (packet: MQTT5Packet) -> Unit) {
         pendingAcknowledgeMessages.forEach {
-            if (!it.value.messageExpiryIntervalExpired())
+            if (!it.value.messageExpiryIntervalExpired()) {
+                it.value.updateMessageExpiryInterval()
                 sendPacket(it.value.setDuplicate())
+            }
         }
         pendingAcknowledgePubrel.forEach {
             sendPacket(it.value)
         }
         pendingSendMessages.forEach {
-            if (!it.value.messageExpiryIntervalExpired())
+            if (!it.value.messageExpiryIntervalExpired()) {
+                it.value.updateMessageExpiryInterval()
                 sendPacket(it.value)
+            }
         }
     }
 
