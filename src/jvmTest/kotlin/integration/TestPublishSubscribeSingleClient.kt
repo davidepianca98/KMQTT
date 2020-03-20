@@ -8,9 +8,15 @@ import org.junit.Test
 import kotlin.test.assertEquals
 
 
-class TestPublishSubscribe {
+class TestPublishSubscribeSingleClient {
 
-    private fun testPublishSubscribe(broker: Broker, topic: String, qos: MqttQos, payload: ByteArray, subscribeReceived: (publish: Mqtt5Publish) -> Unit) {
+    private fun testPublishSubscribe(
+        broker: Broker,
+        topic: String,
+        qos: MqttQos,
+        payload: ByteArray,
+        subscribeReceived: (publish: Mqtt5Publish) -> Unit
+    ) {
         val brokerThread = BrokerThread(broker)
         brokerThread.start()
 
@@ -51,9 +57,7 @@ class TestPublishSubscribe {
         val sendPayload = "Test"
 
         testPublishSubscribe(Broker(), "test/topic", MqttQos.AT_MOST_ONCE, sendPayload.toByteArray()) {
-            val buffer = it.payload.get()
-            val payload = ByteArray(buffer.remaining())
-            buffer.get(payload)
+            val payload = it.payloadAsBytes
             assertEquals(sendPayload, String(payload))
         }
     }
@@ -62,10 +66,8 @@ class TestPublishSubscribe {
     fun testPublishQos1() {
         val sendPayload = "Test"
 
-        testPublishSubscribe(Broker(), "test/topic", MqttQos.AT_LEAST_ONCE, sendPayload.toByteArray()) {
-            val buffer = it.payload.get()
-            val payload = ByteArray(buffer.remaining())
-            buffer.get(payload)
+        testPublishSubscribe(Broker(), "test/topic/2", MqttQos.AT_LEAST_ONCE, sendPayload.toByteArray()) {
+            val payload = it.payloadAsBytes
             assertEquals(sendPayload, String(payload))
         }
     }
@@ -75,9 +77,7 @@ class TestPublishSubscribe {
         val sendPayload = "Test"
 
         testPublishSubscribe(Broker(), "test/topic", MqttQos.EXACTLY_ONCE, sendPayload.toByteArray()) {
-            val buffer = it.payload.get()
-            val payload = ByteArray(buffer.remaining())
-            buffer.get(payload)
+            val payload = it.payloadAsBytes
             assertEquals(sendPayload, String(payload))
         }
     }

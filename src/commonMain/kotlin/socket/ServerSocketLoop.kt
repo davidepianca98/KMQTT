@@ -10,7 +10,7 @@ open class ServerSocketLoop(private val broker: Broker) {
 
     fun run() {
         while (serverSocket.isRunning()) {
-            serverSocket.select(500) { clientConnection, state ->
+            serverSocket.select(250) { clientConnection, state ->
                 try {
                     handleEvent(clientConnection, state)
                     return@select true
@@ -29,9 +29,12 @@ open class ServerSocketLoop(private val broker: Broker) {
     private fun handleEvent(clientConnection: ClientConnection, state: SocketState) {
         when (state) {
             SocketState.READ -> {
-                clientConnection.client.read()?.let {
-                    clientConnection.dataReceived(it)
-                }
+                do {
+                    val data = clientConnection.client.read()
+                    data?.let {
+                        clientConnection.dataReceived(it)
+                    }
+                } while (data != null)
             }
             SocketState.WRITE -> {
                 clientConnection.client.sendRemaining()

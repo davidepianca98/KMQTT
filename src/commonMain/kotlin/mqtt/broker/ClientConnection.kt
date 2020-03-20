@@ -27,7 +27,7 @@ class ClientConnection(
     private val topicAliasesServer = mutableMapOf<String, UInt>()
     private var maxSendQuota: UInt =
         DEFAULT_MAX_SEND_QUOTA // Client receive maximum
-    private var sendQuota: UInt = DEFAULT_MAX_SEND_QUOTA
+    internal var sendQuota: UInt = DEFAULT_MAX_SEND_QUOTA
     private var maximumPacketSize: UInt? = null
     private var topicAliasMaximum = 0u
 
@@ -46,8 +46,10 @@ class ClientConnection(
         val expired = currentTimeMillis() > lastReceivedMessageTimestamp + timeout
         if (expired) {
             if (connectHandled) {
-                broker.sendWill(broker.sessions[clientId])
-                disconnect(ReasonCode.KEEP_ALIVE_TIMEOUT)
+                if (keepAlive > 0) {
+                    disconnect(ReasonCode.KEEP_ALIVE_TIMEOUT)
+                    session?.disconnected()
+                }
             } else {
                 disconnect(ReasonCode.MAXIMUM_CONNECT_TIME)
             }
@@ -77,7 +79,7 @@ class ClientConnection(
         }
     }
 
-    private fun writePacket(packet: MQTT5Packet) {
+    internal fun writePacket(packet: MQTT5Packet) {
         try {
             if (maximumPacketSize?.let { packet.resizeIfTooBig(it) } != false) {
                 val packetBytes = packet.toByteArray()
@@ -93,12 +95,10 @@ class ClientConnection(
 
     fun closedWithException() {
         close()
-        broker.sendWill(broker.sessions[clientId])
     }
 
     fun closedGracefully() {
         close()
-        broker.sendWill(broker.sessions[clientId])
     }
 
     private fun close() {
@@ -117,14 +117,14 @@ class ClientConnection(
             val disconnect =
                 MQTTDisconnect(reasonCode, MQTTProperties().apply { this.serverReference = serverReference })
             writePacket(disconnect)
-            if (reasonCode !in listOf(
+            if (reasonCode in listOf(
                     ReasonCode.SUCCESS,
                     ReasonCode.SERVER_SHUTTING_DOWN,
                     ReasonCode.USE_ANOTHER_SERVER,
                     ReasonCode.SERVER_MOVED
                 )
             ) {
-                broker.sendWill(broker.sessions[clientId])
+                broker.sessions[clientId]?.will = null
             }
         }
         close()
@@ -161,7 +161,7 @@ class ClientConnection(
      * @param topicName to send the message to
      * @param properties the publish properties, will get modified if topic aliases enabled
      */
-    private fun getPublishTopicAlias(topicName: String, properties: MQTTProperties): String {
+    internal fun getPublishTopicAlias(topicName: String, properties: MQTTProperties): String {
         var packetTopicName: String = topicName
         if (topicAliasMaximum > 0u) {
             topicAliasesServer[topicName]?.let {
@@ -178,49 +178,6 @@ class ClientConnection(
         return packetTopicName
     }
 
-    fun publish(
-        retain: Boolean,
-        topicName: String,
-        qos: Qos,
-        dup: Boolean,
-        properties: MQTTProperties,
-        payload: UByteArray?
-    ) {
-        val packetId = if (qos >= Qos.AT_MOST_ONCE) session!!.generatePacketId() else null
-
-        val packetTopicName = getPublishTopicAlias(topicName, properties)
-
-        val packet = MQTTPublish(
-            retain,
-            qos,
-            dup,
-            packetTopicName,
-            packetId,
-            properties,
-            payload
-        )
-
-        if (packet.messageExpiryIntervalExpired())
-            return
-        // Update the expiry interval if present
-        packet.updateMessageExpiryInterval()
-
-        if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
-            if (sendQuota <= 0u)
-                return
-            session!!.sendQosBiggerThanZero(packet) {
-                if (session?.isConnected() == true) {
-                    writePacket(packet)
-                    decrementSendQuota()
-                }
-            }
-        } else {
-            if (session?.isConnected() == true) {
-                writePacket(packet)
-            }
-        }
-    }
-
     private fun generateClientId(): String {
         var id: String
         do {
@@ -234,7 +191,7 @@ class ClientConnection(
             sendQuota = maxSendQuota
     }
 
-    private fun decrementSendQuota() {
+    internal fun decrementSendQuota() {
         if (sendQuota > 0u)
             sendQuota--
     }
@@ -332,10 +289,8 @@ class ClientConnection(
                 session.clientConnection = this
                 session.will = Will.buildWill(packet)
                 session.sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
-                session.resendPending {
-                    writePacket(it)
-                }
                 sessionPresent = true
+                this.session = session
             }
         } else {
             session = Session(packet, this) { id, sess ->
@@ -439,6 +394,10 @@ class ClientConnection(
         writePacket(connack)
         connectCompleted = true
         session.connected()
+
+        session.resendPending {
+            writePacket(it)
+        }
 
         handlePacketsReceivedBeforeConnack()
     }
@@ -570,7 +529,7 @@ class ClientConnection(
                 getTopicOrAlias(it),
                 Qos.EXACTLY_ONCE,
                 false,
-                packet.properties,
+                it.properties,
                 it.payload
             )
         } ?: run {
@@ -695,13 +654,16 @@ class ClientConnection(
         } catch (e: Exception) {
             null
         }
-        if (session?.sessionExpiryInterval == 0u && packet.properties.sessionExpiryInterval != null && packet.properties.sessionExpiryInterval != 0u)
-            disconnect(ReasonCode.PROTOCOL_ERROR)
-        else {
+        if (packet.properties.sessionExpiryInterval != null) {
+            if (session?.sessionExpiryInterval == 0u && packet.properties.sessionExpiryInterval != 0u) {
+                disconnect(ReasonCode.PROTOCOL_ERROR)
+            } else {
+                session?.sessionExpiryInterval = packet.properties.sessionExpiryInterval!!
+                close()
+            }
+        } else {
             if (packet.reasonCode == ReasonCode.SUCCESS)
                 session?.will = null
-            else
-                broker.sendWill(broker.sessions[clientId])
             close()
         }
     }

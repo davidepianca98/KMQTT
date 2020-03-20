@@ -58,11 +58,15 @@ fun String.matchesWildcard(wildcardTopic: String): Boolean {
             while (positionTopic < this.length && this[positionTopic] != '/') {
                 positionTopic++
             }
-            when {
-                positionTopic == this.length -> return true
-                wildcardTopic.getOrNull(positionTopicFilter + 1) == '/' -> positionTopicFilter++
-                else -> return false
+            positionTopicFilter++
+            if (wildcardTopic.getOrNull(positionTopicFilter) != '/') {
+                break
             }
+        }
+    }
+    if (positionTopicFilter < wildcardTopic.length) {
+        if (wildcardTopic[positionTopicFilter] == '/' && wildcardTopic[positionTopicFilter + 1] == '#') {
+            return true
         }
     }
 

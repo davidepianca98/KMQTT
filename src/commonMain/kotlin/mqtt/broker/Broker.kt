@@ -21,7 +21,7 @@ class Broker(
     val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
     val authorization: Authorization? = null,
     val maximumSessionExpiryInterval: UInt = 0xFFFFFFFFu,
-    val receiveMaximum: UShort? = null,
+    val receiveMaximum: UShort? = 1024u,
     val maximumQos: Qos? = null,
     val retainedAvailable: Boolean = true,
     val maximumPacketSize: UInt = 32768u,
@@ -60,7 +60,18 @@ class Broker(
             it.value.hasSharedSubscriptionMatching(shareName, topicName)?.timestampShareSent ?: Long.MAX_VALUE
         }?.value
         session?.hasSharedSubscriptionMatching(shareName, topicName)?.let { subscription ->
-            publishNormal(publisherClientId, retain, topicName, qos, dup, properties, payload, session, subscription)
+            publishNormal(
+                publisherClientId,
+                retain,
+                topicName,
+                qos,
+                dup,
+                properties,
+                payload,
+                session,
+                subscription,
+                listOf(subscription)
+            )
             subscription.timestampShareSent = currentTimeMillis()
         }
     }
@@ -88,18 +99,21 @@ class Broker(
         properties: MQTTProperties,
         payload: UByteArray?,
         session: Session,
-        subscription: Subscription
+        subscription: Subscription,
+        matchingSubscriptions: List<Subscription>
     ) {
         if (subscription.options.noLocal && publisherClientId == session.clientId) {
             return
         }
 
-        subscription.subscriptionIdentifier?.let {
-            properties.subscriptionIdentifier.clear()
-            properties.subscriptionIdentifier.add(it)
+        properties.subscriptionIdentifier.clear()
+        matchingSubscriptions.forEach { sub ->
+            sub.subscriptionIdentifier?.let {
+                properties.subscriptionIdentifier.add(it)
+            }
         }
 
-        session.clientConnection?.publish(
+        session.publish(
             retain,
             topicName,
             Qos.min(subscription.options.qos, qos),
@@ -128,7 +142,9 @@ class Broker(
         val sharedDone = mutableListOf<String>()
 
         sessions.forEach { session ->
-            session.value.hasSubscriptionsMatching(topicName).forEach { subscription ->
+            val matchingSubscriptions = session.value.hasSubscriptionsMatching(topicName)
+            var doneNormal = false
+            matchingSubscriptions.forEach { subscription ->
                 if (subscription.isShared() && sharedSubscriptionsAvailable) {
                     if (subscription.shareName!! !in sharedDone) { // Check we only publish once per shared subscription
                         publishShared(
@@ -144,17 +160,21 @@ class Broker(
                         sharedDone += subscription.shareName
                     }
                 } else {
-                    publishNormal(
-                        publisherClientId,
-                        retain,
-                        topicName,
-                        qos,
-                        dup,
-                        properties,
-                        payload,
-                        session.value,
-                        subscription
-                    )
+                    if (!doneNormal) {
+                        publishNormal(
+                            publisherClientId,
+                            retain,
+                            topicName,
+                            qos,
+                            dup,
+                            properties,
+                            payload,
+                            session.value,
+                            subscription,
+                            matchingSubscriptions
+                        )
+                        doneNormal = true
+                    }
                 }
             }
         }
@@ -225,7 +245,8 @@ class Broker(
 
     private fun Session.isExpired(): Boolean {
         val timestamp = getExpiryTime()
-        return timestamp != null && timestamp < currentTimeMillis()
+        val currentTime = currentTimeMillis()
+        return timestamp != null && timestamp <= currentTime
     }
 
     internal fun cleanUpOperations() {
@@ -243,8 +264,11 @@ class Broker(
                     iterator.remove()
                 } else {
                     session.value.will?.let {
+                        val currentTime = currentTimeMillis()
+                        val expirationTime =
+                            session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L)
                         // Check if the will delay interval has expired, if yes send the will
-                        if (session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L) > currentTimeMillis())
+                        if (expirationTime <= currentTime || it.willDelayInterval == 0u)
                             sendWill(session.value)
                     }
                 }

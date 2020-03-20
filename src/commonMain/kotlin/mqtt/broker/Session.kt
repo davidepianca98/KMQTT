@@ -4,10 +4,8 @@ import currentTimeMillis
 import mqtt.Subscription
 import mqtt.Will
 import mqtt.matchesWildcard
-import mqtt.packets.mqttv5.MQTT5Packet
-import mqtt.packets.mqttv5.MQTTConnect
-import mqtt.packets.mqttv5.MQTTPublish
-import mqtt.packets.mqttv5.MQTTPubrel
+import mqtt.packets.Qos
+import mqtt.packets.mqttv5.*
 
 class Session(
     packet: MQTTConnect,
@@ -36,18 +34,6 @@ class Session(
 
     private fun persist() {
         this.persist(clientId, this)
-    }
-
-    fun sendQosBiggerThanZero(packet: MQTTPublish, block: (packet: MQTTPublish) -> Unit) {
-        pendingSendMessages[packet.packetId!!] = packet
-        persist()
-        if (connected) {
-            block(packet)
-            pendingSendMessages.remove(packet.packetId)
-            persist()
-            pendingAcknowledgeMessages[packet.packetId] = packet
-            persist()
-        }
     }
 
     fun hasPendingAcknowledgeMessage(packetId: UInt): Boolean {
@@ -107,6 +93,54 @@ class Session(
         return result
     }
 
+    fun publish(
+        retain: Boolean,
+        topicName: String,
+        qos: Qos,
+        dup: Boolean,
+        properties: MQTTProperties,
+        payload: UByteArray?
+    ) {
+        val packetId = if (qos >= Qos.AT_MOST_ONCE) generatePacketId() else null
+
+        val packetTopicName = clientConnection?.getPublishTopicAlias(topicName, properties) ?: topicName
+
+        val packet = MQTTPublish(
+            retain,
+            qos,
+            dup,
+            packetTopicName,
+            packetId,
+            properties,
+            payload
+        )
+
+        if (packet.messageExpiryIntervalExpired())
+            return
+        // Update the expiry interval if present
+        packet.updateMessageExpiryInterval()
+
+        if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
+            if (clientConnection?.sendQuota ?: 1u <= 0u)
+                return
+
+            pendingSendMessages[packet.packetId!!] = packet
+            persist()
+            if (isConnected()) {
+                clientConnection!!.writePacket(packet)
+                clientConnection!!.decrementSendQuota()
+                pendingSendMessages.remove(packet.packetId)
+                persist()
+                pendingAcknowledgeMessages[packet.packetId] = packet
+                persist()
+            }
+        } else {
+            if (isConnected()) {
+                clientConnection!!.writePacket(packet)
+            }
+        }
+    }
+
     // TODO shared subscription note:
     //  If the Server is in the process of sending a QoS 1 message to its chosen subscribing Client and the connection
     //  to that Client breaks before the Server has received an acknowledgement from the Client, the Server MAY wait for
@@ -148,7 +182,9 @@ class Session(
         if (connected) {
             connected = false
             clientConnection = null
-            sessionDisconnectedTimestamp = currentTimeMillis()
+            if (sessionDisconnectedTimestamp == null) {
+                sessionDisconnectedTimestamp = currentTimeMillis()
+            }
         }
         persist()
     }
@@ -157,7 +193,7 @@ class Session(
         return if (sessionExpiryInterval == 0xFFFFFFFFu || connected) // If connected it doesn't expire
             null
         else
-            currentTimeMillis() + (sessionExpiryInterval.toLong() * 1000)
+            sessionDisconnectedTimestamp?.plus((sessionExpiryInterval.toLong() * 1000))
     }
 
     fun isConnected() = connected

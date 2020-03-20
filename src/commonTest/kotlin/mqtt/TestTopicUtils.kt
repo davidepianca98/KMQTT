@@ -46,6 +46,10 @@ class TestTopicUtils {
         assertFalse { "/test0".matchesWildcard("/test01") }
         assertFalse { "/test4".matchesWildcard("/test10") }
         assertFalse { "/test22".matchesWildcard("/test10") }
+
+        assertFalse { "TopicA".matchesWildcard("+/+") }
+        assertTrue { "TopicA".matchesWildcard("TopicA/#") }
+        assertTrue { "TopicA".matchesWildcard("TopicA") }
     }
 
     @Test
