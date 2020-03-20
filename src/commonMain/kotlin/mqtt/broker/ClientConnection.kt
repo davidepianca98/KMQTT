@@ -168,7 +168,7 @@ class ClientConnection(
                 packetTopicName = ""
                 properties.topicAlias = it
             } ?: run {
-                if (topicAliasesServer.size < topicAliasMaximum.toInt() - 1) {
+                if (topicAliasesServer.size < topicAliasMaximum.toInt()) {
                     topicAliasesServer[topicName] = topicAliasesServer.size.toUInt()
                     packetTopicName = topicName
                     properties.topicAlias = topicAliasesServer[topicName]
