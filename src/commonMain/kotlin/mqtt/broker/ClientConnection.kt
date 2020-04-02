@@ -316,10 +316,7 @@ class ClientConnection(
             connackProperties.sessionExpiryInterval = broker.maximumSessionExpiryInterval
         }
         broker.receiveMaximum?.toUInt()?.let {
-            if (maxSendQuota > it) {
-                maxSendQuota = it
-                connackProperties.receiveMaximum = it
-            }
+            connackProperties.receiveMaximum = it
         }
         broker.maximumQos?.let { maximumQos ->
             if (maximumQos == Qos.AT_MOST_ONCE || maximumQos == Qos.AT_LEAST_ONCE)
@@ -604,7 +601,7 @@ class ClientConnection(
             if (!broker.wildcardSubscriptionAvailable && subscription.matchTopicFilter.containsWildcard())
                 return@map ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
 
-            val replaced = session!!.addSubscription(subscription)
+            val replaced = broker.subscriptions.insert(subscription, clientId!!)
             retainedMessagesList += prepareRetainedMessages(subscription, replaced)
 
             when (subscription.options.qos) {
@@ -636,7 +633,7 @@ class ClientConnection(
         val reasonCodes = packet.topicFilters.map { topicFilter ->
             if (session!!.isPacketIdInUse(packet.packetIdentifier))
                 return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
-            if (session!!.removeSubscription(topicFilter))
+            if (broker.subscriptions.delete(topicFilter, clientId!!))
                 return@map ReasonCode.SUCCESS
             else
                 return@map ReasonCode.NO_SUBSCRIPTION_EXISTED

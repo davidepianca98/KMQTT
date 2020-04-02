@@ -1,5 +1,6 @@
 package mqtt.broker
 
+import Trie
 import currentTimeMillis
 import mqtt.MQTTException
 import mqtt.Subscription
@@ -15,7 +16,7 @@ import socket.tls.TLSSettings
 class Broker(
     val port: Int = 1883,
     val host: String = "127.0.0.1",
-    val backlog: Int = 10000,
+    val backlog: Int = 100000,
     val tlsSettings: TLSSettings? = null,
     val authentication: Authentication? = null,
     val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
@@ -38,42 +39,12 @@ class Broker(
     // TODO support WebSocket, section 6
 
     private val server = ServerSocketLoop(this)
-    val sessions = sessionPersistence?.getAll() ?: mutableMapOf()
+    internal val sessions = sessionPersistence?.getAll() ?: mutableMapOf()
+    internal val subscriptions = Trie()
     private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
 
     fun listen() {
         server.run()
-    }
-
-    private fun publishShared(
-        publisherClientId: String,
-        shareName: String,
-        retain: Boolean,
-        topicName: String,
-        qos: Qos,
-        dup: Boolean,
-        properties: MQTTProperties,
-        payload: UByteArray?
-    ) {
-        // Get the sessions which subscribe to this shared session and get the one which hasn't received a message for the longest time
-        val session = sessions.minBy {
-            it.value.hasSharedSubscriptionMatching(shareName, topicName)?.timestampShareSent ?: Long.MAX_VALUE
-        }?.value
-        session?.hasSharedSubscriptionMatching(shareName, topicName)?.let { subscription ->
-            publishNormal(
-                publisherClientId,
-                retain,
-                topicName,
-                qos,
-                dup,
-                properties,
-                payload,
-                session,
-                subscription,
-                listOf(subscription)
-            )
-            subscription.timestampShareSent = currentTimeMillis()
-        }
     }
 
     internal fun sendWill(session: Session?) {
@@ -139,28 +110,18 @@ class Broker(
                 throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
         }
 
-        val sharedDone = mutableListOf<String>()
+        val matchedSubscriptions = subscriptions.match(topicName)
 
-        sessions.forEach { session ->
-            val matchingSubscriptions = session.value.hasSubscriptionsMatching(topicName)
-            var doneNormal = false
-            matchingSubscriptions.forEach { subscription ->
-                if (subscription.isShared() && sharedSubscriptionsAvailable) {
-                    if (subscription.shareName!! !in sharedDone) { // Check we only publish once per shared subscription
-                        publishShared(
-                            publisherClientId,
-                            subscription.shareName,
-                            retain,
-                            topicName,
-                            qos,
-                            dup,
-                            properties,
-                            payload
-                        )
-                        sharedDone += subscription.shareName
-                    }
-                } else {
-                    if (!doneNormal) {
+        if (sharedSubscriptionsAvailable) {
+            matchedSubscriptions.filter { it.value.isShared() }.groupBy { it.value.shareName }.forEach {
+                val shareName = it.key
+                if (shareName != null) {
+                    val subscriptionEntry = it.value.minBy { subscription -> subscription.value.timestampShareSent }!!
+                    val clientId = subscriptionEntry.key
+                    val subscription = subscriptionEntry.value
+                    val session = sessions[clientId]
+
+                    if (session != null) {
                         publishNormal(
                             publisherClientId,
                             retain,
@@ -169,13 +130,37 @@ class Broker(
                             dup,
                             properties,
                             payload,
-                            session.value,
+                            session,
                             subscription,
-                            matchingSubscriptions
+                            matchedSubscriptions.filter { sub -> sub.key == clientId && sub.value.isShared() }
+                                .map { sub -> sub.value }
                         )
-                        doneNormal = true
+                        subscription.timestampShareSent = currentTimeMillis()
                     }
                 }
+            }
+        }
+
+        val doneNormal = mutableListOf<String>()
+        matchedSubscriptions.filter { !it.value.isShared() }.forEach { subscriptionEntry ->
+            val clientId = subscriptionEntry.key
+            val subscription = subscriptionEntry.value
+
+            val session = sessions[clientId]
+            if (clientId !in doneNormal && session != null) {
+                publishNormal(
+                    publisherClientId,
+                    retain,
+                    topicName,
+                    qos,
+                    dup,
+                    properties,
+                    payload,
+                    session,
+                    subscription,
+                    matchedSubscriptions.filter { it.key == clientId && !it.value.isShared() }.map { it.value }
+                )
+                doneNormal += clientId
             }
         }
     }
@@ -261,6 +246,7 @@ class Broker(
                         sendWill(session.value)
                     }
                     sessionPersistence?.remove(session.key)
+                    subscriptions.delete(session.key)
                     iterator.remove()
                 } else {
                     session.value.will?.let {

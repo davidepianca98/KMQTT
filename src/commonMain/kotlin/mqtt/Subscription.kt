@@ -4,7 +4,7 @@ import mqtt.packets.mqttv5.MQTTSubscribe
 
 class Subscription(
     val topicFilter: String,
-    val options: MQTTSubscribe.Companion.SubscriptionOptions,
+    val options: MQTTSubscribe.Companion.SubscriptionOptions = MQTTSubscribe.Companion.SubscriptionOptions(),
     val subscriptionIdentifier: UInt? = null
 ) {
     val matchTopicFilter = topicFilter.getSharedTopicFilter() ?: topicFilter

@@ -45,10 +45,10 @@ class MQTTSubscribe(
         }
 
         class SubscriptionOptions(
-            val qos: Qos,
-            val noLocal: Boolean,
-            val retainedAsPublished: Boolean,
-            val retainHandling: UInt
+            val qos: Qos = Qos.AT_MOST_ONCE,
+            val noLocal: Boolean = false,
+            val retainedAsPublished: Boolean = false,
+            val retainHandling: UInt = 0u
         ) {
             fun toByte(): UInt {
                 if (retainHandling !in 0u..2u)

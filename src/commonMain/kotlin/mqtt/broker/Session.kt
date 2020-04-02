@@ -1,9 +1,7 @@
 package mqtt.broker
 
 import currentTimeMillis
-import mqtt.Subscription
 import mqtt.Will
-import mqtt.matchesWildcard
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.*
 
@@ -71,30 +69,6 @@ class Session(
                 sendPacket(it.value)
             }
         }
-    }
-
-    // The Clients subscriptions, including any Subscription Identifiers
-    private val subscriptions = mutableListOf<Subscription>()
-
-    fun hasSubscriptionsMatching(topicName: String): List<Subscription> {
-        return subscriptions.filter { topicName.matchesWildcard(it.matchTopicFilter) }
-    }
-
-    fun hasSharedSubscriptionMatching(shareName: String, topicName: String): Subscription? {
-        return subscriptions.firstOrNull { it.isShared() && it.shareName == shareName && topicName.matchesWildcard(it.matchTopicFilter) }
-    }
-
-    fun addSubscription(subscription: Subscription): Boolean {
-        val replaced = subscriptions.removeAll { it.topicFilter == subscription.topicFilter }
-        subscriptions += subscription
-        persist()
-        return replaced
-    }
-
-    fun removeSubscription(topicFilter: String): Boolean {
-        val result = subscriptions.removeAll { it.topicFilter == topicFilter }
-        persist()
-        return result
     }
 
     fun publish(
