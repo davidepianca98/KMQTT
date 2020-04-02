@@ -9,7 +9,6 @@ import mqtt.packets.Qos
 import mqtt.packets.mqttv5.MQTTProperties
 import mqtt.packets.mqttv5.MQTTPublish
 import mqtt.packets.mqttv5.ReasonCode
-import removeIf
 import socket.ServerSocketLoop
 import socket.tls.TLSSettings
 
@@ -34,14 +33,14 @@ class Broker(
     val responseInformation: String? = null,
     val packetInterceptor: PacketInterceptor? = null,
     val bytesMetrics: BytesMetrics? = null,
-    val sessionPersistence: SessionPersistence? = null
+    val persistence: Persistence? = null
 ) {
     // TODO support WebSocket, section 6
 
     private val server = ServerSocketLoop(this)
-    internal val sessions = sessionPersistence?.getAll() ?: mutableMapOf()
-    internal val subscriptions = Trie()
-    private val retainedList = mutableMapOf<String, Pair<MQTTPublish, String>>()
+    internal val sessions = persistence?.getAllSessions()?.toMutableMap() ?: mutableMapOf()
+    internal val subscriptions = Trie(persistence?.getAllSubscriptions())
+    private val retainedList = persistence?.getAllRetainedMessages()?.toMutableMap() ?: mutableMapOf()
 
     fun listen() {
         server.run()
@@ -207,19 +206,27 @@ class Broker(
 
     internal fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
         if (retainedAvailable) {
-            if (message.payload?.isNotEmpty() == true)
+            if (message.payload?.isNotEmpty() == true) {
                 retainedList[topicName] = Pair(message, clientId)
-            else
+                persistence?.persistRetained(message, clientId)
+            } else {
                 retainedList.remove(topicName)
+                persistence?.removeRetained(topicName)
+            }
         } else {
             throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
         }
     }
 
     private fun removeExpiredRetainedMessages() {
-        retainedList.removeIf {
-            val message = it.value.first
-            message.messageExpiryIntervalExpired()
+        val iterator = retainedList.iterator()
+        while (iterator.hasNext()) {
+            val retained = iterator.next()
+            val message = retained.value.first
+            if (message.messageExpiryIntervalExpired()) {
+                persistence?.removeRetained(retained.key)
+                iterator.remove()
+            }
         }
     }
 
@@ -245,8 +252,9 @@ class Broker(
                     session.value.will?.let {
                         sendWill(session.value)
                     }
-                    sessionPersistence?.remove(session.key)
+                    persistence?.removeSession(session.key)
                     subscriptions.delete(session.key)
+                    persistence?.removeSubscriptions(session.key)
                     iterator.remove()
                 } else {
                     session.value.will?.let {

@@ -280,7 +280,7 @@ class ClientConnection(
             }
             if (packet.connectFlags.cleanStart) {
                 session = Session(packet, this) { id, sess ->
-                    broker.sessionPersistence?.persist(id, sess)
+                    broker.persistence?.persistSession(id, sess)
                 }
                 broker.sessions[clientId] = session
                 this.session = session
@@ -294,7 +294,7 @@ class ClientConnection(
             }
         } else {
             session = Session(packet, this) { id, sess ->
-                broker.sessionPersistence?.persist(id, sess)
+                broker.persistence?.persistSession(id, sess)
             }
             broker.sessions[clientId] = session
             this.session = session
@@ -603,6 +603,7 @@ class ClientConnection(
 
             val replaced = broker.subscriptions.insert(subscription, clientId!!)
             retainedMessagesList += prepareRetainedMessages(subscription, replaced)
+            broker.persistence?.persistSubscription(clientId!!, subscription)
 
             when (subscription.options.qos) {
                 Qos.AT_MOST_ONCE -> ReasonCode.SUCCESS
@@ -633,9 +634,10 @@ class ClientConnection(
         val reasonCodes = packet.topicFilters.map { topicFilter ->
             if (session!!.isPacketIdInUse(packet.packetIdentifier))
                 return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
-            if (broker.subscriptions.delete(topicFilter, clientId!!))
+            if (broker.subscriptions.delete(topicFilter, clientId!!)) {
+                broker.persistence?.removeSubscription(clientId!!, topicFilter)
                 return@map ReasonCode.SUCCESS
-            else
+            } else
                 return@map ReasonCode.NO_SUBSCRIPTION_EXISTED
         }
         writePacket(MQTTUnsuback(packet.packetIdentifier, reasonCodes))

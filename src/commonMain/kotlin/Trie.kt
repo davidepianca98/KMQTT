@@ -1,12 +1,12 @@
 import mqtt.Subscription
 import mqtt.getSharedTopicFilter
 
-class Trie(subscriptions: Map<String, Subscription> = mapOf()) {
+class Trie(subscriptions: Map<String, Subscription>? = null) {
 
     private val root = TrieNode(Char.MIN_VALUE)
 
     init {
-        subscriptions.forEach {
+        subscriptions?.forEach {
             insert(it.value, it.key)
         }
     }
@@ -108,9 +108,10 @@ class Trie(subscriptions: Map<String, Subscription> = mapOf()) {
         } else {
             if (topic.length == index) {
                 node.subscriptions.remove(clientId)
+                return true
             }
         }
-        return true
+        return false
     }
 
     fun delete(clientId: String) {
