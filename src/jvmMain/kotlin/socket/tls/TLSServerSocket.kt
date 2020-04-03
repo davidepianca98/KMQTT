@@ -1,13 +1,12 @@
 package socket.tls
 
 import mqtt.broker.Broker
-import mqtt.broker.ClientConnection
 import socket.ServerSocket
+import socket.Socket
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
-import java.nio.channels.ServerSocketChannel
 import java.security.KeyFactory
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
@@ -67,25 +66,13 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
         return kmf.keyManagers
     }
 
-    override fun accept(socket: Any) {
-        try {
-            val channel = ((socket as SelectionKey).channel() as ServerSocketChannel).accept()
-            channel.configureBlocking(false)
-
-            val engine = sslContext.createSSLEngine()
-            engine.useClientMode = false
-            if (broker.tlsSettings?.requireClientCertificate == true) {
-                engine.needClientAuth = true
-            }
-            engine.beginHandshake()
-            val tlsSocket = TLSSocket(sendBuffer, receiveBuffer, sendAppBuffer, receiveAppBuffer, engine)
-
-            val clientConnection = ClientConnection(tlsSocket, broker)
-
-            val socketKey = channel.register(selector, SelectionKey.OP_READ, clientConnection)
-            tlsSocket.key = socketKey
-        } catch (e: java.io.IOException) {
-            e.printStackTrace()
+    override fun createSocket(socketKey: SelectionKey): Socket {
+        val engine = sslContext.createSSLEngine()
+        engine.useClientMode = false
+        if (broker.tlsSettings?.requireClientCertificate == true) {
+            engine.needClientAuth = true
         }
+        engine.beginHandshake()
+        return TLSSocket(socketKey, sendBuffer, receiveBuffer, sendAppBuffer, receiveAppBuffer, engine)
     }
 }

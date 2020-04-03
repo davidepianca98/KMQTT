@@ -1,6 +1,8 @@
 package socket
 
+import mqtt.broker.cluster.ClusterConnection
+
 interface ServerSocketInterface {
 
-    fun accept(socket: Any)
+    fun addClusterConnection(address: String): ClusterConnection?
 }

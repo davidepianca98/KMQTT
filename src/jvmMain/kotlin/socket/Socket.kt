@@ -6,9 +6,11 @@ import java.nio.channels.SelectionKey
 import java.nio.channels.SocketChannel
 
 @ExperimentalUnsignedTypes
-actual open class Socket(private val sendBuffer: ByteBuffer, private val receiveBuffer: ByteBuffer) : SocketInterface {
-
-    var key: SelectionKey? = null
+actual open class Socket(
+    private val key: SelectionKey,
+    private val sendBuffer: ByteBuffer,
+    private val receiveBuffer: ByteBuffer
+) : SocketInterface {
 
     private var pendingSendData = mutableListOf<ByteArray>()
     private var canWrite = true
@@ -39,17 +41,16 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
             return
         }
 
-        val selectionKey = key!!
-        val channel = selectionKey.channel() as SocketChannel
+        val channel = key.channel() as SocketChannel
         val size = sendBuffer.remaining()
         try {
             val count = channel.write(sendBuffer)
             if (count < size) {
                 canWrite = false
                 addToPending()
-                selectionKey.interestOps(SelectionKey.OP_WRITE)
+                key.interestOps(SelectionKey.OP_WRITE)
             } else {
-                selectionKey.interestOps(SelectionKey.OP_READ)
+                key.interestOps(SelectionKey.OP_READ)
             }
         } catch (e: java.io.IOException) {
             close()
@@ -58,7 +59,7 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
     }
 
     protected fun readToBuffer(): Int {
-        val channel = key?.channel() as SocketChannel
+        val channel = key.channel() as SocketChannel
         receiveBuffer.clear()
         try {
             val length = channel.read(receiveBuffer)
@@ -84,8 +85,8 @@ actual open class Socket(private val sendBuffer: ByteBuffer, private val receive
     }
 
     actual override fun close() {
-        val channel = key?.channel() as SocketChannel
-        key?.cancel()
+        val channel = key.channel() as SocketChannel
+        key.cancel()
         channel.close()
     }
 

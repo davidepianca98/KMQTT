@@ -4,11 +4,14 @@ import Trie
 import currentTimeMillis
 import mqtt.MQTTException
 import mqtt.Subscription
+import mqtt.broker.cluster.ClusterConnection
+import mqtt.broker.cluster.ClusterSettings
 import mqtt.matchesWildcard
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.MQTTProperties
 import mqtt.packets.mqttv5.MQTTPublish
 import mqtt.packets.mqttv5.ReasonCode
+import removeIf
 import socket.ServerSocketLoop
 import socket.tls.TLSSettings
 
@@ -33,7 +36,8 @@ class Broker(
     val responseInformation: String? = null,
     val packetInterceptor: PacketInterceptor? = null,
     val bytesMetrics: BytesMetrics? = null,
-    val persistence: Persistence? = null
+    val persistence: Persistence? = null,
+    val cluster: ClusterSettings? = null
 ) {
     // TODO support WebSocket, section 6
 
@@ -41,6 +45,8 @@ class Broker(
     internal val sessions = persistence?.getAllSessions()?.toMutableMap() ?: mutableMapOf()
     internal val subscriptions = Trie(persistence?.getAllSubscriptions())
     private val retainedList = persistence?.getAllRetainedMessages()?.toMutableMap() ?: mutableMapOf()
+
+    private val clusterConnections = mutableMapOf<String, ClusterConnection>()
 
     fun listen() {
         server.run()
@@ -271,6 +277,7 @@ class Broker(
     }
 
     fun stop(serverReference: String? = null, temporarilyMoved: Boolean = false) {
+        // TODO close cluster connections and send use another server from that list
         val reasonCode = if (serverReference != null) {
             if (temporarilyMoved) {
                 ReasonCode.USE_ANOTHER_SERVER
@@ -284,5 +291,21 @@ class Broker(
             it.value.clientConnection?.disconnect(reasonCode, serverReference)
         }
         server.stop()
+    }
+
+    internal fun addClusterConnection(address: String) {
+        if (clusterConnections[address] == null) {
+            server.addClusterConnection(address)?.let {
+                clusterConnections[address] = it
+            }
+        }
+    }
+
+    internal fun addClusterConnection(address: String, clusterConnection: ClusterConnection) {
+        clusterConnections[address] = clusterConnection
+    }
+
+    internal fun removeClusterConnection(clusterConnection: ClusterConnection) {
+        clusterConnections.removeIf { it.value == clusterConnection }
     }
 }

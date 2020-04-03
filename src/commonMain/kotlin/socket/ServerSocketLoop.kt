@@ -1,7 +1,8 @@
 package socket
 
 import mqtt.broker.Broker
-import mqtt.broker.ClientConnection
+import mqtt.broker.cluster.ClusterConnection
+import mqtt.broker.cluster.ClusterDiscoveryConnection
 import socket.tls.TLSServerSocket
 
 open class ServerSocketLoop(private val broker: Broker) {
@@ -10,36 +11,56 @@ open class ServerSocketLoop(private val broker: Broker) {
 
     fun run() {
         while (serverSocket.isRunning()) {
-            serverSocket.select(250) { clientConnection, state ->
-                try {
-                    handleEvent(clientConnection, state)
-                    return@select true
-                } catch (e: SocketClosedException) {
-                    clientConnection.closedGracefully()
-                    return@select false
-                } catch (e: IOException) {
-                    clientConnection.closedWithException()
-                    return@select false
+            serverSocket.select(250) { attachment, state ->
+                when (attachment) {
+                    is TCPEventHandler -> return@select handleEvent(attachment, state)
+                    is ClusterDiscoveryConnection -> return@select handleDiscoveryEvent(attachment, state)
+                    else -> return@select true
                 }
             }
             broker.cleanUpOperations()
         }
     }
 
-    private fun handleEvent(clientConnection: ClientConnection, state: SocketState) {
-        when (state) {
-            SocketState.READ -> {
-                do {
-                    val data = clientConnection.client.read()
-                    data?.let {
-                        clientConnection.dataReceived(it)
-                    }
-                } while (data != null)
+    private fun handleEvent(tcpEventHandler: TCPEventHandler, state: SocketState): Boolean {
+        try {
+            when (state) {
+                SocketState.READ -> {
+                    do {
+                        val data = tcpEventHandler.read()
+                        data?.let {
+                            tcpEventHandler.dataReceived(it)
+                        }
+                    } while (data != null)
+                }
+                SocketState.WRITE -> {
+                    tcpEventHandler.sendRemaining()
+                }
             }
-            SocketState.WRITE -> {
-                clientConnection.client.sendRemaining()
+            return true
+        } catch (e: SocketClosedException) {
+            tcpEventHandler.closedGracefully()
+            if (tcpEventHandler is ClusterConnection) {
+                broker.removeClusterConnection(tcpEventHandler)
+            }
+        } catch (e: IOException) {
+            tcpEventHandler.closedWithException()
+            if (tcpEventHandler is ClusterConnection) {
+                broker.removeClusterConnection(tcpEventHandler)
             }
         }
+        return false
+    }
+
+    private fun handleDiscoveryEvent(connection: ClusterDiscoveryConnection, state: SocketState): Boolean {
+        if (state == SocketState.READ) {
+            connection.dataReceived()
+        }
+        return true
+    }
+
+    fun addClusterConnection(address: String): ClusterConnection? {
+        return serverSocket.addClusterConnection(address)
     }
 
     fun stop() {

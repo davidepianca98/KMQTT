@@ -7,13 +7,14 @@ import mqtt.packets.Qos
 import mqtt.packets.mqttv5.*
 import socket.IOException
 import socket.Socket
+import socket.TCPEventHandler
 import socket.streams.EOFException
 
 
 class ClientConnection(
-    val client: Socket,
+    private val client: Socket,
     private val broker: Broker
-) {
+) : TCPEventHandler {
 
     companion object {
         private const val DEFAULT_MAX_SEND_QUOTA = 65535u
@@ -56,7 +57,15 @@ class ClientConnection(
         }
     }
 
-    fun dataReceived(data: UByteArray) {
+    override fun read(): UByteArray? {
+        return client.read()
+    }
+
+    override fun sendRemaining() {
+        client.sendRemaining()
+    }
+
+    override fun dataReceived(data: UByteArray) {
         lastReceivedMessageTimestamp = currentTimeMillis()
         try {
             clientId?.let {
@@ -93,11 +102,11 @@ class ClientConnection(
         }
     }
 
-    fun closedWithException() {
+    override fun closedWithException() {
         close()
     }
 
-    fun closedGracefully() {
+    override fun closedGracefully() {
         close()
     }
 
