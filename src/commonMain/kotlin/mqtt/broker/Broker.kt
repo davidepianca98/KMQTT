@@ -1,7 +1,7 @@
 package mqtt.broker
 
-import Trie
 import currentTimeMillis
+import datastructures.Trie
 import mqtt.MQTTException
 import mqtt.Subscription
 import mqtt.broker.cluster.ClusterConnection
@@ -37,7 +37,8 @@ class Broker(
     val packetInterceptor: PacketInterceptor? = null,
     val bytesMetrics: BytesMetrics? = null,
     val persistence: Persistence? = null,
-    val cluster: ClusterSettings? = null
+    val cluster: ClusterSettings? = null,
+    val enableUdp: Boolean = false
 ) {
     // TODO support WebSocket, section 6
 
@@ -47,6 +48,12 @@ class Broker(
     private val retainedList = persistence?.getAllRetainedMessages()?.toMutableMap() ?: mutableMapOf()
 
     private val clusterConnections = mutableMapOf<String, ClusterConnection>()
+
+    init {
+        if (enableUdp && maximumPacketSize > 65535u) {
+            throw IllegalArgumentException("When UDP is enabled the maximum packet size can't be bigger than the datagram maximum size")
+        }
+    }
 
     fun listen() {
         server.run()

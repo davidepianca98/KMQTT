@@ -1,4 +1,6 @@
-package socket
+package socket.tcp
+
+import socket.SocketInterface
 
 expect open class Socket : SocketInterface {
 

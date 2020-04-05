@@ -3,16 +3,26 @@ package socket
 import kotlinx.cinterop.*
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
+import mqtt.broker.cluster.ClusterConnection
+import mqtt.broker.cluster.ClusterDiscoveryConnection
+import mqtt.broker.udp.UDPConnectionsMap
 import platform.posix.*
+import platform.windows.inet_pton
 import platform.windows.select
+import socket.tcp.IOException
+import socket.tcp.Socket
+import socket.udp.UDPSocket
 
 
 actual open class ServerSocket actual constructor(private val broker: Broker) : ServerSocketInterface {
 
     private var running = true
-    private var serverSocket = INVALID_SOCKET
+    private var mqttSocket = INVALID_SOCKET
+    private var mqttUdpSocket = INVALID_SOCKET
+    private var clusteringSocket = INVALID_SOCKET
+    private var discoverySocket = INVALID_SOCKET
 
-    protected val clients = mutableMapOf<SOCKET, ClientConnection>()
+    protected val clients = mutableMapOf<SOCKET, Any?>()
     protected val writeRequest = mutableListOf<SOCKET>()
 
     protected val buffer = ByteArray(broker.maximumPacketSize.toInt())
@@ -21,46 +31,94 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
     private val writefds = nativeHeap.alloc<fd_set>()
     private val errorfds = nativeHeap.alloc<fd_set>()
 
+    private fun prepareStreamSocket(socket: SOCKET, port: Int) = memScoped {
+        val reuseAddr = alloc<uint32_tVar>()
+        reuseAddr.value = 1u
+        if (setsockopt(socket, SOL_SOCKET, SO_REUSEADDR, reuseAddr.ptr.toString(), 4) == SOCKET_ERROR) {
+            WSACleanup()
+            throw IOException("Setsockopt")
+        }
+
+        val serverAddress = alloc<sockaddr_in>()
+        memset(serverAddress.ptr, 0, sockaddr_in.size.convert())
+        serverAddress.sin_family = AF_INET.convert()
+        serverAddress.sin_addr.S_un.S_addr = posix_htons(0).convert()
+        serverAddress.sin_port = posix_htons(port.convert()).convert()
+
+        if (bind(socket, serverAddress.ptr.reinterpret(), sockaddr_in.size.convert()) == SOCKET_ERROR) {
+            WSACleanup()
+            throw IOException("Failed bind")
+        }
+
+        val on = alloc<uint32_tVar>()
+        on.value = 1u
+        if (ioctlsocket(socket, FIONBIO.toInt(), on.ptr.reinterpret()) == SOCKET_ERROR) {
+            WSACleanup()
+            throw IOException("Failed ioctlsocket")
+        }
+
+        if (listen(socket, broker.backlog) == SOCKET_ERROR) {
+            WSACleanup()
+            throw IOException("Failed listen")
+        }
+    }
+
+    private fun prepareDatagramSocket(socket: SOCKET, port: Int) = memScoped {
+        val serverAddress = alloc<sockaddr_in>()
+        memset(serverAddress.ptr, 0, sockaddr_in.size.convert())
+        serverAddress.sin_family = AF_INET.convert()
+        serverAddress.sin_addr.S_un.S_addr = posix_htons(0).convert()
+        serverAddress.sin_port = posix_htons(port.convert()).convert()
+
+        if (bind(socket, serverAddress.ptr.reinterpret(), sockaddr_in.size.convert()) == -1) {
+            throw IOException("Failed bind")
+        }
+
+        val on = alloc<uint32_tVar>()
+        on.value = 1u
+        if (ioctlsocket(socket, FIONBIO.toInt(), on.ptr.reinterpret()) == SOCKET_ERROR) {
+            WSACleanup()
+            throw IOException("Failed ioctlsocket")
+        }
+    }
+
     init {
         memScoped {
             val wsaData = alloc<WSADATA>()
             if (WSAStartup(0x0202u, wsaData.ptr) != 0)
                 throw IOException("Failed WSAStartup")
 
-            serverSocket = socket(AF_INET, SOCK_STREAM, 0)
-            if (serverSocket == INVALID_SOCKET) {
+            mqttSocket = socket(AF_INET, SOCK_STREAM, 0)
+            if (mqttSocket == INVALID_SOCKET) {
                 WSACleanup()
                 throw IOException("Invalid socket")
             }
+            prepareStreamSocket(mqttSocket, broker.port)
 
-            val reuseAddr = alloc<uint32_tVar>()
-            reuseAddr.value = 1u
-            if (setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, reuseAddr.ptr.toString(), 4) == SOCKET_ERROR) {
-                WSACleanup()
-                throw IOException("Setsockopt")
+            if (broker.enableUdp) {
+                mqttUdpSocket = socket(AF_INET, SOCK_DGRAM, 0)
+                if (mqttUdpSocket == INVALID_SOCKET) {
+                    throw IOException("Invalid socket")
+                }
+                prepareDatagramSocket(mqttUdpSocket, broker.port)
+                clients[mqttUdpSocket] = UDPConnectionsMap(UDPSocket(mqttUdpSocket), broker)
             }
 
-            val serverAddress = alloc<sockaddr_in>()
-            memset(serverAddress.ptr, 0, sockaddr_in.size.convert())
-            serverAddress.sin_family = AF_INET.convert()
-            serverAddress.sin_addr.S_un.S_addr = posix_htons(0).convert()
-            serverAddress.sin_port = posix_htons(broker.port.convert()).convert()
+            if (broker.cluster != null) {
+                clusteringSocket = socket(AF_INET, SOCK_STREAM, 0)
+                if (clusteringSocket == INVALID_SOCKET) {
+                    throw IOException("Invalid socket")
+                }
+                prepareStreamSocket(clusteringSocket, broker.cluster.tcpPort)
 
-            if (bind(serverSocket, serverAddress.ptr.reinterpret(), sockaddr_in.size.convert()) == SOCKET_ERROR) {
-                WSACleanup()
-                throw IOException("Failed bind")
-            }
-
-            val on = alloc<uint32_tVar>()
-            on.value = 1u
-            if (ioctlsocket(serverSocket, FIONBIO.toInt(), on.ptr.reinterpret()) == SOCKET_ERROR) {
-                WSACleanup()
-                throw IOException("Failed ioctlsocket")
-            }
-
-            if (listen(serverSocket, broker.backlog) == SOCKET_ERROR) {
-                WSACleanup()
-                throw IOException("Failed listen")
+                discoverySocket = socket(AF_INET, SOCK_DGRAM, 0)
+                if (discoverySocket == INVALID_SOCKET) {
+                    throw IOException("Invalid socket")
+                }
+                prepareDatagramSocket(discoverySocket, broker.cluster.discoveryPort)
+                val clusterConnection = ClusterDiscoveryConnection(UDPSocket(discoverySocket), broker)
+                clients[discoverySocket] = clusterConnection
+                clusterConnection.sendDiscovery(broker.cluster.discoveryPort)
             }
         }
     }
@@ -77,13 +135,14 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
 
     actual fun select(
         timeout: Long,
-        block: (socket: ClientConnection, state: ServerSocketLoop.SocketState) -> Boolean
+        block: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
     ) {
         if (isRunning()) {
             posix_FD_ZERO(readfds.ptr)
             posix_FD_ZERO(writefds.ptr)
             posix_FD_ZERO(errorfds.ptr)
-            posix_FD_SET(serverSocket.convert(), readfds.ptr)
+            posix_FD_SET(mqttSocket.convert(), readfds.ptr)
+            posix_FD_SET(clusteringSocket.convert(), readfds.ptr)
             clients.forEach {
                 posix_FD_SET(it.key.convert(), readfds.ptr)
                 posix_FD_SET(it.key.convert(), errorfds.ptr)
@@ -98,29 +157,30 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                 select(0, readfds.ptr, writefds.ptr, errorfds.ptr, timeoutStruct.ptr)
             }
 
-            if (posix_FD_ISSET(serverSocket.convert(), readfds.ptr) == 1) {
-                val newSocket = accept(serverSocket, null, null)
-                if (newSocket == INVALID_SOCKET) {
-                    throw IOException("Invalid socket")
-                }
-                accept(newSocket)
-            } else {
-                clients.forEach { socket ->
-                    when {
-                        posix_FD_ISSET(socket.key.convert(), readfds.ptr) == 1 -> {
-                            if (!block(socket.value, ServerSocketLoop.SocketState.READ))
-                                clients.remove(socket.key)
-                        }
-                        posix_FD_ISSET(socket.key.convert(), writefds.ptr) == 1 -> {
-                            writeRequest.remove(socket.key)
-                            if (!block(socket.value, ServerSocketLoop.SocketState.WRITE))
-                                clients.remove(socket.key)
-                        }
-                        posix_FD_ISSET(socket.key.convert(), errorfds.ptr) == 1 -> {
+            if (posix_FD_ISSET(mqttSocket.convert(), readfds.ptr) == 1) {
+                tcpServerSocketAccept(mqttSocket)
+            }
+            if (posix_FD_ISSET(clusteringSocket.convert(), readfds.ptr) == 1) {
+                tcpServerSocketAccept(clusteringSocket)
+            }
+            clients.forEach { socket ->
+                when {
+                    posix_FD_ISSET(socket.key.convert(), readfds.ptr) == 1 -> {
+                        if (!block(socket.value, ServerSocketLoop.SocketState.READ))
                             clients.remove(socket.key)
-                            shutdown(socket.key, SD_SEND)
-                            closesocket(socket.key)
-                            socket.value.closedWithException()
+                    }
+                    posix_FD_ISSET(socket.key.convert(), writefds.ptr) == 1 -> {
+                        writeRequest.remove(socket.key)
+                        if (!block(socket.value, ServerSocketLoop.SocketState.WRITE))
+                            clients.remove(socket.key)
+                    }
+                    posix_FD_ISSET(socket.key.convert(), errorfds.ptr) == 1 -> {
+                        clients.remove(socket.key)
+                        shutdown(socket.key, SD_SEND)
+                        closesocket(socket.key)
+                        val socketAttachment = socket.value
+                        if (socketAttachment is ClientConnection) {
+                            socketAttachment.closedWithException()
                         }
                     }
                 }
@@ -128,9 +188,55 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
         }
     }
 
-    override fun accept(socket: Any) {
-        val newSocket = socket as SOCKET
-        clients[newSocket] = ClientConnection(Socket(newSocket, writeRequest, buffer), broker)
+    private fun tcpServerSocketAccept(serverSocket: SOCKET) {
+        val newSocket = accept(serverSocket, null, null)
+        if (newSocket == INVALID_SOCKET) {
+            throw IOException("Invalid socket")
+        }
+        memScoped {
+            val on = alloc<uint32_tVar>()
+            on.value = 1u
+            if (ioctlsocket(newSocket, FIONBIO.toInt(), on.ptr.reinterpret()) == SOCKET_ERROR) {
+                WSACleanup()
+                throw IOException("Failed ioctlsocket")
+            }
+        }
+        accept(newSocket)
+    }
+
+    open fun accept(socket: SOCKET) {
+        clients[socket] = ClientConnection(Socket(socket, writeRequest, buffer), broker)
+    }
+
+    override fun addClusterConnection(address: String): ClusterConnection? {
+        if (broker.cluster != null) {
+            memScoped {
+                val socket = socket(AF_INET, SOCK_STREAM, 0)
+                if (socket == INVALID_SOCKET) {
+                    throw IOException("Invalid socket: error $errno")
+                }
+
+                val serverAddress = alloc<sockaddr_in>()
+                memset(serverAddress.ptr, 0, sockaddr_in.size.convert())
+                serverAddress.sin_family = AF_INET.convert()
+                inet_pton(AF_INET, address, serverAddress.sin_addr.ptr)
+                serverAddress.sin_port = posix_htons(broker.cluster.tcpPort.convert()).convert()
+
+                val on = alloc<uint32_tVar>()
+                on.value = 1u
+                if (ioctlsocket(socket, FIONBIO.toInt(), on.ptr.reinterpret()) == SOCKET_ERROR) {
+                    WSACleanup()
+                    throw IOException("Failed ioctlsocket")
+                }
+
+                val clusterConnection = ClusterConnection(Socket(socket, writeRequest, buffer))
+                broker.addClusterConnection(address, clusterConnection)
+                clients[socket] = clusterConnection
+
+                return clusterConnection
+            }
+        }
+        return null
     }
 
 }

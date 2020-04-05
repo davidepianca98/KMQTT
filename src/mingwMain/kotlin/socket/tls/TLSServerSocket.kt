@@ -52,24 +52,22 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
         }
     }
 
-    override fun accept(socket: Any) {
-        val newSocket = socket as SOCKET
-
+    override fun accept(socket: SOCKET) {
         val readBio = BIO_new(BIO_s_mem())
         if (readBio == null) {
-            closesocket(newSocket)
+            closesocket(socket)
             return
         }
         val writeBio = BIO_new(BIO_s_mem())
         if (writeBio == null) {
-            closesocket(newSocket)
+            closesocket(socket)
             BIO_free(readBio)
             return
         }
 
         val clientContext = SSL_new(sslContext)
         if (clientContext == null) {
-            closesocket(newSocket)
+            closesocket(socket)
             BIO_free(readBio)
             BIO_free(writeBio)
             return
@@ -80,7 +78,7 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
 
         val engine = TLSSocket.OpenSSLEngine(clientContext, readBio, writeBio)
 
-        clients[newSocket] = ClientConnection(TLSSocket(newSocket, engine, writeRequest, buffer), broker)
+        clients[socket] = ClientConnection(TLSSocket(socket, engine, writeRequest, buffer), broker)
     }
 
     override fun close() {

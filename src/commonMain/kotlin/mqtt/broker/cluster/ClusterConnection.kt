@@ -1,7 +1,7 @@
 package mqtt.broker.cluster
 
-import socket.Socket
-import socket.TCPEventHandler
+import socket.tcp.Socket
+import socket.tcp.TCPEventHandler
 
 class ClusterConnection(private val socket: Socket) :
     TCPEventHandler { // TODO implement subscribe, unsubscribe and publish and save retained messages

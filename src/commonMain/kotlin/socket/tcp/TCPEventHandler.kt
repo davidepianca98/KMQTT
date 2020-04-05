@@ -1,4 +1,4 @@
-package socket
+package socket.tcp
 
 interface TCPEventHandler {
 

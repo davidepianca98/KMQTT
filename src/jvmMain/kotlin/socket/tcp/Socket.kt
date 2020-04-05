@@ -1,5 +1,6 @@
-package socket
+package socket.tcp
 
+import socket.SocketInterface
 import toUByteArray
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey

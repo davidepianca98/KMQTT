@@ -1,5 +1,5 @@
 package socket.tls
 
-import socket.Socket
+import socket.tcp.Socket
 
 expect class TLSSocket : Socket

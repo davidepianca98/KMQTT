@@ -4,6 +4,9 @@ import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
 import mqtt.broker.cluster.ClusterConnection
 import mqtt.broker.cluster.ClusterDiscoveryConnection
+import mqtt.broker.udp.UDPConnectionsMap
+import socket.tcp.Socket
+import socket.udp.UDPSocket
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.*
@@ -12,6 +15,7 @@ import java.nio.channels.*
 actual open class ServerSocket actual constructor(private val broker: Broker) : ServerSocketInterface {
 
     private val mqttSocket = ServerSocketChannel.open()
+    private val mqttUdpSocket = DatagramChannel.open()
     private val clusteringSocket = ServerSocketChannel.open()
     private val discoverySocket = DatagramChannel.open()
     private val selector: Selector = Selector.open()
@@ -23,6 +27,13 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
         mqttSocket.configureBlocking(false)
         mqttSocket.bind(InetSocketAddress(broker.host, broker.port), broker.backlog)
         mqttSocket.register(selector, SelectionKey.OP_ACCEPT)
+
+        if (broker.enableUdp) {
+            mqttUdpSocket.configureBlocking(false)
+            mqttUdpSocket.bind(InetSocketAddress(broker.host, broker.port))
+            val datagramKey = mqttUdpSocket.register(selector, SelectionKey.OP_READ)
+            datagramKey.attach(UDPConnectionsMap(UDPSocket(datagramKey), broker))
+        }
 
         if (broker.cluster != null) {
             clusteringSocket.configureBlocking(false)

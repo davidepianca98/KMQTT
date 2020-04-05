@@ -4,10 +4,10 @@ import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import openssl.*
-import socket.IOException
-import socket.Socket
-import socket.SocketClosedException
 import socket.streams.ByteArrayOutputStream
+import socket.tcp.IOException
+import socket.tcp.Socket
+import socket.tcp.SocketClosedException
 
 actual class TLSSocket(
     socket: Int,

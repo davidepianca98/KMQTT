@@ -2,15 +2,17 @@ package mqtt.broker.cluster
 
 import kotlinx.serialization.protobuf.ProtoBuf
 import mqtt.broker.Broker
-import socket.UDPSocket
+import socket.udp.UDPEventHandler
+import socket.udp.UDPSocket
 
-class ClusterDiscoveryConnection(private val socket: UDPSocket, private val broker: Broker) {
+class ClusterDiscoveryConnection(private val socket: UDPSocket, private val broker: Broker) :
+    UDPEventHandler {
 
-    fun dataReceived() {
+    override fun dataReceived() {
         socket.read()?.let { data ->
             val packet = ProtoBuf.load(DiscoveryPacket.serializer(), data.data.toByteArray())
             if (packet.name != broker.cluster!!.name) {
-                broker.addClusterConnection(data.address)
+                broker.addClusterConnection(data.sourceAddress)
             }
         }
     }

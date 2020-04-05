@@ -1,9 +1,10 @@
-package socket
+package socket.tcp
 
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.convert
 import kotlinx.cinterop.usePinned
 import platform.posix.*
+import socket.SocketInterface
 
 actual open class Socket(
     private val socket: Int,

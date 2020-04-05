@@ -1,3 +1,5 @@
+package datastructures
+
 import mqtt.Subscription
 import mqtt.getSharedTopicFilter
 

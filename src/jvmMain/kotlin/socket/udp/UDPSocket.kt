@@ -1,4 +1,4 @@
-package socket
+package socket.udp
 
 import toUByteArray
 import java.net.InetSocketAddress
@@ -8,7 +8,7 @@ import java.nio.channels.SelectionKey
 
 actual class UDPSocket(private val key: SelectionKey) {
 
-    private val buffer = ByteBuffer.allocate(1024)
+    private val buffer = ByteBuffer.allocate(2048)
 
     actual fun send(data: UByteArray, address: String, port: Int) {
         val socket = key.channel() as DatagramChannel
@@ -25,7 +25,7 @@ actual class UDPSocket(private val key: SelectionKey) {
         return if (sourceAddress != null) {
             buffer.flip()
             val address = sourceAddress as InetSocketAddress
-            UDPReadData(buffer.toUByteArray(), address.address.hostAddress)
+            UDPReadData(buffer.toUByteArray(), address.address.hostAddress, address.port)
         } else {
             null
         }

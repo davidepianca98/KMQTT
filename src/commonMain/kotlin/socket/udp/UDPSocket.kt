@@ -1,4 +1,4 @@
-package socket
+package socket.udp
 
 expect class UDPSocket {
 

@@ -2,7 +2,7 @@ package socket.tls
 
 import mqtt.broker.Broker
 import socket.ServerSocket
-import socket.Socket
+import socket.tcp.Socket
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.nio.ByteBuffer

@@ -1,13 +1,14 @@
-package socket
+package socket.tcp
 
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.convert
 import kotlinx.cinterop.usePinned
 import platform.posix.*
+import socket.SocketInterface
 
 actual open class Socket(
-    private val socket: Int,
-    private val writeRequest: MutableList<Int>,
+    private val socket: SOCKET,
+    private val writeRequest: MutableList<SOCKET>,
     private val buffer: ByteArray
 ) : SocketInterface {
 
@@ -15,10 +16,10 @@ actual open class Socket(
 
     actual override fun send(data: UByteArray) {
         data.toByteArray().usePinned { pinned ->
-            val length = send(socket, pinned.addressOf(0), data.size.toULong(), 0)
-            if (length < 0) {
-                val error = errno
-                if (error == EAGAIN || error == EWOULDBLOCK) {
+            val length = send(socket, pinned.addressOf(0), data.size, 0)
+            if (length == SOCKET_ERROR) {
+                val error = WSAGetLastError()
+                if (error == WSAEWOULDBLOCK) {
                     pendingSendData.add(data)
                     writeRequest.add(socket)
                 } else {
@@ -26,10 +27,11 @@ actual open class Socket(
                     throw IOException("Error in send $error")
                 }
             } else if (length < data.size) {
-                pendingSendData.add(data.copyOfRange(length.toInt(), data.size))
+                pendingSendData.add(data.copyOfRange(length, data.size))
                 writeRequest.add(socket)
+            } else {
+
             }
-            pinned
         }
     }
 
@@ -44,19 +46,20 @@ actual open class Socket(
 
     actual override fun read(): UByteArray? {
         buffer.usePinned { pinned ->
-            val length = recv(socket.convert(), pinned.addressOf(0), buffer.size.convert(), 0)
+            val length = recv(socket.convert(), pinned.addressOf(0), buffer.size, 0)
             when {
-                length == 0L -> {
+                length == 0 -> {
                     close()
                     throw SocketClosedException()
                 }
                 length > 0 -> {
-                    return pinned.get().toUByteArray().copyOfRange(0, length.toInt())
+                    return pinned.get().toUByteArray().copyOfRange(0, length)
                 }
                 else -> {
-                    if (errno != EAGAIN && errno != EWOULDBLOCK) {
+                    val error = WSAGetLastError()
+                    if (error != WSAEWOULDBLOCK) {
                         close()
-                        throw IOException("Error in recv: $errno")
+                        throw IOException("Recv error: $error")
                     } else {
                         return null
                     }
@@ -66,8 +69,8 @@ actual open class Socket(
     }
 
     actual override fun close() {
-        shutdown(socket, SHUT_WR)
-        close(socket)
+        shutdown(socket, SD_SEND)
+        closesocket(socket)
     }
 
 }

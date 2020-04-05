@@ -5,14 +5,14 @@ import generateRandomClientId
 import mqtt.*
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.*
-import socket.IOException
-import socket.Socket
-import socket.TCPEventHandler
+import socket.SocketInterface
 import socket.streams.EOFException
+import socket.tcp.IOException
+import socket.tcp.TCPEventHandler
 
 
 class ClientConnection(
-    private val client: Socket,
+    private val client: SocketInterface,
     private val broker: Broker
 ) : TCPEventHandler {
 

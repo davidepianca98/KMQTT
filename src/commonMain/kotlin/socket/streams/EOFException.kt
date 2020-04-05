@@ -1,5 +1,5 @@
 package socket.streams
 
-import socket.IOException
+import socket.tcp.IOException
 
 class EOFException : IOException()

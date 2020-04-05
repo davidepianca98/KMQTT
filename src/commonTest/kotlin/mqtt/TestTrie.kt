@@ -1,6 +1,6 @@
 package mqtt
 
-import Trie
+import datastructures.Trie
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

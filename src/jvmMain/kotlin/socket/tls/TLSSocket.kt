@@ -1,9 +1,9 @@
 package socket.tls
 
-import socket.IOException
-import socket.Socket
-import socket.SocketClosedException
 import socket.streams.ByteArrayOutputStream
+import socket.tcp.IOException
+import socket.tcp.Socket
+import socket.tcp.SocketClosedException
 import toUByteArray
 import java.nio.BufferOverflowException
 import java.nio.ByteBuffer

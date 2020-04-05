@@ -2,8 +2,11 @@ package socket
 
 import mqtt.broker.Broker
 import mqtt.broker.cluster.ClusterConnection
-import mqtt.broker.cluster.ClusterDiscoveryConnection
+import socket.tcp.IOException
+import socket.tcp.SocketClosedException
+import socket.tcp.TCPEventHandler
 import socket.tls.TLSServerSocket
+import socket.udp.UDPEventHandler
 
 open class ServerSocketLoop(private val broker: Broker) {
 
@@ -14,7 +17,7 @@ open class ServerSocketLoop(private val broker: Broker) {
             serverSocket.select(250) { attachment, state ->
                 when (attachment) {
                     is TCPEventHandler -> return@select handleEvent(attachment, state)
-                    is ClusterDiscoveryConnection -> return@select handleDiscoveryEvent(attachment, state)
+                    is UDPEventHandler -> return@select handleUdpEvent(attachment, state)
                     else -> return@select true
                 }
             }
@@ -52,9 +55,9 @@ open class ServerSocketLoop(private val broker: Broker) {
         return false
     }
 
-    private fun handleDiscoveryEvent(connection: ClusterDiscoveryConnection, state: SocketState): Boolean {
+    private fun handleUdpEvent(udpEventHandler: UDPEventHandler, state: SocketState): Boolean {
         if (state == SocketState.READ) {
-            connection.dataReceived()
+            udpEventHandler.dataReceived()
         }
         return true
     }
