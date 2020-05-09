@@ -2,5 +2,5 @@ headers = openssl/ssl.h openssl/err.h openssl/bio.h openssl/pem.h openssl/pkcs12
 headerFilter = openssl/*
 package = openssl
 staticLibraries = libssl.a libcrypto.a
-compilerOpts.mingw_x64 = -I\\msys64\\home\\39340\\openssl-1.1.1d\\include
+compilerOpts.mingw_x64 = -I\\openssl-1.1.1g
 libraryPaths.mingw_x64 = src/nativeInterop/cinterop/opensslLibs/mingwX64

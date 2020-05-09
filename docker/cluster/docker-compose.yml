@@ -1,0 +1,12 @@
+version: '3.5'
+
+services:
+  broker1:
+    image: kmqtt:latest
+    ports:
+      - '1883:1883'
+
+  broker2:
+    image: kmqtt:latest
+    ports:
+      - '1884:1883'

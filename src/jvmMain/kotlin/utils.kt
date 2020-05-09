@@ -1,4 +1,3 @@
-import mqtt.broker.Authorization
 import mqtt.broker.Broker
 import mqtt.broker.cluster.ClusterSettings
 import java.nio.ByteBuffer
@@ -15,13 +14,5 @@ fun ByteBuffer.toUByteArray(): UByteArray {
 }
 
 fun main() {
-    Broker(
-        serverKeepAlive = 60,
-        authorization = object : Authorization {
-            override fun authorize(clientId: String, topicName: String, isSubscription: Boolean): Boolean {
-                return !(isSubscription && topicName == "test/nosubscribe")
-            }
-        },
-        cluster = ClusterSettings()
-    ).listen()
+    Broker(cluster = ClusterSettings()).listen()
 }

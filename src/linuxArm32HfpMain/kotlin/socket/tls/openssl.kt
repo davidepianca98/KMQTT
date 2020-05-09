@@ -1,6 +1,5 @@
 @file:kotlinx.cinterop.InteropStubs
 @file:Suppress("UNUSED_VARIABLE", "UNUSED_EXPRESSION")
-
 package openssl
 
 import cnames.structs.ASN1_ITEM_st
@@ -154,13 +153,25 @@ import kotlinx.cinterop.*
 import kotlinx.cinterop.internal.CCall
 import kotlinx.cinterop.internal.CStruct
 import platform.posix.*
+import kotlin.Any
+import kotlin.Deprecated
+import kotlin.DeprecationLevel
+import kotlin.Int
+import kotlin.String
+import kotlin.Suppress
+import kotlin.UByte
+import kotlin.UInt
+import kotlin.ULong
+import kotlin.UShort
+import kotlin.Unit
+import kotlin.UnsupportedOperationException
 
 // NOTE THIS FILE IS AUTO-GENERATED
 
 @CStruct("struct { int p0; int p1; void* p2; long p3; }")
 class asn1_string_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(16, 4)
+    companion object : CStructVar.Type(16, 4)
 
     var length: Int
         get() = memberAt<IntVar>(0).value
@@ -190,7 +201,7 @@ class asn1_string_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { unsigned int p0; void* p1; unsigned int p2; unsigned long p3; }")
 class buf_mem_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(16, 4)
+    companion object : CStructVar.Type(16, 4)
 
     var length: size_t
         get() = memberAt<size_tVar>(0).value
@@ -217,10 +228,46 @@ class buf_mem_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
         }
 }
 
+@CStruct("struct { void* p0; void* p1; void* p2; void* p3; void* p4; }")
+class rsa_pss_params_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
+
+    companion object : CStructVar.Type(20, 4)
+
+    var hashAlgorithm: CPointer<X509_ALGOR>?
+        get() = memberAt<CPointerVar<X509_ALGOR>>(0).value
+        set(value) {
+            memberAt<CPointerVar<X509_ALGOR>>(0).value = value
+        }
+
+    var maskGenAlgorithm: CPointer<X509_ALGOR>?
+        get() = memberAt<CPointerVar<X509_ALGOR>>(4).value
+        set(value) {
+            memberAt<CPointerVar<X509_ALGOR>>(4).value = value
+        }
+
+    var saltLength: CPointer<ASN1_INTEGER>?
+        get() = memberAt<CPointerVar<ASN1_INTEGER>>(8).value
+        set(value) {
+            memberAt<CPointerVar<ASN1_INTEGER>>(8).value = value
+        }
+
+    var trailerField: CPointer<ASN1_INTEGER>?
+        get() = memberAt<CPointerVar<ASN1_INTEGER>>(12).value
+        set(value) {
+            memberAt<CPointerVar<ASN1_INTEGER>>(12).value = value
+        }
+
+    var maskHash: CPointer<X509_ALGOR>?
+        get() = memberAt<CPointerVar<X509_ALGOR>>(16).value
+        set(value) {
+            memberAt<CPointerVar<X509_ALGOR>>(16).value = value
+        }
+}
+
 @CStruct("struct { void* p0; void* p1; }")
 class X509_algor_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var algorithm: CPointer<ASN1_OBJECT>?
         get() = memberAt<CPointerVar<ASN1_OBJECT>>(0).value
@@ -238,7 +285,7 @@ class X509_algor_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0; union { void* p0; int p1; void* p2; void* p3; void* p4; void* p5; void* p6; void* p7; void* p8; void* p9; void* p10; void* p11; void* p12; void* p13; void* p14; void* p15; void* p16; void* p17; void* p18; void* p19; void* p20; } p1; }")
 class asn1_type_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var type: Int
         get() = memberAt<IntVar>(0).value
@@ -253,7 +300,7 @@ class asn1_type_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("union { void* p0; int p1; void* p2; void* p3; void* p4; void* p5; void* p6; void* p7; void* p8; void* p9; void* p10; void* p11; void* p12; void* p13; void* p14; void* p15; void* p16; void* p17; void* p18; void* p19; void* p20; }")
 class anonymousStruct1(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     var ptr: CPointer<ByteVar>?
         get() = memberAt<CPointerVar<ByteVar>>(0).value
@@ -385,7 +432,7 @@ class anonymousStruct1(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; }")
 class crypto_ex_data_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     var sk: CPointer<stack_st_void>?
         get() = memberAt<CPointerVar<stack_st_void>>(0).value
@@ -397,7 +444,7 @@ class crypto_ex_data_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0; }")
 class CRYPTO_dynlock(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     var dummy: Int
         get() = memberAt<IntVar>(0).value
@@ -409,7 +456,7 @@ class CRYPTO_dynlock(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0; }")
 class crypto_threadid_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     var dummy: Int
         get() = memberAt<IntVar>(0).value
@@ -421,7 +468,7 @@ class crypto_threadid_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("union { void* p0; }")
 class BIO_sock_info_u(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     var addr: CPointer<BIO_ADDR>?
         get() = memberAt<CPointerVar<BIO_ADDR>>(0).value
@@ -433,7 +480,7 @@ class BIO_sock_info_u(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; long p1; int p2; }")
 class ASN1_ENCODING_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(12, 4)
+    companion object : CStructVar.Type(12, 4)
 
     var enc: CPointer<UByteVar>?
         get() = memberAt<CPointerVar<UByteVar>>(0).value
@@ -457,7 +504,7 @@ class ASN1_ENCODING_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0; long p1; long p2; unsigned long p3; unsigned long p4; }")
 class asn1_string_table_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(20, 4)
+    companion object : CStructVar.Type(20, 4)
 
     var nid: Int
         get() = memberAt<IntVar>(0).value
@@ -493,7 +540,7 @@ class asn1_string_table_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0; void* p1; void* p2; }")
 class BIT_STRING_BITNAME_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(12, 4)
+    companion object : CStructVar.Type(12, 4)
 
     var bitnum: Int
         get() = memberAt<IntVar>(0).value
@@ -517,7 +564,7 @@ class BIT_STRING_BITNAME_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0; int p1; void* p2; void* p3; }")
 class obj_name_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(16, 4)
+    companion object : CStructVar.Type(16, 4)
 
     var type: Int
         get() = memberAt<IntVar>(0).value
@@ -547,7 +594,7 @@ class obj_name_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; unsigned int p2; unsigned int p3; }")
 class EVP_CTRL_TLS1_1_MULTIBLOCK_PARAM(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(16, 4)
+    companion object : CStructVar.Type(16, 4)
 
     var out: CPointer<UByteVar>?
         get() = memberAt<CPointerVar<UByteVar>>(0).value
@@ -577,7 +624,7 @@ class EVP_CTRL_TLS1_1_MULTIBLOCK_PARAM(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; unsigned char p1[16]; }")
 class evp_cipher_info_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(20, 4)
+    companion object : CStructVar.Type(20, 4)
 
     var cipher: CPointer<EVP_CIPHER>?
         get() = memberAt<CPointerVar<EVP_CIPHER>>(0).value
@@ -592,7 +639,7 @@ class evp_cipher_info_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0; void* p1; }")
 class EC_builtin_curve(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var nid: Int
         get() = memberAt<IntVar>(0).value
@@ -607,46 +654,10 @@ class EC_builtin_curve(rawPtr: NativePtr) : CStructVar(rawPtr) {
         }
 }
 
-@CStruct("struct { void* p0; void* p1; void* p2; void* p3; void* p4; }")
-class rsa_pss_params_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
-
-    companion object : Type(20, 4)
-
-    var hashAlgorithm: CPointer<X509_ALGOR>?
-        get() = memberAt<CPointerVar<X509_ALGOR>>(0).value
-        set(value) {
-            memberAt<CPointerVar<X509_ALGOR>>(0).value = value
-        }
-
-    var maskGenAlgorithm: CPointer<X509_ALGOR>?
-        get() = memberAt<CPointerVar<X509_ALGOR>>(4).value
-        set(value) {
-            memberAt<CPointerVar<X509_ALGOR>>(4).value = value
-        }
-
-    var saltLength: CPointer<ASN1_INTEGER>?
-        get() = memberAt<CPointerVar<ASN1_INTEGER>>(8).value
-        set(value) {
-            memberAt<CPointerVar<ASN1_INTEGER>>(8).value = value
-        }
-
-    var trailerField: CPointer<ASN1_INTEGER>?
-        get() = memberAt<CPointerVar<ASN1_INTEGER>>(12).value
-        set(value) {
-            memberAt<CPointerVar<ASN1_INTEGER>>(12).value = value
-        }
-
-    var maskHash: CPointer<X509_ALGOR>?
-        get() = memberAt<CPointerVar<X509_ALGOR>>(16).value
-        set(value) {
-            memberAt<CPointerVar<X509_ALGOR>>(16).value = value
-        }
-}
-
 @CStruct("struct { void* p0; void* p1; void* p2; void* p3; }")
 class rsa_oaep_params_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(16, 4)
+    companion object : CStructVar.Type(16, 4)
 
     var hashFunc: CPointer<X509_ALGOR>?
         get() = memberAt<CPointerVar<X509_ALGOR>>(0).value
@@ -676,7 +687,7 @@ class rsa_oaep_params_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { unsigned int p0; unsigned int p1; unsigned int p2; unsigned int p3; unsigned int p4; unsigned int p5; unsigned int p6; unsigned int p7[16]; unsigned int p8; }")
 class SHAstate_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(96, 4)
+    companion object : CStructVar.Type(96, 4)
 
     var h0: UInt
         get() = memberAt<UIntVar>(0).value
@@ -733,7 +744,7 @@ class SHAstate_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { unsigned int p0[8]; unsigned int p1; unsigned int p2; unsigned int p3[16]; unsigned int p4; unsigned int p5; }")
 class SHA256state_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(112, 4)
+    companion object : CStructVar.Type(112, 4)
 
     val h: CArrayPointer<UIntVar>
         get() = arrayMemberAt(0)
@@ -769,7 +780,7 @@ class SHA256state_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { unsigned long long p0[8]; unsigned long long p1; unsigned long long p2; union { unsigned long long p0[16]; unsigned char p1[128]; } p3; unsigned int p4; unsigned int p5; }")
 class SHA512state_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(216, 8)
+    companion object : CStructVar.Type(216, 8)
 
     val h: CArrayPointer<ULongVar>
         get() = arrayMemberAt(0)
@@ -805,7 +816,7 @@ class SHA512state_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("union { unsigned long long p0[16]; unsigned char p1[128]; }")
 class anonymousStruct2(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(128, 8)
+    companion object : CStructVar.Type(128, 8)
 
     val d: CArrayPointer<ULongVar>
         get() = arrayMemberAt(0)
@@ -817,7 +828,7 @@ class anonymousStruct2(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; }")
 class X509_val_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var notBefore: CPointer<ASN1_TIME>?
         get() = memberAt<CPointerVar<ASN1_TIME>>(0).value
@@ -835,7 +846,7 @@ class X509_val_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0; int p1; void* p2; void* p3; int p4; void* p5; }")
 class x509_trust_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(24, 4)
+    companion object : CStructVar.Type(24, 4)
 
     var trust: Int
         get() = memberAt<IntVar>(0).value
@@ -877,7 +888,7 @@ class x509_trust_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0; void* p1; void* p2; void* p3; int p4; void* p5; int p6; struct { void* p0; unsigned char p1[16]; } p7; }")
 class private_key_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(48, 4)
+    companion object : CStructVar.Type(48, 4)
 
     var version: Int
         get() = memberAt<IntVar>(0).value
@@ -928,7 +939,7 @@ class private_key_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; struct { void* p0; unsigned char p1[16]; } p3; int p4; void* p5; }")
 class X509_info_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(40, 4)
+    companion object : CStructVar.Type(40, 4)
 
     var x509: CPointer<X509>?
         get() = memberAt<CPointerVar<X509>>(0).value
@@ -967,7 +978,7 @@ class X509_info_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; }")
 class Netscape_spkac_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var pubkey: CPointer<X509_PUBKEY>?
         get() = memberAt<CPointerVar<X509_PUBKEY>>(0).value
@@ -985,7 +996,7 @@ class Netscape_spkac_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; struct { void* p0; void* p1; } p1; void* p2; }")
 class Netscape_spki_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(16, 4)
+    companion object : CStructVar.Type(16, 4)
 
     var spkac: CPointer<NETSCAPE_SPKAC>?
         get() = memberAt<CPointerVar<NETSCAPE_SPKAC>>(0).value
@@ -1006,7 +1017,7 @@ class Netscape_spki_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; }")
 class Netscape_certificate_sequence(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var type: CPointer<ASN1_OBJECT>?
         get() = memberAt<CPointerVar<ASN1_OBJECT>>(0).value
@@ -1024,7 +1035,7 @@ class Netscape_certificate_sequence(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; }")
 class PBEPARAM_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var salt: CPointer<ASN1_OCTET_STRING>?
         get() = memberAt<CPointerVar<ASN1_OCTET_STRING>>(0).value
@@ -1042,7 +1053,7 @@ class PBEPARAM_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; }")
 class PBE2PARAM_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var keyfunc: CPointer<X509_ALGOR>?
         get() = memberAt<CPointerVar<X509_ALGOR>>(0).value
@@ -1060,7 +1071,7 @@ class PBE2PARAM_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; void* p3; }")
 class PBKDF2PARAM_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(16, 4)
+    companion object : CStructVar.Type(16, 4)
 
     var salt: CPointer<ASN1_TYPE>?
         get() = memberAt<CPointerVar<ASN1_TYPE>>(0).value
@@ -1090,7 +1101,7 @@ class PBKDF2PARAM_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; void* p3; void* p4; }")
 class SCRYPT_PARAMS_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(20, 4)
+    companion object : CStructVar.Type(20, 4)
 
     var salt: CPointer<ASN1_OCTET_STRING>?
         get() = memberAt<CPointerVar<ASN1_OCTET_STRING>>(0).value
@@ -1126,7 +1137,7 @@ class SCRYPT_PARAMS_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { union { void* p0; unsigned long p1; int p2; } p0; }")
 class lhash_st_OPENSSL_STRING(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     val dummy: lh_OPENSSL_STRING_dummy
         get() = memberAt(0)
@@ -1135,7 +1146,7 @@ class lhash_st_OPENSSL_STRING(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("union { void* p0; unsigned long p1; int p2; }")
 class lh_OPENSSL_STRING_dummy(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     var d1: COpaquePointer?
         get() = memberAt<COpaquePointerVar>(0).value
@@ -1159,7 +1170,7 @@ class lh_OPENSSL_STRING_dummy(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { union { void* p0; unsigned long p1; int p2; } p0; }")
 class lhash_st_OPENSSL_CSTRING(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     val dummy: lh_OPENSSL_CSTRING_dummy
         get() = memberAt(0)
@@ -1168,7 +1179,7 @@ class lhash_st_OPENSSL_CSTRING(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("union { void* p0; unsigned long p1; int p2; }")
 class lh_OPENSSL_CSTRING_dummy(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     var d1: COpaquePointer?
         get() = memberAt<COpaquePointerVar>(0).value
@@ -1192,7 +1203,7 @@ class lh_OPENSSL_CSTRING_dummy(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; }")
 class pkcs7_issuer_and_serial_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var issuer: CPointer<X509_NAME>?
         get() = memberAt<CPointerVar<X509_NAME>>(0).value
@@ -1210,7 +1221,7 @@ class pkcs7_issuer_and_serial_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; void* p3; void* p4; void* p5; void* p6; void* p7; }")
 class pkcs7_signer_info_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(32, 4)
+    companion object : CStructVar.Type(32, 4)
 
     var version: CPointer<ASN1_INTEGER>?
         get() = memberAt<CPointerVar<ASN1_INTEGER>>(0).value
@@ -1264,7 +1275,7 @@ class pkcs7_signer_info_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; void* p3; void* p4; }")
 class pkcs7_recip_info_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(20, 4)
+    companion object : CStructVar.Type(20, 4)
 
     var version: CPointer<ASN1_INTEGER>?
         get() = memberAt<CPointerVar<ASN1_INTEGER>>(0).value
@@ -1300,7 +1311,7 @@ class pkcs7_recip_info_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; void* p3; void* p4; void* p5; }")
 class pkcs7_signed_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(24, 4)
+    companion object : CStructVar.Type(24, 4)
 
     var version: CPointer<ASN1_INTEGER>?
         get() = memberAt<CPointerVar<ASN1_INTEGER>>(0).value
@@ -1342,7 +1353,7 @@ class pkcs7_signed_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; long p1; int p2; int p3; void* p4; union { void* p0; void* p1; void* p2; void* p3; void* p4; void* p5; void* p6; void* p7; } p5; }")
 class pkcs7_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(24, 4)
+    companion object : CStructVar.Type(24, 4)
 
     var asn1: CPointer<UByteVar>?
         get() = memberAt<CPointerVar<UByteVar>>(0).value
@@ -1381,7 +1392,7 @@ class pkcs7_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("union { void* p0; void* p1; void* p2; void* p3; void* p4; void* p5; void* p6; void* p7; }")
 class anonymousStruct3(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     var ptr: CPointer<ByteVar>?
         get() = memberAt<CPointerVar<ByteVar>>(0).value
@@ -1435,7 +1446,7 @@ class anonymousStruct3(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; }")
 class pkcs7_enveloped_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(12, 4)
+    companion object : CStructVar.Type(12, 4)
 
     var version: CPointer<ASN1_INTEGER>?
         get() = memberAt<CPointerVar<ASN1_INTEGER>>(0).value
@@ -1459,7 +1470,7 @@ class pkcs7_enveloped_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; void* p3; }")
 class pkcs7_enc_content_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(16, 4)
+    companion object : CStructVar.Type(16, 4)
 
     var content_type: CPointer<ASN1_OBJECT>?
         get() = memberAt<CPointerVar<ASN1_OBJECT>>(0).value
@@ -1489,7 +1500,7 @@ class pkcs7_enc_content_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; void* p3; void* p4; void* p5; void* p6; }")
 class pkcs7_signedandenveloped_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(28, 4)
+    companion object : CStructVar.Type(28, 4)
 
     var version: CPointer<ASN1_INTEGER>?
         get() = memberAt<CPointerVar<ASN1_INTEGER>>(0).value
@@ -1537,7 +1548,7 @@ class pkcs7_signedandenveloped_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; void* p2; void* p3; }")
 class pkcs7_digest_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(16, 4)
+    companion object : CStructVar.Type(16, 4)
 
     var version: CPointer<ASN1_INTEGER>?
         get() = memberAt<CPointerVar<ASN1_INTEGER>>(0).value
@@ -1567,7 +1578,7 @@ class pkcs7_digest_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; void* p1; }")
 class pkcs7_encrypted_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var version: CPointer<ASN1_INTEGER>?
         get() = memberAt<CPointerVar<ASN1_INTEGER>>(0).value
@@ -1585,7 +1596,7 @@ class pkcs7_encrypted_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { unsigned short p0; void* p1; }")
 class tls_session_ticket_ext_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var length: UShort
         get() = memberAt<UShortVar>(0).value
@@ -1603,7 +1614,7 @@ class tls_session_ticket_ext_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { void* p0; unsigned long p1; }")
 class srtp_protection_profile_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var name: CPointer<ByteVar>?
         get() = memberAt<CPointerVar<ByteVar>>(0).value
@@ -1621,7 +1632,7 @@ class srtp_protection_profile_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { int p0[16]; unsigned long p1[16]; void* p2[16]; int p3[16]; void* p4[16]; int p5[16]; int p6; int p7; }")
 class err_state_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(392, 4)
+    companion object : CStructVar.Type(392, 4)
 
     val err_flags: CArrayPointer<IntVar>
         get() = arrayMemberAt(0)
@@ -1657,7 +1668,7 @@ class err_state_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { unsigned long p0; void* p1; }")
 class ERR_string_data_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(8, 4)
+    companion object : CStructVar.Type(8, 4)
 
     var error: UInt
         get() = memberAt<UIntVar>(0).value
@@ -1675,7 +1686,7 @@ class ERR_string_data_st(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("struct { union { void* p0; unsigned long p1; int p2; } p0; }")
 class lhash_st_ERR_STRING_DATA(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     val dummy: lh_ERR_STRING_DATA_dummy
         get() = memberAt(0)
@@ -1684,7 +1695,7 @@ class lhash_st_ERR_STRING_DATA(rawPtr: NativePtr) : CStructVar(rawPtr) {
 @CStruct("union { void* p0; unsigned long p1; int p2; }")
 class lh_ERR_STRING_DATA_dummy(rawPtr: NativePtr) : CStructVar(rawPtr) {
 
-    companion object : Type(4, 4)
+    companion object : CStructVar.Type(4, 4)
 
     var d1: COpaquePointer?
         get() = memberAt<COpaquePointerVar>(0).value
@@ -1705,10 +1716,12 @@ class lh_ERR_STRING_DATA_dummy(rawPtr: NativePtr) : CStructVar(rawPtr) {
         }
 }
 
-enum class BIO_hostserv_priorities(override val value: UInt) : CEnum {
+enum class BIO_hostserv_priorities(value: UInt) : CEnum {
     BIO_PARSE_PRIO_HOST(0u),
     BIO_PARSE_PRIO_SERV(1u),
     ;
+
+    override val value: UInt = value
 
     companion object {
 
@@ -1726,10 +1739,12 @@ enum class BIO_hostserv_priorities(override val value: UInt) : CEnum {
     }
 }
 
-enum class BIO_lookup_type(override val value: UInt) : CEnum {
+enum class BIO_lookup_type(value: UInt) : CEnum {
     BIO_LOOKUP_CLIENT(0u),
     BIO_LOOKUP_SERVER(1u),
     ;
+
+    override val value: UInt = value
 
     companion object {
 
@@ -1747,9 +1762,11 @@ enum class BIO_lookup_type(override val value: UInt) : CEnum {
     }
 }
 
-enum class BIO_sock_info_type(override val value: UInt) : CEnum {
+enum class BIO_sock_info_type(value: UInt) : CEnum {
     BIO_SOCK_INFO_ADDRESS(0u),
     ;
+
+    override val value: UInt = value
 
     companion object {
 
@@ -1767,12 +1784,14 @@ enum class BIO_sock_info_type(override val value: UInt) : CEnum {
     }
 }
 
-enum class sct_source_t(override val value: UInt) : CEnum {
+enum class sct_source_t(value: UInt) : CEnum {
     SCT_SOURCE_UNKNOWN(0u),
     SCT_SOURCE_TLS_EXTENSION(1u),
     SCT_SOURCE_X509V3_EXTENSION(2u),
     SCT_SOURCE_OCSP_STAPLED_RESPONSE(3u),
     ;
+
+    override val value: UInt = value
 
     companion object {
 
@@ -1790,7 +1809,7 @@ enum class sct_source_t(override val value: UInt) : CEnum {
     }
 }
 
-enum class sct_validation_status_t(override val value: UInt) : CEnum {
+enum class sct_validation_status_t(value: UInt) : CEnum {
     SCT_VALIDATION_STATUS_NOT_SET(0u),
     SCT_VALIDATION_STATUS_UNKNOWN_LOG(1u),
     SCT_VALIDATION_STATUS_VALID(2u),
@@ -1798,6 +1817,8 @@ enum class sct_validation_status_t(override val value: UInt) : CEnum {
     SCT_VALIDATION_STATUS_UNVERIFIED(4u),
     SCT_VALIDATION_STATUS_UNKNOWN_VERSION(5u),
     ;
+
+    override val value: UInt = value
 
     companion object {
 
@@ -1815,7 +1836,7 @@ enum class sct_validation_status_t(override val value: UInt) : CEnum {
     }
 }
 
-enum class OSSL_HANDSHAKE_STATE(override val value: UInt) : CEnum {
+enum class OSSL_HANDSHAKE_STATE(value: UInt) : CEnum {
     TLS_ST_BEFORE(0u),
     TLS_ST_OK(1u),
     DTLS_ST_CR_HELLO_VERIFY_REQUEST(2u),
@@ -1867,6 +1888,8 @@ enum class OSSL_HANDSHAKE_STATE(override val value: UInt) : CEnum {
     TLS_ST_CW_END_OF_EARLY_DATA(48u),
     TLS_ST_SR_END_OF_EARLY_DATA(49u),
     ;
+
+    override val value: UInt = value
 
     companion object {
 
@@ -2112,14 +2135,16 @@ external fun sk_OPENSSL_CSTRING_pop_free(
 
 @CCall("knifunptr_openssl63_sk_OPENSSL_CSTRING_insert")
 external fun sk_OPENSSL_CSTRING_insert(
-    sk: CValuesRef<stack_st_OPENSSL_CSTRING>?, @CCall.CString ptr: String?,
+    sk: CValuesRef<stack_st_OPENSSL_CSTRING>?,
+    @CCall.CString ptr: String?,
     idx: Int
 ): Int
 
 @CCall("knifunptr_openssl64_sk_OPENSSL_CSTRING_set")
 external fun sk_OPENSSL_CSTRING_set(
     sk: CValuesRef<stack_st_OPENSSL_CSTRING>?,
-    idx: Int, @CCall.CString ptr: String?
+    idx: Int,
+    @CCall.CString ptr: String?
 ): CPointer<ByteVar>?
 
 @CCall("knifunptr_openssl65_sk_OPENSSL_CSTRING_find")
@@ -2434,7 +2459,9 @@ external fun CRYPTO_strdup(@CCall.CString str: String?, @CCall.CString file: Str
 
 @CCall("knifunptr_openssl151_CRYPTO_strndup")
 external fun CRYPTO_strndup(
-    @CCall.CString str: String?, s: size_t, @CCall.CString file: String?,
+    @CCall.CString str: String?,
+    s: size_t,
+    @CCall.CString file: String?,
     line: Int
 ): CPointer<ByteVar>?
 
@@ -2451,7 +2478,8 @@ external fun CRYPTO_realloc(addr: CValuesRef<*>?, num: size_t, @CCall.CString fi
 external fun CRYPTO_clear_realloc(
     addr: CValuesRef<*>?,
     old_num: size_t,
-    num: size_t, @CCall.CString file: String?,
+    num: size_t,
+    @CCall.CString file: String?,
     line: Int
 ): COpaquePointer?
 
@@ -2914,7 +2942,8 @@ external fun BIO_nwrite(bio: CValuesRef<BIO>?, buf: CValuesRef<CPointerVar<ByteV
 @CCall("knifunptr_openssl293_BIO_debug_callback")
 external fun BIO_debug_callback(
     bio: CValuesRef<BIO>?,
-    cmd: Int, @CCall.CString argp: String?,
+    cmd: Int,
+    @CCall.CString argp: String?,
     argi: Int,
     argl: Int,
     ret: Int
@@ -2986,14 +3015,16 @@ external fun BIO_fd_non_fatal_error(error: Int): Int
 @CCall("knifunptr_openssl315_BIO_dump_cb")
 external fun BIO_dump_cb(
     cb: CPointer<CFunction<(COpaquePointer?, size_t, COpaquePointer?) -> Int>>?,
-    u: CValuesRef<*>?, @CCall.CString s: String?,
+    u: CValuesRef<*>?,
+    @CCall.CString s: String?,
     len: Int
 ): Int
 
 @CCall("knifunptr_openssl316_BIO_dump_indent_cb")
 external fun BIO_dump_indent_cb(
     cb: CPointer<CFunction<(COpaquePointer?, size_t, COpaquePointer?) -> Int>>?,
-    u: CValuesRef<*>?, @CCall.CString s: String?,
+    u: CValuesRef<*>?,
+    @CCall.CString s: String?,
     len: Int,
     indent: Int
 ): Int
@@ -3075,14 +3106,17 @@ external fun BIO_ADDRINFO_free(bai: CValuesRef<BIO_ADDRINFO>?): Unit
 
 @CCall("knifunptr_openssl338_BIO_parse_hostserv")
 external fun BIO_parse_hostserv(
-    @CCall.CString hostserv: String?, host: CValuesRef<CPointerVar<ByteVar>>?,
+    @CCall.CString hostserv: String?,
+    host: CValuesRef<CPointerVar<ByteVar>>?,
     service: CValuesRef<CPointerVar<ByteVar>>?,
     hostserv_prio: BIO_hostserv_priorities
 ): Int
 
 @CCall("knifunptr_openssl339_BIO_lookup")
 external fun BIO_lookup(
-    @CCall.CString host: String?, @CCall.CString service: String?, lookup_type: BIO_lookup_type,
+    @CCall.CString host: String?,
+    @CCall.CString service: String?,
+    lookup_type: BIO_lookup_type,
     family: Int,
     socktype: Int,
     res: CValuesRef<CPointerVar<BIO_ADDRINFO>>?
@@ -3090,7 +3124,9 @@ external fun BIO_lookup(
 
 @CCall("knifunptr_openssl340_BIO_lookup_ex")
 external fun BIO_lookup_ex(
-    @CCall.CString host: String?, @CCall.CString service: String?, lookup_type: Int,
+    @CCall.CString host: String?,
+    @CCall.CString service: String?,
+    lookup_type: Int,
     family: Int,
     socktype: Int,
     protocol: Int,
@@ -3174,12 +3210,21 @@ external fun BIO_copy_next_retry(b: CValuesRef<BIO>?): Unit
 @CCall("knifunptr_openssl364_BIO_printf")
 external fun BIO_printf(bio: CValuesRef<BIO>?, @CCall.CString format: String?, vararg variadicArguments: Any?): Int
 
+@Deprecated("Unable to import this declaration", level = DeprecationLevel.ERROR)
+fun BIO_vprintf(bio: CValuesRef<BIO>?, @CCall.CString format: String?, args: CValue<va_list>): Int =
+    throw UnsupportedOperationException()
+
 @CCall("knifunptr_openssl366_BIO_snprintf")
 external fun BIO_snprintf(
     buf: CValuesRef<ByteVar>?,
-    n: size_t, @CCall.CString format: String?,
+    n: size_t,
+    @CCall.CString format: String?,
     vararg variadicArguments: Any?
 ): Int
+
+@Deprecated("Unable to import this declaration", level = DeprecationLevel.ERROR)
+fun BIO_vsnprintf(buf: CValuesRef<ByteVar>?, n: size_t, @CCall.CString format: String?, args: CValue<va_list>): Int =
+    throw UnsupportedOperationException()
 
 @CCall("knifunptr_openssl368_BIO_meth_new")
 external fun BIO_meth_new(type: Int, @CCall.CString name: String?): CPointer<BIO_METHOD>?
@@ -5053,7 +5098,8 @@ external fun ASN1_BIT_STRING_num_asc(@CCall.CString name: String?, tbl: CValuesR
 
 @CCall("knifunptr_openssl793_ASN1_BIT_STRING_set_asc")
 external fun ASN1_BIT_STRING_set_asc(
-    bs: CValuesRef<ASN1_BIT_STRING>?, @CCall.CString name: String?,
+    bs: CValuesRef<ASN1_BIT_STRING>?,
+    @CCall.CString name: String?,
     value: Int,
     tbl: CValuesRef<BIT_STRING_BITNAME>?
 ): Int
@@ -5507,7 +5553,9 @@ external fun a2d_ASN1_OBJECT(out: CValuesRef<UByteVar>?, olen: Int, @CCall.CStri
 external fun ASN1_OBJECT_create(
     nid: Int,
     data: CValuesRef<UByteVar>?,
-    len: Int, @CCall.CString sn: String?, @CCall.CString ln: String?
+    len: Int,
+    @CCall.CString sn: String?,
+    @CCall.CString ln: String?
 ): CPointer<ASN1_OBJECT>?
 
 @CCall("knifunptr_openssl904_ASN1_INTEGER_get_int64")
@@ -5657,7 +5705,8 @@ external fun ASN1_buf_print(bp: CValuesRef<BIO>?, buf: CValuesRef<UByteVar>?, bu
 
 @CCall("knifunptr_openssl944_ASN1_bn_print")
 external fun ASN1_bn_print(
-    bp: CValuesRef<BIO>?, @CCall.CString number: String?,
+    bp: CValuesRef<BIO>?,
+    @CCall.CString number: String?,
     num: CValuesRef<BIGNUM>?,
     buf: CValuesRef<UByteVar>?,
     off: Int
@@ -5887,7 +5936,8 @@ external fun PEM_write_bio_ASN1_stream(
     out: CValuesRef<BIO>?,
     `val`: CValuesRef<ASN1_VALUE>?,
     `in`: CValuesRef<BIO>?,
-    flags: Int, @CCall.CString hdr: String?,
+    flags: Int,
+    @CCall.CString hdr: String?,
     it: CValuesRef<ASN1_ITEM>?
 ): Int
 
@@ -6376,7 +6426,8 @@ external fun EVP_DigestFinalXOF(ctx: CValuesRef<EVP_MD_CTX>?, md: CValuesRef<UBy
 @CCall("knifunptr_openssl1128_EVP_read_pw_string")
 external fun EVP_read_pw_string(
     buf: CValuesRef<ByteVar>?,
-    length: Int, @CCall.CString prompt: String?,
+    length: Int,
+    @CCall.CString prompt: String?,
     verify: Int
 ): Int
 
@@ -6384,7 +6435,8 @@ external fun EVP_read_pw_string(
 external fun EVP_read_pw_string_min(
     buf: CValuesRef<ByteVar>?,
     minlen: Int,
-    maxlen: Int, @CCall.CString prompt: String?,
+    maxlen: Int,
+    @CCall.CString prompt: String?,
     verify: Int
 ): Int
 
@@ -7449,7 +7501,8 @@ external fun EVP_CIPHER_get_asn1_iv(c: CValuesRef<EVP_CIPHER_CTX>?, type: CValue
 
 @CCall("knifunptr_openssl1410_PKCS5_PBE_keyivgen")
 external fun PKCS5_PBE_keyivgen(
-    ctx: CValuesRef<EVP_CIPHER_CTX>?, @CCall.CString pass: String?,
+    ctx: CValuesRef<EVP_CIPHER_CTX>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     param: CValuesRef<ASN1_TYPE>?,
     cipher: CValuesRef<EVP_CIPHER>?,
@@ -7459,7 +7512,8 @@ external fun PKCS5_PBE_keyivgen(
 
 @CCall("knifunptr_openssl1411_PKCS5_PBKDF2_HMAC_SHA1")
 external fun PKCS5_PBKDF2_HMAC_SHA1(
-    @CCall.CString pass: String?, passlen: Int,
+    @CCall.CString pass: String?,
+    passlen: Int,
     salt: CValuesRef<UByteVar>?,
     saltlen: Int,
     iter: Int,
@@ -7469,7 +7523,8 @@ external fun PKCS5_PBKDF2_HMAC_SHA1(
 
 @CCall("knifunptr_openssl1412_PKCS5_PBKDF2_HMAC")
 external fun PKCS5_PBKDF2_HMAC(
-    @CCall.CString pass: String?, passlen: Int,
+    @CCall.CString pass: String?,
+    passlen: Int,
     salt: CValuesRef<UByteVar>?,
     saltlen: Int,
     iter: Int,
@@ -7480,7 +7535,8 @@ external fun PKCS5_PBKDF2_HMAC(
 
 @CCall("knifunptr_openssl1413_PKCS5_v2_PBE_keyivgen")
 external fun PKCS5_v2_PBE_keyivgen(
-    ctx: CValuesRef<EVP_CIPHER_CTX>?, @CCall.CString pass: String?,
+    ctx: CValuesRef<EVP_CIPHER_CTX>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     param: CValuesRef<ASN1_TYPE>?,
     cipher: CValuesRef<EVP_CIPHER>?,
@@ -7490,7 +7546,8 @@ external fun PKCS5_v2_PBE_keyivgen(
 
 @CCall("knifunptr_openssl1414_EVP_PBE_scrypt")
 external fun EVP_PBE_scrypt(
-    @CCall.CString pass: String?, passlen: size_t,
+    @CCall.CString pass: String?,
+    passlen: size_t,
     salt: CValuesRef<UByteVar>?,
     saltlen: size_t,
     N: uint64_t,
@@ -7503,7 +7560,8 @@ external fun EVP_PBE_scrypt(
 
 @CCall("knifunptr_openssl1415_PKCS5_v2_scrypt_keyivgen")
 external fun PKCS5_v2_scrypt_keyivgen(
-    ctx: CValuesRef<EVP_CIPHER_CTX>?, @CCall.CString pass: String?,
+    ctx: CValuesRef<EVP_CIPHER_CTX>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     param: CValuesRef<ASN1_TYPE>?,
     c: CValuesRef<EVP_CIPHER>?,
@@ -7516,7 +7574,8 @@ external fun PKCS5_PBE_add(): Unit
 
 @CCall("knifunptr_openssl1417_EVP_PBE_CipherInit")
 external fun EVP_PBE_CipherInit(
-    pbe_obj: CValuesRef<ASN1_OBJECT>?, @CCall.CString pass: String?,
+    pbe_obj: CValuesRef<ASN1_OBJECT>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     param: CValuesRef<ASN1_TYPE>?,
     ctx: CValuesRef<EVP_CIPHER_CTX>?,
@@ -7566,7 +7625,8 @@ external fun EVP_PKEY_asn1_find(pe: CValuesRef<CPointerVar<ENGINE>>?, type: Int)
 
 @CCall("knifunptr_openssl1426_EVP_PKEY_asn1_find_str")
 external fun EVP_PKEY_asn1_find_str(
-    pe: CValuesRef<CPointerVar<ENGINE>>?, @CCall.CString str: String?,
+    pe: CValuesRef<CPointerVar<ENGINE>>?,
+    @CCall.CString str: String?,
     len: Int
 ): CPointer<EVP_PKEY_ASN1_METHOD>?
 
@@ -7592,7 +7652,9 @@ external fun EVP_PKEY_get0_asn1(pkey: CValuesRef<EVP_PKEY>?): CPointer<EVP_PKEY_
 @CCall("knifunptr_openssl1431_EVP_PKEY_asn1_new")
 external fun EVP_PKEY_asn1_new(
     id: Int,
-    flags: Int, @CCall.CString pem_str: String?, @CCall.CString info: String?
+    flags: Int,
+    @CCall.CString pem_str: String?,
+    @CCall.CString info: String?
 ): CPointer<EVP_PKEY_ASN1_METHOD>?
 
 @CCall("knifunptr_openssl1432_EVP_PKEY_asn1_copy")
@@ -8046,189 +8108,213 @@ external fun EVP_PKEY_meth_set_ctrl(
     ctrl_str: CPointer<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<ByteVar>?, CPointer<ByteVar>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl1519_EVP_PKEY_meth_set_check")
+@CCall("knifunptr_openssl1519_EVP_PKEY_meth_set_digestsign")
+external fun EVP_PKEY_meth_set_digestsign(
+    pmeth: CValuesRef<EVP_PKEY_METHOD>?,
+    digestsign: CPointer<CFunction<(CPointer<EVP_MD_CTX>?, CPointer<UByteVar>?, CPointer<size_tVar>?, CPointer<UByteVar>?, size_t) -> Int>>?
+): Unit
+
+@CCall("knifunptr_openssl1520_EVP_PKEY_meth_set_digestverify")
+external fun EVP_PKEY_meth_set_digestverify(
+    pmeth: CValuesRef<EVP_PKEY_METHOD>?,
+    digestverify: CPointer<CFunction<(CPointer<EVP_MD_CTX>?, CPointer<UByteVar>?, size_t, CPointer<UByteVar>?, size_t) -> Int>>?
+): Unit
+
+@CCall("knifunptr_openssl1521_EVP_PKEY_meth_set_check")
 external fun EVP_PKEY_meth_set_check(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     check: CPointer<CFunction<(CPointer<EVP_PKEY>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl1520_EVP_PKEY_meth_set_public_check")
+@CCall("knifunptr_openssl1522_EVP_PKEY_meth_set_public_check")
 external fun EVP_PKEY_meth_set_public_check(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     check: CPointer<CFunction<(CPointer<EVP_PKEY>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl1521_EVP_PKEY_meth_set_param_check")
+@CCall("knifunptr_openssl1523_EVP_PKEY_meth_set_param_check")
 external fun EVP_PKEY_meth_set_param_check(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     check: CPointer<CFunction<(CPointer<EVP_PKEY>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl1522_EVP_PKEY_meth_set_digest_custom")
+@CCall("knifunptr_openssl1524_EVP_PKEY_meth_set_digest_custom")
 external fun EVP_PKEY_meth_set_digest_custom(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     digest_custom: CPointer<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<EVP_MD_CTX>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl1523_EVP_PKEY_meth_get_init")
+@CCall("knifunptr_openssl1525_EVP_PKEY_meth_get_init")
 external fun EVP_PKEY_meth_get_init(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pinit: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1524_EVP_PKEY_meth_get_copy")
+@CCall("knifunptr_openssl1526_EVP_PKEY_meth_get_copy")
 external fun EVP_PKEY_meth_get_copy(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pcopy: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<EVP_PKEY_CTX>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1525_EVP_PKEY_meth_get_cleanup")
+@CCall("knifunptr_openssl1527_EVP_PKEY_meth_get_cleanup")
 external fun EVP_PKEY_meth_get_cleanup(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pcleanup: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Unit>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1526_EVP_PKEY_meth_get_paramgen")
+@CCall("knifunptr_openssl1528_EVP_PKEY_meth_get_paramgen")
 external fun EVP_PKEY_meth_get_paramgen(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pparamgen_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Int>>>?,
     pparamgen: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<EVP_PKEY>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1527_EVP_PKEY_meth_get_keygen")
+@CCall("knifunptr_openssl1529_EVP_PKEY_meth_get_keygen")
 external fun EVP_PKEY_meth_get_keygen(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pkeygen_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Int>>>?,
     pkeygen: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<EVP_PKEY>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1528_EVP_PKEY_meth_get_sign")
+@CCall("knifunptr_openssl1530_EVP_PKEY_meth_get_sign")
 external fun EVP_PKEY_meth_get_sign(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     psign_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Int>>>?,
     psign: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<UByteVar>?, CPointer<size_tVar>?, CPointer<UByteVar>?, size_t) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1529_EVP_PKEY_meth_get_verify")
+@CCall("knifunptr_openssl1531_EVP_PKEY_meth_get_verify")
 external fun EVP_PKEY_meth_get_verify(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pverify_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Int>>>?,
     pverify: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<UByteVar>?, size_t, CPointer<UByteVar>?, size_t) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1530_EVP_PKEY_meth_get_verify_recover")
+@CCall("knifunptr_openssl1532_EVP_PKEY_meth_get_verify_recover")
 external fun EVP_PKEY_meth_get_verify_recover(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pverify_recover_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Int>>>?,
     pverify_recover: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<UByteVar>?, CPointer<size_tVar>?, CPointer<UByteVar>?, size_t) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1531_EVP_PKEY_meth_get_signctx")
+@CCall("knifunptr_openssl1533_EVP_PKEY_meth_get_signctx")
 external fun EVP_PKEY_meth_get_signctx(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     psignctx_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<EVP_MD_CTX>?) -> Int>>>?,
     psignctx: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<UByteVar>?, CPointer<size_tVar>?, CPointer<EVP_MD_CTX>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1532_EVP_PKEY_meth_get_verifyctx")
+@CCall("knifunptr_openssl1534_EVP_PKEY_meth_get_verifyctx")
 external fun EVP_PKEY_meth_get_verifyctx(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pverifyctx_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<EVP_MD_CTX>?) -> Int>>>?,
     pverifyctx: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<UByteVar>?, Int, CPointer<EVP_MD_CTX>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1533_EVP_PKEY_meth_get_encrypt")
+@CCall("knifunptr_openssl1535_EVP_PKEY_meth_get_encrypt")
 external fun EVP_PKEY_meth_get_encrypt(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pencrypt_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Int>>>?,
     pencryptfn: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<UByteVar>?, CPointer<size_tVar>?, CPointer<UByteVar>?, size_t) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1534_EVP_PKEY_meth_get_decrypt")
+@CCall("knifunptr_openssl1536_EVP_PKEY_meth_get_decrypt")
 external fun EVP_PKEY_meth_get_decrypt(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pdecrypt_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Int>>>?,
     pdecrypt: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<UByteVar>?, CPointer<size_tVar>?, CPointer<UByteVar>?, size_t) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1535_EVP_PKEY_meth_get_derive")
+@CCall("knifunptr_openssl1537_EVP_PKEY_meth_get_derive")
 external fun EVP_PKEY_meth_get_derive(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pderive_init: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?) -> Int>>>?,
     pderive: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<UByteVar>?, CPointer<size_tVar>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1536_EVP_PKEY_meth_get_ctrl")
+@CCall("knifunptr_openssl1538_EVP_PKEY_meth_get_ctrl")
 external fun EVP_PKEY_meth_get_ctrl(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pctrl: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, Int, Int, COpaquePointer?) -> Int>>>?,
     pctrl_str: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<ByteVar>?, CPointer<ByteVar>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1537_EVP_PKEY_meth_get_check")
+@CCall("knifunptr_openssl1539_EVP_PKEY_meth_get_digestsign")
+external fun EVP_PKEY_meth_get_digestsign(
+    pmeth: CValuesRef<EVP_PKEY_METHOD>?,
+    digestsign: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_MD_CTX>?, CPointer<UByteVar>?, CPointer<size_tVar>?, CPointer<UByteVar>?, size_t) -> Int>>>?
+): Unit
+
+@CCall("knifunptr_openssl1540_EVP_PKEY_meth_get_digestverify")
+external fun EVP_PKEY_meth_get_digestverify(
+    pmeth: CValuesRef<EVP_PKEY_METHOD>?,
+    digestverify: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_MD_CTX>?, CPointer<UByteVar>?, size_t, CPointer<UByteVar>?, size_t) -> Int>>>?
+): Unit
+
+@CCall("knifunptr_openssl1541_EVP_PKEY_meth_get_check")
 external fun EVP_PKEY_meth_get_check(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pcheck: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1538_EVP_PKEY_meth_get_public_check")
+@CCall("knifunptr_openssl1542_EVP_PKEY_meth_get_public_check")
 external fun EVP_PKEY_meth_get_public_check(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pcheck: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1539_EVP_PKEY_meth_get_param_check")
+@CCall("knifunptr_openssl1543_EVP_PKEY_meth_get_param_check")
 external fun EVP_PKEY_meth_get_param_check(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pcheck: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1540_EVP_PKEY_meth_get_digest_custom")
+@CCall("knifunptr_openssl1544_EVP_PKEY_meth_get_digest_custom")
 external fun EVP_PKEY_meth_get_digest_custom(
     pmeth: CValuesRef<EVP_PKEY_METHOD>?,
     pdigest_custom: CValuesRef<CPointerVar<CFunction<(CPointer<EVP_PKEY_CTX>?, CPointer<EVP_MD_CTX>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1541_EVP_add_alg_module")
+@CCall("knifunptr_openssl1545_EVP_add_alg_module")
 external fun EVP_add_alg_module(): Unit
 
-@CCall("knifunptr_openssl1542_ERR_load_EC_strings")
+@CCall("knifunptr_openssl1546_ERR_load_EC_strings")
 external fun ERR_load_EC_strings(): Int
 
-@CCall("knifunptr_openssl1543_EC_GFp_simple_method")
+@CCall("knifunptr_openssl1547_EC_GFp_simple_method")
 external fun EC_GFp_simple_method(): CPointer<EC_METHOD>?
 
-@CCall("knifunptr_openssl1544_EC_GFp_mont_method")
+@CCall("knifunptr_openssl1548_EC_GFp_mont_method")
 external fun EC_GFp_mont_method(): CPointer<EC_METHOD>?
 
-@CCall("knifunptr_openssl1545_EC_GFp_nist_method")
+@CCall("knifunptr_openssl1549_EC_GFp_nist_method")
 external fun EC_GFp_nist_method(): CPointer<EC_METHOD>?
 
-@CCall("knifunptr_openssl1546_EC_GF2m_simple_method")
+@CCall("knifunptr_openssl1550_EC_GF2m_simple_method")
 external fun EC_GF2m_simple_method(): CPointer<EC_METHOD>?
 
-@CCall("knifunptr_openssl1547_EC_GROUP_new")
+@CCall("knifunptr_openssl1551_EC_GROUP_new")
 external fun EC_GROUP_new(meth: CValuesRef<EC_METHOD>?): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl1548_EC_GROUP_free")
+@CCall("knifunptr_openssl1552_EC_GROUP_free")
 external fun EC_GROUP_free(group: CValuesRef<EC_GROUP>?): Unit
 
-@CCall("knifunptr_openssl1549_EC_GROUP_clear_free")
+@CCall("knifunptr_openssl1553_EC_GROUP_clear_free")
 external fun EC_GROUP_clear_free(group: CValuesRef<EC_GROUP>?): Unit
 
-@CCall("knifunptr_openssl1550_EC_GROUP_copy")
+@CCall("knifunptr_openssl1554_EC_GROUP_copy")
 external fun EC_GROUP_copy(dst: CValuesRef<EC_GROUP>?, src: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl1551_EC_GROUP_dup")
+@CCall("knifunptr_openssl1555_EC_GROUP_dup")
 external fun EC_GROUP_dup(src: CValuesRef<EC_GROUP>?): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl1552_EC_GROUP_method_of")
+@CCall("knifunptr_openssl1556_EC_GROUP_method_of")
 external fun EC_GROUP_method_of(group: CValuesRef<EC_GROUP>?): CPointer<EC_METHOD>?
 
-@CCall("knifunptr_openssl1553_EC_METHOD_get_field_type")
+@CCall("knifunptr_openssl1557_EC_METHOD_get_field_type")
 external fun EC_METHOD_get_field_type(meth: CValuesRef<EC_METHOD>?): Int
 
-@CCall("knifunptr_openssl1554_EC_GROUP_set_generator")
+@CCall("knifunptr_openssl1558_EC_GROUP_set_generator")
 external fun EC_GROUP_set_generator(
     group: CValuesRef<EC_GROUP>?,
     generator: CValuesRef<EC_POINT>?,
@@ -8236,59 +8322,59 @@ external fun EC_GROUP_set_generator(
     cofactor: CValuesRef<BIGNUM>?
 ): Int
 
-@CCall("knifunptr_openssl1555_EC_GROUP_get0_generator")
+@CCall("knifunptr_openssl1559_EC_GROUP_get0_generator")
 external fun EC_GROUP_get0_generator(group: CValuesRef<EC_GROUP>?): CPointer<EC_POINT>?
 
-@CCall("knifunptr_openssl1556_EC_GROUP_get_mont_data")
+@CCall("knifunptr_openssl1560_EC_GROUP_get_mont_data")
 external fun EC_GROUP_get_mont_data(group: CValuesRef<EC_GROUP>?): CPointer<BN_MONT_CTX>?
 
-@CCall("knifunptr_openssl1557_EC_GROUP_get_order")
+@CCall("knifunptr_openssl1561_EC_GROUP_get_order")
 external fun EC_GROUP_get_order(group: CValuesRef<EC_GROUP>?, order: CValuesRef<BIGNUM>?, ctx: CValuesRef<BN_CTX>?): Int
 
-@CCall("knifunptr_openssl1558_EC_GROUP_get0_order")
+@CCall("knifunptr_openssl1562_EC_GROUP_get0_order")
 external fun EC_GROUP_get0_order(group: CValuesRef<EC_GROUP>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1559_EC_GROUP_order_bits")
+@CCall("knifunptr_openssl1563_EC_GROUP_order_bits")
 external fun EC_GROUP_order_bits(group: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl1560_EC_GROUP_get_cofactor")
+@CCall("knifunptr_openssl1564_EC_GROUP_get_cofactor")
 external fun EC_GROUP_get_cofactor(
     group: CValuesRef<EC_GROUP>?,
     cofactor: CValuesRef<BIGNUM>?,
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1561_EC_GROUP_get0_cofactor")
+@CCall("knifunptr_openssl1565_EC_GROUP_get0_cofactor")
 external fun EC_GROUP_get0_cofactor(group: CValuesRef<EC_GROUP>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1562_EC_GROUP_set_curve_name")
+@CCall("knifunptr_openssl1566_EC_GROUP_set_curve_name")
 external fun EC_GROUP_set_curve_name(group: CValuesRef<EC_GROUP>?, nid: Int): Unit
 
-@CCall("knifunptr_openssl1563_EC_GROUP_get_curve_name")
+@CCall("knifunptr_openssl1567_EC_GROUP_get_curve_name")
 external fun EC_GROUP_get_curve_name(group: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl1564_EC_GROUP_set_asn1_flag")
+@CCall("knifunptr_openssl1568_EC_GROUP_set_asn1_flag")
 external fun EC_GROUP_set_asn1_flag(group: CValuesRef<EC_GROUP>?, flag: Int): Unit
 
-@CCall("knifunptr_openssl1565_EC_GROUP_get_asn1_flag")
+@CCall("knifunptr_openssl1569_EC_GROUP_get_asn1_flag")
 external fun EC_GROUP_get_asn1_flag(group: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl1566_EC_GROUP_set_point_conversion_form")
+@CCall("knifunptr_openssl1570_EC_GROUP_set_point_conversion_form")
 external fun EC_GROUP_set_point_conversion_form(group: CValuesRef<EC_GROUP>?, form: point_conversion_form_t): Unit
 
-@CCall("knifunptr_openssl1567_EC_GROUP_get_point_conversion_form")
+@CCall("knifunptr_openssl1571_EC_GROUP_get_point_conversion_form")
 external fun EC_GROUP_get_point_conversion_form(arg0: CValuesRef<EC_GROUP>?): point_conversion_form_t
 
-@CCall("knifunptr_openssl1568_EC_GROUP_get0_seed")
+@CCall("knifunptr_openssl1572_EC_GROUP_get0_seed")
 external fun EC_GROUP_get0_seed(x: CValuesRef<EC_GROUP>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl1569_EC_GROUP_get_seed_len")
+@CCall("knifunptr_openssl1573_EC_GROUP_get_seed_len")
 external fun EC_GROUP_get_seed_len(arg0: CValuesRef<EC_GROUP>?): size_t
 
-@CCall("knifunptr_openssl1570_EC_GROUP_set_seed")
+@CCall("knifunptr_openssl1574_EC_GROUP_set_seed")
 external fun EC_GROUP_set_seed(arg0: CValuesRef<EC_GROUP>?, arg1: CValuesRef<UByteVar>?, len: size_t): size_t
 
-@CCall("knifunptr_openssl1571_EC_GROUP_set_curve")
+@CCall("knifunptr_openssl1575_EC_GROUP_set_curve")
 external fun EC_GROUP_set_curve(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<BIGNUM>?,
@@ -8297,7 +8383,7 @@ external fun EC_GROUP_set_curve(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1572_EC_GROUP_get_curve")
+@CCall("knifunptr_openssl1576_EC_GROUP_get_curve")
 external fun EC_GROUP_get_curve(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<BIGNUM>?,
@@ -8306,7 +8392,7 @@ external fun EC_GROUP_get_curve(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1573_EC_GROUP_set_curve_GFp")
+@CCall("knifunptr_openssl1577_EC_GROUP_set_curve_GFp")
 external fun EC_GROUP_set_curve_GFp(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<BIGNUM>?,
@@ -8315,7 +8401,7 @@ external fun EC_GROUP_set_curve_GFp(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1574_EC_GROUP_get_curve_GFp")
+@CCall("knifunptr_openssl1578_EC_GROUP_get_curve_GFp")
 external fun EC_GROUP_get_curve_GFp(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<BIGNUM>?,
@@ -8324,7 +8410,7 @@ external fun EC_GROUP_get_curve_GFp(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1575_EC_GROUP_set_curve_GF2m")
+@CCall("knifunptr_openssl1579_EC_GROUP_set_curve_GF2m")
 external fun EC_GROUP_set_curve_GF2m(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<BIGNUM>?,
@@ -8333,7 +8419,7 @@ external fun EC_GROUP_set_curve_GF2m(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1576_EC_GROUP_get_curve_GF2m")
+@CCall("knifunptr_openssl1580_EC_GROUP_get_curve_GF2m")
 external fun EC_GROUP_get_curve_GF2m(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<BIGNUM>?,
@@ -8342,19 +8428,19 @@ external fun EC_GROUP_get_curve_GF2m(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1577_EC_GROUP_get_degree")
+@CCall("knifunptr_openssl1581_EC_GROUP_get_degree")
 external fun EC_GROUP_get_degree(group: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl1578_EC_GROUP_check")
+@CCall("knifunptr_openssl1582_EC_GROUP_check")
 external fun EC_GROUP_check(group: CValuesRef<EC_GROUP>?, ctx: CValuesRef<BN_CTX>?): Int
 
-@CCall("knifunptr_openssl1579_EC_GROUP_check_discriminant")
+@CCall("knifunptr_openssl1583_EC_GROUP_check_discriminant")
 external fun EC_GROUP_check_discriminant(group: CValuesRef<EC_GROUP>?, ctx: CValuesRef<BN_CTX>?): Int
 
-@CCall("knifunptr_openssl1580_EC_GROUP_cmp")
+@CCall("knifunptr_openssl1584_EC_GROUP_cmp")
 external fun EC_GROUP_cmp(a: CValuesRef<EC_GROUP>?, b: CValuesRef<EC_GROUP>?, ctx: CValuesRef<BN_CTX>?): Int
 
-@CCall("knifunptr_openssl1581_EC_GROUP_new_curve_GFp")
+@CCall("knifunptr_openssl1585_EC_GROUP_new_curve_GFp")
 external fun EC_GROUP_new_curve_GFp(
     p: CValuesRef<BIGNUM>?,
     a: CValuesRef<BIGNUM>?,
@@ -8362,7 +8448,7 @@ external fun EC_GROUP_new_curve_GFp(
     ctx: CValuesRef<BN_CTX>?
 ): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl1582_EC_GROUP_new_curve_GF2m")
+@CCall("knifunptr_openssl1586_EC_GROUP_new_curve_GF2m")
 external fun EC_GROUP_new_curve_GF2m(
     p: CValuesRef<BIGNUM>?,
     a: CValuesRef<BIGNUM>?,
@@ -8370,58 +8456,58 @@ external fun EC_GROUP_new_curve_GF2m(
     ctx: CValuesRef<BN_CTX>?
 ): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl1583_EC_GROUP_new_by_curve_name")
+@CCall("knifunptr_openssl1587_EC_GROUP_new_by_curve_name")
 external fun EC_GROUP_new_by_curve_name(nid: Int): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl1584_EC_GROUP_new_from_ecparameters")
+@CCall("knifunptr_openssl1588_EC_GROUP_new_from_ecparameters")
 external fun EC_GROUP_new_from_ecparameters(params: CValuesRef<ECPARAMETERS>?): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl1585_EC_GROUP_get_ecparameters")
+@CCall("knifunptr_openssl1589_EC_GROUP_get_ecparameters")
 external fun EC_GROUP_get_ecparameters(
     group: CValuesRef<EC_GROUP>?,
     params: CValuesRef<ECPARAMETERS>?
 ): CPointer<ECPARAMETERS>?
 
-@CCall("knifunptr_openssl1586_EC_GROUP_new_from_ecpkparameters")
+@CCall("knifunptr_openssl1590_EC_GROUP_new_from_ecpkparameters")
 external fun EC_GROUP_new_from_ecpkparameters(params: CValuesRef<ECPKPARAMETERS>?): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl1587_EC_GROUP_get_ecpkparameters")
+@CCall("knifunptr_openssl1591_EC_GROUP_get_ecpkparameters")
 external fun EC_GROUP_get_ecpkparameters(
     group: CValuesRef<EC_GROUP>?,
     params: CValuesRef<ECPKPARAMETERS>?
 ): CPointer<ECPKPARAMETERS>?
 
-@CCall("knifunptr_openssl1588_EC_get_builtin_curves")
+@CCall("knifunptr_openssl1592_EC_get_builtin_curves")
 external fun EC_get_builtin_curves(r: CValuesRef<EC_builtin_curve>?, nitems: size_t): size_t
 
-@CCall("knifunptr_openssl1589_EC_curve_nid2nist")
+@CCall("knifunptr_openssl1593_EC_curve_nid2nist")
 external fun EC_curve_nid2nist(nid: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl1590_EC_curve_nist2nid")
+@CCall("knifunptr_openssl1594_EC_curve_nist2nid")
 external fun EC_curve_nist2nid(@CCall.CString name: String?): Int
 
-@CCall("knifunptr_openssl1591_EC_POINT_new")
+@CCall("knifunptr_openssl1595_EC_POINT_new")
 external fun EC_POINT_new(group: CValuesRef<EC_GROUP>?): CPointer<EC_POINT>?
 
-@CCall("knifunptr_openssl1592_EC_POINT_free")
+@CCall("knifunptr_openssl1596_EC_POINT_free")
 external fun EC_POINT_free(point: CValuesRef<EC_POINT>?): Unit
 
-@CCall("knifunptr_openssl1593_EC_POINT_clear_free")
+@CCall("knifunptr_openssl1597_EC_POINT_clear_free")
 external fun EC_POINT_clear_free(point: CValuesRef<EC_POINT>?): Unit
 
-@CCall("knifunptr_openssl1594_EC_POINT_copy")
+@CCall("knifunptr_openssl1598_EC_POINT_copy")
 external fun EC_POINT_copy(dst: CValuesRef<EC_POINT>?, src: CValuesRef<EC_POINT>?): Int
 
-@CCall("knifunptr_openssl1595_EC_POINT_dup")
+@CCall("knifunptr_openssl1599_EC_POINT_dup")
 external fun EC_POINT_dup(src: CValuesRef<EC_POINT>?, group: CValuesRef<EC_GROUP>?): CPointer<EC_POINT>?
 
-@CCall("knifunptr_openssl1596_EC_POINT_method_of")
+@CCall("knifunptr_openssl1600_EC_POINT_method_of")
 external fun EC_POINT_method_of(point: CValuesRef<EC_POINT>?): CPointer<EC_METHOD>?
 
-@CCall("knifunptr_openssl1597_EC_POINT_set_to_infinity")
+@CCall("knifunptr_openssl1601_EC_POINT_set_to_infinity")
 external fun EC_POINT_set_to_infinity(group: CValuesRef<EC_GROUP>?, point: CValuesRef<EC_POINT>?): Int
 
-@CCall("knifunptr_openssl1598_EC_POINT_set_Jprojective_coordinates_GFp")
+@CCall("knifunptr_openssl1602_EC_POINT_set_Jprojective_coordinates_GFp")
 external fun EC_POINT_set_Jprojective_coordinates_GFp(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8431,7 +8517,7 @@ external fun EC_POINT_set_Jprojective_coordinates_GFp(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1599_EC_POINT_get_Jprojective_coordinates_GFp")
+@CCall("knifunptr_openssl1603_EC_POINT_get_Jprojective_coordinates_GFp")
 external fun EC_POINT_get_Jprojective_coordinates_GFp(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8441,7 +8527,7 @@ external fun EC_POINT_get_Jprojective_coordinates_GFp(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1600_EC_POINT_set_affine_coordinates")
+@CCall("knifunptr_openssl1604_EC_POINT_set_affine_coordinates")
 external fun EC_POINT_set_affine_coordinates(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8450,7 +8536,7 @@ external fun EC_POINT_set_affine_coordinates(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1601_EC_POINT_get_affine_coordinates")
+@CCall("knifunptr_openssl1605_EC_POINT_get_affine_coordinates")
 external fun EC_POINT_get_affine_coordinates(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8459,7 +8545,7 @@ external fun EC_POINT_get_affine_coordinates(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1602_EC_POINT_set_affine_coordinates_GFp")
+@CCall("knifunptr_openssl1606_EC_POINT_set_affine_coordinates_GFp")
 external fun EC_POINT_set_affine_coordinates_GFp(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8468,7 +8554,7 @@ external fun EC_POINT_set_affine_coordinates_GFp(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1603_EC_POINT_get_affine_coordinates_GFp")
+@CCall("knifunptr_openssl1607_EC_POINT_get_affine_coordinates_GFp")
 external fun EC_POINT_get_affine_coordinates_GFp(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8477,7 +8563,7 @@ external fun EC_POINT_get_affine_coordinates_GFp(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1604_EC_POINT_set_compressed_coordinates")
+@CCall("knifunptr_openssl1608_EC_POINT_set_compressed_coordinates")
 external fun EC_POINT_set_compressed_coordinates(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8486,7 +8572,7 @@ external fun EC_POINT_set_compressed_coordinates(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1605_EC_POINT_set_compressed_coordinates_GFp")
+@CCall("knifunptr_openssl1609_EC_POINT_set_compressed_coordinates_GFp")
 external fun EC_POINT_set_compressed_coordinates_GFp(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8495,7 +8581,7 @@ external fun EC_POINT_set_compressed_coordinates_GFp(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1606_EC_POINT_set_affine_coordinates_GF2m")
+@CCall("knifunptr_openssl1610_EC_POINT_set_affine_coordinates_GF2m")
 external fun EC_POINT_set_affine_coordinates_GF2m(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8504,7 +8590,7 @@ external fun EC_POINT_set_affine_coordinates_GF2m(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1607_EC_POINT_get_affine_coordinates_GF2m")
+@CCall("knifunptr_openssl1611_EC_POINT_get_affine_coordinates_GF2m")
 external fun EC_POINT_get_affine_coordinates_GF2m(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8513,7 +8599,7 @@ external fun EC_POINT_get_affine_coordinates_GF2m(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1608_EC_POINT_set_compressed_coordinates_GF2m")
+@CCall("knifunptr_openssl1612_EC_POINT_set_compressed_coordinates_GF2m")
 external fun EC_POINT_set_compressed_coordinates_GF2m(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8522,7 +8608,7 @@ external fun EC_POINT_set_compressed_coordinates_GF2m(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1609_EC_POINT_point2oct")
+@CCall("knifunptr_openssl1613_EC_POINT_point2oct")
 external fun EC_POINT_point2oct(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8532,7 +8618,7 @@ external fun EC_POINT_point2oct(
     ctx: CValuesRef<BN_CTX>?
 ): size_t
 
-@CCall("knifunptr_openssl1610_EC_POINT_oct2point")
+@CCall("knifunptr_openssl1614_EC_POINT_oct2point")
 external fun EC_POINT_oct2point(
     group: CValuesRef<EC_GROUP>?,
     p: CValuesRef<EC_POINT>?,
@@ -8541,7 +8627,7 @@ external fun EC_POINT_oct2point(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1611_EC_POINT_point2buf")
+@CCall("knifunptr_openssl1615_EC_POINT_point2buf")
 external fun EC_POINT_point2buf(
     group: CValuesRef<EC_GROUP>?,
     point: CValuesRef<EC_POINT>?,
@@ -8550,7 +8636,7 @@ external fun EC_POINT_point2buf(
     ctx: CValuesRef<BN_CTX>?
 ): size_t
 
-@CCall("knifunptr_openssl1612_EC_POINT_point2bn")
+@CCall("knifunptr_openssl1616_EC_POINT_point2bn")
 external fun EC_POINT_point2bn(
     arg0: CValuesRef<EC_GROUP>?,
     arg1: CValuesRef<EC_POINT>?,
@@ -8559,7 +8645,7 @@ external fun EC_POINT_point2bn(
     arg4: CValuesRef<BN_CTX>?
 ): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1613_EC_POINT_bn2point")
+@CCall("knifunptr_openssl1617_EC_POINT_bn2point")
 external fun EC_POINT_bn2point(
     arg0: CValuesRef<EC_GROUP>?,
     arg1: CValuesRef<BIGNUM>?,
@@ -8567,7 +8653,7 @@ external fun EC_POINT_bn2point(
     arg3: CValuesRef<BN_CTX>?
 ): CPointer<EC_POINT>?
 
-@CCall("knifunptr_openssl1614_EC_POINT_point2hex")
+@CCall("knifunptr_openssl1618_EC_POINT_point2hex")
 external fun EC_POINT_point2hex(
     arg0: CValuesRef<EC_GROUP>?,
     arg1: CValuesRef<EC_POINT>?,
@@ -8575,14 +8661,15 @@ external fun EC_POINT_point2hex(
     arg3: CValuesRef<BN_CTX>?
 ): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl1615_EC_POINT_hex2point")
+@CCall("knifunptr_openssl1619_EC_POINT_hex2point")
 external fun EC_POINT_hex2point(
-    arg0: CValuesRef<EC_GROUP>?, @CCall.CString arg1: String?,
+    arg0: CValuesRef<EC_GROUP>?,
+    @CCall.CString arg1: String?,
     arg2: CValuesRef<EC_POINT>?,
     arg3: CValuesRef<BN_CTX>?
 ): CPointer<EC_POINT>?
 
-@CCall("knifunptr_openssl1616_EC_POINT_add")
+@CCall("knifunptr_openssl1620_EC_POINT_add")
 external fun EC_POINT_add(
     group: CValuesRef<EC_GROUP>?,
     r: CValuesRef<EC_POINT>?,
@@ -8591,7 +8678,7 @@ external fun EC_POINT_add(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1617_EC_POINT_dbl")
+@CCall("knifunptr_openssl1621_EC_POINT_dbl")
 external fun EC_POINT_dbl(
     group: CValuesRef<EC_GROUP>?,
     r: CValuesRef<EC_POINT>?,
@@ -8599,20 +8686,20 @@ external fun EC_POINT_dbl(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1618_EC_POINT_invert")
+@CCall("knifunptr_openssl1622_EC_POINT_invert")
 external fun EC_POINT_invert(group: CValuesRef<EC_GROUP>?, a: CValuesRef<EC_POINT>?, ctx: CValuesRef<BN_CTX>?): Int
 
-@CCall("knifunptr_openssl1619_EC_POINT_is_at_infinity")
+@CCall("knifunptr_openssl1623_EC_POINT_is_at_infinity")
 external fun EC_POINT_is_at_infinity(group: CValuesRef<EC_GROUP>?, p: CValuesRef<EC_POINT>?): Int
 
-@CCall("knifunptr_openssl1620_EC_POINT_is_on_curve")
+@CCall("knifunptr_openssl1624_EC_POINT_is_on_curve")
 external fun EC_POINT_is_on_curve(
     group: CValuesRef<EC_GROUP>?,
     point: CValuesRef<EC_POINT>?,
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1621_EC_POINT_cmp")
+@CCall("knifunptr_openssl1625_EC_POINT_cmp")
 external fun EC_POINT_cmp(
     group: CValuesRef<EC_GROUP>?,
     a: CValuesRef<EC_POINT>?,
@@ -8620,14 +8707,14 @@ external fun EC_POINT_cmp(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1622_EC_POINT_make_affine")
+@CCall("knifunptr_openssl1626_EC_POINT_make_affine")
 external fun EC_POINT_make_affine(
     group: CValuesRef<EC_GROUP>?,
     point: CValuesRef<EC_POINT>?,
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1623_EC_POINTs_make_affine")
+@CCall("knifunptr_openssl1627_EC_POINTs_make_affine")
 external fun EC_POINTs_make_affine(
     group: CValuesRef<EC_GROUP>?,
     num: size_t,
@@ -8635,7 +8722,7 @@ external fun EC_POINTs_make_affine(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1624_EC_POINTs_mul")
+@CCall("knifunptr_openssl1628_EC_POINTs_mul")
 external fun EC_POINTs_mul(
     group: CValuesRef<EC_GROUP>?,
     r: CValuesRef<EC_POINT>?,
@@ -8646,7 +8733,7 @@ external fun EC_POINTs_mul(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1625_EC_POINT_mul")
+@CCall("knifunptr_openssl1629_EC_POINT_mul")
 external fun EC_POINT_mul(
     group: CValuesRef<EC_GROUP>?,
     r: CValuesRef<EC_POINT>?,
@@ -8656,31 +8743,31 @@ external fun EC_POINT_mul(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1626_EC_GROUP_precompute_mult")
+@CCall("knifunptr_openssl1630_EC_GROUP_precompute_mult")
 external fun EC_GROUP_precompute_mult(group: CValuesRef<EC_GROUP>?, ctx: CValuesRef<BN_CTX>?): Int
 
-@CCall("knifunptr_openssl1627_EC_GROUP_have_precompute_mult")
+@CCall("knifunptr_openssl1631_EC_GROUP_have_precompute_mult")
 external fun EC_GROUP_have_precompute_mult(group: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl1628_ECPKPARAMETERS_new")
+@CCall("knifunptr_openssl1632_ECPKPARAMETERS_new")
 external fun ECPKPARAMETERS_new(): CPointer<ECPKPARAMETERS>?
 
-@CCall("knifunptr_openssl1629_ECPKPARAMETERS_free")
+@CCall("knifunptr_openssl1633_ECPKPARAMETERS_free")
 external fun ECPKPARAMETERS_free(a: CValuesRef<ECPKPARAMETERS>?): Unit
 
-@CCall("knifunptr_openssl1630_ECPARAMETERS_new")
+@CCall("knifunptr_openssl1634_ECPARAMETERS_new")
 external fun ECPARAMETERS_new(): CPointer<ECPARAMETERS>?
 
-@CCall("knifunptr_openssl1631_ECPARAMETERS_free")
+@CCall("knifunptr_openssl1635_ECPARAMETERS_free")
 external fun ECPARAMETERS_free(a: CValuesRef<ECPARAMETERS>?): Unit
 
-@CCall("knifunptr_openssl1632_EC_GROUP_get_basis_type")
+@CCall("knifunptr_openssl1636_EC_GROUP_get_basis_type")
 external fun EC_GROUP_get_basis_type(arg0: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl1633_EC_GROUP_get_trinomial_basis")
+@CCall("knifunptr_openssl1637_EC_GROUP_get_trinomial_basis")
 external fun EC_GROUP_get_trinomial_basis(arg0: CValuesRef<EC_GROUP>?, k: CValuesRef<UIntVar>?): Int
 
-@CCall("knifunptr_openssl1634_EC_GROUP_get_pentanomial_basis")
+@CCall("knifunptr_openssl1638_EC_GROUP_get_pentanomial_basis")
 external fun EC_GROUP_get_pentanomial_basis(
     arg0: CValuesRef<EC_GROUP>?,
     k1: CValuesRef<UIntVar>?,
@@ -8688,111 +8775,111 @@ external fun EC_GROUP_get_pentanomial_basis(
     k3: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl1635_d2i_ECPKParameters")
+@CCall("knifunptr_openssl1639_d2i_ECPKParameters")
 external fun d2i_ECPKParameters(
     arg0: CValuesRef<CPointerVar<EC_GROUP>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl1636_i2d_ECPKParameters")
+@CCall("knifunptr_openssl1640_i2d_ECPKParameters")
 external fun i2d_ECPKParameters(arg0: CValuesRef<EC_GROUP>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1637_ECPKParameters_print")
+@CCall("knifunptr_openssl1641_ECPKParameters_print")
 external fun ECPKParameters_print(bp: CValuesRef<BIO>?, x: CValuesRef<EC_GROUP>?, off: Int): Int
 
-@CCall("knifunptr_openssl1638_ECPKParameters_print_fp")
+@CCall("knifunptr_openssl1642_ECPKParameters_print_fp")
 external fun ECPKParameters_print_fp(fp: CValuesRef<FILE>?, x: CValuesRef<EC_GROUP>?, off: Int): Int
 
-@CCall("knifunptr_openssl1639_EC_KEY_new")
+@CCall("knifunptr_openssl1643_EC_KEY_new")
 external fun EC_KEY_new(): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl1640_EC_KEY_get_flags")
+@CCall("knifunptr_openssl1644_EC_KEY_get_flags")
 external fun EC_KEY_get_flags(key: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl1641_EC_KEY_set_flags")
+@CCall("knifunptr_openssl1645_EC_KEY_set_flags")
 external fun EC_KEY_set_flags(key: CValuesRef<EC_KEY>?, flags: Int): Unit
 
-@CCall("knifunptr_openssl1642_EC_KEY_clear_flags")
+@CCall("knifunptr_openssl1646_EC_KEY_clear_flags")
 external fun EC_KEY_clear_flags(key: CValuesRef<EC_KEY>?, flags: Int): Unit
 
-@CCall("knifunptr_openssl1643_EC_KEY_new_by_curve_name")
+@CCall("knifunptr_openssl1647_EC_KEY_new_by_curve_name")
 external fun EC_KEY_new_by_curve_name(nid: Int): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl1644_EC_KEY_free")
+@CCall("knifunptr_openssl1648_EC_KEY_free")
 external fun EC_KEY_free(key: CValuesRef<EC_KEY>?): Unit
 
-@CCall("knifunptr_openssl1645_EC_KEY_copy")
+@CCall("knifunptr_openssl1649_EC_KEY_copy")
 external fun EC_KEY_copy(dst: CValuesRef<EC_KEY>?, src: CValuesRef<EC_KEY>?): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl1646_EC_KEY_dup")
+@CCall("knifunptr_openssl1650_EC_KEY_dup")
 external fun EC_KEY_dup(src: CValuesRef<EC_KEY>?): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl1647_EC_KEY_up_ref")
+@CCall("knifunptr_openssl1651_EC_KEY_up_ref")
 external fun EC_KEY_up_ref(key: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl1648_EC_KEY_get0_engine")
+@CCall("knifunptr_openssl1652_EC_KEY_get0_engine")
 external fun EC_KEY_get0_engine(eckey: CValuesRef<EC_KEY>?): CPointer<ENGINE>?
 
-@CCall("knifunptr_openssl1649_EC_KEY_get0_group")
+@CCall("knifunptr_openssl1653_EC_KEY_get0_group")
 external fun EC_KEY_get0_group(key: CValuesRef<EC_KEY>?): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl1650_EC_KEY_set_group")
+@CCall("knifunptr_openssl1654_EC_KEY_set_group")
 external fun EC_KEY_set_group(key: CValuesRef<EC_KEY>?, group: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl1651_EC_KEY_get0_private_key")
+@CCall("knifunptr_openssl1655_EC_KEY_get0_private_key")
 external fun EC_KEY_get0_private_key(key: CValuesRef<EC_KEY>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1652_EC_KEY_set_private_key")
+@CCall("knifunptr_openssl1656_EC_KEY_set_private_key")
 external fun EC_KEY_set_private_key(key: CValuesRef<EC_KEY>?, prv: CValuesRef<BIGNUM>?): Int
 
-@CCall("knifunptr_openssl1653_EC_KEY_get0_public_key")
+@CCall("knifunptr_openssl1657_EC_KEY_get0_public_key")
 external fun EC_KEY_get0_public_key(key: CValuesRef<EC_KEY>?): CPointer<EC_POINT>?
 
-@CCall("knifunptr_openssl1654_EC_KEY_set_public_key")
+@CCall("knifunptr_openssl1658_EC_KEY_set_public_key")
 external fun EC_KEY_set_public_key(key: CValuesRef<EC_KEY>?, pub: CValuesRef<EC_POINT>?): Int
 
-@CCall("knifunptr_openssl1655_EC_KEY_get_enc_flags")
+@CCall("knifunptr_openssl1659_EC_KEY_get_enc_flags")
 external fun EC_KEY_get_enc_flags(key: CValuesRef<EC_KEY>?): UInt
 
-@CCall("knifunptr_openssl1656_EC_KEY_set_enc_flags")
+@CCall("knifunptr_openssl1660_EC_KEY_set_enc_flags")
 external fun EC_KEY_set_enc_flags(eckey: CValuesRef<EC_KEY>?, flags: UInt): Unit
 
-@CCall("knifunptr_openssl1657_EC_KEY_get_conv_form")
+@CCall("knifunptr_openssl1661_EC_KEY_get_conv_form")
 external fun EC_KEY_get_conv_form(key: CValuesRef<EC_KEY>?): point_conversion_form_t
 
-@CCall("knifunptr_openssl1658_EC_KEY_set_conv_form")
+@CCall("knifunptr_openssl1662_EC_KEY_set_conv_form")
 external fun EC_KEY_set_conv_form(eckey: CValuesRef<EC_KEY>?, cform: point_conversion_form_t): Unit
 
-@CCall("knifunptr_openssl1659_EC_KEY_set_ex_data")
+@CCall("knifunptr_openssl1663_EC_KEY_set_ex_data")
 external fun EC_KEY_set_ex_data(key: CValuesRef<EC_KEY>?, idx: Int, arg: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl1660_EC_KEY_get_ex_data")
+@CCall("knifunptr_openssl1664_EC_KEY_get_ex_data")
 external fun EC_KEY_get_ex_data(key: CValuesRef<EC_KEY>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl1661_EC_KEY_set_asn1_flag")
+@CCall("knifunptr_openssl1665_EC_KEY_set_asn1_flag")
 external fun EC_KEY_set_asn1_flag(eckey: CValuesRef<EC_KEY>?, asn1_flag: Int): Unit
 
-@CCall("knifunptr_openssl1662_EC_KEY_precompute_mult")
+@CCall("knifunptr_openssl1666_EC_KEY_precompute_mult")
 external fun EC_KEY_precompute_mult(key: CValuesRef<EC_KEY>?, ctx: CValuesRef<BN_CTX>?): Int
 
-@CCall("knifunptr_openssl1663_EC_KEY_generate_key")
+@CCall("knifunptr_openssl1667_EC_KEY_generate_key")
 external fun EC_KEY_generate_key(key: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl1664_EC_KEY_check_key")
+@CCall("knifunptr_openssl1668_EC_KEY_check_key")
 external fun EC_KEY_check_key(key: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl1665_EC_KEY_can_sign")
+@CCall("knifunptr_openssl1669_EC_KEY_can_sign")
 external fun EC_KEY_can_sign(eckey: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl1666_EC_KEY_set_public_key_affine_coordinates")
+@CCall("knifunptr_openssl1670_EC_KEY_set_public_key_affine_coordinates")
 external fun EC_KEY_set_public_key_affine_coordinates(
     key: CValuesRef<EC_KEY>?,
     x: CValuesRef<BIGNUM>?,
     y: CValuesRef<BIGNUM>?
 ): Int
 
-@CCall("knifunptr_openssl1667_EC_KEY_key2buf")
+@CCall("knifunptr_openssl1671_EC_KEY_key2buf")
 external fun EC_KEY_key2buf(
     key: CValuesRef<EC_KEY>?,
     form: point_conversion_form_t,
@@ -8800,7 +8887,7 @@ external fun EC_KEY_key2buf(
     ctx: CValuesRef<BN_CTX>?
 ): size_t
 
-@CCall("knifunptr_openssl1668_EC_KEY_oct2key")
+@CCall("knifunptr_openssl1672_EC_KEY_oct2key")
 external fun EC_KEY_oct2key(
     key: CValuesRef<EC_KEY>?,
     buf: CValuesRef<UByteVar>?,
@@ -8808,76 +8895,76 @@ external fun EC_KEY_oct2key(
     ctx: CValuesRef<BN_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl1669_EC_KEY_oct2priv")
+@CCall("knifunptr_openssl1673_EC_KEY_oct2priv")
 external fun EC_KEY_oct2priv(key: CValuesRef<EC_KEY>?, buf: CValuesRef<UByteVar>?, len: size_t): Int
 
-@CCall("knifunptr_openssl1670_EC_KEY_priv2oct")
+@CCall("knifunptr_openssl1674_EC_KEY_priv2oct")
 external fun EC_KEY_priv2oct(key: CValuesRef<EC_KEY>?, buf: CValuesRef<UByteVar>?, len: size_t): size_t
 
-@CCall("knifunptr_openssl1671_EC_KEY_priv2buf")
+@CCall("knifunptr_openssl1675_EC_KEY_priv2buf")
 external fun EC_KEY_priv2buf(eckey: CValuesRef<EC_KEY>?, pbuf: CValuesRef<CPointerVar<UByteVar>>?): size_t
 
-@CCall("knifunptr_openssl1672_d2i_ECPrivateKey")
+@CCall("knifunptr_openssl1676_d2i_ECPrivateKey")
 external fun d2i_ECPrivateKey(
     key: CValuesRef<CPointerVar<EC_KEY>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl1673_i2d_ECPrivateKey")
+@CCall("knifunptr_openssl1677_i2d_ECPrivateKey")
 external fun i2d_ECPrivateKey(key: CValuesRef<EC_KEY>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1674_d2i_ECParameters")
+@CCall("knifunptr_openssl1678_d2i_ECParameters")
 external fun d2i_ECParameters(
     key: CValuesRef<CPointerVar<EC_KEY>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl1675_i2d_ECParameters")
+@CCall("knifunptr_openssl1679_i2d_ECParameters")
 external fun i2d_ECParameters(key: CValuesRef<EC_KEY>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1676_o2i_ECPublicKey")
+@CCall("knifunptr_openssl1680_o2i_ECPublicKey")
 external fun o2i_ECPublicKey(
     key: CValuesRef<CPointerVar<EC_KEY>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl1677_i2o_ECPublicKey")
+@CCall("knifunptr_openssl1681_i2o_ECPublicKey")
 external fun i2o_ECPublicKey(key: CValuesRef<EC_KEY>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1678_ECParameters_print")
+@CCall("knifunptr_openssl1682_ECParameters_print")
 external fun ECParameters_print(bp: CValuesRef<BIO>?, key: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl1679_EC_KEY_print")
+@CCall("knifunptr_openssl1683_EC_KEY_print")
 external fun EC_KEY_print(bp: CValuesRef<BIO>?, key: CValuesRef<EC_KEY>?, off: Int): Int
 
-@CCall("knifunptr_openssl1680_ECParameters_print_fp")
+@CCall("knifunptr_openssl1684_ECParameters_print_fp")
 external fun ECParameters_print_fp(fp: CValuesRef<FILE>?, key: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl1681_EC_KEY_print_fp")
+@CCall("knifunptr_openssl1685_EC_KEY_print_fp")
 external fun EC_KEY_print_fp(fp: CValuesRef<FILE>?, key: CValuesRef<EC_KEY>?, off: Int): Int
 
-@CCall("knifunptr_openssl1682_EC_KEY_OpenSSL")
+@CCall("knifunptr_openssl1686_EC_KEY_OpenSSL")
 external fun EC_KEY_OpenSSL(): CPointer<EC_KEY_METHOD>?
 
-@CCall("knifunptr_openssl1683_EC_KEY_get_default_method")
+@CCall("knifunptr_openssl1687_EC_KEY_get_default_method")
 external fun EC_KEY_get_default_method(): CPointer<EC_KEY_METHOD>?
 
-@CCall("knifunptr_openssl1684_EC_KEY_set_default_method")
+@CCall("knifunptr_openssl1688_EC_KEY_set_default_method")
 external fun EC_KEY_set_default_method(meth: CValuesRef<EC_KEY_METHOD>?): Unit
 
-@CCall("knifunptr_openssl1685_EC_KEY_get_method")
+@CCall("knifunptr_openssl1689_EC_KEY_get_method")
 external fun EC_KEY_get_method(key: CValuesRef<EC_KEY>?): CPointer<EC_KEY_METHOD>?
 
-@CCall("knifunptr_openssl1686_EC_KEY_set_method")
+@CCall("knifunptr_openssl1690_EC_KEY_set_method")
 external fun EC_KEY_set_method(key: CValuesRef<EC_KEY>?, meth: CValuesRef<EC_KEY_METHOD>?): Int
 
-@CCall("knifunptr_openssl1687_EC_KEY_new_method")
+@CCall("knifunptr_openssl1691_EC_KEY_new_method")
 external fun EC_KEY_new_method(engine: CValuesRef<ENGINE>?): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl1688_ECDH_KDF_X9_62")
+@CCall("knifunptr_openssl1692_ECDH_KDF_X9_62")
 external fun ECDH_KDF_X9_62(
     out: CValuesRef<UByteVar>?,
     outlen: size_t,
@@ -8888,7 +8975,7 @@ external fun ECDH_KDF_X9_62(
     md: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl1689_ECDH_compute_key")
+@CCall("knifunptr_openssl1693_ECDH_compute_key")
 external fun ECDH_compute_key(
     out: CValuesRef<*>?,
     outlen: size_t,
@@ -8897,42 +8984,42 @@ external fun ECDH_compute_key(
     KDF: CPointer<CFunction<(COpaquePointer?, size_t, COpaquePointer?, CPointer<size_tVar>?) -> COpaquePointer?>>?
 ): Int
 
-@CCall("knifunptr_openssl1690_ECDSA_SIG_new")
+@CCall("knifunptr_openssl1694_ECDSA_SIG_new")
 external fun ECDSA_SIG_new(): CPointer<ECDSA_SIG>?
 
-@CCall("knifunptr_openssl1691_ECDSA_SIG_free")
+@CCall("knifunptr_openssl1695_ECDSA_SIG_free")
 external fun ECDSA_SIG_free(sig: CValuesRef<ECDSA_SIG>?): Unit
 
-@CCall("knifunptr_openssl1692_i2d_ECDSA_SIG")
+@CCall("knifunptr_openssl1696_i2d_ECDSA_SIG")
 external fun i2d_ECDSA_SIG(sig: CValuesRef<ECDSA_SIG>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1693_d2i_ECDSA_SIG")
+@CCall("knifunptr_openssl1697_d2i_ECDSA_SIG")
 external fun d2i_ECDSA_SIG(
     sig: CValuesRef<CPointerVar<ECDSA_SIG>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<ECDSA_SIG>?
 
-@CCall("knifunptr_openssl1694_ECDSA_SIG_get0")
+@CCall("knifunptr_openssl1698_ECDSA_SIG_get0")
 external fun ECDSA_SIG_get0(
     sig: CValuesRef<ECDSA_SIG>?,
     pr: CValuesRef<CPointerVar<BIGNUM>>?,
     ps: CValuesRef<CPointerVar<BIGNUM>>?
 ): Unit
 
-@CCall("knifunptr_openssl1695_ECDSA_SIG_get0_r")
+@CCall("knifunptr_openssl1699_ECDSA_SIG_get0_r")
 external fun ECDSA_SIG_get0_r(sig: CValuesRef<ECDSA_SIG>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1696_ECDSA_SIG_get0_s")
+@CCall("knifunptr_openssl1700_ECDSA_SIG_get0_s")
 external fun ECDSA_SIG_get0_s(sig: CValuesRef<ECDSA_SIG>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1697_ECDSA_SIG_set0")
+@CCall("knifunptr_openssl1701_ECDSA_SIG_set0")
 external fun ECDSA_SIG_set0(sig: CValuesRef<ECDSA_SIG>?, r: CValuesRef<BIGNUM>?, s: CValuesRef<BIGNUM>?): Int
 
-@CCall("knifunptr_openssl1698_ECDSA_do_sign")
+@CCall("knifunptr_openssl1702_ECDSA_do_sign")
 external fun ECDSA_do_sign(dgst: CValuesRef<UByteVar>?, dgst_len: Int, eckey: CValuesRef<EC_KEY>?): CPointer<ECDSA_SIG>?
 
-@CCall("knifunptr_openssl1699_ECDSA_do_sign_ex")
+@CCall("knifunptr_openssl1703_ECDSA_do_sign_ex")
 external fun ECDSA_do_sign_ex(
     dgst: CValuesRef<UByteVar>?,
     dgstlen: Int,
@@ -8941,7 +9028,7 @@ external fun ECDSA_do_sign_ex(
     eckey: CValuesRef<EC_KEY>?
 ): CPointer<ECDSA_SIG>?
 
-@CCall("knifunptr_openssl1700_ECDSA_do_verify")
+@CCall("knifunptr_openssl1704_ECDSA_do_verify")
 external fun ECDSA_do_verify(
     dgst: CValuesRef<UByteVar>?,
     dgst_len: Int,
@@ -8949,7 +9036,7 @@ external fun ECDSA_do_verify(
     eckey: CValuesRef<EC_KEY>?
 ): Int
 
-@CCall("knifunptr_openssl1701_ECDSA_sign_setup")
+@CCall("knifunptr_openssl1705_ECDSA_sign_setup")
 external fun ECDSA_sign_setup(
     eckey: CValuesRef<EC_KEY>?,
     ctx: CValuesRef<BN_CTX>?,
@@ -8957,7 +9044,7 @@ external fun ECDSA_sign_setup(
     rp: CValuesRef<CPointerVar<BIGNUM>>?
 ): Int
 
-@CCall("knifunptr_openssl1702_ECDSA_sign")
+@CCall("knifunptr_openssl1706_ECDSA_sign")
 external fun ECDSA_sign(
     type: Int,
     dgst: CValuesRef<UByteVar>?,
@@ -8967,7 +9054,7 @@ external fun ECDSA_sign(
     eckey: CValuesRef<EC_KEY>?
 ): Int
 
-@CCall("knifunptr_openssl1703_ECDSA_sign_ex")
+@CCall("knifunptr_openssl1707_ECDSA_sign_ex")
 external fun ECDSA_sign_ex(
     type: Int,
     dgst: CValuesRef<UByteVar>?,
@@ -8979,7 +9066,7 @@ external fun ECDSA_sign_ex(
     eckey: CValuesRef<EC_KEY>?
 ): Int
 
-@CCall("knifunptr_openssl1704_ECDSA_verify")
+@CCall("knifunptr_openssl1708_ECDSA_verify")
 external fun ECDSA_verify(
     type: Int,
     dgst: CValuesRef<UByteVar>?,
@@ -8989,16 +9076,16 @@ external fun ECDSA_verify(
     eckey: CValuesRef<EC_KEY>?
 ): Int
 
-@CCall("knifunptr_openssl1705_ECDSA_size")
+@CCall("knifunptr_openssl1709_ECDSA_size")
 external fun ECDSA_size(eckey: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl1706_EC_KEY_METHOD_new")
+@CCall("knifunptr_openssl1710_EC_KEY_METHOD_new")
 external fun EC_KEY_METHOD_new(meth: CValuesRef<EC_KEY_METHOD>?): CPointer<EC_KEY_METHOD>?
 
-@CCall("knifunptr_openssl1707_EC_KEY_METHOD_free")
+@CCall("knifunptr_openssl1711_EC_KEY_METHOD_free")
 external fun EC_KEY_METHOD_free(meth: CValuesRef<EC_KEY_METHOD>?): Unit
 
-@CCall("knifunptr_openssl1708_EC_KEY_METHOD_set_init")
+@CCall("knifunptr_openssl1712_EC_KEY_METHOD_set_init")
 external fun EC_KEY_METHOD_set_init(
     meth: CValuesRef<EC_KEY_METHOD>?,
     init: CPointer<CFunction<(CPointer<EC_KEY>?) -> Int>>?,
@@ -9009,19 +9096,19 @@ external fun EC_KEY_METHOD_set_init(
     set_public: CPointer<CFunction<(CPointer<EC_KEY>?, CPointer<EC_POINT>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl1709_EC_KEY_METHOD_set_keygen")
+@CCall("knifunptr_openssl1713_EC_KEY_METHOD_set_keygen")
 external fun EC_KEY_METHOD_set_keygen(
     meth: CValuesRef<EC_KEY_METHOD>?,
     keygen: CPointer<CFunction<(CPointer<EC_KEY>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl1710_EC_KEY_METHOD_set_compute_key")
+@CCall("knifunptr_openssl1714_EC_KEY_METHOD_set_compute_key")
 external fun EC_KEY_METHOD_set_compute_key(
     meth: CValuesRef<EC_KEY_METHOD>?,
     ckey: CPointer<CFunction<(CPointer<CPointerVar<UByteVar>>?, CPointer<size_tVar>?, CPointer<EC_POINT>?, CPointer<EC_KEY>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl1711_EC_KEY_METHOD_set_sign")
+@CCall("knifunptr_openssl1715_EC_KEY_METHOD_set_sign")
 external fun EC_KEY_METHOD_set_sign(
     meth: CValuesRef<EC_KEY_METHOD>?,
     sign: CPointer<CFunction<(Int, CPointer<UByteVar>?, Int, CPointer<UByteVar>?, CPointer<UIntVar>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<EC_KEY>?) -> Int>>?,
@@ -9029,14 +9116,14 @@ external fun EC_KEY_METHOD_set_sign(
     sign_sig: CPointer<CFunction<(CPointer<UByteVar>?, Int, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<EC_KEY>?) -> CPointer<ECDSA_SIG>?>>?
 ): Unit
 
-@CCall("knifunptr_openssl1712_EC_KEY_METHOD_set_verify")
+@CCall("knifunptr_openssl1716_EC_KEY_METHOD_set_verify")
 external fun EC_KEY_METHOD_set_verify(
     meth: CValuesRef<EC_KEY_METHOD>?,
     verify: CPointer<CFunction<(Int, CPointer<UByteVar>?, Int, CPointer<UByteVar>?, Int, CPointer<EC_KEY>?) -> Int>>?,
     verify_sig: CPointer<CFunction<(CPointer<UByteVar>?, Int, CPointer<ECDSA_SIG>?, CPointer<EC_KEY>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl1713_EC_KEY_METHOD_get_init")
+@CCall("knifunptr_openssl1717_EC_KEY_METHOD_get_init")
 external fun EC_KEY_METHOD_get_init(
     meth: CValuesRef<EC_KEY_METHOD>?,
     pinit: CValuesRef<CPointerVar<CFunction<(CPointer<EC_KEY>?) -> Int>>>?,
@@ -9047,19 +9134,19 @@ external fun EC_KEY_METHOD_get_init(
     pset_public: CValuesRef<CPointerVar<CFunction<(CPointer<EC_KEY>?, CPointer<EC_POINT>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1714_EC_KEY_METHOD_get_keygen")
+@CCall("knifunptr_openssl1718_EC_KEY_METHOD_get_keygen")
 external fun EC_KEY_METHOD_get_keygen(
     meth: CValuesRef<EC_KEY_METHOD>?,
     pkeygen: CValuesRef<CPointerVar<CFunction<(CPointer<EC_KEY>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1715_EC_KEY_METHOD_get_compute_key")
+@CCall("knifunptr_openssl1719_EC_KEY_METHOD_get_compute_key")
 external fun EC_KEY_METHOD_get_compute_key(
     meth: CValuesRef<EC_KEY_METHOD>?,
     pck: CValuesRef<CPointerVar<CFunction<(CPointer<CPointerVar<UByteVar>>?, CPointer<size_tVar>?, CPointer<EC_POINT>?, CPointer<EC_KEY>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1716_EC_KEY_METHOD_get_sign")
+@CCall("knifunptr_openssl1720_EC_KEY_METHOD_get_sign")
 external fun EC_KEY_METHOD_get_sign(
     meth: CValuesRef<EC_KEY_METHOD>?,
     psign: CValuesRef<CPointerVar<CFunction<(Int, CPointer<UByteVar>?, Int, CPointer<UByteVar>?, CPointer<UIntVar>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<EC_KEY>?) -> Int>>>?,
@@ -9067,32 +9154,32 @@ external fun EC_KEY_METHOD_get_sign(
     psign_sig: CValuesRef<CPointerVar<CFunction<(CPointer<UByteVar>?, Int, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<EC_KEY>?) -> CPointer<ECDSA_SIG>?>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1717_EC_KEY_METHOD_get_verify")
+@CCall("knifunptr_openssl1721_EC_KEY_METHOD_get_verify")
 external fun EC_KEY_METHOD_get_verify(
     meth: CValuesRef<EC_KEY_METHOD>?,
     pverify: CValuesRef<CPointerVar<CFunction<(Int, CPointer<UByteVar>?, Int, CPointer<UByteVar>?, Int, CPointer<EC_KEY>?) -> Int>>>?,
     pverify_sig: CValuesRef<CPointerVar<CFunction<(CPointer<UByteVar>?, Int, CPointer<ECDSA_SIG>?, CPointer<EC_KEY>?) -> Int>>>?
 ): Unit
 
-@CCall("knifunptr_openssl1718_ERR_load_RSA_strings")
+@CCall("knifunptr_openssl1722_ERR_load_RSA_strings")
 external fun ERR_load_RSA_strings(): Int
 
-@CCall("knifunptr_openssl1719_RSA_new")
+@CCall("knifunptr_openssl1723_RSA_new")
 external fun RSA_new(): CPointer<RSA>?
 
-@CCall("knifunptr_openssl1720_RSA_new_method")
+@CCall("knifunptr_openssl1724_RSA_new_method")
 external fun RSA_new_method(engine: CValuesRef<ENGINE>?): CPointer<RSA>?
 
-@CCall("knifunptr_openssl1721_RSA_bits")
+@CCall("knifunptr_openssl1725_RSA_bits")
 external fun RSA_bits(rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl1722_RSA_size")
+@CCall("knifunptr_openssl1726_RSA_size")
 external fun RSA_size(rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl1723_RSA_security_bits")
+@CCall("knifunptr_openssl1727_RSA_security_bits")
 external fun RSA_security_bits(rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl1724_RSA_set0_key")
+@CCall("knifunptr_openssl1728_RSA_set0_key")
 external fun RSA_set0_key(
     r: CValuesRef<RSA>?,
     n: CValuesRef<BIGNUM>?,
@@ -9100,10 +9187,10 @@ external fun RSA_set0_key(
     d: CValuesRef<BIGNUM>?
 ): Int
 
-@CCall("knifunptr_openssl1725_RSA_set0_factors")
+@CCall("knifunptr_openssl1729_RSA_set0_factors")
 external fun RSA_set0_factors(r: CValuesRef<RSA>?, p: CValuesRef<BIGNUM>?, q: CValuesRef<BIGNUM>?): Int
 
-@CCall("knifunptr_openssl1726_RSA_set0_crt_params")
+@CCall("knifunptr_openssl1730_RSA_set0_crt_params")
 external fun RSA_set0_crt_params(
     r: CValuesRef<RSA>?,
     dmp1: CValuesRef<BIGNUM>?,
@@ -9111,7 +9198,7 @@ external fun RSA_set0_crt_params(
     iqmp: CValuesRef<BIGNUM>?
 ): Int
 
-@CCall("knifunptr_openssl1727_RSA_set0_multi_prime_params")
+@CCall("knifunptr_openssl1731_RSA_set0_multi_prime_params")
 external fun RSA_set0_multi_prime_params(
     r: CValuesRef<RSA>?,
     primes: CValuesRef<CPointerVar<BIGNUM>>?,
@@ -9120,7 +9207,7 @@ external fun RSA_set0_multi_prime_params(
     pnum: Int
 ): Int
 
-@CCall("knifunptr_openssl1728_RSA_get0_key")
+@CCall("knifunptr_openssl1732_RSA_get0_key")
 external fun RSA_get0_key(
     r: CValuesRef<RSA>?,
     n: CValuesRef<CPointerVar<BIGNUM>>?,
@@ -9128,20 +9215,20 @@ external fun RSA_get0_key(
     d: CValuesRef<CPointerVar<BIGNUM>>?
 ): Unit
 
-@CCall("knifunptr_openssl1729_RSA_get0_factors")
+@CCall("knifunptr_openssl1733_RSA_get0_factors")
 external fun RSA_get0_factors(
     r: CValuesRef<RSA>?,
     p: CValuesRef<CPointerVar<BIGNUM>>?,
     q: CValuesRef<CPointerVar<BIGNUM>>?
 ): Unit
 
-@CCall("knifunptr_openssl1730_RSA_get_multi_prime_extra_count")
+@CCall("knifunptr_openssl1734_RSA_get_multi_prime_extra_count")
 external fun RSA_get_multi_prime_extra_count(r: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl1731_RSA_get0_multi_prime_factors")
+@CCall("knifunptr_openssl1735_RSA_get0_multi_prime_factors")
 external fun RSA_get0_multi_prime_factors(r: CValuesRef<RSA>?, primes: CValuesRef<CPointerVar<BIGNUM>>?): Int
 
-@CCall("knifunptr_openssl1732_RSA_get0_crt_params")
+@CCall("knifunptr_openssl1736_RSA_get0_crt_params")
 external fun RSA_get0_crt_params(
     r: CValuesRef<RSA>?,
     dmp1: CValuesRef<CPointerVar<BIGNUM>>?,
@@ -9149,53 +9236,56 @@ external fun RSA_get0_crt_params(
     iqmp: CValuesRef<CPointerVar<BIGNUM>>?
 ): Unit
 
-@CCall("knifunptr_openssl1733_RSA_get0_multi_prime_crt_params")
+@CCall("knifunptr_openssl1737_RSA_get0_multi_prime_crt_params")
 external fun RSA_get0_multi_prime_crt_params(
     r: CValuesRef<RSA>?,
     exps: CValuesRef<CPointerVar<BIGNUM>>?,
     coeffs: CValuesRef<CPointerVar<BIGNUM>>?
 ): Int
 
-@CCall("knifunptr_openssl1734_RSA_get0_n")
+@CCall("knifunptr_openssl1738_RSA_get0_n")
 external fun RSA_get0_n(d: CValuesRef<RSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1735_RSA_get0_e")
+@CCall("knifunptr_openssl1739_RSA_get0_e")
 external fun RSA_get0_e(d: CValuesRef<RSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1736_RSA_get0_d")
+@CCall("knifunptr_openssl1740_RSA_get0_d")
 external fun RSA_get0_d(d: CValuesRef<RSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1737_RSA_get0_p")
+@CCall("knifunptr_openssl1741_RSA_get0_p")
 external fun RSA_get0_p(d: CValuesRef<RSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1738_RSA_get0_q")
+@CCall("knifunptr_openssl1742_RSA_get0_q")
 external fun RSA_get0_q(d: CValuesRef<RSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1739_RSA_get0_dmp1")
+@CCall("knifunptr_openssl1743_RSA_get0_dmp1")
 external fun RSA_get0_dmp1(r: CValuesRef<RSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1740_RSA_get0_dmq1")
+@CCall("knifunptr_openssl1744_RSA_get0_dmq1")
 external fun RSA_get0_dmq1(r: CValuesRef<RSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1741_RSA_get0_iqmp")
+@CCall("knifunptr_openssl1745_RSA_get0_iqmp")
 external fun RSA_get0_iqmp(r: CValuesRef<RSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1742_RSA_clear_flags")
+@CCall("knifunptr_openssl1746_RSA_get0_pss_params")
+external fun RSA_get0_pss_params(r: CValuesRef<RSA>?): CPointer<RSA_PSS_PARAMS>?
+
+@CCall("knifunptr_openssl1747_RSA_clear_flags")
 external fun RSA_clear_flags(r: CValuesRef<RSA>?, flags: Int): Unit
 
-@CCall("knifunptr_openssl1743_RSA_test_flags")
+@CCall("knifunptr_openssl1748_RSA_test_flags")
 external fun RSA_test_flags(r: CValuesRef<RSA>?, flags: Int): Int
 
-@CCall("knifunptr_openssl1744_RSA_set_flags")
+@CCall("knifunptr_openssl1749_RSA_set_flags")
 external fun RSA_set_flags(r: CValuesRef<RSA>?, flags: Int): Unit
 
-@CCall("knifunptr_openssl1745_RSA_get_version")
+@CCall("knifunptr_openssl1750_RSA_get_version")
 external fun RSA_get_version(r: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl1746_RSA_get0_engine")
+@CCall("knifunptr_openssl1751_RSA_get0_engine")
 external fun RSA_get0_engine(r: CValuesRef<RSA>?): CPointer<ENGINE>?
 
-@CCall("knifunptr_openssl1747_RSA_generate_key")
+@CCall("knifunptr_openssl1752_RSA_generate_key")
 external fun RSA_generate_key(
     bits: Int,
     e: UInt,
@@ -9203,7 +9293,7 @@ external fun RSA_generate_key(
     cb_arg: CValuesRef<*>?
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl1748_RSA_generate_key_ex")
+@CCall("knifunptr_openssl1753_RSA_generate_key_ex")
 external fun RSA_generate_key_ex(
     rsa: CValuesRef<RSA>?,
     bits: Int,
@@ -9211,7 +9301,7 @@ external fun RSA_generate_key_ex(
     cb: CValuesRef<BN_GENCB>?
 ): Int
 
-@CCall("knifunptr_openssl1749_RSA_generate_multi_prime_key")
+@CCall("knifunptr_openssl1754_RSA_generate_multi_prime_key")
 external fun RSA_generate_multi_prime_key(
     rsa: CValuesRef<RSA>?,
     bits: Int,
@@ -9220,7 +9310,7 @@ external fun RSA_generate_multi_prime_key(
     cb: CValuesRef<BN_GENCB>?
 ): Int
 
-@CCall("knifunptr_openssl1750_RSA_X931_derive_ex")
+@CCall("knifunptr_openssl1755_RSA_X931_derive_ex")
 external fun RSA_X931_derive_ex(
     rsa: CValuesRef<RSA>?,
     p1: CValuesRef<BIGNUM>?,
@@ -9237,7 +9327,7 @@ external fun RSA_X931_derive_ex(
     cb: CValuesRef<BN_GENCB>?
 ): Int
 
-@CCall("knifunptr_openssl1751_RSA_X931_generate_key_ex")
+@CCall("knifunptr_openssl1756_RSA_X931_generate_key_ex")
 external fun RSA_X931_generate_key_ex(
     rsa: CValuesRef<RSA>?,
     bits: Int,
@@ -9245,13 +9335,13 @@ external fun RSA_X931_generate_key_ex(
     cb: CValuesRef<BN_GENCB>?
 ): Int
 
-@CCall("knifunptr_openssl1752_RSA_check_key")
+@CCall("knifunptr_openssl1757_RSA_check_key")
 external fun RSA_check_key(arg0: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl1753_RSA_check_key_ex")
+@CCall("knifunptr_openssl1758_RSA_check_key_ex")
 external fun RSA_check_key_ex(arg0: CValuesRef<RSA>?, cb: CValuesRef<BN_GENCB>?): Int
 
-@CCall("knifunptr_openssl1754_RSA_public_encrypt")
+@CCall("knifunptr_openssl1759_RSA_public_encrypt")
 external fun RSA_public_encrypt(
     flen: Int,
     from: CValuesRef<UByteVar>?,
@@ -9260,7 +9350,7 @@ external fun RSA_public_encrypt(
     padding: Int
 ): Int
 
-@CCall("knifunptr_openssl1755_RSA_private_encrypt")
+@CCall("knifunptr_openssl1760_RSA_private_encrypt")
 external fun RSA_private_encrypt(
     flen: Int,
     from: CValuesRef<UByteVar>?,
@@ -9269,7 +9359,7 @@ external fun RSA_private_encrypt(
     padding: Int
 ): Int
 
-@CCall("knifunptr_openssl1756_RSA_public_decrypt")
+@CCall("knifunptr_openssl1761_RSA_public_decrypt")
 external fun RSA_public_decrypt(
     flen: Int,
     from: CValuesRef<UByteVar>?,
@@ -9278,7 +9368,7 @@ external fun RSA_public_decrypt(
     padding: Int
 ): Int
 
-@CCall("knifunptr_openssl1757_RSA_private_decrypt")
+@CCall("knifunptr_openssl1762_RSA_private_decrypt")
 external fun RSA_private_decrypt(
     flen: Int,
     from: CValuesRef<UByteVar>?,
@@ -9287,95 +9377,95 @@ external fun RSA_private_decrypt(
     padding: Int
 ): Int
 
-@CCall("knifunptr_openssl1758_RSA_free")
+@CCall("knifunptr_openssl1763_RSA_free")
 external fun RSA_free(r: CValuesRef<RSA>?): Unit
 
-@CCall("knifunptr_openssl1759_RSA_up_ref")
+@CCall("knifunptr_openssl1764_RSA_up_ref")
 external fun RSA_up_ref(r: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl1760_RSA_flags")
+@CCall("knifunptr_openssl1765_RSA_flags")
 external fun RSA_flags(r: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl1761_RSA_set_default_method")
+@CCall("knifunptr_openssl1766_RSA_set_default_method")
 external fun RSA_set_default_method(meth: CValuesRef<RSA_METHOD>?): Unit
 
-@CCall("knifunptr_openssl1762_RSA_get_default_method")
+@CCall("knifunptr_openssl1767_RSA_get_default_method")
 external fun RSA_get_default_method(): CPointer<RSA_METHOD>?
 
-@CCall("knifunptr_openssl1763_RSA_null_method")
+@CCall("knifunptr_openssl1768_RSA_null_method")
 external fun RSA_null_method(): CPointer<RSA_METHOD>?
 
-@CCall("knifunptr_openssl1764_RSA_get_method")
+@CCall("knifunptr_openssl1769_RSA_get_method")
 external fun RSA_get_method(rsa: CValuesRef<RSA>?): CPointer<RSA_METHOD>?
 
-@CCall("knifunptr_openssl1765_RSA_set_method")
+@CCall("knifunptr_openssl1770_RSA_set_method")
 external fun RSA_set_method(rsa: CValuesRef<RSA>?, meth: CValuesRef<RSA_METHOD>?): Int
 
-@CCall("knifunptr_openssl1766_RSA_PKCS1_OpenSSL")
+@CCall("knifunptr_openssl1771_RSA_PKCS1_OpenSSL")
 external fun RSA_PKCS1_OpenSSL(): CPointer<RSA_METHOD>?
 
-@CCall("knifunptr_openssl1767_RSA_pkey_ctx_ctrl")
+@CCall("knifunptr_openssl1772_RSA_pkey_ctx_ctrl")
 external fun RSA_pkey_ctx_ctrl(ctx: CValuesRef<EVP_PKEY_CTX>?, optype: Int, cmd: Int, p1: Int, p2: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl1768_d2i_RSAPublicKey")
+@CCall("knifunptr_openssl1773_d2i_RSAPublicKey")
 external fun d2i_RSAPublicKey(
     a: CValuesRef<CPointerVar<RSA>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl1769_i2d_RSAPublicKey")
+@CCall("knifunptr_openssl1774_i2d_RSAPublicKey")
 external fun i2d_RSAPublicKey(a: CValuesRef<RSA>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1770_d2i_RSAPrivateKey")
+@CCall("knifunptr_openssl1775_d2i_RSAPrivateKey")
 external fun d2i_RSAPrivateKey(
     a: CValuesRef<CPointerVar<RSA>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl1771_i2d_RSAPrivateKey")
+@CCall("knifunptr_openssl1776_i2d_RSAPrivateKey")
 external fun i2d_RSAPrivateKey(a: CValuesRef<RSA>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1772_RSA_PSS_PARAMS_new")
+@CCall("knifunptr_openssl1777_RSA_PSS_PARAMS_new")
 external fun RSA_PSS_PARAMS_new(): CPointer<RSA_PSS_PARAMS>?
 
-@CCall("knifunptr_openssl1773_RSA_PSS_PARAMS_free")
+@CCall("knifunptr_openssl1778_RSA_PSS_PARAMS_free")
 external fun RSA_PSS_PARAMS_free(a: CValuesRef<RSA_PSS_PARAMS>?): Unit
 
-@CCall("knifunptr_openssl1774_d2i_RSA_PSS_PARAMS")
+@CCall("knifunptr_openssl1779_d2i_RSA_PSS_PARAMS")
 external fun d2i_RSA_PSS_PARAMS(
     a: CValuesRef<CPointerVar<RSA_PSS_PARAMS>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<RSA_PSS_PARAMS>?
 
-@CCall("knifunptr_openssl1775_i2d_RSA_PSS_PARAMS")
+@CCall("knifunptr_openssl1780_i2d_RSA_PSS_PARAMS")
 external fun i2d_RSA_PSS_PARAMS(a: CValuesRef<RSA_PSS_PARAMS>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1776_RSA_OAEP_PARAMS_new")
+@CCall("knifunptr_openssl1781_RSA_OAEP_PARAMS_new")
 external fun RSA_OAEP_PARAMS_new(): CPointer<RSA_OAEP_PARAMS>?
 
-@CCall("knifunptr_openssl1777_RSA_OAEP_PARAMS_free")
+@CCall("knifunptr_openssl1782_RSA_OAEP_PARAMS_free")
 external fun RSA_OAEP_PARAMS_free(a: CValuesRef<RSA_OAEP_PARAMS>?): Unit
 
-@CCall("knifunptr_openssl1778_d2i_RSA_OAEP_PARAMS")
+@CCall("knifunptr_openssl1783_d2i_RSA_OAEP_PARAMS")
 external fun d2i_RSA_OAEP_PARAMS(
     a: CValuesRef<CPointerVar<RSA_OAEP_PARAMS>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<RSA_OAEP_PARAMS>?
 
-@CCall("knifunptr_openssl1779_i2d_RSA_OAEP_PARAMS")
+@CCall("knifunptr_openssl1784_i2d_RSA_OAEP_PARAMS")
 external fun i2d_RSA_OAEP_PARAMS(a: CValuesRef<RSA_OAEP_PARAMS>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1780_RSA_print_fp")
+@CCall("knifunptr_openssl1785_RSA_print_fp")
 external fun RSA_print_fp(fp: CValuesRef<FILE>?, r: CValuesRef<RSA>?, offset: Int): Int
 
-@CCall("knifunptr_openssl1781_RSA_print")
+@CCall("knifunptr_openssl1786_RSA_print")
 external fun RSA_print(bp: CValuesRef<BIO>?, r: CValuesRef<RSA>?, offset: Int): Int
 
-@CCall("knifunptr_openssl1782_RSA_sign")
+@CCall("knifunptr_openssl1787_RSA_sign")
 external fun RSA_sign(
     type: Int,
     m: CValuesRef<UByteVar>?,
@@ -9385,7 +9475,7 @@ external fun RSA_sign(
     rsa: CValuesRef<RSA>?
 ): Int
 
-@CCall("knifunptr_openssl1783_RSA_verify")
+@CCall("knifunptr_openssl1788_RSA_verify")
 external fun RSA_verify(
     type: Int,
     m: CValuesRef<UByteVar>?,
@@ -9395,7 +9485,7 @@ external fun RSA_verify(
     rsa: CValuesRef<RSA>?
 ): Int
 
-@CCall("knifunptr_openssl1784_RSA_sign_ASN1_OCTET_STRING")
+@CCall("knifunptr_openssl1789_RSA_sign_ASN1_OCTET_STRING")
 external fun RSA_sign_ASN1_OCTET_STRING(
     type: Int,
     m: CValuesRef<UByteVar>?,
@@ -9405,7 +9495,7 @@ external fun RSA_sign_ASN1_OCTET_STRING(
     rsa: CValuesRef<RSA>?
 ): Int
 
-@CCall("knifunptr_openssl1785_RSA_verify_ASN1_OCTET_STRING")
+@CCall("knifunptr_openssl1790_RSA_verify_ASN1_OCTET_STRING")
 external fun RSA_verify_ASN1_OCTET_STRING(
     type: Int,
     m: CValuesRef<UByteVar>?,
@@ -9415,19 +9505,19 @@ external fun RSA_verify_ASN1_OCTET_STRING(
     rsa: CValuesRef<RSA>?
 ): Int
 
-@CCall("knifunptr_openssl1786_RSA_blinding_on")
+@CCall("knifunptr_openssl1791_RSA_blinding_on")
 external fun RSA_blinding_on(rsa: CValuesRef<RSA>?, ctx: CValuesRef<BN_CTX>?): Int
 
-@CCall("knifunptr_openssl1787_RSA_blinding_off")
+@CCall("knifunptr_openssl1792_RSA_blinding_off")
 external fun RSA_blinding_off(rsa: CValuesRef<RSA>?): Unit
 
-@CCall("knifunptr_openssl1788_RSA_setup_blinding")
+@CCall("knifunptr_openssl1793_RSA_setup_blinding")
 external fun RSA_setup_blinding(rsa: CValuesRef<RSA>?, ctx: CValuesRef<BN_CTX>?): CPointer<BN_BLINDING>?
 
-@CCall("knifunptr_openssl1789_RSA_padding_add_PKCS1_type_1")
+@CCall("knifunptr_openssl1794_RSA_padding_add_PKCS1_type_1")
 external fun RSA_padding_add_PKCS1_type_1(to: CValuesRef<UByteVar>?, tlen: Int, f: CValuesRef<UByteVar>?, fl: Int): Int
 
-@CCall("knifunptr_openssl1790_RSA_padding_check_PKCS1_type_1")
+@CCall("knifunptr_openssl1795_RSA_padding_check_PKCS1_type_1")
 external fun RSA_padding_check_PKCS1_type_1(
     to: CValuesRef<UByteVar>?,
     tlen: Int,
@@ -9436,10 +9526,10 @@ external fun RSA_padding_check_PKCS1_type_1(
     rsa_len: Int
 ): Int
 
-@CCall("knifunptr_openssl1791_RSA_padding_add_PKCS1_type_2")
+@CCall("knifunptr_openssl1796_RSA_padding_add_PKCS1_type_2")
 external fun RSA_padding_add_PKCS1_type_2(to: CValuesRef<UByteVar>?, tlen: Int, f: CValuesRef<UByteVar>?, fl: Int): Int
 
-@CCall("knifunptr_openssl1792_RSA_padding_check_PKCS1_type_2")
+@CCall("knifunptr_openssl1797_RSA_padding_check_PKCS1_type_2")
 external fun RSA_padding_check_PKCS1_type_2(
     to: CValuesRef<UByteVar>?,
     tlen: Int,
@@ -9448,7 +9538,7 @@ external fun RSA_padding_check_PKCS1_type_2(
     rsa_len: Int
 ): Int
 
-@CCall("knifunptr_openssl1793_PKCS1_MGF1")
+@CCall("knifunptr_openssl1798_PKCS1_MGF1")
 external fun PKCS1_MGF1(
     mask: CValuesRef<UByteVar>?,
     len: Int,
@@ -9457,7 +9547,7 @@ external fun PKCS1_MGF1(
     dgst: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl1794_RSA_padding_add_PKCS1_OAEP")
+@CCall("knifunptr_openssl1799_RSA_padding_add_PKCS1_OAEP")
 external fun RSA_padding_add_PKCS1_OAEP(
     to: CValuesRef<UByteVar>?,
     tlen: Int,
@@ -9467,7 +9557,7 @@ external fun RSA_padding_add_PKCS1_OAEP(
     pl: Int
 ): Int
 
-@CCall("knifunptr_openssl1795_RSA_padding_check_PKCS1_OAEP")
+@CCall("knifunptr_openssl1800_RSA_padding_check_PKCS1_OAEP")
 external fun RSA_padding_check_PKCS1_OAEP(
     to: CValuesRef<UByteVar>?,
     tlen: Int,
@@ -9478,7 +9568,7 @@ external fun RSA_padding_check_PKCS1_OAEP(
     pl: Int
 ): Int
 
-@CCall("knifunptr_openssl1796_RSA_padding_add_PKCS1_OAEP_mgf1")
+@CCall("knifunptr_openssl1801_RSA_padding_add_PKCS1_OAEP_mgf1")
 external fun RSA_padding_add_PKCS1_OAEP_mgf1(
     to: CValuesRef<UByteVar>?,
     tlen: Int,
@@ -9490,7 +9580,7 @@ external fun RSA_padding_add_PKCS1_OAEP_mgf1(
     mgf1md: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl1797_RSA_padding_check_PKCS1_OAEP_mgf1")
+@CCall("knifunptr_openssl1802_RSA_padding_check_PKCS1_OAEP_mgf1")
 external fun RSA_padding_check_PKCS1_OAEP_mgf1(
     to: CValuesRef<UByteVar>?,
     tlen: Int,
@@ -9503,10 +9593,10 @@ external fun RSA_padding_check_PKCS1_OAEP_mgf1(
     mgf1md: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl1798_RSA_padding_add_SSLv23")
+@CCall("knifunptr_openssl1803_RSA_padding_add_SSLv23")
 external fun RSA_padding_add_SSLv23(to: CValuesRef<UByteVar>?, tlen: Int, f: CValuesRef<UByteVar>?, fl: Int): Int
 
-@CCall("knifunptr_openssl1799_RSA_padding_check_SSLv23")
+@CCall("knifunptr_openssl1804_RSA_padding_check_SSLv23")
 external fun RSA_padding_check_SSLv23(
     to: CValuesRef<UByteVar>?,
     tlen: Int,
@@ -9515,10 +9605,10 @@ external fun RSA_padding_check_SSLv23(
     rsa_len: Int
 ): Int
 
-@CCall("knifunptr_openssl1800_RSA_padding_add_none")
+@CCall("knifunptr_openssl1805_RSA_padding_add_none")
 external fun RSA_padding_add_none(to: CValuesRef<UByteVar>?, tlen: Int, f: CValuesRef<UByteVar>?, fl: Int): Int
 
-@CCall("knifunptr_openssl1801_RSA_padding_check_none")
+@CCall("knifunptr_openssl1806_RSA_padding_check_none")
 external fun RSA_padding_check_none(
     to: CValuesRef<UByteVar>?,
     tlen: Int,
@@ -9527,10 +9617,10 @@ external fun RSA_padding_check_none(
     rsa_len: Int
 ): Int
 
-@CCall("knifunptr_openssl1802_RSA_padding_add_X931")
+@CCall("knifunptr_openssl1807_RSA_padding_add_X931")
 external fun RSA_padding_add_X931(to: CValuesRef<UByteVar>?, tlen: Int, f: CValuesRef<UByteVar>?, fl: Int): Int
 
-@CCall("knifunptr_openssl1803_RSA_padding_check_X931")
+@CCall("knifunptr_openssl1808_RSA_padding_check_X931")
 external fun RSA_padding_check_X931(
     to: CValuesRef<UByteVar>?,
     tlen: Int,
@@ -9539,10 +9629,10 @@ external fun RSA_padding_check_X931(
     rsa_len: Int
 ): Int
 
-@CCall("knifunptr_openssl1804_RSA_X931_hash_id")
+@CCall("knifunptr_openssl1809_RSA_X931_hash_id")
 external fun RSA_X931_hash_id(nid: Int): Int
 
-@CCall("knifunptr_openssl1805_RSA_verify_PKCS1_PSS")
+@CCall("knifunptr_openssl1810_RSA_verify_PKCS1_PSS")
 external fun RSA_verify_PKCS1_PSS(
     rsa: CValuesRef<RSA>?,
     mHash: CValuesRef<UByteVar>?,
@@ -9551,7 +9641,7 @@ external fun RSA_verify_PKCS1_PSS(
     sLen: Int
 ): Int
 
-@CCall("knifunptr_openssl1806_RSA_padding_add_PKCS1_PSS")
+@CCall("knifunptr_openssl1811_RSA_padding_add_PKCS1_PSS")
 external fun RSA_padding_add_PKCS1_PSS(
     rsa: CValuesRef<RSA>?,
     EM: CValuesRef<UByteVar>?,
@@ -9560,7 +9650,7 @@ external fun RSA_padding_add_PKCS1_PSS(
     sLen: Int
 ): Int
 
-@CCall("knifunptr_openssl1807_RSA_verify_PKCS1_PSS_mgf1")
+@CCall("knifunptr_openssl1812_RSA_verify_PKCS1_PSS_mgf1")
 external fun RSA_verify_PKCS1_PSS_mgf1(
     rsa: CValuesRef<RSA>?,
     mHash: CValuesRef<UByteVar>?,
@@ -9570,7 +9660,7 @@ external fun RSA_verify_PKCS1_PSS_mgf1(
     sLen: Int
 ): Int
 
-@CCall("knifunptr_openssl1808_RSA_padding_add_PKCS1_PSS_mgf1")
+@CCall("knifunptr_openssl1813_RSA_padding_add_PKCS1_PSS_mgf1")
 external fun RSA_padding_add_PKCS1_PSS_mgf1(
     rsa: CValuesRef<RSA>?,
     EM: CValuesRef<UByteVar>?,
@@ -9580,196 +9670,196 @@ external fun RSA_padding_add_PKCS1_PSS_mgf1(
     sLen: Int
 ): Int
 
-@CCall("knifunptr_openssl1809_RSA_set_ex_data")
+@CCall("knifunptr_openssl1814_RSA_set_ex_data")
 external fun RSA_set_ex_data(r: CValuesRef<RSA>?, idx: Int, arg: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl1810_RSA_get_ex_data")
+@CCall("knifunptr_openssl1815_RSA_get_ex_data")
 external fun RSA_get_ex_data(r: CValuesRef<RSA>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl1811_RSAPublicKey_dup")
+@CCall("knifunptr_openssl1816_RSAPublicKey_dup")
 external fun RSAPublicKey_dup(rsa: CValuesRef<RSA>?): CPointer<RSA>?
 
-@CCall("knifunptr_openssl1812_RSAPrivateKey_dup")
+@CCall("knifunptr_openssl1817_RSAPrivateKey_dup")
 external fun RSAPrivateKey_dup(rsa: CValuesRef<RSA>?): CPointer<RSA>?
 
-@CCall("knifunptr_openssl1813_RSA_meth_new")
+@CCall("knifunptr_openssl1818_RSA_meth_new")
 external fun RSA_meth_new(@CCall.CString name: String?, flags: Int): CPointer<RSA_METHOD>?
 
-@CCall("knifunptr_openssl1814_RSA_meth_free")
+@CCall("knifunptr_openssl1819_RSA_meth_free")
 external fun RSA_meth_free(meth: CValuesRef<RSA_METHOD>?): Unit
 
-@CCall("knifunptr_openssl1815_RSA_meth_dup")
+@CCall("knifunptr_openssl1820_RSA_meth_dup")
 external fun RSA_meth_dup(meth: CValuesRef<RSA_METHOD>?): CPointer<RSA_METHOD>?
 
-@CCall("knifunptr_openssl1816_RSA_meth_get0_name")
+@CCall("knifunptr_openssl1821_RSA_meth_get0_name")
 external fun RSA_meth_get0_name(meth: CValuesRef<RSA_METHOD>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl1817_RSA_meth_set1_name")
+@CCall("knifunptr_openssl1822_RSA_meth_set1_name")
 external fun RSA_meth_set1_name(meth: CValuesRef<RSA_METHOD>?, @CCall.CString name: String?): Int
 
-@CCall("knifunptr_openssl1818_RSA_meth_get_flags")
+@CCall("knifunptr_openssl1823_RSA_meth_get_flags")
 external fun RSA_meth_get_flags(meth: CValuesRef<RSA_METHOD>?): Int
 
-@CCall("knifunptr_openssl1819_RSA_meth_set_flags")
+@CCall("knifunptr_openssl1824_RSA_meth_set_flags")
 external fun RSA_meth_set_flags(meth: CValuesRef<RSA_METHOD>?, flags: Int): Int
 
-@CCall("knifunptr_openssl1820_RSA_meth_get0_app_data")
+@CCall("knifunptr_openssl1825_RSA_meth_get0_app_data")
 external fun RSA_meth_get0_app_data(meth: CValuesRef<RSA_METHOD>?): COpaquePointer?
 
-@CCall("knifunptr_openssl1821_RSA_meth_set0_app_data")
+@CCall("knifunptr_openssl1826_RSA_meth_set0_app_data")
 external fun RSA_meth_set0_app_data(meth: CValuesRef<RSA_METHOD>?, app_data: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl1822_RSA_meth_get_pub_enc")
+@CCall("knifunptr_openssl1827_RSA_meth_get_pub_enc")
 external fun RSA_meth_get_pub_enc(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(Int, CPointer<UByteVar>?, CPointer<UByteVar>?, CPointer<RSA>?, Int) -> Int>>?
 
-@CCall("knifunptr_openssl1823_RSA_meth_set_pub_enc")
+@CCall("knifunptr_openssl1828_RSA_meth_set_pub_enc")
 external fun RSA_meth_set_pub_enc(
     rsa: CValuesRef<RSA_METHOD>?,
     pub_enc: CPointer<CFunction<(Int, CPointer<UByteVar>?, CPointer<UByteVar>?, CPointer<RSA>?, Int) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1824_RSA_meth_get_pub_dec")
+@CCall("knifunptr_openssl1829_RSA_meth_get_pub_dec")
 external fun RSA_meth_get_pub_dec(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(Int, CPointer<UByteVar>?, CPointer<UByteVar>?, CPointer<RSA>?, Int) -> Int>>?
 
-@CCall("knifunptr_openssl1825_RSA_meth_set_pub_dec")
+@CCall("knifunptr_openssl1830_RSA_meth_set_pub_dec")
 external fun RSA_meth_set_pub_dec(
     rsa: CValuesRef<RSA_METHOD>?,
     pub_dec: CPointer<CFunction<(Int, CPointer<UByteVar>?, CPointer<UByteVar>?, CPointer<RSA>?, Int) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1826_RSA_meth_get_priv_enc")
+@CCall("knifunptr_openssl1831_RSA_meth_get_priv_enc")
 external fun RSA_meth_get_priv_enc(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(Int, CPointer<UByteVar>?, CPointer<UByteVar>?, CPointer<RSA>?, Int) -> Int>>?
 
-@CCall("knifunptr_openssl1827_RSA_meth_set_priv_enc")
+@CCall("knifunptr_openssl1832_RSA_meth_set_priv_enc")
 external fun RSA_meth_set_priv_enc(
     rsa: CValuesRef<RSA_METHOD>?,
     priv_enc: CPointer<CFunction<(Int, CPointer<UByteVar>?, CPointer<UByteVar>?, CPointer<RSA>?, Int) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1828_RSA_meth_get_priv_dec")
+@CCall("knifunptr_openssl1833_RSA_meth_get_priv_dec")
 external fun RSA_meth_get_priv_dec(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(Int, CPointer<UByteVar>?, CPointer<UByteVar>?, CPointer<RSA>?, Int) -> Int>>?
 
-@CCall("knifunptr_openssl1829_RSA_meth_set_priv_dec")
+@CCall("knifunptr_openssl1834_RSA_meth_set_priv_dec")
 external fun RSA_meth_set_priv_dec(
     rsa: CValuesRef<RSA_METHOD>?,
     priv_dec: CPointer<CFunction<(Int, CPointer<UByteVar>?, CPointer<UByteVar>?, CPointer<RSA>?, Int) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1830_RSA_meth_get_mod_exp")
+@CCall("knifunptr_openssl1835_RSA_meth_get_mod_exp")
 external fun RSA_meth_get_mod_exp(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<RSA>?, CPointer<BN_CTX>?) -> Int>>?
 
-@CCall("knifunptr_openssl1831_RSA_meth_set_mod_exp")
+@CCall("knifunptr_openssl1836_RSA_meth_set_mod_exp")
 external fun RSA_meth_set_mod_exp(
     rsa: CValuesRef<RSA_METHOD>?,
     mod_exp: CPointer<CFunction<(CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<RSA>?, CPointer<BN_CTX>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1832_RSA_meth_get_bn_mod_exp")
+@CCall("knifunptr_openssl1837_RSA_meth_get_bn_mod_exp")
 external fun RSA_meth_get_bn_mod_exp(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BN_CTX>?, CPointer<BN_MONT_CTX>?) -> Int>>?
 
-@CCall("knifunptr_openssl1833_RSA_meth_set_bn_mod_exp")
+@CCall("knifunptr_openssl1838_RSA_meth_set_bn_mod_exp")
 external fun RSA_meth_set_bn_mod_exp(
     rsa: CValuesRef<RSA_METHOD>?,
     bn_mod_exp: CPointer<CFunction<(CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BN_CTX>?, CPointer<BN_MONT_CTX>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1834_RSA_meth_get_init")
+@CCall("knifunptr_openssl1839_RSA_meth_get_init")
 external fun RSA_meth_get_init(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(CPointer<RSA>?) -> Int>>?
 
-@CCall("knifunptr_openssl1835_RSA_meth_set_init")
+@CCall("knifunptr_openssl1840_RSA_meth_set_init")
 external fun RSA_meth_set_init(rsa: CValuesRef<RSA_METHOD>?, init: CPointer<CFunction<(CPointer<RSA>?) -> Int>>?): Int
 
-@CCall("knifunptr_openssl1836_RSA_meth_get_finish")
+@CCall("knifunptr_openssl1841_RSA_meth_get_finish")
 external fun RSA_meth_get_finish(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(CPointer<RSA>?) -> Int>>?
 
-@CCall("knifunptr_openssl1837_RSA_meth_set_finish")
+@CCall("knifunptr_openssl1842_RSA_meth_set_finish")
 external fun RSA_meth_set_finish(
     rsa: CValuesRef<RSA_METHOD>?,
     finish: CPointer<CFunction<(CPointer<RSA>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1838_RSA_meth_get_sign")
+@CCall("knifunptr_openssl1843_RSA_meth_get_sign")
 external fun RSA_meth_get_sign(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(Int, CPointer<UByteVar>?, UInt, CPointer<UByteVar>?, CPointer<UIntVar>?, CPointer<RSA>?) -> Int>>?
 
-@CCall("knifunptr_openssl1839_RSA_meth_set_sign")
+@CCall("knifunptr_openssl1844_RSA_meth_set_sign")
 external fun RSA_meth_set_sign(
     rsa: CValuesRef<RSA_METHOD>?,
     sign: CPointer<CFunction<(Int, CPointer<UByteVar>?, UInt, CPointer<UByteVar>?, CPointer<UIntVar>?, CPointer<RSA>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1840_RSA_meth_get_verify")
+@CCall("knifunptr_openssl1845_RSA_meth_get_verify")
 external fun RSA_meth_get_verify(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(Int, CPointer<UByteVar>?, UInt, CPointer<UByteVar>?, UInt, CPointer<RSA>?) -> Int>>?
 
-@CCall("knifunptr_openssl1841_RSA_meth_set_verify")
+@CCall("knifunptr_openssl1846_RSA_meth_set_verify")
 external fun RSA_meth_set_verify(
     rsa: CValuesRef<RSA_METHOD>?,
     verify: CPointer<CFunction<(Int, CPointer<UByteVar>?, UInt, CPointer<UByteVar>?, UInt, CPointer<RSA>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1842_RSA_meth_get_keygen")
+@CCall("knifunptr_openssl1847_RSA_meth_get_keygen")
 external fun RSA_meth_get_keygen(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(CPointer<RSA>?, Int, CPointer<BIGNUM>?, CPointer<BN_GENCB>?) -> Int>>?
 
-@CCall("knifunptr_openssl1843_RSA_meth_set_keygen")
+@CCall("knifunptr_openssl1848_RSA_meth_set_keygen")
 external fun RSA_meth_set_keygen(
     rsa: CValuesRef<RSA_METHOD>?,
     keygen: CPointer<CFunction<(CPointer<RSA>?, Int, CPointer<BIGNUM>?, CPointer<BN_GENCB>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1844_RSA_meth_get_multi_prime_keygen")
+@CCall("knifunptr_openssl1849_RSA_meth_get_multi_prime_keygen")
 external fun RSA_meth_get_multi_prime_keygen(meth: CValuesRef<RSA_METHOD>?): CPointer<CFunction<(CPointer<RSA>?, Int, Int, CPointer<BIGNUM>?, CPointer<BN_GENCB>?) -> Int>>?
 
-@CCall("knifunptr_openssl1845_RSA_meth_set_multi_prime_keygen")
+@CCall("knifunptr_openssl1850_RSA_meth_set_multi_prime_keygen")
 external fun RSA_meth_set_multi_prime_keygen(
     meth: CValuesRef<RSA_METHOD>?,
     keygen: CPointer<CFunction<(CPointer<RSA>?, Int, Int, CPointer<BIGNUM>?, CPointer<BN_GENCB>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1846_ERR_load_DH_strings")
+@CCall("knifunptr_openssl1851_ERR_load_DH_strings")
 external fun ERR_load_DH_strings(): Int
 
-@CCall("knifunptr_openssl1847_DHparams_dup")
+@CCall("knifunptr_openssl1852_DHparams_dup")
 external fun DHparams_dup(arg0: CValuesRef<DH>?): CPointer<DH>?
 
-@CCall("knifunptr_openssl1848_DH_OpenSSL")
+@CCall("knifunptr_openssl1853_DH_OpenSSL")
 external fun DH_OpenSSL(): CPointer<DH_METHOD>?
 
-@CCall("knifunptr_openssl1849_DH_set_default_method")
+@CCall("knifunptr_openssl1854_DH_set_default_method")
 external fun DH_set_default_method(meth: CValuesRef<DH_METHOD>?): Unit
 
-@CCall("knifunptr_openssl1850_DH_get_default_method")
+@CCall("knifunptr_openssl1855_DH_get_default_method")
 external fun DH_get_default_method(): CPointer<DH_METHOD>?
 
-@CCall("knifunptr_openssl1851_DH_set_method")
+@CCall("knifunptr_openssl1856_DH_set_method")
 external fun DH_set_method(dh: CValuesRef<DH>?, meth: CValuesRef<DH_METHOD>?): Int
 
-@CCall("knifunptr_openssl1852_DH_new_method")
+@CCall("knifunptr_openssl1857_DH_new_method")
 external fun DH_new_method(engine: CValuesRef<ENGINE>?): CPointer<DH>?
 
-@CCall("knifunptr_openssl1853_DH_new")
+@CCall("knifunptr_openssl1858_DH_new")
 external fun DH_new(): CPointer<DH>?
 
-@CCall("knifunptr_openssl1854_DH_free")
+@CCall("knifunptr_openssl1859_DH_free")
 external fun DH_free(dh: CValuesRef<DH>?): Unit
 
-@CCall("knifunptr_openssl1855_DH_up_ref")
+@CCall("knifunptr_openssl1860_DH_up_ref")
 external fun DH_up_ref(dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1856_DH_bits")
+@CCall("knifunptr_openssl1861_DH_bits")
 external fun DH_bits(dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1857_DH_size")
+@CCall("knifunptr_openssl1862_DH_size")
 external fun DH_size(dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1858_DH_security_bits")
+@CCall("knifunptr_openssl1863_DH_security_bits")
 external fun DH_security_bits(dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1859_DH_set_ex_data")
+@CCall("knifunptr_openssl1864_DH_set_ex_data")
 external fun DH_set_ex_data(d: CValuesRef<DH>?, idx: Int, arg: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl1860_DH_get_ex_data")
+@CCall("knifunptr_openssl1865_DH_get_ex_data")
 external fun DH_get_ex_data(d: CValuesRef<DH>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl1861_DH_generate_parameters")
+@CCall("knifunptr_openssl1866_DH_generate_parameters")
 external fun DH_generate_parameters(
     prime_len: Int,
     generator: Int,
@@ -9777,7 +9867,7 @@ external fun DH_generate_parameters(
     cb_arg: CValuesRef<*>?
 ): CPointer<DH>?
 
-@CCall("knifunptr_openssl1862_DH_generate_parameters_ex")
+@CCall("knifunptr_openssl1867_DH_generate_parameters_ex")
 external fun DH_generate_parameters_ex(
     dh: CValuesRef<DH>?,
     prime_len: Int,
@@ -9785,75 +9875,75 @@ external fun DH_generate_parameters_ex(
     cb: CValuesRef<BN_GENCB>?
 ): Int
 
-@CCall("knifunptr_openssl1863_DH_check_params_ex")
+@CCall("knifunptr_openssl1868_DH_check_params_ex")
 external fun DH_check_params_ex(dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1864_DH_check_ex")
+@CCall("knifunptr_openssl1869_DH_check_ex")
 external fun DH_check_ex(dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1865_DH_check_pub_key_ex")
+@CCall("knifunptr_openssl1870_DH_check_pub_key_ex")
 external fun DH_check_pub_key_ex(dh: CValuesRef<DH>?, pub_key: CValuesRef<BIGNUM>?): Int
 
-@CCall("knifunptr_openssl1866_DH_check_params")
+@CCall("knifunptr_openssl1871_DH_check_params")
 external fun DH_check_params(dh: CValuesRef<DH>?, ret: CValuesRef<IntVar>?): Int
 
-@CCall("knifunptr_openssl1867_DH_check")
+@CCall("knifunptr_openssl1872_DH_check")
 external fun DH_check(dh: CValuesRef<DH>?, codes: CValuesRef<IntVar>?): Int
 
-@CCall("knifunptr_openssl1868_DH_check_pub_key")
+@CCall("knifunptr_openssl1873_DH_check_pub_key")
 external fun DH_check_pub_key(dh: CValuesRef<DH>?, pub_key: CValuesRef<BIGNUM>?, codes: CValuesRef<IntVar>?): Int
 
-@CCall("knifunptr_openssl1869_DH_generate_key")
+@CCall("knifunptr_openssl1874_DH_generate_key")
 external fun DH_generate_key(dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1870_DH_compute_key")
+@CCall("knifunptr_openssl1875_DH_compute_key")
 external fun DH_compute_key(key: CValuesRef<UByteVar>?, pub_key: CValuesRef<BIGNUM>?, dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1871_DH_compute_key_padded")
+@CCall("knifunptr_openssl1876_DH_compute_key_padded")
 external fun DH_compute_key_padded(key: CValuesRef<UByteVar>?, pub_key: CValuesRef<BIGNUM>?, dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1872_d2i_DHparams")
+@CCall("knifunptr_openssl1877_d2i_DHparams")
 external fun d2i_DHparams(
     a: CValuesRef<CPointerVar<DH>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<DH>?
 
-@CCall("knifunptr_openssl1873_i2d_DHparams")
+@CCall("knifunptr_openssl1878_i2d_DHparams")
 external fun i2d_DHparams(a: CValuesRef<DH>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1874_d2i_DHxparams")
+@CCall("knifunptr_openssl1879_d2i_DHxparams")
 external fun d2i_DHxparams(
     a: CValuesRef<CPointerVar<DH>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<DH>?
 
-@CCall("knifunptr_openssl1875_i2d_DHxparams")
+@CCall("knifunptr_openssl1880_i2d_DHxparams")
 external fun i2d_DHxparams(a: CValuesRef<DH>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1876_DHparams_print_fp")
+@CCall("knifunptr_openssl1881_DHparams_print_fp")
 external fun DHparams_print_fp(fp: CValuesRef<FILE>?, x: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1877_DHparams_print")
+@CCall("knifunptr_openssl1882_DHparams_print")
 external fun DHparams_print(bp: CValuesRef<BIO>?, x: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1878_DH_get_1024_160")
+@CCall("knifunptr_openssl1883_DH_get_1024_160")
 external fun DH_get_1024_160(): CPointer<DH>?
 
-@CCall("knifunptr_openssl1879_DH_get_2048_224")
+@CCall("knifunptr_openssl1884_DH_get_2048_224")
 external fun DH_get_2048_224(): CPointer<DH>?
 
-@CCall("knifunptr_openssl1880_DH_get_2048_256")
+@CCall("knifunptr_openssl1885_DH_get_2048_256")
 external fun DH_get_2048_256(): CPointer<DH>?
 
-@CCall("knifunptr_openssl1881_DH_new_by_nid")
+@CCall("knifunptr_openssl1886_DH_new_by_nid")
 external fun DH_new_by_nid(nid: Int): CPointer<DH>?
 
-@CCall("knifunptr_openssl1882_DH_get_nid")
+@CCall("knifunptr_openssl1887_DH_get_nid")
 external fun DH_get_nid(dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1883_DH_KDF_X9_42")
+@CCall("knifunptr_openssl1888_DH_KDF_X9_42")
 external fun DH_KDF_X9_42(
     out: CValuesRef<UByteVar>?,
     outlen: size_t,
@@ -9865,7 +9955,7 @@ external fun DH_KDF_X9_42(
     md: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl1884_DH_get0_pqg")
+@CCall("knifunptr_openssl1889_DH_get0_pqg")
 external fun DH_get0_pqg(
     dh: CValuesRef<DH>?,
     p: CValuesRef<CPointerVar<BIGNUM>>?,
@@ -9873,7 +9963,7 @@ external fun DH_get0_pqg(
     g: CValuesRef<CPointerVar<BIGNUM>>?
 ): Unit
 
-@CCall("knifunptr_openssl1885_DH_set0_pqg")
+@CCall("knifunptr_openssl1890_DH_set0_pqg")
 external fun DH_set0_pqg(
     dh: CValuesRef<DH>?,
     p: CValuesRef<BIGNUM>?,
@@ -9881,160 +9971,160 @@ external fun DH_set0_pqg(
     g: CValuesRef<BIGNUM>?
 ): Int
 
-@CCall("knifunptr_openssl1886_DH_get0_key")
+@CCall("knifunptr_openssl1891_DH_get0_key")
 external fun DH_get0_key(
     dh: CValuesRef<DH>?,
     pub_key: CValuesRef<CPointerVar<BIGNUM>>?,
     priv_key: CValuesRef<CPointerVar<BIGNUM>>?
 ): Unit
 
-@CCall("knifunptr_openssl1887_DH_set0_key")
+@CCall("knifunptr_openssl1892_DH_set0_key")
 external fun DH_set0_key(dh: CValuesRef<DH>?, pub_key: CValuesRef<BIGNUM>?, priv_key: CValuesRef<BIGNUM>?): Int
 
-@CCall("knifunptr_openssl1888_DH_get0_p")
+@CCall("knifunptr_openssl1893_DH_get0_p")
 external fun DH_get0_p(dh: CValuesRef<DH>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1889_DH_get0_q")
+@CCall("knifunptr_openssl1894_DH_get0_q")
 external fun DH_get0_q(dh: CValuesRef<DH>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1890_DH_get0_g")
+@CCall("knifunptr_openssl1895_DH_get0_g")
 external fun DH_get0_g(dh: CValuesRef<DH>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1891_DH_get0_priv_key")
+@CCall("knifunptr_openssl1896_DH_get0_priv_key")
 external fun DH_get0_priv_key(dh: CValuesRef<DH>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1892_DH_get0_pub_key")
+@CCall("knifunptr_openssl1897_DH_get0_pub_key")
 external fun DH_get0_pub_key(dh: CValuesRef<DH>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1893_DH_clear_flags")
+@CCall("knifunptr_openssl1898_DH_clear_flags")
 external fun DH_clear_flags(dh: CValuesRef<DH>?, flags: Int): Unit
 
-@CCall("knifunptr_openssl1894_DH_test_flags")
+@CCall("knifunptr_openssl1899_DH_test_flags")
 external fun DH_test_flags(dh: CValuesRef<DH>?, flags: Int): Int
 
-@CCall("knifunptr_openssl1895_DH_set_flags")
+@CCall("knifunptr_openssl1900_DH_set_flags")
 external fun DH_set_flags(dh: CValuesRef<DH>?, flags: Int): Unit
 
-@CCall("knifunptr_openssl1896_DH_get0_engine")
+@CCall("knifunptr_openssl1901_DH_get0_engine")
 external fun DH_get0_engine(d: CValuesRef<DH>?): CPointer<ENGINE>?
 
-@CCall("knifunptr_openssl1897_DH_get_length")
+@CCall("knifunptr_openssl1902_DH_get_length")
 external fun DH_get_length(dh: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl1898_DH_set_length")
+@CCall("knifunptr_openssl1903_DH_set_length")
 external fun DH_set_length(dh: CValuesRef<DH>?, length: Int): Int
 
-@CCall("knifunptr_openssl1899_DH_meth_new")
+@CCall("knifunptr_openssl1904_DH_meth_new")
 external fun DH_meth_new(@CCall.CString name: String?, flags: Int): CPointer<DH_METHOD>?
 
-@CCall("knifunptr_openssl1900_DH_meth_free")
+@CCall("knifunptr_openssl1905_DH_meth_free")
 external fun DH_meth_free(dhm: CValuesRef<DH_METHOD>?): Unit
 
-@CCall("knifunptr_openssl1901_DH_meth_dup")
+@CCall("knifunptr_openssl1906_DH_meth_dup")
 external fun DH_meth_dup(dhm: CValuesRef<DH_METHOD>?): CPointer<DH_METHOD>?
 
-@CCall("knifunptr_openssl1902_DH_meth_get0_name")
+@CCall("knifunptr_openssl1907_DH_meth_get0_name")
 external fun DH_meth_get0_name(dhm: CValuesRef<DH_METHOD>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl1903_DH_meth_set1_name")
+@CCall("knifunptr_openssl1908_DH_meth_set1_name")
 external fun DH_meth_set1_name(dhm: CValuesRef<DH_METHOD>?, @CCall.CString name: String?): Int
 
-@CCall("knifunptr_openssl1904_DH_meth_get_flags")
+@CCall("knifunptr_openssl1909_DH_meth_get_flags")
 external fun DH_meth_get_flags(dhm: CValuesRef<DH_METHOD>?): Int
 
-@CCall("knifunptr_openssl1905_DH_meth_set_flags")
+@CCall("knifunptr_openssl1910_DH_meth_set_flags")
 external fun DH_meth_set_flags(dhm: CValuesRef<DH_METHOD>?, flags: Int): Int
 
-@CCall("knifunptr_openssl1906_DH_meth_get0_app_data")
+@CCall("knifunptr_openssl1911_DH_meth_get0_app_data")
 external fun DH_meth_get0_app_data(dhm: CValuesRef<DH_METHOD>?): COpaquePointer?
 
-@CCall("knifunptr_openssl1907_DH_meth_set0_app_data")
+@CCall("knifunptr_openssl1912_DH_meth_set0_app_data")
 external fun DH_meth_set0_app_data(dhm: CValuesRef<DH_METHOD>?, app_data: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl1908_DH_meth_get_generate_key")
+@CCall("knifunptr_openssl1913_DH_meth_get_generate_key")
 external fun DH_meth_get_generate_key(dhm: CValuesRef<DH_METHOD>?): CPointer<CFunction<(CPointer<DH>?) -> Int>>?
 
-@CCall("knifunptr_openssl1909_DH_meth_set_generate_key")
+@CCall("knifunptr_openssl1914_DH_meth_set_generate_key")
 external fun DH_meth_set_generate_key(
     dhm: CValuesRef<DH_METHOD>?,
     generate_key: CPointer<CFunction<(CPointer<DH>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1910_DH_meth_get_compute_key")
+@CCall("knifunptr_openssl1915_DH_meth_get_compute_key")
 external fun DH_meth_get_compute_key(dhm: CValuesRef<DH_METHOD>?): CPointer<CFunction<(CPointer<UByteVar>?, CPointer<BIGNUM>?, CPointer<DH>?) -> Int>>?
 
-@CCall("knifunptr_openssl1911_DH_meth_set_compute_key")
+@CCall("knifunptr_openssl1916_DH_meth_set_compute_key")
 external fun DH_meth_set_compute_key(
     dhm: CValuesRef<DH_METHOD>?,
     compute_key: CPointer<CFunction<(CPointer<UByteVar>?, CPointer<BIGNUM>?, CPointer<DH>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1912_DH_meth_get_bn_mod_exp")
+@CCall("knifunptr_openssl1917_DH_meth_get_bn_mod_exp")
 external fun DH_meth_get_bn_mod_exp(dhm: CValuesRef<DH_METHOD>?): CPointer<CFunction<(CPointer<DH>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BN_CTX>?, CPointer<BN_MONT_CTX>?) -> Int>>?
 
-@CCall("knifunptr_openssl1913_DH_meth_set_bn_mod_exp")
+@CCall("knifunptr_openssl1918_DH_meth_set_bn_mod_exp")
 external fun DH_meth_set_bn_mod_exp(
     dhm: CValuesRef<DH_METHOD>?,
     bn_mod_exp: CPointer<CFunction<(CPointer<DH>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BN_CTX>?, CPointer<BN_MONT_CTX>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1914_DH_meth_get_init")
+@CCall("knifunptr_openssl1919_DH_meth_get_init")
 external fun DH_meth_get_init(dhm: CValuesRef<DH_METHOD>?): CPointer<CFunction<(CPointer<DH>?) -> Int>>?
 
-@CCall("knifunptr_openssl1915_DH_meth_set_init")
+@CCall("knifunptr_openssl1920_DH_meth_set_init")
 external fun DH_meth_set_init(dhm: CValuesRef<DH_METHOD>?, init: CPointer<CFunction<(CPointer<DH>?) -> Int>>?): Int
 
-@CCall("knifunptr_openssl1916_DH_meth_get_finish")
+@CCall("knifunptr_openssl1921_DH_meth_get_finish")
 external fun DH_meth_get_finish(dhm: CValuesRef<DH_METHOD>?): CPointer<CFunction<(CPointer<DH>?) -> Int>>?
 
-@CCall("knifunptr_openssl1917_DH_meth_set_finish")
+@CCall("knifunptr_openssl1922_DH_meth_set_finish")
 external fun DH_meth_set_finish(dhm: CValuesRef<DH_METHOD>?, finish: CPointer<CFunction<(CPointer<DH>?) -> Int>>?): Int
 
-@CCall("knifunptr_openssl1918_DH_meth_get_generate_params")
+@CCall("knifunptr_openssl1923_DH_meth_get_generate_params")
 external fun DH_meth_get_generate_params(dhm: CValuesRef<DH_METHOD>?): CPointer<CFunction<(CPointer<DH>?, Int, Int, CPointer<BN_GENCB>?) -> Int>>?
 
-@CCall("knifunptr_openssl1919_DH_meth_set_generate_params")
+@CCall("knifunptr_openssl1924_DH_meth_set_generate_params")
 external fun DH_meth_set_generate_params(
     dhm: CValuesRef<DH_METHOD>?,
     generate_params: CPointer<CFunction<(CPointer<DH>?, Int, Int, CPointer<BN_GENCB>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1920_ERR_load_DSA_strings")
+@CCall("knifunptr_openssl1925_ERR_load_DSA_strings")
 external fun ERR_load_DSA_strings(): Int
 
-@CCall("knifunptr_openssl1921_DSAparams_dup")
+@CCall("knifunptr_openssl1926_DSAparams_dup")
 external fun DSAparams_dup(x: CValuesRef<DSA>?): CPointer<DSA>?
 
-@CCall("knifunptr_openssl1922_DSA_SIG_new")
+@CCall("knifunptr_openssl1927_DSA_SIG_new")
 external fun DSA_SIG_new(): CPointer<DSA_SIG>?
 
-@CCall("knifunptr_openssl1923_DSA_SIG_free")
+@CCall("knifunptr_openssl1928_DSA_SIG_free")
 external fun DSA_SIG_free(a: CValuesRef<DSA_SIG>?): Unit
 
-@CCall("knifunptr_openssl1924_i2d_DSA_SIG")
+@CCall("knifunptr_openssl1929_i2d_DSA_SIG")
 external fun i2d_DSA_SIG(a: CValuesRef<DSA_SIG>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1925_d2i_DSA_SIG")
+@CCall("knifunptr_openssl1930_d2i_DSA_SIG")
 external fun d2i_DSA_SIG(
     v: CValuesRef<CPointerVar<DSA_SIG>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<DSA_SIG>?
 
-@CCall("knifunptr_openssl1926_DSA_SIG_get0")
+@CCall("knifunptr_openssl1931_DSA_SIG_get0")
 external fun DSA_SIG_get0(
     sig: CValuesRef<DSA_SIG>?,
     pr: CValuesRef<CPointerVar<BIGNUM>>?,
     ps: CValuesRef<CPointerVar<BIGNUM>>?
 ): Unit
 
-@CCall("knifunptr_openssl1927_DSA_SIG_set0")
+@CCall("knifunptr_openssl1932_DSA_SIG_set0")
 external fun DSA_SIG_set0(sig: CValuesRef<DSA_SIG>?, r: CValuesRef<BIGNUM>?, s: CValuesRef<BIGNUM>?): Int
 
-@CCall("knifunptr_openssl1928_DSA_do_sign")
+@CCall("knifunptr_openssl1933_DSA_do_sign")
 external fun DSA_do_sign(dgst: CValuesRef<UByteVar>?, dlen: Int, dsa: CValuesRef<DSA>?): CPointer<DSA_SIG>?
 
-@CCall("knifunptr_openssl1929_DSA_do_verify")
+@CCall("knifunptr_openssl1934_DSA_do_verify")
 external fun DSA_do_verify(
     dgst: CValuesRef<UByteVar>?,
     dgst_len: Int,
@@ -10042,43 +10132,43 @@ external fun DSA_do_verify(
     dsa: CValuesRef<DSA>?
 ): Int
 
-@CCall("knifunptr_openssl1930_DSA_OpenSSL")
+@CCall("knifunptr_openssl1935_DSA_OpenSSL")
 external fun DSA_OpenSSL(): CPointer<DSA_METHOD>?
 
-@CCall("knifunptr_openssl1931_DSA_set_default_method")
+@CCall("knifunptr_openssl1936_DSA_set_default_method")
 external fun DSA_set_default_method(arg0: CValuesRef<DSA_METHOD>?): Unit
 
-@CCall("knifunptr_openssl1932_DSA_get_default_method")
+@CCall("knifunptr_openssl1937_DSA_get_default_method")
 external fun DSA_get_default_method(): CPointer<DSA_METHOD>?
 
-@CCall("knifunptr_openssl1933_DSA_set_method")
+@CCall("knifunptr_openssl1938_DSA_set_method")
 external fun DSA_set_method(dsa: CValuesRef<DSA>?, arg1: CValuesRef<DSA_METHOD>?): Int
 
-@CCall("knifunptr_openssl1934_DSA_get_method")
+@CCall("knifunptr_openssl1939_DSA_get_method")
 external fun DSA_get_method(d: CValuesRef<DSA>?): CPointer<DSA_METHOD>?
 
-@CCall("knifunptr_openssl1935_DSA_new")
+@CCall("knifunptr_openssl1940_DSA_new")
 external fun DSA_new(): CPointer<DSA>?
 
-@CCall("knifunptr_openssl1936_DSA_new_method")
+@CCall("knifunptr_openssl1941_DSA_new_method")
 external fun DSA_new_method(engine: CValuesRef<ENGINE>?): CPointer<DSA>?
 
-@CCall("knifunptr_openssl1937_DSA_free")
+@CCall("knifunptr_openssl1942_DSA_free")
 external fun DSA_free(r: CValuesRef<DSA>?): Unit
 
-@CCall("knifunptr_openssl1938_DSA_up_ref")
+@CCall("knifunptr_openssl1943_DSA_up_ref")
 external fun DSA_up_ref(r: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl1939_DSA_size")
+@CCall("knifunptr_openssl1944_DSA_size")
 external fun DSA_size(arg0: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl1940_DSA_bits")
+@CCall("knifunptr_openssl1945_DSA_bits")
 external fun DSA_bits(d: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl1941_DSA_security_bits")
+@CCall("knifunptr_openssl1946_DSA_security_bits")
 external fun DSA_security_bits(d: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl1942_DSA_sign_setup")
+@CCall("knifunptr_openssl1947_DSA_sign_setup")
 external fun DSA_sign_setup(
     dsa: CValuesRef<DSA>?,
     ctx_in: CValuesRef<BN_CTX>?,
@@ -10086,7 +10176,7 @@ external fun DSA_sign_setup(
     rp: CValuesRef<CPointerVar<BIGNUM>>?
 ): Int
 
-@CCall("knifunptr_openssl1943_DSA_sign")
+@CCall("knifunptr_openssl1948_DSA_sign")
 external fun DSA_sign(
     type: Int,
     dgst: CValuesRef<UByteVar>?,
@@ -10096,7 +10186,7 @@ external fun DSA_sign(
     dsa: CValuesRef<DSA>?
 ): Int
 
-@CCall("knifunptr_openssl1944_DSA_verify")
+@CCall("knifunptr_openssl1949_DSA_verify")
 external fun DSA_verify(
     type: Int,
     dgst: CValuesRef<UByteVar>?,
@@ -10106,34 +10196,34 @@ external fun DSA_verify(
     dsa: CValuesRef<DSA>?
 ): Int
 
-@CCall("knifunptr_openssl1945_DSA_set_ex_data")
+@CCall("knifunptr_openssl1950_DSA_set_ex_data")
 external fun DSA_set_ex_data(d: CValuesRef<DSA>?, idx: Int, arg: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl1946_DSA_get_ex_data")
+@CCall("knifunptr_openssl1951_DSA_get_ex_data")
 external fun DSA_get_ex_data(d: CValuesRef<DSA>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl1947_d2i_DSAPublicKey")
+@CCall("knifunptr_openssl1952_d2i_DSAPublicKey")
 external fun d2i_DSAPublicKey(
     a: CValuesRef<CPointerVar<DSA>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl1948_d2i_DSAPrivateKey")
+@CCall("knifunptr_openssl1953_d2i_DSAPrivateKey")
 external fun d2i_DSAPrivateKey(
     a: CValuesRef<CPointerVar<DSA>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl1949_d2i_DSAparams")
+@CCall("knifunptr_openssl1954_d2i_DSAparams")
 external fun d2i_DSAparams(
     a: CValuesRef<CPointerVar<DSA>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl1950_DSA_generate_parameters")
+@CCall("knifunptr_openssl1955_DSA_generate_parameters")
 external fun DSA_generate_parameters(
     bits: Int,
     seed: CValuesRef<UByteVar>?,
@@ -10144,7 +10234,7 @@ external fun DSA_generate_parameters(
     cb_arg: CValuesRef<*>?
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl1951_DSA_generate_parameters_ex")
+@CCall("knifunptr_openssl1956_DSA_generate_parameters_ex")
 external fun DSA_generate_parameters_ex(
     dsa: CValuesRef<DSA>?,
     bits: Int,
@@ -10155,34 +10245,34 @@ external fun DSA_generate_parameters_ex(
     cb: CValuesRef<BN_GENCB>?
 ): Int
 
-@CCall("knifunptr_openssl1952_DSA_generate_key")
+@CCall("knifunptr_openssl1957_DSA_generate_key")
 external fun DSA_generate_key(a: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl1953_i2d_DSAPublicKey")
+@CCall("knifunptr_openssl1958_i2d_DSAPublicKey")
 external fun i2d_DSAPublicKey(a: CValuesRef<DSA>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1954_i2d_DSAPrivateKey")
+@CCall("knifunptr_openssl1959_i2d_DSAPrivateKey")
 external fun i2d_DSAPrivateKey(a: CValuesRef<DSA>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1955_i2d_DSAparams")
+@CCall("knifunptr_openssl1960_i2d_DSAparams")
 external fun i2d_DSAparams(a: CValuesRef<DSA>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl1956_DSAparams_print")
+@CCall("knifunptr_openssl1961_DSAparams_print")
 external fun DSAparams_print(bp: CValuesRef<BIO>?, x: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl1957_DSA_print")
+@CCall("knifunptr_openssl1962_DSA_print")
 external fun DSA_print(bp: CValuesRef<BIO>?, x: CValuesRef<DSA>?, off: Int): Int
 
-@CCall("knifunptr_openssl1958_DSAparams_print_fp")
+@CCall("knifunptr_openssl1963_DSAparams_print_fp")
 external fun DSAparams_print_fp(fp: CValuesRef<FILE>?, x: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl1959_DSA_print_fp")
+@CCall("knifunptr_openssl1964_DSA_print_fp")
 external fun DSA_print_fp(bp: CValuesRef<FILE>?, x: CValuesRef<DSA>?, off: Int): Int
 
-@CCall("knifunptr_openssl1960_DSA_dup_DH")
+@CCall("knifunptr_openssl1965_DSA_dup_DH")
 external fun DSA_dup_DH(r: CValuesRef<DSA>?): CPointer<DH>?
 
-@CCall("knifunptr_openssl1961_DSA_get0_pqg")
+@CCall("knifunptr_openssl1966_DSA_get0_pqg")
 external fun DSA_get0_pqg(
     d: CValuesRef<DSA>?,
     p: CValuesRef<CPointerVar<BIGNUM>>?,
@@ -10190,7 +10280,7 @@ external fun DSA_get0_pqg(
     g: CValuesRef<CPointerVar<BIGNUM>>?
 ): Unit
 
-@CCall("knifunptr_openssl1962_DSA_set0_pqg")
+@CCall("knifunptr_openssl1967_DSA_set0_pqg")
 external fun DSA_set0_pqg(
     d: CValuesRef<DSA>?,
     p: CValuesRef<BIGNUM>?,
@@ -10198,1681 +10288,1681 @@ external fun DSA_set0_pqg(
     g: CValuesRef<BIGNUM>?
 ): Int
 
-@CCall("knifunptr_openssl1963_DSA_get0_key")
+@CCall("knifunptr_openssl1968_DSA_get0_key")
 external fun DSA_get0_key(
     d: CValuesRef<DSA>?,
     pub_key: CValuesRef<CPointerVar<BIGNUM>>?,
     priv_key: CValuesRef<CPointerVar<BIGNUM>>?
 ): Unit
 
-@CCall("knifunptr_openssl1964_DSA_set0_key")
+@CCall("knifunptr_openssl1969_DSA_set0_key")
 external fun DSA_set0_key(d: CValuesRef<DSA>?, pub_key: CValuesRef<BIGNUM>?, priv_key: CValuesRef<BIGNUM>?): Int
 
-@CCall("knifunptr_openssl1965_DSA_get0_p")
+@CCall("knifunptr_openssl1970_DSA_get0_p")
 external fun DSA_get0_p(d: CValuesRef<DSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1966_DSA_get0_q")
+@CCall("knifunptr_openssl1971_DSA_get0_q")
 external fun DSA_get0_q(d: CValuesRef<DSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1967_DSA_get0_g")
+@CCall("knifunptr_openssl1972_DSA_get0_g")
 external fun DSA_get0_g(d: CValuesRef<DSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1968_DSA_get0_pub_key")
+@CCall("knifunptr_openssl1973_DSA_get0_pub_key")
 external fun DSA_get0_pub_key(d: CValuesRef<DSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1969_DSA_get0_priv_key")
+@CCall("knifunptr_openssl1974_DSA_get0_priv_key")
 external fun DSA_get0_priv_key(d: CValuesRef<DSA>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl1970_DSA_clear_flags")
+@CCall("knifunptr_openssl1975_DSA_clear_flags")
 external fun DSA_clear_flags(d: CValuesRef<DSA>?, flags: Int): Unit
 
-@CCall("knifunptr_openssl1971_DSA_test_flags")
+@CCall("knifunptr_openssl1976_DSA_test_flags")
 external fun DSA_test_flags(d: CValuesRef<DSA>?, flags: Int): Int
 
-@CCall("knifunptr_openssl1972_DSA_set_flags")
+@CCall("knifunptr_openssl1977_DSA_set_flags")
 external fun DSA_set_flags(d: CValuesRef<DSA>?, flags: Int): Unit
 
-@CCall("knifunptr_openssl1973_DSA_get0_engine")
+@CCall("knifunptr_openssl1978_DSA_get0_engine")
 external fun DSA_get0_engine(d: CValuesRef<DSA>?): CPointer<ENGINE>?
 
-@CCall("knifunptr_openssl1974_DSA_meth_new")
+@CCall("knifunptr_openssl1979_DSA_meth_new")
 external fun DSA_meth_new(@CCall.CString name: String?, flags: Int): CPointer<DSA_METHOD>?
 
-@CCall("knifunptr_openssl1975_DSA_meth_free")
+@CCall("knifunptr_openssl1980_DSA_meth_free")
 external fun DSA_meth_free(dsam: CValuesRef<DSA_METHOD>?): Unit
 
-@CCall("knifunptr_openssl1976_DSA_meth_dup")
+@CCall("knifunptr_openssl1981_DSA_meth_dup")
 external fun DSA_meth_dup(dsam: CValuesRef<DSA_METHOD>?): CPointer<DSA_METHOD>?
 
-@CCall("knifunptr_openssl1977_DSA_meth_get0_name")
+@CCall("knifunptr_openssl1982_DSA_meth_get0_name")
 external fun DSA_meth_get0_name(dsam: CValuesRef<DSA_METHOD>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl1978_DSA_meth_set1_name")
+@CCall("knifunptr_openssl1983_DSA_meth_set1_name")
 external fun DSA_meth_set1_name(dsam: CValuesRef<DSA_METHOD>?, @CCall.CString name: String?): Int
 
-@CCall("knifunptr_openssl1979_DSA_meth_get_flags")
+@CCall("knifunptr_openssl1984_DSA_meth_get_flags")
 external fun DSA_meth_get_flags(dsam: CValuesRef<DSA_METHOD>?): Int
 
-@CCall("knifunptr_openssl1980_DSA_meth_set_flags")
+@CCall("knifunptr_openssl1985_DSA_meth_set_flags")
 external fun DSA_meth_set_flags(dsam: CValuesRef<DSA_METHOD>?, flags: Int): Int
 
-@CCall("knifunptr_openssl1981_DSA_meth_get0_app_data")
+@CCall("knifunptr_openssl1986_DSA_meth_get0_app_data")
 external fun DSA_meth_get0_app_data(dsam: CValuesRef<DSA_METHOD>?): COpaquePointer?
 
-@CCall("knifunptr_openssl1982_DSA_meth_set0_app_data")
+@CCall("knifunptr_openssl1987_DSA_meth_set0_app_data")
 external fun DSA_meth_set0_app_data(dsam: CValuesRef<DSA_METHOD>?, app_data: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl1983_DSA_meth_get_sign")
+@CCall("knifunptr_openssl1988_DSA_meth_get_sign")
 external fun DSA_meth_get_sign(dsam: CValuesRef<DSA_METHOD>?): CPointer<CFunction<(CPointer<UByteVar>?, Int, CPointer<DSA>?) -> CPointer<DSA_SIG>?>>?
 
-@CCall("knifunptr_openssl1984_DSA_meth_set_sign")
+@CCall("knifunptr_openssl1989_DSA_meth_set_sign")
 external fun DSA_meth_set_sign(
     dsam: CValuesRef<DSA_METHOD>?,
     sign: CPointer<CFunction<(CPointer<UByteVar>?, Int, CPointer<DSA>?) -> CPointer<DSA_SIG>?>>?
 ): Int
 
-@CCall("knifunptr_openssl1985_DSA_meth_get_sign_setup")
+@CCall("knifunptr_openssl1990_DSA_meth_get_sign_setup")
 external fun DSA_meth_get_sign_setup(dsam: CValuesRef<DSA_METHOD>?): CPointer<CFunction<(CPointer<DSA>?, CPointer<BN_CTX>?, CPointer<CPointerVar<BIGNUM>>?, CPointer<CPointerVar<BIGNUM>>?) -> Int>>?
 
-@CCall("knifunptr_openssl1986_DSA_meth_set_sign_setup")
+@CCall("knifunptr_openssl1991_DSA_meth_set_sign_setup")
 external fun DSA_meth_set_sign_setup(
     dsam: CValuesRef<DSA_METHOD>?,
     sign_setup: CPointer<CFunction<(CPointer<DSA>?, CPointer<BN_CTX>?, CPointer<CPointerVar<BIGNUM>>?, CPointer<CPointerVar<BIGNUM>>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1987_DSA_meth_get_verify")
+@CCall("knifunptr_openssl1992_DSA_meth_get_verify")
 external fun DSA_meth_get_verify(dsam: CValuesRef<DSA_METHOD>?): CPointer<CFunction<(CPointer<UByteVar>?, Int, CPointer<DSA_SIG>?, CPointer<DSA>?) -> Int>>?
 
-@CCall("knifunptr_openssl1988_DSA_meth_set_verify")
+@CCall("knifunptr_openssl1993_DSA_meth_set_verify")
 external fun DSA_meth_set_verify(
     dsam: CValuesRef<DSA_METHOD>?,
     verify: CPointer<CFunction<(CPointer<UByteVar>?, Int, CPointer<DSA_SIG>?, CPointer<DSA>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1989_DSA_meth_get_mod_exp")
+@CCall("knifunptr_openssl1994_DSA_meth_get_mod_exp")
 external fun DSA_meth_get_mod_exp(dsam: CValuesRef<DSA_METHOD>?): CPointer<CFunction<(CPointer<DSA>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BN_CTX>?, CPointer<BN_MONT_CTX>?) -> Int>>?
 
-@CCall("knifunptr_openssl1990_DSA_meth_set_mod_exp")
+@CCall("knifunptr_openssl1995_DSA_meth_set_mod_exp")
 external fun DSA_meth_set_mod_exp(
     dsam: CValuesRef<DSA_METHOD>?,
     mod_exp: CPointer<CFunction<(CPointer<DSA>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BN_CTX>?, CPointer<BN_MONT_CTX>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1991_DSA_meth_get_bn_mod_exp")
+@CCall("knifunptr_openssl1996_DSA_meth_get_bn_mod_exp")
 external fun DSA_meth_get_bn_mod_exp(dsam: CValuesRef<DSA_METHOD>?): CPointer<CFunction<(CPointer<DSA>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BN_CTX>?, CPointer<BN_MONT_CTX>?) -> Int>>?
 
-@CCall("knifunptr_openssl1992_DSA_meth_set_bn_mod_exp")
+@CCall("knifunptr_openssl1997_DSA_meth_set_bn_mod_exp")
 external fun DSA_meth_set_bn_mod_exp(
     dsam: CValuesRef<DSA_METHOD>?,
     bn_mod_exp: CPointer<CFunction<(CPointer<DSA>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BIGNUM>?, CPointer<BN_CTX>?, CPointer<BN_MONT_CTX>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1993_DSA_meth_get_init")
+@CCall("knifunptr_openssl1998_DSA_meth_get_init")
 external fun DSA_meth_get_init(dsam: CValuesRef<DSA_METHOD>?): CPointer<CFunction<(CPointer<DSA>?) -> Int>>?
 
-@CCall("knifunptr_openssl1994_DSA_meth_set_init")
+@CCall("knifunptr_openssl1999_DSA_meth_set_init")
 external fun DSA_meth_set_init(dsam: CValuesRef<DSA_METHOD>?, init: CPointer<CFunction<(CPointer<DSA>?) -> Int>>?): Int
 
-@CCall("knifunptr_openssl1995_DSA_meth_get_finish")
+@CCall("knifunptr_openssl2000_DSA_meth_get_finish")
 external fun DSA_meth_get_finish(dsam: CValuesRef<DSA_METHOD>?): CPointer<CFunction<(CPointer<DSA>?) -> Int>>?
 
-@CCall("knifunptr_openssl1996_DSA_meth_set_finish")
+@CCall("knifunptr_openssl2001_DSA_meth_set_finish")
 external fun DSA_meth_set_finish(
     dsam: CValuesRef<DSA_METHOD>?,
     finish: CPointer<CFunction<(CPointer<DSA>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1997_DSA_meth_get_paramgen")
+@CCall("knifunptr_openssl2002_DSA_meth_get_paramgen")
 external fun DSA_meth_get_paramgen(dsam: CValuesRef<DSA_METHOD>?): CPointer<CFunction<(CPointer<DSA>?, Int, CPointer<UByteVar>?, Int, CPointer<IntVar>?, CPointer<UIntVar>?, CPointer<BN_GENCB>?) -> Int>>?
 
-@CCall("knifunptr_openssl1998_DSA_meth_set_paramgen")
+@CCall("knifunptr_openssl2003_DSA_meth_set_paramgen")
 external fun DSA_meth_set_paramgen(
     dsam: CValuesRef<DSA_METHOD>?,
     paramgen: CPointer<CFunction<(CPointer<DSA>?, Int, CPointer<UByteVar>?, Int, CPointer<IntVar>?, CPointer<UIntVar>?, CPointer<BN_GENCB>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl1999_DSA_meth_get_keygen")
+@CCall("knifunptr_openssl2004_DSA_meth_get_keygen")
 external fun DSA_meth_get_keygen(dsam: CValuesRef<DSA_METHOD>?): CPointer<CFunction<(CPointer<DSA>?) -> Int>>?
 
-@CCall("knifunptr_openssl2000_DSA_meth_set_keygen")
+@CCall("knifunptr_openssl2005_DSA_meth_set_keygen")
 external fun DSA_meth_set_keygen(
     dsam: CValuesRef<DSA_METHOD>?,
     keygen: CPointer<CFunction<(CPointer<DSA>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl2001_SHA1_Init")
+@CCall("knifunptr_openssl2006_SHA1_Init")
 external fun SHA1_Init(c: CValuesRef<SHA_CTX>?): Int
 
-@CCall("knifunptr_openssl2002_SHA1_Update")
+@CCall("knifunptr_openssl2007_SHA1_Update")
 external fun SHA1_Update(c: CValuesRef<SHA_CTX>?, data: CValuesRef<*>?, len: size_t): Int
 
-@CCall("knifunptr_openssl2003_SHA1_Final")
+@CCall("knifunptr_openssl2008_SHA1_Final")
 external fun SHA1_Final(md: CValuesRef<UByteVar>?, c: CValuesRef<SHA_CTX>?): Int
 
-@CCall("knifunptr_openssl2004_SHA1")
+@CCall("knifunptr_openssl2009_SHA1")
 external fun SHA1(d: CValuesRef<UByteVar>?, n: size_t, md: CValuesRef<UByteVar>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl2005_SHA1_Transform")
+@CCall("knifunptr_openssl2010_SHA1_Transform")
 external fun SHA1_Transform(c: CValuesRef<SHA_CTX>?, data: CValuesRef<UByteVar>?): Unit
 
-@CCall("knifunptr_openssl2006_SHA224_Init")
+@CCall("knifunptr_openssl2011_SHA224_Init")
 external fun SHA224_Init(c: CValuesRef<SHA256_CTX>?): Int
 
-@CCall("knifunptr_openssl2007_SHA224_Update")
+@CCall("knifunptr_openssl2012_SHA224_Update")
 external fun SHA224_Update(c: CValuesRef<SHA256_CTX>?, data: CValuesRef<*>?, len: size_t): Int
 
-@CCall("knifunptr_openssl2008_SHA224_Final")
+@CCall("knifunptr_openssl2013_SHA224_Final")
 external fun SHA224_Final(md: CValuesRef<UByteVar>?, c: CValuesRef<SHA256_CTX>?): Int
 
-@CCall("knifunptr_openssl2009_SHA224")
+@CCall("knifunptr_openssl2014_SHA224")
 external fun SHA224(d: CValuesRef<UByteVar>?, n: size_t, md: CValuesRef<UByteVar>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl2010_SHA256_Init")
+@CCall("knifunptr_openssl2015_SHA256_Init")
 external fun SHA256_Init(c: CValuesRef<SHA256_CTX>?): Int
 
-@CCall("knifunptr_openssl2011_SHA256_Update")
+@CCall("knifunptr_openssl2016_SHA256_Update")
 external fun SHA256_Update(c: CValuesRef<SHA256_CTX>?, data: CValuesRef<*>?, len: size_t): Int
 
-@CCall("knifunptr_openssl2012_SHA256_Final")
+@CCall("knifunptr_openssl2017_SHA256_Final")
 external fun SHA256_Final(md: CValuesRef<UByteVar>?, c: CValuesRef<SHA256_CTX>?): Int
 
-@CCall("knifunptr_openssl2013_SHA256")
+@CCall("knifunptr_openssl2018_SHA256")
 external fun SHA256(d: CValuesRef<UByteVar>?, n: size_t, md: CValuesRef<UByteVar>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl2014_SHA256_Transform")
+@CCall("knifunptr_openssl2019_SHA256_Transform")
 external fun SHA256_Transform(c: CValuesRef<SHA256_CTX>?, data: CValuesRef<UByteVar>?): Unit
 
-@CCall("knifunptr_openssl2015_SHA384_Init")
+@CCall("knifunptr_openssl2020_SHA384_Init")
 external fun SHA384_Init(c: CValuesRef<SHA512_CTX>?): Int
 
-@CCall("knifunptr_openssl2016_SHA384_Update")
+@CCall("knifunptr_openssl2021_SHA384_Update")
 external fun SHA384_Update(c: CValuesRef<SHA512_CTX>?, data: CValuesRef<*>?, len: size_t): Int
 
-@CCall("knifunptr_openssl2017_SHA384_Final")
+@CCall("knifunptr_openssl2022_SHA384_Final")
 external fun SHA384_Final(md: CValuesRef<UByteVar>?, c: CValuesRef<SHA512_CTX>?): Int
 
-@CCall("knifunptr_openssl2018_SHA384")
+@CCall("knifunptr_openssl2023_SHA384")
 external fun SHA384(d: CValuesRef<UByteVar>?, n: size_t, md: CValuesRef<UByteVar>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl2019_SHA512_Init")
+@CCall("knifunptr_openssl2024_SHA512_Init")
 external fun SHA512_Init(c: CValuesRef<SHA512_CTX>?): Int
 
-@CCall("knifunptr_openssl2020_SHA512_Update")
+@CCall("knifunptr_openssl2025_SHA512_Update")
 external fun SHA512_Update(c: CValuesRef<SHA512_CTX>?, data: CValuesRef<*>?, len: size_t): Int
 
-@CCall("knifunptr_openssl2021_SHA512_Final")
+@CCall("knifunptr_openssl2026_SHA512_Final")
 external fun SHA512_Final(md: CValuesRef<UByteVar>?, c: CValuesRef<SHA512_CTX>?): Int
 
-@CCall("knifunptr_openssl2022_SHA512")
+@CCall("knifunptr_openssl2027_SHA512")
 external fun SHA512(d: CValuesRef<UByteVar>?, n: size_t, md: CValuesRef<UByteVar>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl2023_SHA512_Transform")
+@CCall("knifunptr_openssl2028_SHA512_Transform")
 external fun SHA512_Transform(c: CValuesRef<SHA512_CTX>?, data: CValuesRef<UByteVar>?): Unit
 
-@CCall("knifunptr_openssl2024_ERR_load_X509_strings")
+@CCall("knifunptr_openssl2029_ERR_load_X509_strings")
 external fun ERR_load_X509_strings(): Int
 
-@CCall("knifunptr_openssl2025_sk_X509_NAME_ENTRY_num")
+@CCall("knifunptr_openssl2030_sk_X509_NAME_ENTRY_num")
 external fun sk_X509_NAME_ENTRY_num(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?): Int
 
-@CCall("knifunptr_openssl2026_sk_X509_NAME_ENTRY_value")
+@CCall("knifunptr_openssl2031_sk_X509_NAME_ENTRY_value")
 external fun sk_X509_NAME_ENTRY_value(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?, idx: Int): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2027_sk_X509_NAME_ENTRY_new")
+@CCall("knifunptr_openssl2032_sk_X509_NAME_ENTRY_new")
 external fun sk_X509_NAME_ENTRY_new(compare: sk_X509_NAME_ENTRY_compfunc?): CPointer<stack_st_X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2028_sk_X509_NAME_ENTRY_new_null")
+@CCall("knifunptr_openssl2033_sk_X509_NAME_ENTRY_new_null")
 external fun sk_X509_NAME_ENTRY_new_null(): CPointer<stack_st_X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2029_sk_X509_NAME_ENTRY_new_reserve")
+@CCall("knifunptr_openssl2034_sk_X509_NAME_ENTRY_new_reserve")
 external fun sk_X509_NAME_ENTRY_new_reserve(
     compare: sk_X509_NAME_ENTRY_compfunc?,
     n: Int
 ): CPointer<stack_st_X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2030_sk_X509_NAME_ENTRY_reserve")
+@CCall("knifunptr_openssl2035_sk_X509_NAME_ENTRY_reserve")
 external fun sk_X509_NAME_ENTRY_reserve(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?, n: Int): Int
 
-@CCall("knifunptr_openssl2031_sk_X509_NAME_ENTRY_free")
+@CCall("knifunptr_openssl2036_sk_X509_NAME_ENTRY_free")
 external fun sk_X509_NAME_ENTRY_free(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?): Unit
 
-@CCall("knifunptr_openssl2032_sk_X509_NAME_ENTRY_zero")
+@CCall("knifunptr_openssl2037_sk_X509_NAME_ENTRY_zero")
 external fun sk_X509_NAME_ENTRY_zero(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?): Unit
 
-@CCall("knifunptr_openssl2033_sk_X509_NAME_ENTRY_delete")
+@CCall("knifunptr_openssl2038_sk_X509_NAME_ENTRY_delete")
 external fun sk_X509_NAME_ENTRY_delete(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?, i: Int): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2034_sk_X509_NAME_ENTRY_delete_ptr")
+@CCall("knifunptr_openssl2039_sk_X509_NAME_ENTRY_delete_ptr")
 external fun sk_X509_NAME_ENTRY_delete_ptr(
     sk: CValuesRef<stack_st_X509_NAME_ENTRY>?,
     ptr: CValuesRef<X509_NAME_ENTRY>?
 ): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2035_sk_X509_NAME_ENTRY_push")
+@CCall("knifunptr_openssl2040_sk_X509_NAME_ENTRY_push")
 external fun sk_X509_NAME_ENTRY_push(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?, ptr: CValuesRef<X509_NAME_ENTRY>?): Int
 
-@CCall("knifunptr_openssl2036_sk_X509_NAME_ENTRY_unshift")
+@CCall("knifunptr_openssl2041_sk_X509_NAME_ENTRY_unshift")
 external fun sk_X509_NAME_ENTRY_unshift(
     sk: CValuesRef<stack_st_X509_NAME_ENTRY>?,
     ptr: CValuesRef<X509_NAME_ENTRY>?
 ): Int
 
-@CCall("knifunptr_openssl2037_sk_X509_NAME_ENTRY_pop")
+@CCall("knifunptr_openssl2042_sk_X509_NAME_ENTRY_pop")
 external fun sk_X509_NAME_ENTRY_pop(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2038_sk_X509_NAME_ENTRY_shift")
+@CCall("knifunptr_openssl2043_sk_X509_NAME_ENTRY_shift")
 external fun sk_X509_NAME_ENTRY_shift(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2039_sk_X509_NAME_ENTRY_pop_free")
+@CCall("knifunptr_openssl2044_sk_X509_NAME_ENTRY_pop_free")
 external fun sk_X509_NAME_ENTRY_pop_free(
     sk: CValuesRef<stack_st_X509_NAME_ENTRY>?,
     freefunc: sk_X509_NAME_ENTRY_freefunc?
 ): Unit
 
-@CCall("knifunptr_openssl2040_sk_X509_NAME_ENTRY_insert")
+@CCall("knifunptr_openssl2045_sk_X509_NAME_ENTRY_insert")
 external fun sk_X509_NAME_ENTRY_insert(
     sk: CValuesRef<stack_st_X509_NAME_ENTRY>?,
     ptr: CValuesRef<X509_NAME_ENTRY>?,
     idx: Int
 ): Int
 
-@CCall("knifunptr_openssl2041_sk_X509_NAME_ENTRY_set")
+@CCall("knifunptr_openssl2046_sk_X509_NAME_ENTRY_set")
 external fun sk_X509_NAME_ENTRY_set(
     sk: CValuesRef<stack_st_X509_NAME_ENTRY>?,
     idx: Int,
     ptr: CValuesRef<X509_NAME_ENTRY>?
 ): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2042_sk_X509_NAME_ENTRY_find")
+@CCall("knifunptr_openssl2047_sk_X509_NAME_ENTRY_find")
 external fun sk_X509_NAME_ENTRY_find(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?, ptr: CValuesRef<X509_NAME_ENTRY>?): Int
 
-@CCall("knifunptr_openssl2043_sk_X509_NAME_ENTRY_find_ex")
+@CCall("knifunptr_openssl2048_sk_X509_NAME_ENTRY_find_ex")
 external fun sk_X509_NAME_ENTRY_find_ex(
     sk: CValuesRef<stack_st_X509_NAME_ENTRY>?,
     ptr: CValuesRef<X509_NAME_ENTRY>?
 ): Int
 
-@CCall("knifunptr_openssl2044_sk_X509_NAME_ENTRY_sort")
+@CCall("knifunptr_openssl2049_sk_X509_NAME_ENTRY_sort")
 external fun sk_X509_NAME_ENTRY_sort(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?): Unit
 
-@CCall("knifunptr_openssl2045_sk_X509_NAME_ENTRY_is_sorted")
+@CCall("knifunptr_openssl2050_sk_X509_NAME_ENTRY_is_sorted")
 external fun sk_X509_NAME_ENTRY_is_sorted(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?): Int
 
-@CCall("knifunptr_openssl2046_sk_X509_NAME_ENTRY_dup")
+@CCall("knifunptr_openssl2051_sk_X509_NAME_ENTRY_dup")
 external fun sk_X509_NAME_ENTRY_dup(sk: CValuesRef<stack_st_X509_NAME_ENTRY>?): CPointer<stack_st_X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2047_sk_X509_NAME_ENTRY_deep_copy")
+@CCall("knifunptr_openssl2052_sk_X509_NAME_ENTRY_deep_copy")
 external fun sk_X509_NAME_ENTRY_deep_copy(
     sk: CValuesRef<stack_st_X509_NAME_ENTRY>?,
     copyfunc: sk_X509_NAME_ENTRY_copyfunc?,
     freefunc: sk_X509_NAME_ENTRY_freefunc?
 ): CPointer<stack_st_X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2048_sk_X509_NAME_ENTRY_set_cmp_func")
+@CCall("knifunptr_openssl2053_sk_X509_NAME_ENTRY_set_cmp_func")
 external fun sk_X509_NAME_ENTRY_set_cmp_func(
     sk: CValuesRef<stack_st_X509_NAME_ENTRY>?,
     compare: sk_X509_NAME_ENTRY_compfunc?
 ): sk_X509_NAME_ENTRY_compfunc?
 
-@CCall("knifunptr_openssl2049_sk_X509_NAME_num")
+@CCall("knifunptr_openssl2054_sk_X509_NAME_num")
 external fun sk_X509_NAME_num(sk: CValuesRef<stack_st_X509_NAME>?): Int
 
-@CCall("knifunptr_openssl2050_sk_X509_NAME_value")
+@CCall("knifunptr_openssl2055_sk_X509_NAME_value")
 external fun sk_X509_NAME_value(sk: CValuesRef<stack_st_X509_NAME>?, idx: Int): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2051_sk_X509_NAME_new")
+@CCall("knifunptr_openssl2056_sk_X509_NAME_new")
 external fun sk_X509_NAME_new(compare: sk_X509_NAME_compfunc?): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl2052_sk_X509_NAME_new_null")
+@CCall("knifunptr_openssl2057_sk_X509_NAME_new_null")
 external fun sk_X509_NAME_new_null(): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl2053_sk_X509_NAME_new_reserve")
+@CCall("knifunptr_openssl2058_sk_X509_NAME_new_reserve")
 external fun sk_X509_NAME_new_reserve(compare: sk_X509_NAME_compfunc?, n: Int): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl2054_sk_X509_NAME_reserve")
+@CCall("knifunptr_openssl2059_sk_X509_NAME_reserve")
 external fun sk_X509_NAME_reserve(sk: CValuesRef<stack_st_X509_NAME>?, n: Int): Int
 
-@CCall("knifunptr_openssl2055_sk_X509_NAME_free")
+@CCall("knifunptr_openssl2060_sk_X509_NAME_free")
 external fun sk_X509_NAME_free(sk: CValuesRef<stack_st_X509_NAME>?): Unit
 
-@CCall("knifunptr_openssl2056_sk_X509_NAME_zero")
+@CCall("knifunptr_openssl2061_sk_X509_NAME_zero")
 external fun sk_X509_NAME_zero(sk: CValuesRef<stack_st_X509_NAME>?): Unit
 
-@CCall("knifunptr_openssl2057_sk_X509_NAME_delete")
+@CCall("knifunptr_openssl2062_sk_X509_NAME_delete")
 external fun sk_X509_NAME_delete(sk: CValuesRef<stack_st_X509_NAME>?, i: Int): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2058_sk_X509_NAME_delete_ptr")
+@CCall("knifunptr_openssl2063_sk_X509_NAME_delete_ptr")
 external fun sk_X509_NAME_delete_ptr(
     sk: CValuesRef<stack_st_X509_NAME>?,
     ptr: CValuesRef<X509_NAME>?
 ): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2059_sk_X509_NAME_push")
+@CCall("knifunptr_openssl2064_sk_X509_NAME_push")
 external fun sk_X509_NAME_push(sk: CValuesRef<stack_st_X509_NAME>?, ptr: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl2060_sk_X509_NAME_unshift")
+@CCall("knifunptr_openssl2065_sk_X509_NAME_unshift")
 external fun sk_X509_NAME_unshift(sk: CValuesRef<stack_st_X509_NAME>?, ptr: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl2061_sk_X509_NAME_pop")
+@CCall("knifunptr_openssl2066_sk_X509_NAME_pop")
 external fun sk_X509_NAME_pop(sk: CValuesRef<stack_st_X509_NAME>?): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2062_sk_X509_NAME_shift")
+@CCall("knifunptr_openssl2067_sk_X509_NAME_shift")
 external fun sk_X509_NAME_shift(sk: CValuesRef<stack_st_X509_NAME>?): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2063_sk_X509_NAME_pop_free")
+@CCall("knifunptr_openssl2068_sk_X509_NAME_pop_free")
 external fun sk_X509_NAME_pop_free(sk: CValuesRef<stack_st_X509_NAME>?, freefunc: sk_X509_NAME_freefunc?): Unit
 
-@CCall("knifunptr_openssl2064_sk_X509_NAME_insert")
+@CCall("knifunptr_openssl2069_sk_X509_NAME_insert")
 external fun sk_X509_NAME_insert(sk: CValuesRef<stack_st_X509_NAME>?, ptr: CValuesRef<X509_NAME>?, idx: Int): Int
 
-@CCall("knifunptr_openssl2065_sk_X509_NAME_set")
+@CCall("knifunptr_openssl2070_sk_X509_NAME_set")
 external fun sk_X509_NAME_set(
     sk: CValuesRef<stack_st_X509_NAME>?,
     idx: Int,
     ptr: CValuesRef<X509_NAME>?
 ): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2066_sk_X509_NAME_find")
+@CCall("knifunptr_openssl2071_sk_X509_NAME_find")
 external fun sk_X509_NAME_find(sk: CValuesRef<stack_st_X509_NAME>?, ptr: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl2067_sk_X509_NAME_find_ex")
+@CCall("knifunptr_openssl2072_sk_X509_NAME_find_ex")
 external fun sk_X509_NAME_find_ex(sk: CValuesRef<stack_st_X509_NAME>?, ptr: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl2068_sk_X509_NAME_sort")
+@CCall("knifunptr_openssl2073_sk_X509_NAME_sort")
 external fun sk_X509_NAME_sort(sk: CValuesRef<stack_st_X509_NAME>?): Unit
 
-@CCall("knifunptr_openssl2069_sk_X509_NAME_is_sorted")
+@CCall("knifunptr_openssl2074_sk_X509_NAME_is_sorted")
 external fun sk_X509_NAME_is_sorted(sk: CValuesRef<stack_st_X509_NAME>?): Int
 
-@CCall("knifunptr_openssl2070_sk_X509_NAME_dup")
+@CCall("knifunptr_openssl2075_sk_X509_NAME_dup")
 external fun sk_X509_NAME_dup(sk: CValuesRef<stack_st_X509_NAME>?): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl2071_sk_X509_NAME_deep_copy")
+@CCall("knifunptr_openssl2076_sk_X509_NAME_deep_copy")
 external fun sk_X509_NAME_deep_copy(
     sk: CValuesRef<stack_st_X509_NAME>?,
     copyfunc: sk_X509_NAME_copyfunc?,
     freefunc: sk_X509_NAME_freefunc?
 ): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl2072_sk_X509_NAME_set_cmp_func")
+@CCall("knifunptr_openssl2077_sk_X509_NAME_set_cmp_func")
 external fun sk_X509_NAME_set_cmp_func(
     sk: CValuesRef<stack_st_X509_NAME>?,
     compare: sk_X509_NAME_compfunc?
 ): sk_X509_NAME_compfunc?
 
-@CCall("knifunptr_openssl2073_sk_X509_EXTENSION_num")
+@CCall("knifunptr_openssl2078_sk_X509_EXTENSION_num")
 external fun sk_X509_EXTENSION_num(sk: CValuesRef<stack_st_X509_EXTENSION>?): Int
 
-@CCall("knifunptr_openssl2074_sk_X509_EXTENSION_value")
+@CCall("knifunptr_openssl2079_sk_X509_EXTENSION_value")
 external fun sk_X509_EXTENSION_value(sk: CValuesRef<stack_st_X509_EXTENSION>?, idx: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2075_sk_X509_EXTENSION_new")
+@CCall("knifunptr_openssl2080_sk_X509_EXTENSION_new")
 external fun sk_X509_EXTENSION_new(compare: sk_X509_EXTENSION_compfunc?): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2076_sk_X509_EXTENSION_new_null")
+@CCall("knifunptr_openssl2081_sk_X509_EXTENSION_new_null")
 external fun sk_X509_EXTENSION_new_null(): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2077_sk_X509_EXTENSION_new_reserve")
+@CCall("knifunptr_openssl2082_sk_X509_EXTENSION_new_reserve")
 external fun sk_X509_EXTENSION_new_reserve(
     compare: sk_X509_EXTENSION_compfunc?,
     n: Int
 ): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2078_sk_X509_EXTENSION_reserve")
+@CCall("knifunptr_openssl2083_sk_X509_EXTENSION_reserve")
 external fun sk_X509_EXTENSION_reserve(sk: CValuesRef<stack_st_X509_EXTENSION>?, n: Int): Int
 
-@CCall("knifunptr_openssl2079_sk_X509_EXTENSION_free")
+@CCall("knifunptr_openssl2084_sk_X509_EXTENSION_free")
 external fun sk_X509_EXTENSION_free(sk: CValuesRef<stack_st_X509_EXTENSION>?): Unit
 
-@CCall("knifunptr_openssl2080_sk_X509_EXTENSION_zero")
+@CCall("knifunptr_openssl2085_sk_X509_EXTENSION_zero")
 external fun sk_X509_EXTENSION_zero(sk: CValuesRef<stack_st_X509_EXTENSION>?): Unit
 
-@CCall("knifunptr_openssl2081_sk_X509_EXTENSION_delete")
+@CCall("knifunptr_openssl2086_sk_X509_EXTENSION_delete")
 external fun sk_X509_EXTENSION_delete(sk: CValuesRef<stack_st_X509_EXTENSION>?, i: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2082_sk_X509_EXTENSION_delete_ptr")
+@CCall("knifunptr_openssl2087_sk_X509_EXTENSION_delete_ptr")
 external fun sk_X509_EXTENSION_delete_ptr(
     sk: CValuesRef<stack_st_X509_EXTENSION>?,
     ptr: CValuesRef<X509_EXTENSION>?
 ): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2083_sk_X509_EXTENSION_push")
+@CCall("knifunptr_openssl2088_sk_X509_EXTENSION_push")
 external fun sk_X509_EXTENSION_push(sk: CValuesRef<stack_st_X509_EXTENSION>?, ptr: CValuesRef<X509_EXTENSION>?): Int
 
-@CCall("knifunptr_openssl2084_sk_X509_EXTENSION_unshift")
+@CCall("knifunptr_openssl2089_sk_X509_EXTENSION_unshift")
 external fun sk_X509_EXTENSION_unshift(sk: CValuesRef<stack_st_X509_EXTENSION>?, ptr: CValuesRef<X509_EXTENSION>?): Int
 
-@CCall("knifunptr_openssl2085_sk_X509_EXTENSION_pop")
+@CCall("knifunptr_openssl2090_sk_X509_EXTENSION_pop")
 external fun sk_X509_EXTENSION_pop(sk: CValuesRef<stack_st_X509_EXTENSION>?): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2086_sk_X509_EXTENSION_shift")
+@CCall("knifunptr_openssl2091_sk_X509_EXTENSION_shift")
 external fun sk_X509_EXTENSION_shift(sk: CValuesRef<stack_st_X509_EXTENSION>?): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2087_sk_X509_EXTENSION_pop_free")
+@CCall("knifunptr_openssl2092_sk_X509_EXTENSION_pop_free")
 external fun sk_X509_EXTENSION_pop_free(
     sk: CValuesRef<stack_st_X509_EXTENSION>?,
     freefunc: sk_X509_EXTENSION_freefunc?
 ): Unit
 
-@CCall("knifunptr_openssl2088_sk_X509_EXTENSION_insert")
+@CCall("knifunptr_openssl2093_sk_X509_EXTENSION_insert")
 external fun sk_X509_EXTENSION_insert(
     sk: CValuesRef<stack_st_X509_EXTENSION>?,
     ptr: CValuesRef<X509_EXTENSION>?,
     idx: Int
 ): Int
 
-@CCall("knifunptr_openssl2089_sk_X509_EXTENSION_set")
+@CCall("knifunptr_openssl2094_sk_X509_EXTENSION_set")
 external fun sk_X509_EXTENSION_set(
     sk: CValuesRef<stack_st_X509_EXTENSION>?,
     idx: Int,
     ptr: CValuesRef<X509_EXTENSION>?
 ): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2090_sk_X509_EXTENSION_find")
+@CCall("knifunptr_openssl2095_sk_X509_EXTENSION_find")
 external fun sk_X509_EXTENSION_find(sk: CValuesRef<stack_st_X509_EXTENSION>?, ptr: CValuesRef<X509_EXTENSION>?): Int
 
-@CCall("knifunptr_openssl2091_sk_X509_EXTENSION_find_ex")
+@CCall("knifunptr_openssl2096_sk_X509_EXTENSION_find_ex")
 external fun sk_X509_EXTENSION_find_ex(sk: CValuesRef<stack_st_X509_EXTENSION>?, ptr: CValuesRef<X509_EXTENSION>?): Int
 
-@CCall("knifunptr_openssl2092_sk_X509_EXTENSION_sort")
+@CCall("knifunptr_openssl2097_sk_X509_EXTENSION_sort")
 external fun sk_X509_EXTENSION_sort(sk: CValuesRef<stack_st_X509_EXTENSION>?): Unit
 
-@CCall("knifunptr_openssl2093_sk_X509_EXTENSION_is_sorted")
+@CCall("knifunptr_openssl2098_sk_X509_EXTENSION_is_sorted")
 external fun sk_X509_EXTENSION_is_sorted(sk: CValuesRef<stack_st_X509_EXTENSION>?): Int
 
-@CCall("knifunptr_openssl2094_sk_X509_EXTENSION_dup")
+@CCall("knifunptr_openssl2099_sk_X509_EXTENSION_dup")
 external fun sk_X509_EXTENSION_dup(sk: CValuesRef<stack_st_X509_EXTENSION>?): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2095_sk_X509_EXTENSION_deep_copy")
+@CCall("knifunptr_openssl2100_sk_X509_EXTENSION_deep_copy")
 external fun sk_X509_EXTENSION_deep_copy(
     sk: CValuesRef<stack_st_X509_EXTENSION>?,
     copyfunc: sk_X509_EXTENSION_copyfunc?,
     freefunc: sk_X509_EXTENSION_freefunc?
 ): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2096_sk_X509_EXTENSION_set_cmp_func")
+@CCall("knifunptr_openssl2101_sk_X509_EXTENSION_set_cmp_func")
 external fun sk_X509_EXTENSION_set_cmp_func(
     sk: CValuesRef<stack_st_X509_EXTENSION>?,
     compare: sk_X509_EXTENSION_compfunc?
 ): sk_X509_EXTENSION_compfunc?
 
-@CCall("knifunptr_openssl2097_sk_X509_ATTRIBUTE_num")
+@CCall("knifunptr_openssl2102_sk_X509_ATTRIBUTE_num")
 external fun sk_X509_ATTRIBUTE_num(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl2098_sk_X509_ATTRIBUTE_value")
+@CCall("knifunptr_openssl2103_sk_X509_ATTRIBUTE_value")
 external fun sk_X509_ATTRIBUTE_value(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?, idx: Int): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2099_sk_X509_ATTRIBUTE_new")
+@CCall("knifunptr_openssl2104_sk_X509_ATTRIBUTE_new")
 external fun sk_X509_ATTRIBUTE_new(compare: sk_X509_ATTRIBUTE_compfunc?): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2100_sk_X509_ATTRIBUTE_new_null")
+@CCall("knifunptr_openssl2105_sk_X509_ATTRIBUTE_new_null")
 external fun sk_X509_ATTRIBUTE_new_null(): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2101_sk_X509_ATTRIBUTE_new_reserve")
+@CCall("knifunptr_openssl2106_sk_X509_ATTRIBUTE_new_reserve")
 external fun sk_X509_ATTRIBUTE_new_reserve(
     compare: sk_X509_ATTRIBUTE_compfunc?,
     n: Int
 ): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2102_sk_X509_ATTRIBUTE_reserve")
+@CCall("knifunptr_openssl2107_sk_X509_ATTRIBUTE_reserve")
 external fun sk_X509_ATTRIBUTE_reserve(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?, n: Int): Int
 
-@CCall("knifunptr_openssl2103_sk_X509_ATTRIBUTE_free")
+@CCall("knifunptr_openssl2108_sk_X509_ATTRIBUTE_free")
 external fun sk_X509_ATTRIBUTE_free(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): Unit
 
-@CCall("knifunptr_openssl2104_sk_X509_ATTRIBUTE_zero")
+@CCall("knifunptr_openssl2109_sk_X509_ATTRIBUTE_zero")
 external fun sk_X509_ATTRIBUTE_zero(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): Unit
 
-@CCall("knifunptr_openssl2105_sk_X509_ATTRIBUTE_delete")
+@CCall("knifunptr_openssl2110_sk_X509_ATTRIBUTE_delete")
 external fun sk_X509_ATTRIBUTE_delete(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?, i: Int): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2106_sk_X509_ATTRIBUTE_delete_ptr")
+@CCall("knifunptr_openssl2111_sk_X509_ATTRIBUTE_delete_ptr")
 external fun sk_X509_ATTRIBUTE_delete_ptr(
     sk: CValuesRef<stack_st_X509_ATTRIBUTE>?,
     ptr: CValuesRef<X509_ATTRIBUTE>?
 ): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2107_sk_X509_ATTRIBUTE_push")
+@CCall("knifunptr_openssl2112_sk_X509_ATTRIBUTE_push")
 external fun sk_X509_ATTRIBUTE_push(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?, ptr: CValuesRef<X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl2108_sk_X509_ATTRIBUTE_unshift")
+@CCall("knifunptr_openssl2113_sk_X509_ATTRIBUTE_unshift")
 external fun sk_X509_ATTRIBUTE_unshift(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?, ptr: CValuesRef<X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl2109_sk_X509_ATTRIBUTE_pop")
+@CCall("knifunptr_openssl2114_sk_X509_ATTRIBUTE_pop")
 external fun sk_X509_ATTRIBUTE_pop(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2110_sk_X509_ATTRIBUTE_shift")
+@CCall("knifunptr_openssl2115_sk_X509_ATTRIBUTE_shift")
 external fun sk_X509_ATTRIBUTE_shift(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2111_sk_X509_ATTRIBUTE_pop_free")
+@CCall("knifunptr_openssl2116_sk_X509_ATTRIBUTE_pop_free")
 external fun sk_X509_ATTRIBUTE_pop_free(
     sk: CValuesRef<stack_st_X509_ATTRIBUTE>?,
     freefunc: sk_X509_ATTRIBUTE_freefunc?
 ): Unit
 
-@CCall("knifunptr_openssl2112_sk_X509_ATTRIBUTE_insert")
+@CCall("knifunptr_openssl2117_sk_X509_ATTRIBUTE_insert")
 external fun sk_X509_ATTRIBUTE_insert(
     sk: CValuesRef<stack_st_X509_ATTRIBUTE>?,
     ptr: CValuesRef<X509_ATTRIBUTE>?,
     idx: Int
 ): Int
 
-@CCall("knifunptr_openssl2113_sk_X509_ATTRIBUTE_set")
+@CCall("knifunptr_openssl2118_sk_X509_ATTRIBUTE_set")
 external fun sk_X509_ATTRIBUTE_set(
     sk: CValuesRef<stack_st_X509_ATTRIBUTE>?,
     idx: Int,
     ptr: CValuesRef<X509_ATTRIBUTE>?
 ): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2114_sk_X509_ATTRIBUTE_find")
+@CCall("knifunptr_openssl2119_sk_X509_ATTRIBUTE_find")
 external fun sk_X509_ATTRIBUTE_find(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?, ptr: CValuesRef<X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl2115_sk_X509_ATTRIBUTE_find_ex")
+@CCall("knifunptr_openssl2120_sk_X509_ATTRIBUTE_find_ex")
 external fun sk_X509_ATTRIBUTE_find_ex(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?, ptr: CValuesRef<X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl2116_sk_X509_ATTRIBUTE_sort")
+@CCall("knifunptr_openssl2121_sk_X509_ATTRIBUTE_sort")
 external fun sk_X509_ATTRIBUTE_sort(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): Unit
 
-@CCall("knifunptr_openssl2117_sk_X509_ATTRIBUTE_is_sorted")
+@CCall("knifunptr_openssl2122_sk_X509_ATTRIBUTE_is_sorted")
 external fun sk_X509_ATTRIBUTE_is_sorted(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl2118_sk_X509_ATTRIBUTE_dup")
+@CCall("knifunptr_openssl2123_sk_X509_ATTRIBUTE_dup")
 external fun sk_X509_ATTRIBUTE_dup(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2119_sk_X509_ATTRIBUTE_deep_copy")
+@CCall("knifunptr_openssl2124_sk_X509_ATTRIBUTE_deep_copy")
 external fun sk_X509_ATTRIBUTE_deep_copy(
     sk: CValuesRef<stack_st_X509_ATTRIBUTE>?,
     copyfunc: sk_X509_ATTRIBUTE_copyfunc?,
     freefunc: sk_X509_ATTRIBUTE_freefunc?
 ): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2120_sk_X509_ATTRIBUTE_set_cmp_func")
+@CCall("knifunptr_openssl2125_sk_X509_ATTRIBUTE_set_cmp_func")
 external fun sk_X509_ATTRIBUTE_set_cmp_func(
     sk: CValuesRef<stack_st_X509_ATTRIBUTE>?,
     compare: sk_X509_ATTRIBUTE_compfunc?
 ): sk_X509_ATTRIBUTE_compfunc?
 
-@CCall("knifunptr_openssl2121_sk_X509_num")
+@CCall("knifunptr_openssl2126_sk_X509_num")
 external fun sk_X509_num(sk: CValuesRef<stack_st_X509>?): Int
 
-@CCall("knifunptr_openssl2122_sk_X509_value")
+@CCall("knifunptr_openssl2127_sk_X509_value")
 external fun sk_X509_value(sk: CValuesRef<stack_st_X509>?, idx: Int): CPointer<X509>?
 
-@CCall("knifunptr_openssl2123_sk_X509_new")
+@CCall("knifunptr_openssl2128_sk_X509_new")
 external fun sk_X509_new(compare: sk_X509_compfunc?): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2124_sk_X509_new_null")
+@CCall("knifunptr_openssl2129_sk_X509_new_null")
 external fun sk_X509_new_null(): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2125_sk_X509_new_reserve")
+@CCall("knifunptr_openssl2130_sk_X509_new_reserve")
 external fun sk_X509_new_reserve(compare: sk_X509_compfunc?, n: Int): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2126_sk_X509_reserve")
+@CCall("knifunptr_openssl2131_sk_X509_reserve")
 external fun sk_X509_reserve(sk: CValuesRef<stack_st_X509>?, n: Int): Int
 
-@CCall("knifunptr_openssl2127_sk_X509_free")
+@CCall("knifunptr_openssl2132_sk_X509_free")
 external fun sk_X509_free(sk: CValuesRef<stack_st_X509>?): Unit
 
-@CCall("knifunptr_openssl2128_sk_X509_zero")
+@CCall("knifunptr_openssl2133_sk_X509_zero")
 external fun sk_X509_zero(sk: CValuesRef<stack_st_X509>?): Unit
 
-@CCall("knifunptr_openssl2129_sk_X509_delete")
+@CCall("knifunptr_openssl2134_sk_X509_delete")
 external fun sk_X509_delete(sk: CValuesRef<stack_st_X509>?, i: Int): CPointer<X509>?
 
-@CCall("knifunptr_openssl2130_sk_X509_delete_ptr")
+@CCall("knifunptr_openssl2135_sk_X509_delete_ptr")
 external fun sk_X509_delete_ptr(sk: CValuesRef<stack_st_X509>?, ptr: CValuesRef<X509>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2131_sk_X509_push")
+@CCall("knifunptr_openssl2136_sk_X509_push")
 external fun sk_X509_push(sk: CValuesRef<stack_st_X509>?, ptr: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2132_sk_X509_unshift")
+@CCall("knifunptr_openssl2137_sk_X509_unshift")
 external fun sk_X509_unshift(sk: CValuesRef<stack_st_X509>?, ptr: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2133_sk_X509_pop")
+@CCall("knifunptr_openssl2138_sk_X509_pop")
 external fun sk_X509_pop(sk: CValuesRef<stack_st_X509>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2134_sk_X509_shift")
+@CCall("knifunptr_openssl2139_sk_X509_shift")
 external fun sk_X509_shift(sk: CValuesRef<stack_st_X509>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2135_sk_X509_pop_free")
+@CCall("knifunptr_openssl2140_sk_X509_pop_free")
 external fun sk_X509_pop_free(sk: CValuesRef<stack_st_X509>?, freefunc: sk_X509_freefunc?): Unit
 
-@CCall("knifunptr_openssl2136_sk_X509_insert")
+@CCall("knifunptr_openssl2141_sk_X509_insert")
 external fun sk_X509_insert(sk: CValuesRef<stack_st_X509>?, ptr: CValuesRef<X509>?, idx: Int): Int
 
-@CCall("knifunptr_openssl2137_sk_X509_set")
+@CCall("knifunptr_openssl2142_sk_X509_set")
 external fun sk_X509_set(sk: CValuesRef<stack_st_X509>?, idx: Int, ptr: CValuesRef<X509>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2138_sk_X509_find")
+@CCall("knifunptr_openssl2143_sk_X509_find")
 external fun sk_X509_find(sk: CValuesRef<stack_st_X509>?, ptr: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2139_sk_X509_find_ex")
+@CCall("knifunptr_openssl2144_sk_X509_find_ex")
 external fun sk_X509_find_ex(sk: CValuesRef<stack_st_X509>?, ptr: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2140_sk_X509_sort")
+@CCall("knifunptr_openssl2145_sk_X509_sort")
 external fun sk_X509_sort(sk: CValuesRef<stack_st_X509>?): Unit
 
-@CCall("knifunptr_openssl2141_sk_X509_is_sorted")
+@CCall("knifunptr_openssl2146_sk_X509_is_sorted")
 external fun sk_X509_is_sorted(sk: CValuesRef<stack_st_X509>?): Int
 
-@CCall("knifunptr_openssl2142_sk_X509_dup")
+@CCall("knifunptr_openssl2147_sk_X509_dup")
 external fun sk_X509_dup(sk: CValuesRef<stack_st_X509>?): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2143_sk_X509_deep_copy")
+@CCall("knifunptr_openssl2148_sk_X509_deep_copy")
 external fun sk_X509_deep_copy(
     sk: CValuesRef<stack_st_X509>?,
     copyfunc: sk_X509_copyfunc?,
     freefunc: sk_X509_freefunc?
 ): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2144_sk_X509_set_cmp_func")
+@CCall("knifunptr_openssl2149_sk_X509_set_cmp_func")
 external fun sk_X509_set_cmp_func(sk: CValuesRef<stack_st_X509>?, compare: sk_X509_compfunc?): sk_X509_compfunc?
 
-@CCall("knifunptr_openssl2145_sk_X509_TRUST_num")
+@CCall("knifunptr_openssl2150_sk_X509_TRUST_num")
 external fun sk_X509_TRUST_num(sk: CValuesRef<stack_st_X509_TRUST>?): Int
 
-@CCall("knifunptr_openssl2146_sk_X509_TRUST_value")
+@CCall("knifunptr_openssl2151_sk_X509_TRUST_value")
 external fun sk_X509_TRUST_value(sk: CValuesRef<stack_st_X509_TRUST>?, idx: Int): CPointer<X509_TRUST>?
 
-@CCall("knifunptr_openssl2147_sk_X509_TRUST_new")
+@CCall("knifunptr_openssl2152_sk_X509_TRUST_new")
 external fun sk_X509_TRUST_new(compare: sk_X509_TRUST_compfunc?): CPointer<stack_st_X509_TRUST>?
 
-@CCall("knifunptr_openssl2148_sk_X509_TRUST_new_null")
+@CCall("knifunptr_openssl2153_sk_X509_TRUST_new_null")
 external fun sk_X509_TRUST_new_null(): CPointer<stack_st_X509_TRUST>?
 
-@CCall("knifunptr_openssl2149_sk_X509_TRUST_new_reserve")
+@CCall("knifunptr_openssl2154_sk_X509_TRUST_new_reserve")
 external fun sk_X509_TRUST_new_reserve(compare: sk_X509_TRUST_compfunc?, n: Int): CPointer<stack_st_X509_TRUST>?
 
-@CCall("knifunptr_openssl2150_sk_X509_TRUST_reserve")
+@CCall("knifunptr_openssl2155_sk_X509_TRUST_reserve")
 external fun sk_X509_TRUST_reserve(sk: CValuesRef<stack_st_X509_TRUST>?, n: Int): Int
 
-@CCall("knifunptr_openssl2151_sk_X509_TRUST_free")
+@CCall("knifunptr_openssl2156_sk_X509_TRUST_free")
 external fun sk_X509_TRUST_free(sk: CValuesRef<stack_st_X509_TRUST>?): Unit
 
-@CCall("knifunptr_openssl2152_sk_X509_TRUST_zero")
+@CCall("knifunptr_openssl2157_sk_X509_TRUST_zero")
 external fun sk_X509_TRUST_zero(sk: CValuesRef<stack_st_X509_TRUST>?): Unit
 
-@CCall("knifunptr_openssl2153_sk_X509_TRUST_delete")
+@CCall("knifunptr_openssl2158_sk_X509_TRUST_delete")
 external fun sk_X509_TRUST_delete(sk: CValuesRef<stack_st_X509_TRUST>?, i: Int): CPointer<X509_TRUST>?
 
-@CCall("knifunptr_openssl2154_sk_X509_TRUST_delete_ptr")
+@CCall("knifunptr_openssl2159_sk_X509_TRUST_delete_ptr")
 external fun sk_X509_TRUST_delete_ptr(
     sk: CValuesRef<stack_st_X509_TRUST>?,
     ptr: CValuesRef<X509_TRUST>?
 ): CPointer<X509_TRUST>?
 
-@CCall("knifunptr_openssl2155_sk_X509_TRUST_push")
+@CCall("knifunptr_openssl2160_sk_X509_TRUST_push")
 external fun sk_X509_TRUST_push(sk: CValuesRef<stack_st_X509_TRUST>?, ptr: CValuesRef<X509_TRUST>?): Int
 
-@CCall("knifunptr_openssl2156_sk_X509_TRUST_unshift")
+@CCall("knifunptr_openssl2161_sk_X509_TRUST_unshift")
 external fun sk_X509_TRUST_unshift(sk: CValuesRef<stack_st_X509_TRUST>?, ptr: CValuesRef<X509_TRUST>?): Int
 
-@CCall("knifunptr_openssl2157_sk_X509_TRUST_pop")
+@CCall("knifunptr_openssl2162_sk_X509_TRUST_pop")
 external fun sk_X509_TRUST_pop(sk: CValuesRef<stack_st_X509_TRUST>?): CPointer<X509_TRUST>?
 
-@CCall("knifunptr_openssl2158_sk_X509_TRUST_shift")
+@CCall("knifunptr_openssl2163_sk_X509_TRUST_shift")
 external fun sk_X509_TRUST_shift(sk: CValuesRef<stack_st_X509_TRUST>?): CPointer<X509_TRUST>?
 
-@CCall("knifunptr_openssl2159_sk_X509_TRUST_pop_free")
+@CCall("knifunptr_openssl2164_sk_X509_TRUST_pop_free")
 external fun sk_X509_TRUST_pop_free(sk: CValuesRef<stack_st_X509_TRUST>?, freefunc: sk_X509_TRUST_freefunc?): Unit
 
-@CCall("knifunptr_openssl2160_sk_X509_TRUST_insert")
+@CCall("knifunptr_openssl2165_sk_X509_TRUST_insert")
 external fun sk_X509_TRUST_insert(sk: CValuesRef<stack_st_X509_TRUST>?, ptr: CValuesRef<X509_TRUST>?, idx: Int): Int
 
-@CCall("knifunptr_openssl2161_sk_X509_TRUST_set")
+@CCall("knifunptr_openssl2166_sk_X509_TRUST_set")
 external fun sk_X509_TRUST_set(
     sk: CValuesRef<stack_st_X509_TRUST>?,
     idx: Int,
     ptr: CValuesRef<X509_TRUST>?
 ): CPointer<X509_TRUST>?
 
-@CCall("knifunptr_openssl2162_sk_X509_TRUST_find")
+@CCall("knifunptr_openssl2167_sk_X509_TRUST_find")
 external fun sk_X509_TRUST_find(sk: CValuesRef<stack_st_X509_TRUST>?, ptr: CValuesRef<X509_TRUST>?): Int
 
-@CCall("knifunptr_openssl2163_sk_X509_TRUST_find_ex")
+@CCall("knifunptr_openssl2168_sk_X509_TRUST_find_ex")
 external fun sk_X509_TRUST_find_ex(sk: CValuesRef<stack_st_X509_TRUST>?, ptr: CValuesRef<X509_TRUST>?): Int
 
-@CCall("knifunptr_openssl2164_sk_X509_TRUST_sort")
+@CCall("knifunptr_openssl2169_sk_X509_TRUST_sort")
 external fun sk_X509_TRUST_sort(sk: CValuesRef<stack_st_X509_TRUST>?): Unit
 
-@CCall("knifunptr_openssl2165_sk_X509_TRUST_is_sorted")
+@CCall("knifunptr_openssl2170_sk_X509_TRUST_is_sorted")
 external fun sk_X509_TRUST_is_sorted(sk: CValuesRef<stack_st_X509_TRUST>?): Int
 
-@CCall("knifunptr_openssl2166_sk_X509_TRUST_dup")
+@CCall("knifunptr_openssl2171_sk_X509_TRUST_dup")
 external fun sk_X509_TRUST_dup(sk: CValuesRef<stack_st_X509_TRUST>?): CPointer<stack_st_X509_TRUST>?
 
-@CCall("knifunptr_openssl2167_sk_X509_TRUST_deep_copy")
+@CCall("knifunptr_openssl2172_sk_X509_TRUST_deep_copy")
 external fun sk_X509_TRUST_deep_copy(
     sk: CValuesRef<stack_st_X509_TRUST>?,
     copyfunc: sk_X509_TRUST_copyfunc?,
     freefunc: sk_X509_TRUST_freefunc?
 ): CPointer<stack_st_X509_TRUST>?
 
-@CCall("knifunptr_openssl2168_sk_X509_TRUST_set_cmp_func")
+@CCall("knifunptr_openssl2173_sk_X509_TRUST_set_cmp_func")
 external fun sk_X509_TRUST_set_cmp_func(
     sk: CValuesRef<stack_st_X509_TRUST>?,
     compare: sk_X509_TRUST_compfunc?
 ): sk_X509_TRUST_compfunc?
 
-@CCall("knifunptr_openssl2169_sk_X509_REVOKED_num")
+@CCall("knifunptr_openssl2174_sk_X509_REVOKED_num")
 external fun sk_X509_REVOKED_num(sk: CValuesRef<stack_st_X509_REVOKED>?): Int
 
-@CCall("knifunptr_openssl2170_sk_X509_REVOKED_value")
+@CCall("knifunptr_openssl2175_sk_X509_REVOKED_value")
 external fun sk_X509_REVOKED_value(sk: CValuesRef<stack_st_X509_REVOKED>?, idx: Int): CPointer<X509_REVOKED>?
 
-@CCall("knifunptr_openssl2171_sk_X509_REVOKED_new")
+@CCall("knifunptr_openssl2176_sk_X509_REVOKED_new")
 external fun sk_X509_REVOKED_new(compare: sk_X509_REVOKED_compfunc?): CPointer<stack_st_X509_REVOKED>?
 
-@CCall("knifunptr_openssl2172_sk_X509_REVOKED_new_null")
+@CCall("knifunptr_openssl2177_sk_X509_REVOKED_new_null")
 external fun sk_X509_REVOKED_new_null(): CPointer<stack_st_X509_REVOKED>?
 
-@CCall("knifunptr_openssl2173_sk_X509_REVOKED_new_reserve")
+@CCall("knifunptr_openssl2178_sk_X509_REVOKED_new_reserve")
 external fun sk_X509_REVOKED_new_reserve(compare: sk_X509_REVOKED_compfunc?, n: Int): CPointer<stack_st_X509_REVOKED>?
 
-@CCall("knifunptr_openssl2174_sk_X509_REVOKED_reserve")
+@CCall("knifunptr_openssl2179_sk_X509_REVOKED_reserve")
 external fun sk_X509_REVOKED_reserve(sk: CValuesRef<stack_st_X509_REVOKED>?, n: Int): Int
 
-@CCall("knifunptr_openssl2175_sk_X509_REVOKED_free")
+@CCall("knifunptr_openssl2180_sk_X509_REVOKED_free")
 external fun sk_X509_REVOKED_free(sk: CValuesRef<stack_st_X509_REVOKED>?): Unit
 
-@CCall("knifunptr_openssl2176_sk_X509_REVOKED_zero")
+@CCall("knifunptr_openssl2181_sk_X509_REVOKED_zero")
 external fun sk_X509_REVOKED_zero(sk: CValuesRef<stack_st_X509_REVOKED>?): Unit
 
-@CCall("knifunptr_openssl2177_sk_X509_REVOKED_delete")
+@CCall("knifunptr_openssl2182_sk_X509_REVOKED_delete")
 external fun sk_X509_REVOKED_delete(sk: CValuesRef<stack_st_X509_REVOKED>?, i: Int): CPointer<X509_REVOKED>?
 
-@CCall("knifunptr_openssl2178_sk_X509_REVOKED_delete_ptr")
+@CCall("knifunptr_openssl2183_sk_X509_REVOKED_delete_ptr")
 external fun sk_X509_REVOKED_delete_ptr(
     sk: CValuesRef<stack_st_X509_REVOKED>?,
     ptr: CValuesRef<X509_REVOKED>?
 ): CPointer<X509_REVOKED>?
 
-@CCall("knifunptr_openssl2179_sk_X509_REVOKED_push")
+@CCall("knifunptr_openssl2184_sk_X509_REVOKED_push")
 external fun sk_X509_REVOKED_push(sk: CValuesRef<stack_st_X509_REVOKED>?, ptr: CValuesRef<X509_REVOKED>?): Int
 
-@CCall("knifunptr_openssl2180_sk_X509_REVOKED_unshift")
+@CCall("knifunptr_openssl2185_sk_X509_REVOKED_unshift")
 external fun sk_X509_REVOKED_unshift(sk: CValuesRef<stack_st_X509_REVOKED>?, ptr: CValuesRef<X509_REVOKED>?): Int
 
-@CCall("knifunptr_openssl2181_sk_X509_REVOKED_pop")
+@CCall("knifunptr_openssl2186_sk_X509_REVOKED_pop")
 external fun sk_X509_REVOKED_pop(sk: CValuesRef<stack_st_X509_REVOKED>?): CPointer<X509_REVOKED>?
 
-@CCall("knifunptr_openssl2182_sk_X509_REVOKED_shift")
+@CCall("knifunptr_openssl2187_sk_X509_REVOKED_shift")
 external fun sk_X509_REVOKED_shift(sk: CValuesRef<stack_st_X509_REVOKED>?): CPointer<X509_REVOKED>?
 
-@CCall("knifunptr_openssl2183_sk_X509_REVOKED_pop_free")
+@CCall("knifunptr_openssl2188_sk_X509_REVOKED_pop_free")
 external fun sk_X509_REVOKED_pop_free(sk: CValuesRef<stack_st_X509_REVOKED>?, freefunc: sk_X509_REVOKED_freefunc?): Unit
 
-@CCall("knifunptr_openssl2184_sk_X509_REVOKED_insert")
+@CCall("knifunptr_openssl2189_sk_X509_REVOKED_insert")
 external fun sk_X509_REVOKED_insert(
     sk: CValuesRef<stack_st_X509_REVOKED>?,
     ptr: CValuesRef<X509_REVOKED>?,
     idx: Int
 ): Int
 
-@CCall("knifunptr_openssl2185_sk_X509_REVOKED_set")
+@CCall("knifunptr_openssl2190_sk_X509_REVOKED_set")
 external fun sk_X509_REVOKED_set(
     sk: CValuesRef<stack_st_X509_REVOKED>?,
     idx: Int,
     ptr: CValuesRef<X509_REVOKED>?
 ): CPointer<X509_REVOKED>?
 
-@CCall("knifunptr_openssl2186_sk_X509_REVOKED_find")
+@CCall("knifunptr_openssl2191_sk_X509_REVOKED_find")
 external fun sk_X509_REVOKED_find(sk: CValuesRef<stack_st_X509_REVOKED>?, ptr: CValuesRef<X509_REVOKED>?): Int
 
-@CCall("knifunptr_openssl2187_sk_X509_REVOKED_find_ex")
+@CCall("knifunptr_openssl2192_sk_X509_REVOKED_find_ex")
 external fun sk_X509_REVOKED_find_ex(sk: CValuesRef<stack_st_X509_REVOKED>?, ptr: CValuesRef<X509_REVOKED>?): Int
 
-@CCall("knifunptr_openssl2188_sk_X509_REVOKED_sort")
+@CCall("knifunptr_openssl2193_sk_X509_REVOKED_sort")
 external fun sk_X509_REVOKED_sort(sk: CValuesRef<stack_st_X509_REVOKED>?): Unit
 
-@CCall("knifunptr_openssl2189_sk_X509_REVOKED_is_sorted")
+@CCall("knifunptr_openssl2194_sk_X509_REVOKED_is_sorted")
 external fun sk_X509_REVOKED_is_sorted(sk: CValuesRef<stack_st_X509_REVOKED>?): Int
 
-@CCall("knifunptr_openssl2190_sk_X509_REVOKED_dup")
+@CCall("knifunptr_openssl2195_sk_X509_REVOKED_dup")
 external fun sk_X509_REVOKED_dup(sk: CValuesRef<stack_st_X509_REVOKED>?): CPointer<stack_st_X509_REVOKED>?
 
-@CCall("knifunptr_openssl2191_sk_X509_REVOKED_deep_copy")
+@CCall("knifunptr_openssl2196_sk_X509_REVOKED_deep_copy")
 external fun sk_X509_REVOKED_deep_copy(
     sk: CValuesRef<stack_st_X509_REVOKED>?,
     copyfunc: sk_X509_REVOKED_copyfunc?,
     freefunc: sk_X509_REVOKED_freefunc?
 ): CPointer<stack_st_X509_REVOKED>?
 
-@CCall("knifunptr_openssl2192_sk_X509_REVOKED_set_cmp_func")
+@CCall("knifunptr_openssl2197_sk_X509_REVOKED_set_cmp_func")
 external fun sk_X509_REVOKED_set_cmp_func(
     sk: CValuesRef<stack_st_X509_REVOKED>?,
     compare: sk_X509_REVOKED_compfunc?
 ): sk_X509_REVOKED_compfunc?
 
-@CCall("knifunptr_openssl2193_sk_X509_CRL_num")
+@CCall("knifunptr_openssl2198_sk_X509_CRL_num")
 external fun sk_X509_CRL_num(sk: CValuesRef<stack_st_X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2194_sk_X509_CRL_value")
+@CCall("knifunptr_openssl2199_sk_X509_CRL_value")
 external fun sk_X509_CRL_value(sk: CValuesRef<stack_st_X509_CRL>?, idx: Int): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2195_sk_X509_CRL_new")
+@CCall("knifunptr_openssl2200_sk_X509_CRL_new")
 external fun sk_X509_CRL_new(compare: sk_X509_CRL_compfunc?): CPointer<stack_st_X509_CRL>?
 
-@CCall("knifunptr_openssl2196_sk_X509_CRL_new_null")
+@CCall("knifunptr_openssl2201_sk_X509_CRL_new_null")
 external fun sk_X509_CRL_new_null(): CPointer<stack_st_X509_CRL>?
 
-@CCall("knifunptr_openssl2197_sk_X509_CRL_new_reserve")
+@CCall("knifunptr_openssl2202_sk_X509_CRL_new_reserve")
 external fun sk_X509_CRL_new_reserve(compare: sk_X509_CRL_compfunc?, n: Int): CPointer<stack_st_X509_CRL>?
 
-@CCall("knifunptr_openssl2198_sk_X509_CRL_reserve")
+@CCall("knifunptr_openssl2203_sk_X509_CRL_reserve")
 external fun sk_X509_CRL_reserve(sk: CValuesRef<stack_st_X509_CRL>?, n: Int): Int
 
-@CCall("knifunptr_openssl2199_sk_X509_CRL_free")
+@CCall("knifunptr_openssl2204_sk_X509_CRL_free")
 external fun sk_X509_CRL_free(sk: CValuesRef<stack_st_X509_CRL>?): Unit
 
-@CCall("knifunptr_openssl2200_sk_X509_CRL_zero")
+@CCall("knifunptr_openssl2205_sk_X509_CRL_zero")
 external fun sk_X509_CRL_zero(sk: CValuesRef<stack_st_X509_CRL>?): Unit
 
-@CCall("knifunptr_openssl2201_sk_X509_CRL_delete")
+@CCall("knifunptr_openssl2206_sk_X509_CRL_delete")
 external fun sk_X509_CRL_delete(sk: CValuesRef<stack_st_X509_CRL>?, i: Int): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2202_sk_X509_CRL_delete_ptr")
+@CCall("knifunptr_openssl2207_sk_X509_CRL_delete_ptr")
 external fun sk_X509_CRL_delete_ptr(sk: CValuesRef<stack_st_X509_CRL>?, ptr: CValuesRef<X509_CRL>?): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2203_sk_X509_CRL_push")
+@CCall("knifunptr_openssl2208_sk_X509_CRL_push")
 external fun sk_X509_CRL_push(sk: CValuesRef<stack_st_X509_CRL>?, ptr: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2204_sk_X509_CRL_unshift")
+@CCall("knifunptr_openssl2209_sk_X509_CRL_unshift")
 external fun sk_X509_CRL_unshift(sk: CValuesRef<stack_st_X509_CRL>?, ptr: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2205_sk_X509_CRL_pop")
+@CCall("knifunptr_openssl2210_sk_X509_CRL_pop")
 external fun sk_X509_CRL_pop(sk: CValuesRef<stack_st_X509_CRL>?): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2206_sk_X509_CRL_shift")
+@CCall("knifunptr_openssl2211_sk_X509_CRL_shift")
 external fun sk_X509_CRL_shift(sk: CValuesRef<stack_st_X509_CRL>?): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2207_sk_X509_CRL_pop_free")
+@CCall("knifunptr_openssl2212_sk_X509_CRL_pop_free")
 external fun sk_X509_CRL_pop_free(sk: CValuesRef<stack_st_X509_CRL>?, freefunc: sk_X509_CRL_freefunc?): Unit
 
-@CCall("knifunptr_openssl2208_sk_X509_CRL_insert")
+@CCall("knifunptr_openssl2213_sk_X509_CRL_insert")
 external fun sk_X509_CRL_insert(sk: CValuesRef<stack_st_X509_CRL>?, ptr: CValuesRef<X509_CRL>?, idx: Int): Int
 
-@CCall("knifunptr_openssl2209_sk_X509_CRL_set")
+@CCall("knifunptr_openssl2214_sk_X509_CRL_set")
 external fun sk_X509_CRL_set(
     sk: CValuesRef<stack_st_X509_CRL>?,
     idx: Int,
     ptr: CValuesRef<X509_CRL>?
 ): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2210_sk_X509_CRL_find")
+@CCall("knifunptr_openssl2215_sk_X509_CRL_find")
 external fun sk_X509_CRL_find(sk: CValuesRef<stack_st_X509_CRL>?, ptr: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2211_sk_X509_CRL_find_ex")
+@CCall("knifunptr_openssl2216_sk_X509_CRL_find_ex")
 external fun sk_X509_CRL_find_ex(sk: CValuesRef<stack_st_X509_CRL>?, ptr: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2212_sk_X509_CRL_sort")
+@CCall("knifunptr_openssl2217_sk_X509_CRL_sort")
 external fun sk_X509_CRL_sort(sk: CValuesRef<stack_st_X509_CRL>?): Unit
 
-@CCall("knifunptr_openssl2213_sk_X509_CRL_is_sorted")
+@CCall("knifunptr_openssl2218_sk_X509_CRL_is_sorted")
 external fun sk_X509_CRL_is_sorted(sk: CValuesRef<stack_st_X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2214_sk_X509_CRL_dup")
+@CCall("knifunptr_openssl2219_sk_X509_CRL_dup")
 external fun sk_X509_CRL_dup(sk: CValuesRef<stack_st_X509_CRL>?): CPointer<stack_st_X509_CRL>?
 
-@CCall("knifunptr_openssl2215_sk_X509_CRL_deep_copy")
+@CCall("knifunptr_openssl2220_sk_X509_CRL_deep_copy")
 external fun sk_X509_CRL_deep_copy(
     sk: CValuesRef<stack_st_X509_CRL>?,
     copyfunc: sk_X509_CRL_copyfunc?,
     freefunc: sk_X509_CRL_freefunc?
 ): CPointer<stack_st_X509_CRL>?
 
-@CCall("knifunptr_openssl2216_sk_X509_CRL_set_cmp_func")
+@CCall("knifunptr_openssl2221_sk_X509_CRL_set_cmp_func")
 external fun sk_X509_CRL_set_cmp_func(
     sk: CValuesRef<stack_st_X509_CRL>?,
     compare: sk_X509_CRL_compfunc?
 ): sk_X509_CRL_compfunc?
 
-@CCall("knifunptr_openssl2217_sk_X509_INFO_num")
+@CCall("knifunptr_openssl2222_sk_X509_INFO_num")
 external fun sk_X509_INFO_num(sk: CValuesRef<stack_st_X509_INFO>?): Int
 
-@CCall("knifunptr_openssl2218_sk_X509_INFO_value")
+@CCall("knifunptr_openssl2223_sk_X509_INFO_value")
 external fun sk_X509_INFO_value(sk: CValuesRef<stack_st_X509_INFO>?, idx: Int): CPointer<X509_INFO>?
 
-@CCall("knifunptr_openssl2219_sk_X509_INFO_new")
+@CCall("knifunptr_openssl2224_sk_X509_INFO_new")
 external fun sk_X509_INFO_new(compare: sk_X509_INFO_compfunc?): CPointer<stack_st_X509_INFO>?
 
-@CCall("knifunptr_openssl2220_sk_X509_INFO_new_null")
+@CCall("knifunptr_openssl2225_sk_X509_INFO_new_null")
 external fun sk_X509_INFO_new_null(): CPointer<stack_st_X509_INFO>?
 
-@CCall("knifunptr_openssl2221_sk_X509_INFO_new_reserve")
+@CCall("knifunptr_openssl2226_sk_X509_INFO_new_reserve")
 external fun sk_X509_INFO_new_reserve(compare: sk_X509_INFO_compfunc?, n: Int): CPointer<stack_st_X509_INFO>?
 
-@CCall("knifunptr_openssl2222_sk_X509_INFO_reserve")
+@CCall("knifunptr_openssl2227_sk_X509_INFO_reserve")
 external fun sk_X509_INFO_reserve(sk: CValuesRef<stack_st_X509_INFO>?, n: Int): Int
 
-@CCall("knifunptr_openssl2223_sk_X509_INFO_free")
+@CCall("knifunptr_openssl2228_sk_X509_INFO_free")
 external fun sk_X509_INFO_free(sk: CValuesRef<stack_st_X509_INFO>?): Unit
 
-@CCall("knifunptr_openssl2224_sk_X509_INFO_zero")
+@CCall("knifunptr_openssl2229_sk_X509_INFO_zero")
 external fun sk_X509_INFO_zero(sk: CValuesRef<stack_st_X509_INFO>?): Unit
 
-@CCall("knifunptr_openssl2225_sk_X509_INFO_delete")
+@CCall("knifunptr_openssl2230_sk_X509_INFO_delete")
 external fun sk_X509_INFO_delete(sk: CValuesRef<stack_st_X509_INFO>?, i: Int): CPointer<X509_INFO>?
 
-@CCall("knifunptr_openssl2226_sk_X509_INFO_delete_ptr")
+@CCall("knifunptr_openssl2231_sk_X509_INFO_delete_ptr")
 external fun sk_X509_INFO_delete_ptr(
     sk: CValuesRef<stack_st_X509_INFO>?,
     ptr: CValuesRef<X509_INFO>?
 ): CPointer<X509_INFO>?
 
-@CCall("knifunptr_openssl2227_sk_X509_INFO_push")
+@CCall("knifunptr_openssl2232_sk_X509_INFO_push")
 external fun sk_X509_INFO_push(sk: CValuesRef<stack_st_X509_INFO>?, ptr: CValuesRef<X509_INFO>?): Int
 
-@CCall("knifunptr_openssl2228_sk_X509_INFO_unshift")
+@CCall("knifunptr_openssl2233_sk_X509_INFO_unshift")
 external fun sk_X509_INFO_unshift(sk: CValuesRef<stack_st_X509_INFO>?, ptr: CValuesRef<X509_INFO>?): Int
 
-@CCall("knifunptr_openssl2229_sk_X509_INFO_pop")
+@CCall("knifunptr_openssl2234_sk_X509_INFO_pop")
 external fun sk_X509_INFO_pop(sk: CValuesRef<stack_st_X509_INFO>?): CPointer<X509_INFO>?
 
-@CCall("knifunptr_openssl2230_sk_X509_INFO_shift")
+@CCall("knifunptr_openssl2235_sk_X509_INFO_shift")
 external fun sk_X509_INFO_shift(sk: CValuesRef<stack_st_X509_INFO>?): CPointer<X509_INFO>?
 
-@CCall("knifunptr_openssl2231_sk_X509_INFO_pop_free")
+@CCall("knifunptr_openssl2236_sk_X509_INFO_pop_free")
 external fun sk_X509_INFO_pop_free(sk: CValuesRef<stack_st_X509_INFO>?, freefunc: sk_X509_INFO_freefunc?): Unit
 
-@CCall("knifunptr_openssl2232_sk_X509_INFO_insert")
+@CCall("knifunptr_openssl2237_sk_X509_INFO_insert")
 external fun sk_X509_INFO_insert(sk: CValuesRef<stack_st_X509_INFO>?, ptr: CValuesRef<X509_INFO>?, idx: Int): Int
 
-@CCall("knifunptr_openssl2233_sk_X509_INFO_set")
+@CCall("knifunptr_openssl2238_sk_X509_INFO_set")
 external fun sk_X509_INFO_set(
     sk: CValuesRef<stack_st_X509_INFO>?,
     idx: Int,
     ptr: CValuesRef<X509_INFO>?
 ): CPointer<X509_INFO>?
 
-@CCall("knifunptr_openssl2234_sk_X509_INFO_find")
+@CCall("knifunptr_openssl2239_sk_X509_INFO_find")
 external fun sk_X509_INFO_find(sk: CValuesRef<stack_st_X509_INFO>?, ptr: CValuesRef<X509_INFO>?): Int
 
-@CCall("knifunptr_openssl2235_sk_X509_INFO_find_ex")
+@CCall("knifunptr_openssl2240_sk_X509_INFO_find_ex")
 external fun sk_X509_INFO_find_ex(sk: CValuesRef<stack_st_X509_INFO>?, ptr: CValuesRef<X509_INFO>?): Int
 
-@CCall("knifunptr_openssl2236_sk_X509_INFO_sort")
+@CCall("knifunptr_openssl2241_sk_X509_INFO_sort")
 external fun sk_X509_INFO_sort(sk: CValuesRef<stack_st_X509_INFO>?): Unit
 
-@CCall("knifunptr_openssl2237_sk_X509_INFO_is_sorted")
+@CCall("knifunptr_openssl2242_sk_X509_INFO_is_sorted")
 external fun sk_X509_INFO_is_sorted(sk: CValuesRef<stack_st_X509_INFO>?): Int
 
-@CCall("knifunptr_openssl2238_sk_X509_INFO_dup")
+@CCall("knifunptr_openssl2243_sk_X509_INFO_dup")
 external fun sk_X509_INFO_dup(sk: CValuesRef<stack_st_X509_INFO>?): CPointer<stack_st_X509_INFO>?
 
-@CCall("knifunptr_openssl2239_sk_X509_INFO_deep_copy")
+@CCall("knifunptr_openssl2244_sk_X509_INFO_deep_copy")
 external fun sk_X509_INFO_deep_copy(
     sk: CValuesRef<stack_st_X509_INFO>?,
     copyfunc: sk_X509_INFO_copyfunc?,
     freefunc: sk_X509_INFO_freefunc?
 ): CPointer<stack_st_X509_INFO>?
 
-@CCall("knifunptr_openssl2240_sk_X509_INFO_set_cmp_func")
+@CCall("knifunptr_openssl2245_sk_X509_INFO_set_cmp_func")
 external fun sk_X509_INFO_set_cmp_func(
     sk: CValuesRef<stack_st_X509_INFO>?,
     compare: sk_X509_INFO_compfunc?
 ): sk_X509_INFO_compfunc?
 
-@CCall("knifunptr_openssl2241_OPENSSL_LH_error")
+@CCall("knifunptr_openssl2246_OPENSSL_LH_error")
 external fun OPENSSL_LH_error(lh: CValuesRef<OPENSSL_LHASH>?): Int
 
-@CCall("knifunptr_openssl2242_OPENSSL_LH_new")
+@CCall("knifunptr_openssl2247_OPENSSL_LH_new")
 external fun OPENSSL_LH_new(h: OPENSSL_LH_HASHFUNC?, c: OPENSSL_LH_COMPFUNC?): CPointer<OPENSSL_LHASH>?
 
-@CCall("knifunptr_openssl2243_OPENSSL_LH_free")
+@CCall("knifunptr_openssl2248_OPENSSL_LH_free")
 external fun OPENSSL_LH_free(lh: CValuesRef<OPENSSL_LHASH>?): Unit
 
-@CCall("knifunptr_openssl2244_OPENSSL_LH_insert")
+@CCall("knifunptr_openssl2249_OPENSSL_LH_insert")
 external fun OPENSSL_LH_insert(lh: CValuesRef<OPENSSL_LHASH>?, data: CValuesRef<*>?): COpaquePointer?
 
-@CCall("knifunptr_openssl2245_OPENSSL_LH_delete")
+@CCall("knifunptr_openssl2250_OPENSSL_LH_delete")
 external fun OPENSSL_LH_delete(lh: CValuesRef<OPENSSL_LHASH>?, data: CValuesRef<*>?): COpaquePointer?
 
-@CCall("knifunptr_openssl2246_OPENSSL_LH_retrieve")
+@CCall("knifunptr_openssl2251_OPENSSL_LH_retrieve")
 external fun OPENSSL_LH_retrieve(lh: CValuesRef<OPENSSL_LHASH>?, data: CValuesRef<*>?): COpaquePointer?
 
-@CCall("knifunptr_openssl2247_OPENSSL_LH_doall")
+@CCall("knifunptr_openssl2252_OPENSSL_LH_doall")
 external fun OPENSSL_LH_doall(lh: CValuesRef<OPENSSL_LHASH>?, func: OPENSSL_LH_DOALL_FUNC?): Unit
 
-@CCall("knifunptr_openssl2248_OPENSSL_LH_doall_arg")
+@CCall("knifunptr_openssl2253_OPENSSL_LH_doall_arg")
 external fun OPENSSL_LH_doall_arg(
     lh: CValuesRef<OPENSSL_LHASH>?,
     func: OPENSSL_LH_DOALL_FUNCARG?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl2249_OPENSSL_LH_strhash")
+@CCall("knifunptr_openssl2254_OPENSSL_LH_strhash")
 external fun OPENSSL_LH_strhash(@CCall.CString c: String?): UInt
 
-@CCall("knifunptr_openssl2250_OPENSSL_LH_num_items")
+@CCall("knifunptr_openssl2255_OPENSSL_LH_num_items")
 external fun OPENSSL_LH_num_items(lh: CValuesRef<OPENSSL_LHASH>?): UInt
 
-@CCall("knifunptr_openssl2251_OPENSSL_LH_get_down_load")
+@CCall("knifunptr_openssl2256_OPENSSL_LH_get_down_load")
 external fun OPENSSL_LH_get_down_load(lh: CValuesRef<OPENSSL_LHASH>?): UInt
 
-@CCall("knifunptr_openssl2252_OPENSSL_LH_set_down_load")
+@CCall("knifunptr_openssl2257_OPENSSL_LH_set_down_load")
 external fun OPENSSL_LH_set_down_load(lh: CValuesRef<OPENSSL_LHASH>?, down_load: UInt): Unit
 
-@CCall("knifunptr_openssl2253_OPENSSL_LH_stats")
+@CCall("knifunptr_openssl2258_OPENSSL_LH_stats")
 external fun OPENSSL_LH_stats(lh: CValuesRef<OPENSSL_LHASH>?, fp: CValuesRef<FILE>?): Unit
 
-@CCall("knifunptr_openssl2254_OPENSSL_LH_node_stats")
+@CCall("knifunptr_openssl2259_OPENSSL_LH_node_stats")
 external fun OPENSSL_LH_node_stats(lh: CValuesRef<OPENSSL_LHASH>?, fp: CValuesRef<FILE>?): Unit
 
-@CCall("knifunptr_openssl2255_OPENSSL_LH_node_usage_stats")
+@CCall("knifunptr_openssl2260_OPENSSL_LH_node_usage_stats")
 external fun OPENSSL_LH_node_usage_stats(lh: CValuesRef<OPENSSL_LHASH>?, fp: CValuesRef<FILE>?): Unit
 
-@CCall("knifunptr_openssl2256_OPENSSL_LH_stats_bio")
+@CCall("knifunptr_openssl2261_OPENSSL_LH_stats_bio")
 external fun OPENSSL_LH_stats_bio(lh: CValuesRef<OPENSSL_LHASH>?, out: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl2257_OPENSSL_LH_node_stats_bio")
+@CCall("knifunptr_openssl2262_OPENSSL_LH_node_stats_bio")
 external fun OPENSSL_LH_node_stats_bio(lh: CValuesRef<OPENSSL_LHASH>?, out: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl2258_OPENSSL_LH_node_usage_stats_bio")
+@CCall("knifunptr_openssl2263_OPENSSL_LH_node_usage_stats_bio")
 external fun OPENSSL_LH_node_usage_stats_bio(lh: CValuesRef<OPENSSL_LHASH>?, out: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl2259_lh_OPENSSL_STRING_new")
+@CCall("knifunptr_openssl2264_lh_OPENSSL_STRING_new")
 external fun lh_OPENSSL_STRING_new(
     hfn: CPointer<CFunction<(CPointer<OPENSSL_STRINGVar>?) -> UInt>>?,
     cfn: CPointer<CFunction<(CPointer<OPENSSL_STRINGVar>?, CPointer<OPENSSL_STRINGVar>?) -> Int>>?
 ): CPointer<lhash_st_OPENSSL_STRING>?
 
-@CCall("knifunptr_openssl2260_lh_OPENSSL_STRING_free")
+@CCall("knifunptr_openssl2265_lh_OPENSSL_STRING_free")
 external fun lh_OPENSSL_STRING_free(lh: CValuesRef<lhash_st_OPENSSL_STRING>?): Unit
 
-@CCall("knifunptr_openssl2261_lh_OPENSSL_STRING_insert")
+@CCall("knifunptr_openssl2266_lh_OPENSSL_STRING_insert")
 external fun lh_OPENSSL_STRING_insert(
     lh: CValuesRef<lhash_st_OPENSSL_STRING>?,
     d: CValuesRef<OPENSSL_STRINGVar>?
 ): CPointer<OPENSSL_STRINGVar>?
 
-@CCall("knifunptr_openssl2262_lh_OPENSSL_STRING_delete")
+@CCall("knifunptr_openssl2267_lh_OPENSSL_STRING_delete")
 external fun lh_OPENSSL_STRING_delete(
     lh: CValuesRef<lhash_st_OPENSSL_STRING>?,
     d: CValuesRef<OPENSSL_STRINGVar>?
 ): CPointer<OPENSSL_STRINGVar>?
 
-@CCall("knifunptr_openssl2263_lh_OPENSSL_STRING_retrieve")
+@CCall("knifunptr_openssl2268_lh_OPENSSL_STRING_retrieve")
 external fun lh_OPENSSL_STRING_retrieve(
     lh: CValuesRef<lhash_st_OPENSSL_STRING>?,
     d: CValuesRef<OPENSSL_STRINGVar>?
 ): CPointer<OPENSSL_STRINGVar>?
 
-@CCall("knifunptr_openssl2264_lh_OPENSSL_STRING_error")
+@CCall("knifunptr_openssl2269_lh_OPENSSL_STRING_error")
 external fun lh_OPENSSL_STRING_error(lh: CValuesRef<lhash_st_OPENSSL_STRING>?): Int
 
-@CCall("knifunptr_openssl2265_lh_OPENSSL_STRING_num_items")
+@CCall("knifunptr_openssl2270_lh_OPENSSL_STRING_num_items")
 external fun lh_OPENSSL_STRING_num_items(lh: CValuesRef<lhash_st_OPENSSL_STRING>?): UInt
 
-@CCall("knifunptr_openssl2266_lh_OPENSSL_STRING_node_stats_bio")
+@CCall("knifunptr_openssl2271_lh_OPENSSL_STRING_node_stats_bio")
 external fun lh_OPENSSL_STRING_node_stats_bio(lh: CValuesRef<lhash_st_OPENSSL_STRING>?, out: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl2267_lh_OPENSSL_STRING_node_usage_stats_bio")
+@CCall("knifunptr_openssl2272_lh_OPENSSL_STRING_node_usage_stats_bio")
 external fun lh_OPENSSL_STRING_node_usage_stats_bio(
     lh: CValuesRef<lhash_st_OPENSSL_STRING>?,
     out: CValuesRef<BIO>?
 ): Unit
 
-@CCall("knifunptr_openssl2268_lh_OPENSSL_STRING_stats_bio")
+@CCall("knifunptr_openssl2273_lh_OPENSSL_STRING_stats_bio")
 external fun lh_OPENSSL_STRING_stats_bio(lh: CValuesRef<lhash_st_OPENSSL_STRING>?, out: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl2269_lh_OPENSSL_STRING_get_down_load")
+@CCall("knifunptr_openssl2274_lh_OPENSSL_STRING_get_down_load")
 external fun lh_OPENSSL_STRING_get_down_load(lh: CValuesRef<lhash_st_OPENSSL_STRING>?): UInt
 
-@CCall("knifunptr_openssl2270_lh_OPENSSL_STRING_set_down_load")
+@CCall("knifunptr_openssl2275_lh_OPENSSL_STRING_set_down_load")
 external fun lh_OPENSSL_STRING_set_down_load(lh: CValuesRef<lhash_st_OPENSSL_STRING>?, dl: UInt): Unit
 
-@CCall("knifunptr_openssl2271_lh_OPENSSL_STRING_doall")
+@CCall("knifunptr_openssl2276_lh_OPENSSL_STRING_doall")
 external fun lh_OPENSSL_STRING_doall(
     lh: CValuesRef<lhash_st_OPENSSL_STRING>?,
     doall: CPointer<CFunction<(CPointer<OPENSSL_STRINGVar>?) -> Unit>>?
 ): Unit
 
-@CCall("knifunptr_openssl2272_lh_OPENSSL_CSTRING_new")
+@CCall("knifunptr_openssl2277_lh_OPENSSL_CSTRING_new")
 external fun lh_OPENSSL_CSTRING_new(
     hfn: CPointer<CFunction<(CPointer<OPENSSL_CSTRINGVar>?) -> UInt>>?,
     cfn: CPointer<CFunction<(CPointer<OPENSSL_CSTRINGVar>?, CPointer<OPENSSL_CSTRINGVar>?) -> Int>>?
 ): CPointer<lhash_st_OPENSSL_CSTRING>?
 
-@CCall("knifunptr_openssl2273_lh_OPENSSL_CSTRING_free")
+@CCall("knifunptr_openssl2278_lh_OPENSSL_CSTRING_free")
 external fun lh_OPENSSL_CSTRING_free(lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?): Unit
 
-@CCall("knifunptr_openssl2274_lh_OPENSSL_CSTRING_insert")
+@CCall("knifunptr_openssl2279_lh_OPENSSL_CSTRING_insert")
 external fun lh_OPENSSL_CSTRING_insert(
     lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?,
     d: CValuesRef<OPENSSL_CSTRINGVar>?
 ): CPointer<OPENSSL_CSTRINGVar>?
 
-@CCall("knifunptr_openssl2275_lh_OPENSSL_CSTRING_delete")
+@CCall("knifunptr_openssl2280_lh_OPENSSL_CSTRING_delete")
 external fun lh_OPENSSL_CSTRING_delete(
     lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?,
     d: CValuesRef<OPENSSL_CSTRINGVar>?
 ): CPointer<OPENSSL_CSTRINGVar>?
 
-@CCall("knifunptr_openssl2276_lh_OPENSSL_CSTRING_retrieve")
+@CCall("knifunptr_openssl2281_lh_OPENSSL_CSTRING_retrieve")
 external fun lh_OPENSSL_CSTRING_retrieve(
     lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?,
     d: CValuesRef<OPENSSL_CSTRINGVar>?
 ): CPointer<OPENSSL_CSTRINGVar>?
 
-@CCall("knifunptr_openssl2277_lh_OPENSSL_CSTRING_error")
+@CCall("knifunptr_openssl2282_lh_OPENSSL_CSTRING_error")
 external fun lh_OPENSSL_CSTRING_error(lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?): Int
 
-@CCall("knifunptr_openssl2278_lh_OPENSSL_CSTRING_num_items")
+@CCall("knifunptr_openssl2283_lh_OPENSSL_CSTRING_num_items")
 external fun lh_OPENSSL_CSTRING_num_items(lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?): UInt
 
-@CCall("knifunptr_openssl2279_lh_OPENSSL_CSTRING_node_stats_bio")
+@CCall("knifunptr_openssl2284_lh_OPENSSL_CSTRING_node_stats_bio")
 external fun lh_OPENSSL_CSTRING_node_stats_bio(lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?, out: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl2280_lh_OPENSSL_CSTRING_node_usage_stats_bio")
+@CCall("knifunptr_openssl2285_lh_OPENSSL_CSTRING_node_usage_stats_bio")
 external fun lh_OPENSSL_CSTRING_node_usage_stats_bio(
     lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?,
     out: CValuesRef<BIO>?
 ): Unit
 
-@CCall("knifunptr_openssl2281_lh_OPENSSL_CSTRING_stats_bio")
+@CCall("knifunptr_openssl2286_lh_OPENSSL_CSTRING_stats_bio")
 external fun lh_OPENSSL_CSTRING_stats_bio(lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?, out: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl2282_lh_OPENSSL_CSTRING_get_down_load")
+@CCall("knifunptr_openssl2287_lh_OPENSSL_CSTRING_get_down_load")
 external fun lh_OPENSSL_CSTRING_get_down_load(lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?): UInt
 
-@CCall("knifunptr_openssl2283_lh_OPENSSL_CSTRING_set_down_load")
+@CCall("knifunptr_openssl2288_lh_OPENSSL_CSTRING_set_down_load")
 external fun lh_OPENSSL_CSTRING_set_down_load(lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?, dl: UInt): Unit
 
-@CCall("knifunptr_openssl2284_lh_OPENSSL_CSTRING_doall")
+@CCall("knifunptr_openssl2289_lh_OPENSSL_CSTRING_doall")
 external fun lh_OPENSSL_CSTRING_doall(
     lh: CValuesRef<lhash_st_OPENSSL_CSTRING>?,
     doall: CPointer<CFunction<(CPointer<OPENSSL_CSTRINGVar>?) -> Unit>>?
 ): Unit
 
-@CCall("knifunptr_openssl2285_sk_X509_LOOKUP_num")
+@CCall("knifunptr_openssl2290_sk_X509_LOOKUP_num")
 external fun sk_X509_LOOKUP_num(sk: CValuesRef<stack_st_X509_LOOKUP>?): Int
 
-@CCall("knifunptr_openssl2286_sk_X509_LOOKUP_value")
+@CCall("knifunptr_openssl2291_sk_X509_LOOKUP_value")
 external fun sk_X509_LOOKUP_value(sk: CValuesRef<stack_st_X509_LOOKUP>?, idx: Int): CPointer<X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2287_sk_X509_LOOKUP_new")
+@CCall("knifunptr_openssl2292_sk_X509_LOOKUP_new")
 external fun sk_X509_LOOKUP_new(compare: sk_X509_LOOKUP_compfunc?): CPointer<stack_st_X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2288_sk_X509_LOOKUP_new_null")
+@CCall("knifunptr_openssl2293_sk_X509_LOOKUP_new_null")
 external fun sk_X509_LOOKUP_new_null(): CPointer<stack_st_X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2289_sk_X509_LOOKUP_new_reserve")
+@CCall("knifunptr_openssl2294_sk_X509_LOOKUP_new_reserve")
 external fun sk_X509_LOOKUP_new_reserve(compare: sk_X509_LOOKUP_compfunc?, n: Int): CPointer<stack_st_X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2290_sk_X509_LOOKUP_reserve")
+@CCall("knifunptr_openssl2295_sk_X509_LOOKUP_reserve")
 external fun sk_X509_LOOKUP_reserve(sk: CValuesRef<stack_st_X509_LOOKUP>?, n: Int): Int
 
-@CCall("knifunptr_openssl2291_sk_X509_LOOKUP_free")
+@CCall("knifunptr_openssl2296_sk_X509_LOOKUP_free")
 external fun sk_X509_LOOKUP_free(sk: CValuesRef<stack_st_X509_LOOKUP>?): Unit
 
-@CCall("knifunptr_openssl2292_sk_X509_LOOKUP_zero")
+@CCall("knifunptr_openssl2297_sk_X509_LOOKUP_zero")
 external fun sk_X509_LOOKUP_zero(sk: CValuesRef<stack_st_X509_LOOKUP>?): Unit
 
-@CCall("knifunptr_openssl2293_sk_X509_LOOKUP_delete")
+@CCall("knifunptr_openssl2298_sk_X509_LOOKUP_delete")
 external fun sk_X509_LOOKUP_delete(sk: CValuesRef<stack_st_X509_LOOKUP>?, i: Int): CPointer<X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2294_sk_X509_LOOKUP_delete_ptr")
+@CCall("knifunptr_openssl2299_sk_X509_LOOKUP_delete_ptr")
 external fun sk_X509_LOOKUP_delete_ptr(
     sk: CValuesRef<stack_st_X509_LOOKUP>?,
     ptr: CValuesRef<X509_LOOKUP>?
 ): CPointer<X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2295_sk_X509_LOOKUP_push")
+@CCall("knifunptr_openssl2300_sk_X509_LOOKUP_push")
 external fun sk_X509_LOOKUP_push(sk: CValuesRef<stack_st_X509_LOOKUP>?, ptr: CValuesRef<X509_LOOKUP>?): Int
 
-@CCall("knifunptr_openssl2296_sk_X509_LOOKUP_unshift")
+@CCall("knifunptr_openssl2301_sk_X509_LOOKUP_unshift")
 external fun sk_X509_LOOKUP_unshift(sk: CValuesRef<stack_st_X509_LOOKUP>?, ptr: CValuesRef<X509_LOOKUP>?): Int
 
-@CCall("knifunptr_openssl2297_sk_X509_LOOKUP_pop")
+@CCall("knifunptr_openssl2302_sk_X509_LOOKUP_pop")
 external fun sk_X509_LOOKUP_pop(sk: CValuesRef<stack_st_X509_LOOKUP>?): CPointer<X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2298_sk_X509_LOOKUP_shift")
+@CCall("knifunptr_openssl2303_sk_X509_LOOKUP_shift")
 external fun sk_X509_LOOKUP_shift(sk: CValuesRef<stack_st_X509_LOOKUP>?): CPointer<X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2299_sk_X509_LOOKUP_pop_free")
+@CCall("knifunptr_openssl2304_sk_X509_LOOKUP_pop_free")
 external fun sk_X509_LOOKUP_pop_free(sk: CValuesRef<stack_st_X509_LOOKUP>?, freefunc: sk_X509_LOOKUP_freefunc?): Unit
 
-@CCall("knifunptr_openssl2300_sk_X509_LOOKUP_insert")
+@CCall("knifunptr_openssl2305_sk_X509_LOOKUP_insert")
 external fun sk_X509_LOOKUP_insert(sk: CValuesRef<stack_st_X509_LOOKUP>?, ptr: CValuesRef<X509_LOOKUP>?, idx: Int): Int
 
-@CCall("knifunptr_openssl2301_sk_X509_LOOKUP_set")
+@CCall("knifunptr_openssl2306_sk_X509_LOOKUP_set")
 external fun sk_X509_LOOKUP_set(
     sk: CValuesRef<stack_st_X509_LOOKUP>?,
     idx: Int,
     ptr: CValuesRef<X509_LOOKUP>?
 ): CPointer<X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2302_sk_X509_LOOKUP_find")
+@CCall("knifunptr_openssl2307_sk_X509_LOOKUP_find")
 external fun sk_X509_LOOKUP_find(sk: CValuesRef<stack_st_X509_LOOKUP>?, ptr: CValuesRef<X509_LOOKUP>?): Int
 
-@CCall("knifunptr_openssl2303_sk_X509_LOOKUP_find_ex")
+@CCall("knifunptr_openssl2308_sk_X509_LOOKUP_find_ex")
 external fun sk_X509_LOOKUP_find_ex(sk: CValuesRef<stack_st_X509_LOOKUP>?, ptr: CValuesRef<X509_LOOKUP>?): Int
 
-@CCall("knifunptr_openssl2304_sk_X509_LOOKUP_sort")
+@CCall("knifunptr_openssl2309_sk_X509_LOOKUP_sort")
 external fun sk_X509_LOOKUP_sort(sk: CValuesRef<stack_st_X509_LOOKUP>?): Unit
 
-@CCall("knifunptr_openssl2305_sk_X509_LOOKUP_is_sorted")
+@CCall("knifunptr_openssl2310_sk_X509_LOOKUP_is_sorted")
 external fun sk_X509_LOOKUP_is_sorted(sk: CValuesRef<stack_st_X509_LOOKUP>?): Int
 
-@CCall("knifunptr_openssl2306_sk_X509_LOOKUP_dup")
+@CCall("knifunptr_openssl2311_sk_X509_LOOKUP_dup")
 external fun sk_X509_LOOKUP_dup(sk: CValuesRef<stack_st_X509_LOOKUP>?): CPointer<stack_st_X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2307_sk_X509_LOOKUP_deep_copy")
+@CCall("knifunptr_openssl2312_sk_X509_LOOKUP_deep_copy")
 external fun sk_X509_LOOKUP_deep_copy(
     sk: CValuesRef<stack_st_X509_LOOKUP>?,
     copyfunc: sk_X509_LOOKUP_copyfunc?,
     freefunc: sk_X509_LOOKUP_freefunc?
 ): CPointer<stack_st_X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2308_sk_X509_LOOKUP_set_cmp_func")
+@CCall("knifunptr_openssl2313_sk_X509_LOOKUP_set_cmp_func")
 external fun sk_X509_LOOKUP_set_cmp_func(
     sk: CValuesRef<stack_st_X509_LOOKUP>?,
     compare: sk_X509_LOOKUP_compfunc?
 ): sk_X509_LOOKUP_compfunc?
 
-@CCall("knifunptr_openssl2309_sk_X509_OBJECT_num")
+@CCall("knifunptr_openssl2314_sk_X509_OBJECT_num")
 external fun sk_X509_OBJECT_num(sk: CValuesRef<stack_st_X509_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2310_sk_X509_OBJECT_value")
+@CCall("knifunptr_openssl2315_sk_X509_OBJECT_value")
 external fun sk_X509_OBJECT_value(sk: CValuesRef<stack_st_X509_OBJECT>?, idx: Int): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2311_sk_X509_OBJECT_new")
+@CCall("knifunptr_openssl2316_sk_X509_OBJECT_new")
 external fun sk_X509_OBJECT_new(compare: sk_X509_OBJECT_compfunc?): CPointer<stack_st_X509_OBJECT>?
 
-@CCall("knifunptr_openssl2312_sk_X509_OBJECT_new_null")
+@CCall("knifunptr_openssl2317_sk_X509_OBJECT_new_null")
 external fun sk_X509_OBJECT_new_null(): CPointer<stack_st_X509_OBJECT>?
 
-@CCall("knifunptr_openssl2313_sk_X509_OBJECT_new_reserve")
+@CCall("knifunptr_openssl2318_sk_X509_OBJECT_new_reserve")
 external fun sk_X509_OBJECT_new_reserve(compare: sk_X509_OBJECT_compfunc?, n: Int): CPointer<stack_st_X509_OBJECT>?
 
-@CCall("knifunptr_openssl2314_sk_X509_OBJECT_reserve")
+@CCall("knifunptr_openssl2319_sk_X509_OBJECT_reserve")
 external fun sk_X509_OBJECT_reserve(sk: CValuesRef<stack_st_X509_OBJECT>?, n: Int): Int
 
-@CCall("knifunptr_openssl2315_sk_X509_OBJECT_free")
+@CCall("knifunptr_openssl2320_sk_X509_OBJECT_free")
 external fun sk_X509_OBJECT_free(sk: CValuesRef<stack_st_X509_OBJECT>?): Unit
 
-@CCall("knifunptr_openssl2316_sk_X509_OBJECT_zero")
+@CCall("knifunptr_openssl2321_sk_X509_OBJECT_zero")
 external fun sk_X509_OBJECT_zero(sk: CValuesRef<stack_st_X509_OBJECT>?): Unit
 
-@CCall("knifunptr_openssl2317_sk_X509_OBJECT_delete")
+@CCall("knifunptr_openssl2322_sk_X509_OBJECT_delete")
 external fun sk_X509_OBJECT_delete(sk: CValuesRef<stack_st_X509_OBJECT>?, i: Int): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2318_sk_X509_OBJECT_delete_ptr")
+@CCall("knifunptr_openssl2323_sk_X509_OBJECT_delete_ptr")
 external fun sk_X509_OBJECT_delete_ptr(
     sk: CValuesRef<stack_st_X509_OBJECT>?,
     ptr: CValuesRef<X509_OBJECT>?
 ): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2319_sk_X509_OBJECT_push")
+@CCall("knifunptr_openssl2324_sk_X509_OBJECT_push")
 external fun sk_X509_OBJECT_push(sk: CValuesRef<stack_st_X509_OBJECT>?, ptr: CValuesRef<X509_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2320_sk_X509_OBJECT_unshift")
+@CCall("knifunptr_openssl2325_sk_X509_OBJECT_unshift")
 external fun sk_X509_OBJECT_unshift(sk: CValuesRef<stack_st_X509_OBJECT>?, ptr: CValuesRef<X509_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2321_sk_X509_OBJECT_pop")
+@CCall("knifunptr_openssl2326_sk_X509_OBJECT_pop")
 external fun sk_X509_OBJECT_pop(sk: CValuesRef<stack_st_X509_OBJECT>?): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2322_sk_X509_OBJECT_shift")
+@CCall("knifunptr_openssl2327_sk_X509_OBJECT_shift")
 external fun sk_X509_OBJECT_shift(sk: CValuesRef<stack_st_X509_OBJECT>?): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2323_sk_X509_OBJECT_pop_free")
+@CCall("knifunptr_openssl2328_sk_X509_OBJECT_pop_free")
 external fun sk_X509_OBJECT_pop_free(sk: CValuesRef<stack_st_X509_OBJECT>?, freefunc: sk_X509_OBJECT_freefunc?): Unit
 
-@CCall("knifunptr_openssl2324_sk_X509_OBJECT_insert")
+@CCall("knifunptr_openssl2329_sk_X509_OBJECT_insert")
 external fun sk_X509_OBJECT_insert(sk: CValuesRef<stack_st_X509_OBJECT>?, ptr: CValuesRef<X509_OBJECT>?, idx: Int): Int
 
-@CCall("knifunptr_openssl2325_sk_X509_OBJECT_set")
+@CCall("knifunptr_openssl2330_sk_X509_OBJECT_set")
 external fun sk_X509_OBJECT_set(
     sk: CValuesRef<stack_st_X509_OBJECT>?,
     idx: Int,
     ptr: CValuesRef<X509_OBJECT>?
 ): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2326_sk_X509_OBJECT_find")
+@CCall("knifunptr_openssl2331_sk_X509_OBJECT_find")
 external fun sk_X509_OBJECT_find(sk: CValuesRef<stack_st_X509_OBJECT>?, ptr: CValuesRef<X509_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2327_sk_X509_OBJECT_find_ex")
+@CCall("knifunptr_openssl2332_sk_X509_OBJECT_find_ex")
 external fun sk_X509_OBJECT_find_ex(sk: CValuesRef<stack_st_X509_OBJECT>?, ptr: CValuesRef<X509_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2328_sk_X509_OBJECT_sort")
+@CCall("knifunptr_openssl2333_sk_X509_OBJECT_sort")
 external fun sk_X509_OBJECT_sort(sk: CValuesRef<stack_st_X509_OBJECT>?): Unit
 
-@CCall("knifunptr_openssl2329_sk_X509_OBJECT_is_sorted")
+@CCall("knifunptr_openssl2334_sk_X509_OBJECT_is_sorted")
 external fun sk_X509_OBJECT_is_sorted(sk: CValuesRef<stack_st_X509_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2330_sk_X509_OBJECT_dup")
+@CCall("knifunptr_openssl2335_sk_X509_OBJECT_dup")
 external fun sk_X509_OBJECT_dup(sk: CValuesRef<stack_st_X509_OBJECT>?): CPointer<stack_st_X509_OBJECT>?
 
-@CCall("knifunptr_openssl2331_sk_X509_OBJECT_deep_copy")
+@CCall("knifunptr_openssl2336_sk_X509_OBJECT_deep_copy")
 external fun sk_X509_OBJECT_deep_copy(
     sk: CValuesRef<stack_st_X509_OBJECT>?,
     copyfunc: sk_X509_OBJECT_copyfunc?,
     freefunc: sk_X509_OBJECT_freefunc?
 ): CPointer<stack_st_X509_OBJECT>?
 
-@CCall("knifunptr_openssl2332_sk_X509_OBJECT_set_cmp_func")
+@CCall("knifunptr_openssl2337_sk_X509_OBJECT_set_cmp_func")
 external fun sk_X509_OBJECT_set_cmp_func(
     sk: CValuesRef<stack_st_X509_OBJECT>?,
     compare: sk_X509_OBJECT_compfunc?
 ): sk_X509_OBJECT_compfunc?
 
-@CCall("knifunptr_openssl2333_sk_X509_VERIFY_PARAM_num")
+@CCall("knifunptr_openssl2338_sk_X509_VERIFY_PARAM_num")
 external fun sk_X509_VERIFY_PARAM_num(sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl2334_sk_X509_VERIFY_PARAM_value")
+@CCall("knifunptr_openssl2339_sk_X509_VERIFY_PARAM_value")
 external fun sk_X509_VERIFY_PARAM_value(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     idx: Int
 ): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2335_sk_X509_VERIFY_PARAM_new")
+@CCall("knifunptr_openssl2340_sk_X509_VERIFY_PARAM_new")
 external fun sk_X509_VERIFY_PARAM_new(compare: sk_X509_VERIFY_PARAM_compfunc?): CPointer<stack_st_X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2336_sk_X509_VERIFY_PARAM_new_null")
+@CCall("knifunptr_openssl2341_sk_X509_VERIFY_PARAM_new_null")
 external fun sk_X509_VERIFY_PARAM_new_null(): CPointer<stack_st_X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2337_sk_X509_VERIFY_PARAM_new_reserve")
+@CCall("knifunptr_openssl2342_sk_X509_VERIFY_PARAM_new_reserve")
 external fun sk_X509_VERIFY_PARAM_new_reserve(
     compare: sk_X509_VERIFY_PARAM_compfunc?,
     n: Int
 ): CPointer<stack_st_X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2338_sk_X509_VERIFY_PARAM_reserve")
+@CCall("knifunptr_openssl2343_sk_X509_VERIFY_PARAM_reserve")
 external fun sk_X509_VERIFY_PARAM_reserve(sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?, n: Int): Int
 
-@CCall("knifunptr_openssl2339_sk_X509_VERIFY_PARAM_free")
+@CCall("knifunptr_openssl2344_sk_X509_VERIFY_PARAM_free")
 external fun sk_X509_VERIFY_PARAM_free(sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?): Unit
 
-@CCall("knifunptr_openssl2340_sk_X509_VERIFY_PARAM_zero")
+@CCall("knifunptr_openssl2345_sk_X509_VERIFY_PARAM_zero")
 external fun sk_X509_VERIFY_PARAM_zero(sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?): Unit
 
-@CCall("knifunptr_openssl2341_sk_X509_VERIFY_PARAM_delete")
+@CCall("knifunptr_openssl2346_sk_X509_VERIFY_PARAM_delete")
 external fun sk_X509_VERIFY_PARAM_delete(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     i: Int
 ): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2342_sk_X509_VERIFY_PARAM_delete_ptr")
+@CCall("knifunptr_openssl2347_sk_X509_VERIFY_PARAM_delete_ptr")
 external fun sk_X509_VERIFY_PARAM_delete_ptr(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     ptr: CValuesRef<X509_VERIFY_PARAM>?
 ): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2343_sk_X509_VERIFY_PARAM_push")
+@CCall("knifunptr_openssl2348_sk_X509_VERIFY_PARAM_push")
 external fun sk_X509_VERIFY_PARAM_push(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     ptr: CValuesRef<X509_VERIFY_PARAM>?
 ): Int
 
-@CCall("knifunptr_openssl2344_sk_X509_VERIFY_PARAM_unshift")
+@CCall("knifunptr_openssl2349_sk_X509_VERIFY_PARAM_unshift")
 external fun sk_X509_VERIFY_PARAM_unshift(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     ptr: CValuesRef<X509_VERIFY_PARAM>?
 ): Int
 
-@CCall("knifunptr_openssl2345_sk_X509_VERIFY_PARAM_pop")
+@CCall("knifunptr_openssl2350_sk_X509_VERIFY_PARAM_pop")
 external fun sk_X509_VERIFY_PARAM_pop(sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2346_sk_X509_VERIFY_PARAM_shift")
+@CCall("knifunptr_openssl2351_sk_X509_VERIFY_PARAM_shift")
 external fun sk_X509_VERIFY_PARAM_shift(sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2347_sk_X509_VERIFY_PARAM_pop_free")
+@CCall("knifunptr_openssl2352_sk_X509_VERIFY_PARAM_pop_free")
 external fun sk_X509_VERIFY_PARAM_pop_free(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     freefunc: sk_X509_VERIFY_PARAM_freefunc?
 ): Unit
 
-@CCall("knifunptr_openssl2348_sk_X509_VERIFY_PARAM_insert")
+@CCall("knifunptr_openssl2353_sk_X509_VERIFY_PARAM_insert")
 external fun sk_X509_VERIFY_PARAM_insert(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     ptr: CValuesRef<X509_VERIFY_PARAM>?,
     idx: Int
 ): Int
 
-@CCall("knifunptr_openssl2349_sk_X509_VERIFY_PARAM_set")
+@CCall("knifunptr_openssl2354_sk_X509_VERIFY_PARAM_set")
 external fun sk_X509_VERIFY_PARAM_set(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     idx: Int,
     ptr: CValuesRef<X509_VERIFY_PARAM>?
 ): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2350_sk_X509_VERIFY_PARAM_find")
+@CCall("knifunptr_openssl2355_sk_X509_VERIFY_PARAM_find")
 external fun sk_X509_VERIFY_PARAM_find(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     ptr: CValuesRef<X509_VERIFY_PARAM>?
 ): Int
 
-@CCall("knifunptr_openssl2351_sk_X509_VERIFY_PARAM_find_ex")
+@CCall("knifunptr_openssl2356_sk_X509_VERIFY_PARAM_find_ex")
 external fun sk_X509_VERIFY_PARAM_find_ex(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     ptr: CValuesRef<X509_VERIFY_PARAM>?
 ): Int
 
-@CCall("knifunptr_openssl2352_sk_X509_VERIFY_PARAM_sort")
+@CCall("knifunptr_openssl2357_sk_X509_VERIFY_PARAM_sort")
 external fun sk_X509_VERIFY_PARAM_sort(sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?): Unit
 
-@CCall("knifunptr_openssl2353_sk_X509_VERIFY_PARAM_is_sorted")
+@CCall("knifunptr_openssl2358_sk_X509_VERIFY_PARAM_is_sorted")
 external fun sk_X509_VERIFY_PARAM_is_sorted(sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl2354_sk_X509_VERIFY_PARAM_dup")
+@CCall("knifunptr_openssl2359_sk_X509_VERIFY_PARAM_dup")
 external fun sk_X509_VERIFY_PARAM_dup(sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?): CPointer<stack_st_X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2355_sk_X509_VERIFY_PARAM_deep_copy")
+@CCall("knifunptr_openssl2360_sk_X509_VERIFY_PARAM_deep_copy")
 external fun sk_X509_VERIFY_PARAM_deep_copy(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     copyfunc: sk_X509_VERIFY_PARAM_copyfunc?,
     freefunc: sk_X509_VERIFY_PARAM_freefunc?
 ): CPointer<stack_st_X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2356_sk_X509_VERIFY_PARAM_set_cmp_func")
+@CCall("knifunptr_openssl2361_sk_X509_VERIFY_PARAM_set_cmp_func")
 external fun sk_X509_VERIFY_PARAM_set_cmp_func(
     sk: CValuesRef<stack_st_X509_VERIFY_PARAM>?,
     compare: sk_X509_VERIFY_PARAM_compfunc?
 ): sk_X509_VERIFY_PARAM_compfunc?
 
-@CCall("knifunptr_openssl2357_X509_STORE_set_depth")
+@CCall("knifunptr_openssl2362_X509_STORE_set_depth")
 external fun X509_STORE_set_depth(store: CValuesRef<X509_STORE>?, depth: Int): Int
 
-@CCall("knifunptr_openssl2358_X509_STORE_CTX_set_depth")
+@CCall("knifunptr_openssl2363_X509_STORE_CTX_set_depth")
 external fun X509_STORE_CTX_set_depth(ctx: CValuesRef<X509_STORE_CTX>?, depth: Int): Unit
 
-@CCall("knifunptr_openssl2359_X509_OBJECT_idx_by_subject")
+@CCall("knifunptr_openssl2364_X509_OBJECT_idx_by_subject")
 external fun X509_OBJECT_idx_by_subject(
     h: CValuesRef<stack_st_X509_OBJECT>?,
     type: X509_LOOKUP_TYPE,
     name: CValuesRef<X509_NAME>?
 ): Int
 
-@CCall("knifunptr_openssl2360_X509_OBJECT_retrieve_by_subject")
+@CCall("knifunptr_openssl2365_X509_OBJECT_retrieve_by_subject")
 external fun X509_OBJECT_retrieve_by_subject(
     h: CValuesRef<stack_st_X509_OBJECT>?,
     type: X509_LOOKUP_TYPE,
     name: CValuesRef<X509_NAME>?
 ): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2361_X509_OBJECT_retrieve_match")
+@CCall("knifunptr_openssl2366_X509_OBJECT_retrieve_match")
 external fun X509_OBJECT_retrieve_match(
     h: CValuesRef<stack_st_X509_OBJECT>?,
     x: CValuesRef<X509_OBJECT>?
 ): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2362_X509_OBJECT_up_ref_count")
+@CCall("knifunptr_openssl2367_X509_OBJECT_up_ref_count")
 external fun X509_OBJECT_up_ref_count(a: CValuesRef<X509_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2363_X509_OBJECT_new")
+@CCall("knifunptr_openssl2368_X509_OBJECT_new")
 external fun X509_OBJECT_new(): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2364_X509_OBJECT_free")
+@CCall("knifunptr_openssl2369_X509_OBJECT_free")
 external fun X509_OBJECT_free(a: CValuesRef<X509_OBJECT>?): Unit
 
-@CCall("knifunptr_openssl2365_X509_OBJECT_get_type")
+@CCall("knifunptr_openssl2370_X509_OBJECT_get_type")
 external fun X509_OBJECT_get_type(a: CValuesRef<X509_OBJECT>?): X509_LOOKUP_TYPE
 
-@CCall("knifunptr_openssl2366_X509_OBJECT_get0_X509")
+@CCall("knifunptr_openssl2371_X509_OBJECT_get0_X509")
 external fun X509_OBJECT_get0_X509(a: CValuesRef<X509_OBJECT>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2367_X509_OBJECT_set1_X509")
+@CCall("knifunptr_openssl2372_X509_OBJECT_set1_X509")
 external fun X509_OBJECT_set1_X509(a: CValuesRef<X509_OBJECT>?, obj: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2368_X509_OBJECT_get0_X509_CRL")
+@CCall("knifunptr_openssl2373_X509_OBJECT_get0_X509_CRL")
 external fun X509_OBJECT_get0_X509_CRL(a: CValuesRef<X509_OBJECT>?): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2369_X509_OBJECT_set1_X509_CRL")
+@CCall("knifunptr_openssl2374_X509_OBJECT_set1_X509_CRL")
 external fun X509_OBJECT_set1_X509_CRL(a: CValuesRef<X509_OBJECT>?, obj: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2370_X509_STORE_new")
+@CCall("knifunptr_openssl2375_X509_STORE_new")
 external fun X509_STORE_new(): CPointer<X509_STORE>?
 
-@CCall("knifunptr_openssl2371_X509_STORE_free")
+@CCall("knifunptr_openssl2376_X509_STORE_free")
 external fun X509_STORE_free(v: CValuesRef<X509_STORE>?): Unit
 
-@CCall("knifunptr_openssl2372_X509_STORE_lock")
+@CCall("knifunptr_openssl2377_X509_STORE_lock")
 external fun X509_STORE_lock(ctx: CValuesRef<X509_STORE>?): Int
 
-@CCall("knifunptr_openssl2373_X509_STORE_unlock")
+@CCall("knifunptr_openssl2378_X509_STORE_unlock")
 external fun X509_STORE_unlock(ctx: CValuesRef<X509_STORE>?): Int
 
-@CCall("knifunptr_openssl2374_X509_STORE_up_ref")
+@CCall("knifunptr_openssl2379_X509_STORE_up_ref")
 external fun X509_STORE_up_ref(v: CValuesRef<X509_STORE>?): Int
 
-@CCall("knifunptr_openssl2375_X509_STORE_get0_objects")
+@CCall("knifunptr_openssl2380_X509_STORE_get0_objects")
 external fun X509_STORE_get0_objects(v: CValuesRef<X509_STORE>?): CPointer<stack_st_X509_OBJECT>?
 
-@CCall("knifunptr_openssl2376_X509_STORE_CTX_get1_certs")
+@CCall("knifunptr_openssl2381_X509_STORE_CTX_get1_certs")
 external fun X509_STORE_CTX_get1_certs(
     st: CValuesRef<X509_STORE_CTX>?,
     nm: CValuesRef<X509_NAME>?
 ): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2377_X509_STORE_CTX_get1_crls")
+@CCall("knifunptr_openssl2382_X509_STORE_CTX_get1_crls")
 external fun X509_STORE_CTX_get1_crls(
     st: CValuesRef<X509_STORE_CTX>?,
     nm: CValuesRef<X509_NAME>?
 ): CPointer<stack_st_X509_CRL>?
 
-@CCall("knifunptr_openssl2378_X509_STORE_set_flags")
+@CCall("knifunptr_openssl2383_X509_STORE_set_flags")
 external fun X509_STORE_set_flags(ctx: CValuesRef<X509_STORE>?, flags: UInt): Int
 
-@CCall("knifunptr_openssl2379_X509_STORE_set_purpose")
+@CCall("knifunptr_openssl2384_X509_STORE_set_purpose")
 external fun X509_STORE_set_purpose(ctx: CValuesRef<X509_STORE>?, purpose: Int): Int
 
-@CCall("knifunptr_openssl2380_X509_STORE_set_trust")
+@CCall("knifunptr_openssl2385_X509_STORE_set_trust")
 external fun X509_STORE_set_trust(ctx: CValuesRef<X509_STORE>?, trust: Int): Int
 
-@CCall("knifunptr_openssl2381_X509_STORE_set1_param")
+@CCall("knifunptr_openssl2386_X509_STORE_set1_param")
 external fun X509_STORE_set1_param(ctx: CValuesRef<X509_STORE>?, pm: CValuesRef<X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl2382_X509_STORE_get0_param")
+@CCall("knifunptr_openssl2387_X509_STORE_get0_param")
 external fun X509_STORE_get0_param(ctx: CValuesRef<X509_STORE>?): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2383_X509_STORE_set_verify")
+@CCall("knifunptr_openssl2388_X509_STORE_set_verify")
 external fun X509_STORE_set_verify(ctx: CValuesRef<X509_STORE>?, verify: X509_STORE_CTX_verify_fn?): Unit
 
-@CCall("knifunptr_openssl2384_X509_STORE_CTX_set_verify")
+@CCall("knifunptr_openssl2389_X509_STORE_CTX_set_verify")
 external fun X509_STORE_CTX_set_verify(ctx: CValuesRef<X509_STORE_CTX>?, verify: X509_STORE_CTX_verify_fn?): Unit
 
-@CCall("knifunptr_openssl2385_X509_STORE_get_verify")
+@CCall("knifunptr_openssl2390_X509_STORE_get_verify")
 external fun X509_STORE_get_verify(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_verify_fn?
 
-@CCall("knifunptr_openssl2386_X509_STORE_set_verify_cb")
+@CCall("knifunptr_openssl2391_X509_STORE_set_verify_cb")
 external fun X509_STORE_set_verify_cb(ctx: CValuesRef<X509_STORE>?, verify_cb: X509_STORE_CTX_verify_cb?): Unit
 
-@CCall("knifunptr_openssl2387_X509_STORE_get_verify_cb")
+@CCall("knifunptr_openssl2392_X509_STORE_get_verify_cb")
 external fun X509_STORE_get_verify_cb(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_verify_cb?
 
-@CCall("knifunptr_openssl2388_X509_STORE_set_get_issuer")
+@CCall("knifunptr_openssl2393_X509_STORE_set_get_issuer")
 external fun X509_STORE_set_get_issuer(ctx: CValuesRef<X509_STORE>?, get_issuer: X509_STORE_CTX_get_issuer_fn?): Unit
 
-@CCall("knifunptr_openssl2389_X509_STORE_get_get_issuer")
+@CCall("knifunptr_openssl2394_X509_STORE_get_get_issuer")
 external fun X509_STORE_get_get_issuer(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_get_issuer_fn?
 
-@CCall("knifunptr_openssl2390_X509_STORE_set_check_issued")
+@CCall("knifunptr_openssl2395_X509_STORE_set_check_issued")
 external fun X509_STORE_set_check_issued(
     ctx: CValuesRef<X509_STORE>?,
     check_issued: X509_STORE_CTX_check_issued_fn?
 ): Unit
 
-@CCall("knifunptr_openssl2391_X509_STORE_get_check_issued")
+@CCall("knifunptr_openssl2396_X509_STORE_get_check_issued")
 external fun X509_STORE_get_check_issued(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_check_issued_fn?
 
-@CCall("knifunptr_openssl2392_X509_STORE_set_check_revocation")
+@CCall("knifunptr_openssl2397_X509_STORE_set_check_revocation")
 external fun X509_STORE_set_check_revocation(
     ctx: CValuesRef<X509_STORE>?,
     check_revocation: X509_STORE_CTX_check_revocation_fn?
 ): Unit
 
-@CCall("knifunptr_openssl2393_X509_STORE_get_check_revocation")
+@CCall("knifunptr_openssl2398_X509_STORE_get_check_revocation")
 external fun X509_STORE_get_check_revocation(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_check_revocation_fn?
 
-@CCall("knifunptr_openssl2394_X509_STORE_set_get_crl")
+@CCall("knifunptr_openssl2399_X509_STORE_set_get_crl")
 external fun X509_STORE_set_get_crl(ctx: CValuesRef<X509_STORE>?, get_crl: X509_STORE_CTX_get_crl_fn?): Unit
 
-@CCall("knifunptr_openssl2395_X509_STORE_get_get_crl")
+@CCall("knifunptr_openssl2400_X509_STORE_get_get_crl")
 external fun X509_STORE_get_get_crl(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_get_crl_fn?
 
-@CCall("knifunptr_openssl2396_X509_STORE_set_check_crl")
+@CCall("knifunptr_openssl2401_X509_STORE_set_check_crl")
 external fun X509_STORE_set_check_crl(ctx: CValuesRef<X509_STORE>?, check_crl: X509_STORE_CTX_check_crl_fn?): Unit
 
-@CCall("knifunptr_openssl2397_X509_STORE_get_check_crl")
+@CCall("knifunptr_openssl2402_X509_STORE_get_check_crl")
 external fun X509_STORE_get_check_crl(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_check_crl_fn?
 
-@CCall("knifunptr_openssl2398_X509_STORE_set_cert_crl")
+@CCall("knifunptr_openssl2403_X509_STORE_set_cert_crl")
 external fun X509_STORE_set_cert_crl(ctx: CValuesRef<X509_STORE>?, cert_crl: X509_STORE_CTX_cert_crl_fn?): Unit
 
-@CCall("knifunptr_openssl2399_X509_STORE_get_cert_crl")
+@CCall("knifunptr_openssl2404_X509_STORE_get_cert_crl")
 external fun X509_STORE_get_cert_crl(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_cert_crl_fn?
 
-@CCall("knifunptr_openssl2400_X509_STORE_set_check_policy")
+@CCall("knifunptr_openssl2405_X509_STORE_set_check_policy")
 external fun X509_STORE_set_check_policy(
     ctx: CValuesRef<X509_STORE>?,
     check_policy: X509_STORE_CTX_check_policy_fn?
 ): Unit
 
-@CCall("knifunptr_openssl2401_X509_STORE_get_check_policy")
+@CCall("knifunptr_openssl2406_X509_STORE_get_check_policy")
 external fun X509_STORE_get_check_policy(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_check_policy_fn?
 
-@CCall("knifunptr_openssl2402_X509_STORE_set_lookup_certs")
+@CCall("knifunptr_openssl2407_X509_STORE_set_lookup_certs")
 external fun X509_STORE_set_lookup_certs(
     ctx: CValuesRef<X509_STORE>?,
     lookup_certs: X509_STORE_CTX_lookup_certs_fn?
 ): Unit
 
-@CCall("knifunptr_openssl2403_X509_STORE_get_lookup_certs")
+@CCall("knifunptr_openssl2408_X509_STORE_get_lookup_certs")
 external fun X509_STORE_get_lookup_certs(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_lookup_certs_fn?
 
-@CCall("knifunptr_openssl2404_X509_STORE_set_lookup_crls")
+@CCall("knifunptr_openssl2409_X509_STORE_set_lookup_crls")
 external fun X509_STORE_set_lookup_crls(ctx: CValuesRef<X509_STORE>?, lookup_crls: X509_STORE_CTX_lookup_crls_fn?): Unit
 
-@CCall("knifunptr_openssl2405_X509_STORE_get_lookup_crls")
+@CCall("knifunptr_openssl2410_X509_STORE_get_lookup_crls")
 external fun X509_STORE_get_lookup_crls(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_lookup_crls_fn?
 
-@CCall("knifunptr_openssl2406_X509_STORE_set_cleanup")
+@CCall("knifunptr_openssl2411_X509_STORE_set_cleanup")
 external fun X509_STORE_set_cleanup(ctx: CValuesRef<X509_STORE>?, cleanup: X509_STORE_CTX_cleanup_fn?): Unit
 
-@CCall("knifunptr_openssl2407_X509_STORE_get_cleanup")
+@CCall("knifunptr_openssl2412_X509_STORE_get_cleanup")
 external fun X509_STORE_get_cleanup(ctx: CValuesRef<X509_STORE>?): X509_STORE_CTX_cleanup_fn?
 
-@CCall("knifunptr_openssl2408_X509_STORE_set_ex_data")
+@CCall("knifunptr_openssl2413_X509_STORE_set_ex_data")
 external fun X509_STORE_set_ex_data(ctx: CValuesRef<X509_STORE>?, idx: Int, data: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl2409_X509_STORE_get_ex_data")
+@CCall("knifunptr_openssl2414_X509_STORE_get_ex_data")
 external fun X509_STORE_get_ex_data(ctx: CValuesRef<X509_STORE>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl2410_X509_STORE_CTX_new")
+@CCall("knifunptr_openssl2415_X509_STORE_CTX_new")
 external fun X509_STORE_CTX_new(): CPointer<X509_STORE_CTX>?
 
-@CCall("knifunptr_openssl2411_X509_STORE_CTX_get1_issuer")
+@CCall("knifunptr_openssl2416_X509_STORE_CTX_get1_issuer")
 external fun X509_STORE_CTX_get1_issuer(
     issuer: CValuesRef<CPointerVar<X509>>?,
     ctx: CValuesRef<X509_STORE_CTX>?,
     x: CValuesRef<X509>?
 ): Int
 
-@CCall("knifunptr_openssl2412_X509_STORE_CTX_free")
+@CCall("knifunptr_openssl2417_X509_STORE_CTX_free")
 external fun X509_STORE_CTX_free(ctx: CValuesRef<X509_STORE_CTX>?): Unit
 
-@CCall("knifunptr_openssl2413_X509_STORE_CTX_init")
+@CCall("knifunptr_openssl2418_X509_STORE_CTX_init")
 external fun X509_STORE_CTX_init(
     ctx: CValuesRef<X509_STORE_CTX>?,
     store: CValuesRef<X509_STORE>?,
@@ -11880,166 +11970,166 @@ external fun X509_STORE_CTX_init(
     chain: CValuesRef<stack_st_X509>?
 ): Int
 
-@CCall("knifunptr_openssl2414_X509_STORE_CTX_set0_trusted_stack")
+@CCall("knifunptr_openssl2419_X509_STORE_CTX_set0_trusted_stack")
 external fun X509_STORE_CTX_set0_trusted_stack(ctx: CValuesRef<X509_STORE_CTX>?, sk: CValuesRef<stack_st_X509>?): Unit
 
-@CCall("knifunptr_openssl2415_X509_STORE_CTX_cleanup")
+@CCall("knifunptr_openssl2420_X509_STORE_CTX_cleanup")
 external fun X509_STORE_CTX_cleanup(ctx: CValuesRef<X509_STORE_CTX>?): Unit
 
-@CCall("knifunptr_openssl2416_X509_STORE_CTX_get0_store")
+@CCall("knifunptr_openssl2421_X509_STORE_CTX_get0_store")
 external fun X509_STORE_CTX_get0_store(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<X509_STORE>?
 
-@CCall("knifunptr_openssl2417_X509_STORE_CTX_get0_cert")
+@CCall("knifunptr_openssl2422_X509_STORE_CTX_get0_cert")
 external fun X509_STORE_CTX_get0_cert(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2418_X509_STORE_CTX_get0_untrusted")
+@CCall("knifunptr_openssl2423_X509_STORE_CTX_get0_untrusted")
 external fun X509_STORE_CTX_get0_untrusted(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2419_X509_STORE_CTX_set0_untrusted")
+@CCall("knifunptr_openssl2424_X509_STORE_CTX_set0_untrusted")
 external fun X509_STORE_CTX_set0_untrusted(ctx: CValuesRef<X509_STORE_CTX>?, sk: CValuesRef<stack_st_X509>?): Unit
 
-@CCall("knifunptr_openssl2420_X509_STORE_CTX_set_verify_cb")
+@CCall("knifunptr_openssl2425_X509_STORE_CTX_set_verify_cb")
 external fun X509_STORE_CTX_set_verify_cb(ctx: CValuesRef<X509_STORE_CTX>?, verify: X509_STORE_CTX_verify_cb?): Unit
 
-@CCall("knifunptr_openssl2421_X509_STORE_CTX_get_verify_cb")
+@CCall("knifunptr_openssl2426_X509_STORE_CTX_get_verify_cb")
 external fun X509_STORE_CTX_get_verify_cb(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_verify_cb?
 
-@CCall("knifunptr_openssl2422_X509_STORE_CTX_get_verify")
+@CCall("knifunptr_openssl2427_X509_STORE_CTX_get_verify")
 external fun X509_STORE_CTX_get_verify(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_verify_fn?
 
-@CCall("knifunptr_openssl2423_X509_STORE_CTX_get_get_issuer")
+@CCall("knifunptr_openssl2428_X509_STORE_CTX_get_get_issuer")
 external fun X509_STORE_CTX_get_get_issuer(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_get_issuer_fn?
 
-@CCall("knifunptr_openssl2424_X509_STORE_CTX_get_check_issued")
+@CCall("knifunptr_openssl2429_X509_STORE_CTX_get_check_issued")
 external fun X509_STORE_CTX_get_check_issued(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_check_issued_fn?
 
-@CCall("knifunptr_openssl2425_X509_STORE_CTX_get_check_revocation")
+@CCall("knifunptr_openssl2430_X509_STORE_CTX_get_check_revocation")
 external fun X509_STORE_CTX_get_check_revocation(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_check_revocation_fn?
 
-@CCall("knifunptr_openssl2426_X509_STORE_CTX_get_get_crl")
+@CCall("knifunptr_openssl2431_X509_STORE_CTX_get_get_crl")
 external fun X509_STORE_CTX_get_get_crl(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_get_crl_fn?
 
-@CCall("knifunptr_openssl2427_X509_STORE_CTX_get_check_crl")
+@CCall("knifunptr_openssl2432_X509_STORE_CTX_get_check_crl")
 external fun X509_STORE_CTX_get_check_crl(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_check_crl_fn?
 
-@CCall("knifunptr_openssl2428_X509_STORE_CTX_get_cert_crl")
+@CCall("knifunptr_openssl2433_X509_STORE_CTX_get_cert_crl")
 external fun X509_STORE_CTX_get_cert_crl(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_cert_crl_fn?
 
-@CCall("knifunptr_openssl2429_X509_STORE_CTX_get_check_policy")
+@CCall("knifunptr_openssl2434_X509_STORE_CTX_get_check_policy")
 external fun X509_STORE_CTX_get_check_policy(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_check_policy_fn?
 
-@CCall("knifunptr_openssl2430_X509_STORE_CTX_get_lookup_certs")
+@CCall("knifunptr_openssl2435_X509_STORE_CTX_get_lookup_certs")
 external fun X509_STORE_CTX_get_lookup_certs(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_lookup_certs_fn?
 
-@CCall("knifunptr_openssl2431_X509_STORE_CTX_get_lookup_crls")
+@CCall("knifunptr_openssl2436_X509_STORE_CTX_get_lookup_crls")
 external fun X509_STORE_CTX_get_lookup_crls(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_lookup_crls_fn?
 
-@CCall("knifunptr_openssl2432_X509_STORE_CTX_get_cleanup")
+@CCall("knifunptr_openssl2437_X509_STORE_CTX_get_cleanup")
 external fun X509_STORE_CTX_get_cleanup(ctx: CValuesRef<X509_STORE_CTX>?): X509_STORE_CTX_cleanup_fn?
 
-@CCall("knifunptr_openssl2433_X509_STORE_add_lookup")
+@CCall("knifunptr_openssl2438_X509_STORE_add_lookup")
 external fun X509_STORE_add_lookup(
     v: CValuesRef<X509_STORE>?,
     m: CValuesRef<X509_LOOKUP_METHOD>?
 ): CPointer<X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2434_X509_LOOKUP_hash_dir")
+@CCall("knifunptr_openssl2439_X509_LOOKUP_hash_dir")
 external fun X509_LOOKUP_hash_dir(): CPointer<X509_LOOKUP_METHOD>?
 
-@CCall("knifunptr_openssl2435_X509_LOOKUP_file")
+@CCall("knifunptr_openssl2440_X509_LOOKUP_file")
 external fun X509_LOOKUP_file(): CPointer<X509_LOOKUP_METHOD>?
 
-@CCall("knifunptr_openssl2436_X509_LOOKUP_meth_new")
+@CCall("knifunptr_openssl2441_X509_LOOKUP_meth_new")
 external fun X509_LOOKUP_meth_new(@CCall.CString name: String?): CPointer<X509_LOOKUP_METHOD>?
 
-@CCall("knifunptr_openssl2437_X509_LOOKUP_meth_free")
+@CCall("knifunptr_openssl2442_X509_LOOKUP_meth_free")
 external fun X509_LOOKUP_meth_free(method: CValuesRef<X509_LOOKUP_METHOD>?): Unit
 
-@CCall("knifunptr_openssl2438_X509_LOOKUP_meth_set_new_item")
+@CCall("knifunptr_openssl2443_X509_LOOKUP_meth_set_new_item")
 external fun X509_LOOKUP_meth_set_new_item(
     method: CValuesRef<X509_LOOKUP_METHOD>?,
     new_item: CPointer<CFunction<(CPointer<X509_LOOKUP>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl2439_X509_LOOKUP_meth_get_new_item")
+@CCall("knifunptr_openssl2444_X509_LOOKUP_meth_get_new_item")
 external fun X509_LOOKUP_meth_get_new_item(method: CValuesRef<X509_LOOKUP_METHOD>?): CPointer<CFunction<(CPointer<X509_LOOKUP>?) -> Int>>?
 
-@CCall("knifunptr_openssl2440_X509_LOOKUP_meth_set_free")
+@CCall("knifunptr_openssl2445_X509_LOOKUP_meth_set_free")
 external fun X509_LOOKUP_meth_set_free(
     method: CValuesRef<X509_LOOKUP_METHOD>?,
     free_fn: CPointer<CFunction<(CPointer<X509_LOOKUP>?) -> Unit>>?
 ): Int
 
-@CCall("knifunptr_openssl2441_X509_LOOKUP_meth_get_free")
+@CCall("knifunptr_openssl2446_X509_LOOKUP_meth_get_free")
 external fun X509_LOOKUP_meth_get_free(method: CValuesRef<X509_LOOKUP_METHOD>?): CPointer<CFunction<(CPointer<X509_LOOKUP>?) -> Unit>>?
 
-@CCall("knifunptr_openssl2442_X509_LOOKUP_meth_set_init")
+@CCall("knifunptr_openssl2447_X509_LOOKUP_meth_set_init")
 external fun X509_LOOKUP_meth_set_init(
     method: CValuesRef<X509_LOOKUP_METHOD>?,
     init: CPointer<CFunction<(CPointer<X509_LOOKUP>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl2443_X509_LOOKUP_meth_get_init")
+@CCall("knifunptr_openssl2448_X509_LOOKUP_meth_get_init")
 external fun X509_LOOKUP_meth_get_init(method: CValuesRef<X509_LOOKUP_METHOD>?): CPointer<CFunction<(CPointer<X509_LOOKUP>?) -> Int>>?
 
-@CCall("knifunptr_openssl2444_X509_LOOKUP_meth_set_shutdown")
+@CCall("knifunptr_openssl2449_X509_LOOKUP_meth_set_shutdown")
 external fun X509_LOOKUP_meth_set_shutdown(
     method: CValuesRef<X509_LOOKUP_METHOD>?,
     shutdown: CPointer<CFunction<(CPointer<X509_LOOKUP>?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl2445_X509_LOOKUP_meth_get_shutdown")
+@CCall("knifunptr_openssl2450_X509_LOOKUP_meth_get_shutdown")
 external fun X509_LOOKUP_meth_get_shutdown(method: CValuesRef<X509_LOOKUP_METHOD>?): CPointer<CFunction<(CPointer<X509_LOOKUP>?) -> Int>>?
 
-@CCall("knifunptr_openssl2446_X509_LOOKUP_meth_set_ctrl")
+@CCall("knifunptr_openssl2451_X509_LOOKUP_meth_set_ctrl")
 external fun X509_LOOKUP_meth_set_ctrl(method: CValuesRef<X509_LOOKUP_METHOD>?, ctrl_fn: X509_LOOKUP_ctrl_fn?): Int
 
-@CCall("knifunptr_openssl2447_X509_LOOKUP_meth_get_ctrl")
+@CCall("knifunptr_openssl2452_X509_LOOKUP_meth_get_ctrl")
 external fun X509_LOOKUP_meth_get_ctrl(method: CValuesRef<X509_LOOKUP_METHOD>?): X509_LOOKUP_ctrl_fn?
 
-@CCall("knifunptr_openssl2448_X509_LOOKUP_meth_set_get_by_subject")
+@CCall("knifunptr_openssl2453_X509_LOOKUP_meth_set_get_by_subject")
 external fun X509_LOOKUP_meth_set_get_by_subject(
     method: CValuesRef<X509_LOOKUP_METHOD>?,
     fn: X509_LOOKUP_get_by_subject_fn?
 ): Int
 
-@CCall("knifunptr_openssl2449_X509_LOOKUP_meth_get_get_by_subject")
+@CCall("knifunptr_openssl2454_X509_LOOKUP_meth_get_get_by_subject")
 external fun X509_LOOKUP_meth_get_get_by_subject(method: CValuesRef<X509_LOOKUP_METHOD>?): X509_LOOKUP_get_by_subject_fn?
 
-@CCall("knifunptr_openssl2450_X509_LOOKUP_meth_set_get_by_issuer_serial")
+@CCall("knifunptr_openssl2455_X509_LOOKUP_meth_set_get_by_issuer_serial")
 external fun X509_LOOKUP_meth_set_get_by_issuer_serial(
     method: CValuesRef<X509_LOOKUP_METHOD>?,
     fn: X509_LOOKUP_get_by_issuer_serial_fn?
 ): Int
 
-@CCall("knifunptr_openssl2451_X509_LOOKUP_meth_get_get_by_issuer_serial")
+@CCall("knifunptr_openssl2456_X509_LOOKUP_meth_get_get_by_issuer_serial")
 external fun X509_LOOKUP_meth_get_get_by_issuer_serial(method: CValuesRef<X509_LOOKUP_METHOD>?): X509_LOOKUP_get_by_issuer_serial_fn?
 
-@CCall("knifunptr_openssl2452_X509_LOOKUP_meth_set_get_by_fingerprint")
+@CCall("knifunptr_openssl2457_X509_LOOKUP_meth_set_get_by_fingerprint")
 external fun X509_LOOKUP_meth_set_get_by_fingerprint(
     method: CValuesRef<X509_LOOKUP_METHOD>?,
     fn: X509_LOOKUP_get_by_fingerprint_fn?
 ): Int
 
-@CCall("knifunptr_openssl2453_X509_LOOKUP_meth_get_get_by_fingerprint")
+@CCall("knifunptr_openssl2458_X509_LOOKUP_meth_get_get_by_fingerprint")
 external fun X509_LOOKUP_meth_get_get_by_fingerprint(method: CValuesRef<X509_LOOKUP_METHOD>?): X509_LOOKUP_get_by_fingerprint_fn?
 
-@CCall("knifunptr_openssl2454_X509_LOOKUP_meth_set_get_by_alias")
+@CCall("knifunptr_openssl2459_X509_LOOKUP_meth_set_get_by_alias")
 external fun X509_LOOKUP_meth_set_get_by_alias(
     method: CValuesRef<X509_LOOKUP_METHOD>?,
     fn: X509_LOOKUP_get_by_alias_fn?
 ): Int
 
-@CCall("knifunptr_openssl2455_X509_LOOKUP_meth_get_get_by_alias")
+@CCall("knifunptr_openssl2460_X509_LOOKUP_meth_get_get_by_alias")
 external fun X509_LOOKUP_meth_get_get_by_alias(method: CValuesRef<X509_LOOKUP_METHOD>?): X509_LOOKUP_get_by_alias_fn?
 
-@CCall("knifunptr_openssl2456_X509_STORE_add_cert")
+@CCall("knifunptr_openssl2461_X509_STORE_add_cert")
 external fun X509_STORE_add_cert(ctx: CValuesRef<X509_STORE>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2457_X509_STORE_add_crl")
+@CCall("knifunptr_openssl2462_X509_STORE_add_crl")
 external fun X509_STORE_add_crl(ctx: CValuesRef<X509_STORE>?, x: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2458_X509_STORE_CTX_get_by_subject")
+@CCall("knifunptr_openssl2463_X509_STORE_CTX_get_by_subject")
 external fun X509_STORE_CTX_get_by_subject(
     vs: CValuesRef<X509_STORE_CTX>?,
     type: X509_LOOKUP_TYPE,
@@ -12047,40 +12137,41 @@ external fun X509_STORE_CTX_get_by_subject(
     ret: CValuesRef<X509_OBJECT>?
 ): Int
 
-@CCall("knifunptr_openssl2459_X509_STORE_CTX_get_obj_by_subject")
+@CCall("knifunptr_openssl2464_X509_STORE_CTX_get_obj_by_subject")
 external fun X509_STORE_CTX_get_obj_by_subject(
     vs: CValuesRef<X509_STORE_CTX>?,
     type: X509_LOOKUP_TYPE,
     name: CValuesRef<X509_NAME>?
 ): CPointer<X509_OBJECT>?
 
-@CCall("knifunptr_openssl2460_X509_LOOKUP_ctrl")
+@CCall("knifunptr_openssl2465_X509_LOOKUP_ctrl")
 external fun X509_LOOKUP_ctrl(
     ctx: CValuesRef<X509_LOOKUP>?,
-    cmd: Int, @CCall.CString argc: String?,
+    cmd: Int,
+    @CCall.CString argc: String?,
     argl: Int,
     ret: CValuesRef<CPointerVar<ByteVar>>?
 ): Int
 
-@CCall("knifunptr_openssl2461_X509_load_cert_file")
+@CCall("knifunptr_openssl2466_X509_load_cert_file")
 external fun X509_load_cert_file(ctx: CValuesRef<X509_LOOKUP>?, @CCall.CString file: String?, type: Int): Int
 
-@CCall("knifunptr_openssl2462_X509_load_crl_file")
+@CCall("knifunptr_openssl2467_X509_load_crl_file")
 external fun X509_load_crl_file(ctx: CValuesRef<X509_LOOKUP>?, @CCall.CString file: String?, type: Int): Int
 
-@CCall("knifunptr_openssl2463_X509_load_cert_crl_file")
+@CCall("knifunptr_openssl2468_X509_load_cert_crl_file")
 external fun X509_load_cert_crl_file(ctx: CValuesRef<X509_LOOKUP>?, @CCall.CString file: String?, type: Int): Int
 
-@CCall("knifunptr_openssl2464_X509_LOOKUP_new")
+@CCall("knifunptr_openssl2469_X509_LOOKUP_new")
 external fun X509_LOOKUP_new(method: CValuesRef<X509_LOOKUP_METHOD>?): CPointer<X509_LOOKUP>?
 
-@CCall("knifunptr_openssl2465_X509_LOOKUP_free")
+@CCall("knifunptr_openssl2470_X509_LOOKUP_free")
 external fun X509_LOOKUP_free(ctx: CValuesRef<X509_LOOKUP>?): Unit
 
-@CCall("knifunptr_openssl2466_X509_LOOKUP_init")
+@CCall("knifunptr_openssl2471_X509_LOOKUP_init")
 external fun X509_LOOKUP_init(ctx: CValuesRef<X509_LOOKUP>?): Int
 
-@CCall("knifunptr_openssl2467_X509_LOOKUP_by_subject")
+@CCall("knifunptr_openssl2472_X509_LOOKUP_by_subject")
 external fun X509_LOOKUP_by_subject(
     ctx: CValuesRef<X509_LOOKUP>?,
     type: X509_LOOKUP_TYPE,
@@ -12088,7 +12179,7 @@ external fun X509_LOOKUP_by_subject(
     ret: CValuesRef<X509_OBJECT>?
 ): Int
 
-@CCall("knifunptr_openssl2468_X509_LOOKUP_by_issuer_serial")
+@CCall("knifunptr_openssl2473_X509_LOOKUP_by_issuer_serial")
 external fun X509_LOOKUP_by_issuer_serial(
     ctx: CValuesRef<X509_LOOKUP>?,
     type: X509_LOOKUP_TYPE,
@@ -12097,7 +12188,7 @@ external fun X509_LOOKUP_by_issuer_serial(
     ret: CValuesRef<X509_OBJECT>?
 ): Int
 
-@CCall("knifunptr_openssl2469_X509_LOOKUP_by_fingerprint")
+@CCall("knifunptr_openssl2474_X509_LOOKUP_by_fingerprint")
 external fun X509_LOOKUP_by_fingerprint(
     ctx: CValuesRef<X509_LOOKUP>?,
     type: X509_LOOKUP_TYPE,
@@ -12106,87 +12197,88 @@ external fun X509_LOOKUP_by_fingerprint(
     ret: CValuesRef<X509_OBJECT>?
 ): Int
 
-@CCall("knifunptr_openssl2470_X509_LOOKUP_by_alias")
+@CCall("knifunptr_openssl2475_X509_LOOKUP_by_alias")
 external fun X509_LOOKUP_by_alias(
     ctx: CValuesRef<X509_LOOKUP>?,
-    type: X509_LOOKUP_TYPE, @CCall.CString str: String?,
+    type: X509_LOOKUP_TYPE,
+    @CCall.CString str: String?,
     len: Int,
     ret: CValuesRef<X509_OBJECT>?
 ): Int
 
-@CCall("knifunptr_openssl2471_X509_LOOKUP_set_method_data")
+@CCall("knifunptr_openssl2476_X509_LOOKUP_set_method_data")
 external fun X509_LOOKUP_set_method_data(ctx: CValuesRef<X509_LOOKUP>?, data: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl2472_X509_LOOKUP_get_method_data")
+@CCall("knifunptr_openssl2477_X509_LOOKUP_get_method_data")
 external fun X509_LOOKUP_get_method_data(ctx: CValuesRef<X509_LOOKUP>?): COpaquePointer?
 
-@CCall("knifunptr_openssl2473_X509_LOOKUP_get_store")
+@CCall("knifunptr_openssl2478_X509_LOOKUP_get_store")
 external fun X509_LOOKUP_get_store(ctx: CValuesRef<X509_LOOKUP>?): CPointer<X509_STORE>?
 
-@CCall("knifunptr_openssl2474_X509_LOOKUP_shutdown")
+@CCall("knifunptr_openssl2479_X509_LOOKUP_shutdown")
 external fun X509_LOOKUP_shutdown(ctx: CValuesRef<X509_LOOKUP>?): Int
 
-@CCall("knifunptr_openssl2475_X509_STORE_load_locations")
+@CCall("knifunptr_openssl2480_X509_STORE_load_locations")
 external fun X509_STORE_load_locations(ctx: CValuesRef<X509_STORE>?, @CCall.CString file: String?, @CCall.CString dir: String?): Int
 
-@CCall("knifunptr_openssl2476_X509_STORE_set_default_paths")
+@CCall("knifunptr_openssl2481_X509_STORE_set_default_paths")
 external fun X509_STORE_set_default_paths(ctx: CValuesRef<X509_STORE>?): Int
 
-@CCall("knifunptr_openssl2477_X509_STORE_CTX_set_ex_data")
+@CCall("knifunptr_openssl2482_X509_STORE_CTX_set_ex_data")
 external fun X509_STORE_CTX_set_ex_data(ctx: CValuesRef<X509_STORE_CTX>?, idx: Int, data: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl2478_X509_STORE_CTX_get_ex_data")
+@CCall("knifunptr_openssl2483_X509_STORE_CTX_get_ex_data")
 external fun X509_STORE_CTX_get_ex_data(ctx: CValuesRef<X509_STORE_CTX>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl2479_X509_STORE_CTX_get_error")
+@CCall("knifunptr_openssl2484_X509_STORE_CTX_get_error")
 external fun X509_STORE_CTX_get_error(ctx: CValuesRef<X509_STORE_CTX>?): Int
 
-@CCall("knifunptr_openssl2480_X509_STORE_CTX_set_error")
+@CCall("knifunptr_openssl2485_X509_STORE_CTX_set_error")
 external fun X509_STORE_CTX_set_error(ctx: CValuesRef<X509_STORE_CTX>?, s: Int): Unit
 
-@CCall("knifunptr_openssl2481_X509_STORE_CTX_get_error_depth")
+@CCall("knifunptr_openssl2486_X509_STORE_CTX_get_error_depth")
 external fun X509_STORE_CTX_get_error_depth(ctx: CValuesRef<X509_STORE_CTX>?): Int
 
-@CCall("knifunptr_openssl2482_X509_STORE_CTX_set_error_depth")
+@CCall("knifunptr_openssl2487_X509_STORE_CTX_set_error_depth")
 external fun X509_STORE_CTX_set_error_depth(ctx: CValuesRef<X509_STORE_CTX>?, depth: Int): Unit
 
-@CCall("knifunptr_openssl2483_X509_STORE_CTX_get_current_cert")
+@CCall("knifunptr_openssl2488_X509_STORE_CTX_get_current_cert")
 external fun X509_STORE_CTX_get_current_cert(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2484_X509_STORE_CTX_set_current_cert")
+@CCall("knifunptr_openssl2489_X509_STORE_CTX_set_current_cert")
 external fun X509_STORE_CTX_set_current_cert(ctx: CValuesRef<X509_STORE_CTX>?, x: CValuesRef<X509>?): Unit
 
-@CCall("knifunptr_openssl2485_X509_STORE_CTX_get0_current_issuer")
+@CCall("knifunptr_openssl2490_X509_STORE_CTX_get0_current_issuer")
 external fun X509_STORE_CTX_get0_current_issuer(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2486_X509_STORE_CTX_get0_current_crl")
+@CCall("knifunptr_openssl2491_X509_STORE_CTX_get0_current_crl")
 external fun X509_STORE_CTX_get0_current_crl(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2487_X509_STORE_CTX_get0_parent_ctx")
+@CCall("knifunptr_openssl2492_X509_STORE_CTX_get0_parent_ctx")
 external fun X509_STORE_CTX_get0_parent_ctx(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<X509_STORE_CTX>?
 
-@CCall("knifunptr_openssl2488_X509_STORE_CTX_get0_chain")
+@CCall("knifunptr_openssl2493_X509_STORE_CTX_get0_chain")
 external fun X509_STORE_CTX_get0_chain(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2489_X509_STORE_CTX_get1_chain")
+@CCall("knifunptr_openssl2494_X509_STORE_CTX_get1_chain")
 external fun X509_STORE_CTX_get1_chain(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2490_X509_STORE_CTX_set_cert")
+@CCall("knifunptr_openssl2495_X509_STORE_CTX_set_cert")
 external fun X509_STORE_CTX_set_cert(c: CValuesRef<X509_STORE_CTX>?, x: CValuesRef<X509>?): Unit
 
-@CCall("knifunptr_openssl2491_X509_STORE_CTX_set0_verified_chain")
+@CCall("knifunptr_openssl2496_X509_STORE_CTX_set0_verified_chain")
 external fun X509_STORE_CTX_set0_verified_chain(c: CValuesRef<X509_STORE_CTX>?, sk: CValuesRef<stack_st_X509>?): Unit
 
-@CCall("knifunptr_openssl2492_X509_STORE_CTX_set0_crls")
+@CCall("knifunptr_openssl2497_X509_STORE_CTX_set0_crls")
 external fun X509_STORE_CTX_set0_crls(c: CValuesRef<X509_STORE_CTX>?, sk: CValuesRef<stack_st_X509_CRL>?): Unit
 
-@CCall("knifunptr_openssl2493_X509_STORE_CTX_set_purpose")
+@CCall("knifunptr_openssl2498_X509_STORE_CTX_set_purpose")
 external fun X509_STORE_CTX_set_purpose(ctx: CValuesRef<X509_STORE_CTX>?, purpose: Int): Int
 
-@CCall("knifunptr_openssl2494_X509_STORE_CTX_set_trust")
+@CCall("knifunptr_openssl2499_X509_STORE_CTX_set_trust")
 external fun X509_STORE_CTX_set_trust(ctx: CValuesRef<X509_STORE_CTX>?, trust: Int): Int
 
-@CCall("knifunptr_openssl2495_X509_STORE_CTX_purpose_inherit")
+@CCall("knifunptr_openssl2500_X509_STORE_CTX_purpose_inherit")
 external fun X509_STORE_CTX_purpose_inherit(
     ctx: CValuesRef<X509_STORE_CTX>?,
     def_purpose: Int,
@@ -12194,158 +12286,161 @@ external fun X509_STORE_CTX_purpose_inherit(
     trust: Int
 ): Int
 
-@CCall("knifunptr_openssl2496_X509_STORE_CTX_set_flags")
+@CCall("knifunptr_openssl2501_X509_STORE_CTX_set_flags")
 external fun X509_STORE_CTX_set_flags(ctx: CValuesRef<X509_STORE_CTX>?, flags: UInt): Unit
 
-@CCall("knifunptr_openssl2497_X509_STORE_CTX_set_time")
+@CCall("knifunptr_openssl2502_X509_STORE_CTX_set_time")
 external fun X509_STORE_CTX_set_time(ctx: CValuesRef<X509_STORE_CTX>?, flags: UInt, t: time_t): Unit
 
-@CCall("knifunptr_openssl2498_X509_STORE_CTX_get0_policy_tree")
+@CCall("knifunptr_openssl2503_X509_STORE_CTX_get0_policy_tree")
 external fun X509_STORE_CTX_get0_policy_tree(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<X509_POLICY_TREE>?
 
-@CCall("knifunptr_openssl2499_X509_STORE_CTX_get_explicit_policy")
+@CCall("knifunptr_openssl2504_X509_STORE_CTX_get_explicit_policy")
 external fun X509_STORE_CTX_get_explicit_policy(ctx: CValuesRef<X509_STORE_CTX>?): Int
 
-@CCall("knifunptr_openssl2500_X509_STORE_CTX_get_num_untrusted")
+@CCall("knifunptr_openssl2505_X509_STORE_CTX_get_num_untrusted")
 external fun X509_STORE_CTX_get_num_untrusted(ctx: CValuesRef<X509_STORE_CTX>?): Int
 
-@CCall("knifunptr_openssl2501_X509_STORE_CTX_get0_param")
+@CCall("knifunptr_openssl2506_X509_STORE_CTX_get0_param")
 external fun X509_STORE_CTX_get0_param(ctx: CValuesRef<X509_STORE_CTX>?): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2502_X509_STORE_CTX_set0_param")
+@CCall("knifunptr_openssl2507_X509_STORE_CTX_set0_param")
 external fun X509_STORE_CTX_set0_param(ctx: CValuesRef<X509_STORE_CTX>?, param: CValuesRef<X509_VERIFY_PARAM>?): Unit
 
-@CCall("knifunptr_openssl2503_X509_STORE_CTX_set_default")
+@CCall("knifunptr_openssl2508_X509_STORE_CTX_set_default")
 external fun X509_STORE_CTX_set_default(ctx: CValuesRef<X509_STORE_CTX>?, @CCall.CString name: String?): Int
 
-@CCall("knifunptr_openssl2504_X509_STORE_CTX_set0_dane")
+@CCall("knifunptr_openssl2509_X509_STORE_CTX_set0_dane")
 external fun X509_STORE_CTX_set0_dane(ctx: CValuesRef<X509_STORE_CTX>?, dane: CValuesRef<SSL_DANE>?): Unit
 
-@CCall("knifunptr_openssl2505_X509_VERIFY_PARAM_new")
+@CCall("knifunptr_openssl2510_X509_VERIFY_PARAM_new")
 external fun X509_VERIFY_PARAM_new(): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2506_X509_VERIFY_PARAM_free")
+@CCall("knifunptr_openssl2511_X509_VERIFY_PARAM_free")
 external fun X509_VERIFY_PARAM_free(param: CValuesRef<X509_VERIFY_PARAM>?): Unit
 
-@CCall("knifunptr_openssl2507_X509_VERIFY_PARAM_inherit")
+@CCall("knifunptr_openssl2512_X509_VERIFY_PARAM_inherit")
 external fun X509_VERIFY_PARAM_inherit(to: CValuesRef<X509_VERIFY_PARAM>?, from: CValuesRef<X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl2508_X509_VERIFY_PARAM_set1")
+@CCall("knifunptr_openssl2513_X509_VERIFY_PARAM_set1")
 external fun X509_VERIFY_PARAM_set1(to: CValuesRef<X509_VERIFY_PARAM>?, from: CValuesRef<X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl2509_X509_VERIFY_PARAM_set1_name")
+@CCall("knifunptr_openssl2514_X509_VERIFY_PARAM_set1_name")
 external fun X509_VERIFY_PARAM_set1_name(param: CValuesRef<X509_VERIFY_PARAM>?, @CCall.CString name: String?): Int
 
-@CCall("knifunptr_openssl2510_X509_VERIFY_PARAM_set_flags")
+@CCall("knifunptr_openssl2515_X509_VERIFY_PARAM_set_flags")
 external fun X509_VERIFY_PARAM_set_flags(param: CValuesRef<X509_VERIFY_PARAM>?, flags: UInt): Int
 
-@CCall("knifunptr_openssl2511_X509_VERIFY_PARAM_clear_flags")
+@CCall("knifunptr_openssl2516_X509_VERIFY_PARAM_clear_flags")
 external fun X509_VERIFY_PARAM_clear_flags(param: CValuesRef<X509_VERIFY_PARAM>?, flags: UInt): Int
 
-@CCall("knifunptr_openssl2512_X509_VERIFY_PARAM_get_flags")
+@CCall("knifunptr_openssl2517_X509_VERIFY_PARAM_get_flags")
 external fun X509_VERIFY_PARAM_get_flags(param: CValuesRef<X509_VERIFY_PARAM>?): UInt
 
-@CCall("knifunptr_openssl2513_X509_VERIFY_PARAM_set_purpose")
+@CCall("knifunptr_openssl2518_X509_VERIFY_PARAM_set_purpose")
 external fun X509_VERIFY_PARAM_set_purpose(param: CValuesRef<X509_VERIFY_PARAM>?, purpose: Int): Int
 
-@CCall("knifunptr_openssl2514_X509_VERIFY_PARAM_set_trust")
+@CCall("knifunptr_openssl2519_X509_VERIFY_PARAM_set_trust")
 external fun X509_VERIFY_PARAM_set_trust(param: CValuesRef<X509_VERIFY_PARAM>?, trust: Int): Int
 
-@CCall("knifunptr_openssl2515_X509_VERIFY_PARAM_set_depth")
+@CCall("knifunptr_openssl2520_X509_VERIFY_PARAM_set_depth")
 external fun X509_VERIFY_PARAM_set_depth(param: CValuesRef<X509_VERIFY_PARAM>?, depth: Int): Unit
 
-@CCall("knifunptr_openssl2516_X509_VERIFY_PARAM_set_auth_level")
+@CCall("knifunptr_openssl2521_X509_VERIFY_PARAM_set_auth_level")
 external fun X509_VERIFY_PARAM_set_auth_level(param: CValuesRef<X509_VERIFY_PARAM>?, auth_level: Int): Unit
 
-@CCall("knifunptr_openssl2517_X509_VERIFY_PARAM_get_time")
+@CCall("knifunptr_openssl2522_X509_VERIFY_PARAM_get_time")
 external fun X509_VERIFY_PARAM_get_time(param: CValuesRef<X509_VERIFY_PARAM>?): time_t
 
-@CCall("knifunptr_openssl2518_X509_VERIFY_PARAM_set_time")
+@CCall("knifunptr_openssl2523_X509_VERIFY_PARAM_set_time")
 external fun X509_VERIFY_PARAM_set_time(param: CValuesRef<X509_VERIFY_PARAM>?, t: time_t): Unit
 
-@CCall("knifunptr_openssl2519_X509_VERIFY_PARAM_add0_policy")
+@CCall("knifunptr_openssl2524_X509_VERIFY_PARAM_add0_policy")
 external fun X509_VERIFY_PARAM_add0_policy(param: CValuesRef<X509_VERIFY_PARAM>?, policy: CValuesRef<ASN1_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2520_X509_VERIFY_PARAM_set1_policies")
+@CCall("knifunptr_openssl2525_X509_VERIFY_PARAM_set1_policies")
 external fun X509_VERIFY_PARAM_set1_policies(
     param: CValuesRef<X509_VERIFY_PARAM>?,
     policies: CValuesRef<stack_st_ASN1_OBJECT>?
 ): Int
 
-@CCall("knifunptr_openssl2521_X509_VERIFY_PARAM_set_inh_flags")
+@CCall("knifunptr_openssl2526_X509_VERIFY_PARAM_set_inh_flags")
 external fun X509_VERIFY_PARAM_set_inh_flags(param: CValuesRef<X509_VERIFY_PARAM>?, flags: uint32_t): Int
 
-@CCall("knifunptr_openssl2522_X509_VERIFY_PARAM_get_inh_flags")
+@CCall("knifunptr_openssl2527_X509_VERIFY_PARAM_get_inh_flags")
 external fun X509_VERIFY_PARAM_get_inh_flags(param: CValuesRef<X509_VERIFY_PARAM>?): uint32_t
 
-@CCall("knifunptr_openssl2523_X509_VERIFY_PARAM_set1_host")
+@CCall("knifunptr_openssl2528_X509_VERIFY_PARAM_set1_host")
 external fun X509_VERIFY_PARAM_set1_host(
-    param: CValuesRef<X509_VERIFY_PARAM>?, @CCall.CString name: String?,
+    param: CValuesRef<X509_VERIFY_PARAM>?,
+    @CCall.CString name: String?,
     namelen: size_t
 ): Int
 
-@CCall("knifunptr_openssl2524_X509_VERIFY_PARAM_add1_host")
+@CCall("knifunptr_openssl2529_X509_VERIFY_PARAM_add1_host")
 external fun X509_VERIFY_PARAM_add1_host(
-    param: CValuesRef<X509_VERIFY_PARAM>?, @CCall.CString name: String?,
+    param: CValuesRef<X509_VERIFY_PARAM>?,
+    @CCall.CString name: String?,
     namelen: size_t
 ): Int
 
-@CCall("knifunptr_openssl2525_X509_VERIFY_PARAM_set_hostflags")
+@CCall("knifunptr_openssl2530_X509_VERIFY_PARAM_set_hostflags")
 external fun X509_VERIFY_PARAM_set_hostflags(param: CValuesRef<X509_VERIFY_PARAM>?, flags: UInt): Unit
 
-@CCall("knifunptr_openssl2526_X509_VERIFY_PARAM_get_hostflags")
+@CCall("knifunptr_openssl2531_X509_VERIFY_PARAM_get_hostflags")
 external fun X509_VERIFY_PARAM_get_hostflags(param: CValuesRef<X509_VERIFY_PARAM>?): UInt
 
-@CCall("knifunptr_openssl2527_X509_VERIFY_PARAM_get0_peername")
+@CCall("knifunptr_openssl2532_X509_VERIFY_PARAM_get0_peername")
 external fun X509_VERIFY_PARAM_get0_peername(arg0: CValuesRef<X509_VERIFY_PARAM>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2528_X509_VERIFY_PARAM_move_peername")
+@CCall("knifunptr_openssl2533_X509_VERIFY_PARAM_move_peername")
 external fun X509_VERIFY_PARAM_move_peername(
     arg0: CValuesRef<X509_VERIFY_PARAM>?,
     arg1: CValuesRef<X509_VERIFY_PARAM>?
 ): Unit
 
-@CCall("knifunptr_openssl2529_X509_VERIFY_PARAM_set1_email")
+@CCall("knifunptr_openssl2534_X509_VERIFY_PARAM_set1_email")
 external fun X509_VERIFY_PARAM_set1_email(
-    param: CValuesRef<X509_VERIFY_PARAM>?, @CCall.CString email: String?,
+    param: CValuesRef<X509_VERIFY_PARAM>?,
+    @CCall.CString email: String?,
     emaillen: size_t
 ): Int
 
-@CCall("knifunptr_openssl2530_X509_VERIFY_PARAM_set1_ip")
+@CCall("knifunptr_openssl2535_X509_VERIFY_PARAM_set1_ip")
 external fun X509_VERIFY_PARAM_set1_ip(
     param: CValuesRef<X509_VERIFY_PARAM>?,
     ip: CValuesRef<UByteVar>?,
     iplen: size_t
 ): Int
 
-@CCall("knifunptr_openssl2531_X509_VERIFY_PARAM_set1_ip_asc")
+@CCall("knifunptr_openssl2536_X509_VERIFY_PARAM_set1_ip_asc")
 external fun X509_VERIFY_PARAM_set1_ip_asc(param: CValuesRef<X509_VERIFY_PARAM>?, @CCall.CString ipasc: String?): Int
 
-@CCall("knifunptr_openssl2532_X509_VERIFY_PARAM_get_depth")
+@CCall("knifunptr_openssl2537_X509_VERIFY_PARAM_get_depth")
 external fun X509_VERIFY_PARAM_get_depth(param: CValuesRef<X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl2533_X509_VERIFY_PARAM_get_auth_level")
+@CCall("knifunptr_openssl2538_X509_VERIFY_PARAM_get_auth_level")
 external fun X509_VERIFY_PARAM_get_auth_level(param: CValuesRef<X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl2534_X509_VERIFY_PARAM_get0_name")
+@CCall("knifunptr_openssl2539_X509_VERIFY_PARAM_get0_name")
 external fun X509_VERIFY_PARAM_get0_name(param: CValuesRef<X509_VERIFY_PARAM>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2535_X509_VERIFY_PARAM_add0_table")
+@CCall("knifunptr_openssl2540_X509_VERIFY_PARAM_add0_table")
 external fun X509_VERIFY_PARAM_add0_table(param: CValuesRef<X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl2536_X509_VERIFY_PARAM_get_count")
+@CCall("knifunptr_openssl2541_X509_VERIFY_PARAM_get_count")
 external fun X509_VERIFY_PARAM_get_count(): Int
 
-@CCall("knifunptr_openssl2537_X509_VERIFY_PARAM_get0")
+@CCall("knifunptr_openssl2542_X509_VERIFY_PARAM_get0")
 external fun X509_VERIFY_PARAM_get0(id: Int): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2538_X509_VERIFY_PARAM_lookup")
+@CCall("knifunptr_openssl2543_X509_VERIFY_PARAM_lookup")
 external fun X509_VERIFY_PARAM_lookup(@CCall.CString name: String?): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl2539_X509_VERIFY_PARAM_table_cleanup")
+@CCall("knifunptr_openssl2544_X509_VERIFY_PARAM_table_cleanup")
 external fun X509_VERIFY_PARAM_table_cleanup(): Unit
 
-@CCall("knifunptr_openssl2540_X509_policy_check")
+@CCall("knifunptr_openssl2545_X509_policy_check")
 external fun X509_policy_check(
     ptree: CValuesRef<CPointerVar<X509_POLICY_TREE>>?,
     pexplicit_policy: CValuesRef<IntVar>?,
@@ -12354,360 +12449,360 @@ external fun X509_policy_check(
     flags: UInt
 ): Int
 
-@CCall("knifunptr_openssl2541_X509_policy_tree_free")
+@CCall("knifunptr_openssl2546_X509_policy_tree_free")
 external fun X509_policy_tree_free(tree: CValuesRef<X509_POLICY_TREE>?): Unit
 
-@CCall("knifunptr_openssl2542_X509_policy_tree_level_count")
+@CCall("knifunptr_openssl2547_X509_policy_tree_level_count")
 external fun X509_policy_tree_level_count(tree: CValuesRef<X509_POLICY_TREE>?): Int
 
-@CCall("knifunptr_openssl2543_X509_policy_tree_get0_level")
+@CCall("knifunptr_openssl2548_X509_policy_tree_get0_level")
 external fun X509_policy_tree_get0_level(tree: CValuesRef<X509_POLICY_TREE>?, i: Int): CPointer<X509_POLICY_LEVEL>?
 
-@CCall("knifunptr_openssl2544_X509_policy_tree_get0_policies")
+@CCall("knifunptr_openssl2549_X509_policy_tree_get0_policies")
 external fun X509_policy_tree_get0_policies(tree: CValuesRef<X509_POLICY_TREE>?): CPointer<stack_st_X509_POLICY_NODE>?
 
-@CCall("knifunptr_openssl2545_X509_policy_tree_get0_user_policies")
+@CCall("knifunptr_openssl2550_X509_policy_tree_get0_user_policies")
 external fun X509_policy_tree_get0_user_policies(tree: CValuesRef<X509_POLICY_TREE>?): CPointer<stack_st_X509_POLICY_NODE>?
 
-@CCall("knifunptr_openssl2546_X509_policy_level_node_count")
+@CCall("knifunptr_openssl2551_X509_policy_level_node_count")
 external fun X509_policy_level_node_count(level: CValuesRef<X509_POLICY_LEVEL>?): Int
 
-@CCall("knifunptr_openssl2547_X509_policy_level_get0_node")
+@CCall("knifunptr_openssl2552_X509_policy_level_get0_node")
 external fun X509_policy_level_get0_node(level: CValuesRef<X509_POLICY_LEVEL>?, i: Int): CPointer<X509_POLICY_NODE>?
 
-@CCall("knifunptr_openssl2548_X509_policy_node_get0_policy")
+@CCall("knifunptr_openssl2553_X509_policy_node_get0_policy")
 external fun X509_policy_node_get0_policy(node: CValuesRef<X509_POLICY_NODE>?): CPointer<ASN1_OBJECT>?
 
-@CCall("knifunptr_openssl2549_X509_policy_node_get0_qualifiers")
+@CCall("knifunptr_openssl2554_X509_policy_node_get0_qualifiers")
 external fun X509_policy_node_get0_qualifiers(node: CValuesRef<X509_POLICY_NODE>?): CPointer<stack_st_POLICYQUALINFO>?
 
-@CCall("knifunptr_openssl2550_X509_policy_node_get0_parent")
+@CCall("knifunptr_openssl2555_X509_policy_node_get0_parent")
 external fun X509_policy_node_get0_parent(node: CValuesRef<X509_POLICY_NODE>?): CPointer<X509_POLICY_NODE>?
 
-@CCall("knifunptr_openssl2551_ERR_load_PKCS7_strings")
+@CCall("knifunptr_openssl2556_ERR_load_PKCS7_strings")
 external fun ERR_load_PKCS7_strings(): Int
 
-@CCall("knifunptr_openssl2552_sk_PKCS7_SIGNER_INFO_num")
+@CCall("knifunptr_openssl2557_sk_PKCS7_SIGNER_INFO_num")
 external fun sk_PKCS7_SIGNER_INFO_num(sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?): Int
 
-@CCall("knifunptr_openssl2553_sk_PKCS7_SIGNER_INFO_value")
+@CCall("knifunptr_openssl2558_sk_PKCS7_SIGNER_INFO_value")
 external fun sk_PKCS7_SIGNER_INFO_value(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     idx: Int
 ): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2554_sk_PKCS7_SIGNER_INFO_new")
+@CCall("knifunptr_openssl2559_sk_PKCS7_SIGNER_INFO_new")
 external fun sk_PKCS7_SIGNER_INFO_new(compare: sk_PKCS7_SIGNER_INFO_compfunc?): CPointer<stack_st_PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2555_sk_PKCS7_SIGNER_INFO_new_null")
+@CCall("knifunptr_openssl2560_sk_PKCS7_SIGNER_INFO_new_null")
 external fun sk_PKCS7_SIGNER_INFO_new_null(): CPointer<stack_st_PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2556_sk_PKCS7_SIGNER_INFO_new_reserve")
+@CCall("knifunptr_openssl2561_sk_PKCS7_SIGNER_INFO_new_reserve")
 external fun sk_PKCS7_SIGNER_INFO_new_reserve(
     compare: sk_PKCS7_SIGNER_INFO_compfunc?,
     n: Int
 ): CPointer<stack_st_PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2557_sk_PKCS7_SIGNER_INFO_reserve")
+@CCall("knifunptr_openssl2562_sk_PKCS7_SIGNER_INFO_reserve")
 external fun sk_PKCS7_SIGNER_INFO_reserve(sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?, n: Int): Int
 
-@CCall("knifunptr_openssl2558_sk_PKCS7_SIGNER_INFO_free")
+@CCall("knifunptr_openssl2563_sk_PKCS7_SIGNER_INFO_free")
 external fun sk_PKCS7_SIGNER_INFO_free(sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?): Unit
 
-@CCall("knifunptr_openssl2559_sk_PKCS7_SIGNER_INFO_zero")
+@CCall("knifunptr_openssl2564_sk_PKCS7_SIGNER_INFO_zero")
 external fun sk_PKCS7_SIGNER_INFO_zero(sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?): Unit
 
-@CCall("knifunptr_openssl2560_sk_PKCS7_SIGNER_INFO_delete")
+@CCall("knifunptr_openssl2565_sk_PKCS7_SIGNER_INFO_delete")
 external fun sk_PKCS7_SIGNER_INFO_delete(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     i: Int
 ): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2561_sk_PKCS7_SIGNER_INFO_delete_ptr")
+@CCall("knifunptr_openssl2566_sk_PKCS7_SIGNER_INFO_delete_ptr")
 external fun sk_PKCS7_SIGNER_INFO_delete_ptr(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     ptr: CValuesRef<PKCS7_SIGNER_INFO>?
 ): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2562_sk_PKCS7_SIGNER_INFO_push")
+@CCall("knifunptr_openssl2567_sk_PKCS7_SIGNER_INFO_push")
 external fun sk_PKCS7_SIGNER_INFO_push(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     ptr: CValuesRef<PKCS7_SIGNER_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl2563_sk_PKCS7_SIGNER_INFO_unshift")
+@CCall("knifunptr_openssl2568_sk_PKCS7_SIGNER_INFO_unshift")
 external fun sk_PKCS7_SIGNER_INFO_unshift(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     ptr: CValuesRef<PKCS7_SIGNER_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl2564_sk_PKCS7_SIGNER_INFO_pop")
+@CCall("knifunptr_openssl2569_sk_PKCS7_SIGNER_INFO_pop")
 external fun sk_PKCS7_SIGNER_INFO_pop(sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2565_sk_PKCS7_SIGNER_INFO_shift")
+@CCall("knifunptr_openssl2570_sk_PKCS7_SIGNER_INFO_shift")
 external fun sk_PKCS7_SIGNER_INFO_shift(sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2566_sk_PKCS7_SIGNER_INFO_pop_free")
+@CCall("knifunptr_openssl2571_sk_PKCS7_SIGNER_INFO_pop_free")
 external fun sk_PKCS7_SIGNER_INFO_pop_free(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     freefunc: sk_PKCS7_SIGNER_INFO_freefunc?
 ): Unit
 
-@CCall("knifunptr_openssl2567_sk_PKCS7_SIGNER_INFO_insert")
+@CCall("knifunptr_openssl2572_sk_PKCS7_SIGNER_INFO_insert")
 external fun sk_PKCS7_SIGNER_INFO_insert(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     ptr: CValuesRef<PKCS7_SIGNER_INFO>?,
     idx: Int
 ): Int
 
-@CCall("knifunptr_openssl2568_sk_PKCS7_SIGNER_INFO_set")
+@CCall("knifunptr_openssl2573_sk_PKCS7_SIGNER_INFO_set")
 external fun sk_PKCS7_SIGNER_INFO_set(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     idx: Int,
     ptr: CValuesRef<PKCS7_SIGNER_INFO>?
 ): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2569_sk_PKCS7_SIGNER_INFO_find")
+@CCall("knifunptr_openssl2574_sk_PKCS7_SIGNER_INFO_find")
 external fun sk_PKCS7_SIGNER_INFO_find(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     ptr: CValuesRef<PKCS7_SIGNER_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl2570_sk_PKCS7_SIGNER_INFO_find_ex")
+@CCall("knifunptr_openssl2575_sk_PKCS7_SIGNER_INFO_find_ex")
 external fun sk_PKCS7_SIGNER_INFO_find_ex(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     ptr: CValuesRef<PKCS7_SIGNER_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl2571_sk_PKCS7_SIGNER_INFO_sort")
+@CCall("knifunptr_openssl2576_sk_PKCS7_SIGNER_INFO_sort")
 external fun sk_PKCS7_SIGNER_INFO_sort(sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?): Unit
 
-@CCall("knifunptr_openssl2572_sk_PKCS7_SIGNER_INFO_is_sorted")
+@CCall("knifunptr_openssl2577_sk_PKCS7_SIGNER_INFO_is_sorted")
 external fun sk_PKCS7_SIGNER_INFO_is_sorted(sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?): Int
 
-@CCall("knifunptr_openssl2573_sk_PKCS7_SIGNER_INFO_dup")
+@CCall("knifunptr_openssl2578_sk_PKCS7_SIGNER_INFO_dup")
 external fun sk_PKCS7_SIGNER_INFO_dup(sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?): CPointer<stack_st_PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2574_sk_PKCS7_SIGNER_INFO_deep_copy")
+@CCall("knifunptr_openssl2579_sk_PKCS7_SIGNER_INFO_deep_copy")
 external fun sk_PKCS7_SIGNER_INFO_deep_copy(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     copyfunc: sk_PKCS7_SIGNER_INFO_copyfunc?,
     freefunc: sk_PKCS7_SIGNER_INFO_freefunc?
 ): CPointer<stack_st_PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2575_sk_PKCS7_SIGNER_INFO_set_cmp_func")
+@CCall("knifunptr_openssl2580_sk_PKCS7_SIGNER_INFO_set_cmp_func")
 external fun sk_PKCS7_SIGNER_INFO_set_cmp_func(
     sk: CValuesRef<stack_st_PKCS7_SIGNER_INFO>?,
     compare: sk_PKCS7_SIGNER_INFO_compfunc?
 ): sk_PKCS7_SIGNER_INFO_compfunc?
 
-@CCall("knifunptr_openssl2576_sk_PKCS7_RECIP_INFO_num")
+@CCall("knifunptr_openssl2581_sk_PKCS7_RECIP_INFO_num")
 external fun sk_PKCS7_RECIP_INFO_num(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?): Int
 
-@CCall("knifunptr_openssl2577_sk_PKCS7_RECIP_INFO_value")
+@CCall("knifunptr_openssl2582_sk_PKCS7_RECIP_INFO_value")
 external fun sk_PKCS7_RECIP_INFO_value(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     idx: Int
 ): CPointer<PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2578_sk_PKCS7_RECIP_INFO_new")
+@CCall("knifunptr_openssl2583_sk_PKCS7_RECIP_INFO_new")
 external fun sk_PKCS7_RECIP_INFO_new(compare: sk_PKCS7_RECIP_INFO_compfunc?): CPointer<stack_st_PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2579_sk_PKCS7_RECIP_INFO_new_null")
+@CCall("knifunptr_openssl2584_sk_PKCS7_RECIP_INFO_new_null")
 external fun sk_PKCS7_RECIP_INFO_new_null(): CPointer<stack_st_PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2580_sk_PKCS7_RECIP_INFO_new_reserve")
+@CCall("knifunptr_openssl2585_sk_PKCS7_RECIP_INFO_new_reserve")
 external fun sk_PKCS7_RECIP_INFO_new_reserve(
     compare: sk_PKCS7_RECIP_INFO_compfunc?,
     n: Int
 ): CPointer<stack_st_PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2581_sk_PKCS7_RECIP_INFO_reserve")
+@CCall("knifunptr_openssl2586_sk_PKCS7_RECIP_INFO_reserve")
 external fun sk_PKCS7_RECIP_INFO_reserve(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?, n: Int): Int
 
-@CCall("knifunptr_openssl2582_sk_PKCS7_RECIP_INFO_free")
+@CCall("knifunptr_openssl2587_sk_PKCS7_RECIP_INFO_free")
 external fun sk_PKCS7_RECIP_INFO_free(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?): Unit
 
-@CCall("knifunptr_openssl2583_sk_PKCS7_RECIP_INFO_zero")
+@CCall("knifunptr_openssl2588_sk_PKCS7_RECIP_INFO_zero")
 external fun sk_PKCS7_RECIP_INFO_zero(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?): Unit
 
-@CCall("knifunptr_openssl2584_sk_PKCS7_RECIP_INFO_delete")
+@CCall("knifunptr_openssl2589_sk_PKCS7_RECIP_INFO_delete")
 external fun sk_PKCS7_RECIP_INFO_delete(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?, i: Int): CPointer<PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2585_sk_PKCS7_RECIP_INFO_delete_ptr")
+@CCall("knifunptr_openssl2590_sk_PKCS7_RECIP_INFO_delete_ptr")
 external fun sk_PKCS7_RECIP_INFO_delete_ptr(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     ptr: CValuesRef<PKCS7_RECIP_INFO>?
 ): CPointer<PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2586_sk_PKCS7_RECIP_INFO_push")
+@CCall("knifunptr_openssl2591_sk_PKCS7_RECIP_INFO_push")
 external fun sk_PKCS7_RECIP_INFO_push(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     ptr: CValuesRef<PKCS7_RECIP_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl2587_sk_PKCS7_RECIP_INFO_unshift")
+@CCall("knifunptr_openssl2592_sk_PKCS7_RECIP_INFO_unshift")
 external fun sk_PKCS7_RECIP_INFO_unshift(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     ptr: CValuesRef<PKCS7_RECIP_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl2588_sk_PKCS7_RECIP_INFO_pop")
+@CCall("knifunptr_openssl2593_sk_PKCS7_RECIP_INFO_pop")
 external fun sk_PKCS7_RECIP_INFO_pop(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?): CPointer<PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2589_sk_PKCS7_RECIP_INFO_shift")
+@CCall("knifunptr_openssl2594_sk_PKCS7_RECIP_INFO_shift")
 external fun sk_PKCS7_RECIP_INFO_shift(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?): CPointer<PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2590_sk_PKCS7_RECIP_INFO_pop_free")
+@CCall("knifunptr_openssl2595_sk_PKCS7_RECIP_INFO_pop_free")
 external fun sk_PKCS7_RECIP_INFO_pop_free(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     freefunc: sk_PKCS7_RECIP_INFO_freefunc?
 ): Unit
 
-@CCall("knifunptr_openssl2591_sk_PKCS7_RECIP_INFO_insert")
+@CCall("knifunptr_openssl2596_sk_PKCS7_RECIP_INFO_insert")
 external fun sk_PKCS7_RECIP_INFO_insert(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     ptr: CValuesRef<PKCS7_RECIP_INFO>?,
     idx: Int
 ): Int
 
-@CCall("knifunptr_openssl2592_sk_PKCS7_RECIP_INFO_set")
+@CCall("knifunptr_openssl2597_sk_PKCS7_RECIP_INFO_set")
 external fun sk_PKCS7_RECIP_INFO_set(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     idx: Int,
     ptr: CValuesRef<PKCS7_RECIP_INFO>?
 ): CPointer<PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2593_sk_PKCS7_RECIP_INFO_find")
+@CCall("knifunptr_openssl2598_sk_PKCS7_RECIP_INFO_find")
 external fun sk_PKCS7_RECIP_INFO_find(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     ptr: CValuesRef<PKCS7_RECIP_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl2594_sk_PKCS7_RECIP_INFO_find_ex")
+@CCall("knifunptr_openssl2599_sk_PKCS7_RECIP_INFO_find_ex")
 external fun sk_PKCS7_RECIP_INFO_find_ex(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     ptr: CValuesRef<PKCS7_RECIP_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl2595_sk_PKCS7_RECIP_INFO_sort")
+@CCall("knifunptr_openssl2600_sk_PKCS7_RECIP_INFO_sort")
 external fun sk_PKCS7_RECIP_INFO_sort(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?): Unit
 
-@CCall("knifunptr_openssl2596_sk_PKCS7_RECIP_INFO_is_sorted")
+@CCall("knifunptr_openssl2601_sk_PKCS7_RECIP_INFO_is_sorted")
 external fun sk_PKCS7_RECIP_INFO_is_sorted(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?): Int
 
-@CCall("knifunptr_openssl2597_sk_PKCS7_RECIP_INFO_dup")
+@CCall("knifunptr_openssl2602_sk_PKCS7_RECIP_INFO_dup")
 external fun sk_PKCS7_RECIP_INFO_dup(sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?): CPointer<stack_st_PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2598_sk_PKCS7_RECIP_INFO_deep_copy")
+@CCall("knifunptr_openssl2603_sk_PKCS7_RECIP_INFO_deep_copy")
 external fun sk_PKCS7_RECIP_INFO_deep_copy(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     copyfunc: sk_PKCS7_RECIP_INFO_copyfunc?,
     freefunc: sk_PKCS7_RECIP_INFO_freefunc?
 ): CPointer<stack_st_PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2599_sk_PKCS7_RECIP_INFO_set_cmp_func")
+@CCall("knifunptr_openssl2604_sk_PKCS7_RECIP_INFO_set_cmp_func")
 external fun sk_PKCS7_RECIP_INFO_set_cmp_func(
     sk: CValuesRef<stack_st_PKCS7_RECIP_INFO>?,
     compare: sk_PKCS7_RECIP_INFO_compfunc?
 ): sk_PKCS7_RECIP_INFO_compfunc?
 
-@CCall("knifunptr_openssl2600_sk_PKCS7_num")
+@CCall("knifunptr_openssl2605_sk_PKCS7_num")
 external fun sk_PKCS7_num(sk: CValuesRef<stack_st_PKCS7>?): Int
 
-@CCall("knifunptr_openssl2601_sk_PKCS7_value")
+@CCall("knifunptr_openssl2606_sk_PKCS7_value")
 external fun sk_PKCS7_value(sk: CValuesRef<stack_st_PKCS7>?, idx: Int): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2602_sk_PKCS7_new")
+@CCall("knifunptr_openssl2607_sk_PKCS7_new")
 external fun sk_PKCS7_new(compare: sk_PKCS7_compfunc?): CPointer<stack_st_PKCS7>?
 
-@CCall("knifunptr_openssl2603_sk_PKCS7_new_null")
+@CCall("knifunptr_openssl2608_sk_PKCS7_new_null")
 external fun sk_PKCS7_new_null(): CPointer<stack_st_PKCS7>?
 
-@CCall("knifunptr_openssl2604_sk_PKCS7_new_reserve")
+@CCall("knifunptr_openssl2609_sk_PKCS7_new_reserve")
 external fun sk_PKCS7_new_reserve(compare: sk_PKCS7_compfunc?, n: Int): CPointer<stack_st_PKCS7>?
 
-@CCall("knifunptr_openssl2605_sk_PKCS7_reserve")
+@CCall("knifunptr_openssl2610_sk_PKCS7_reserve")
 external fun sk_PKCS7_reserve(sk: CValuesRef<stack_st_PKCS7>?, n: Int): Int
 
-@CCall("knifunptr_openssl2606_sk_PKCS7_free")
+@CCall("knifunptr_openssl2611_sk_PKCS7_free")
 external fun sk_PKCS7_free(sk: CValuesRef<stack_st_PKCS7>?): Unit
 
-@CCall("knifunptr_openssl2607_sk_PKCS7_zero")
+@CCall("knifunptr_openssl2612_sk_PKCS7_zero")
 external fun sk_PKCS7_zero(sk: CValuesRef<stack_st_PKCS7>?): Unit
 
-@CCall("knifunptr_openssl2608_sk_PKCS7_delete")
+@CCall("knifunptr_openssl2613_sk_PKCS7_delete")
 external fun sk_PKCS7_delete(sk: CValuesRef<stack_st_PKCS7>?, i: Int): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2609_sk_PKCS7_delete_ptr")
+@CCall("knifunptr_openssl2614_sk_PKCS7_delete_ptr")
 external fun sk_PKCS7_delete_ptr(sk: CValuesRef<stack_st_PKCS7>?, ptr: CValuesRef<PKCS7>?): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2610_sk_PKCS7_push")
+@CCall("knifunptr_openssl2615_sk_PKCS7_push")
 external fun sk_PKCS7_push(sk: CValuesRef<stack_st_PKCS7>?, ptr: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl2611_sk_PKCS7_unshift")
+@CCall("knifunptr_openssl2616_sk_PKCS7_unshift")
 external fun sk_PKCS7_unshift(sk: CValuesRef<stack_st_PKCS7>?, ptr: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl2612_sk_PKCS7_pop")
+@CCall("knifunptr_openssl2617_sk_PKCS7_pop")
 external fun sk_PKCS7_pop(sk: CValuesRef<stack_st_PKCS7>?): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2613_sk_PKCS7_shift")
+@CCall("knifunptr_openssl2618_sk_PKCS7_shift")
 external fun sk_PKCS7_shift(sk: CValuesRef<stack_st_PKCS7>?): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2614_sk_PKCS7_pop_free")
+@CCall("knifunptr_openssl2619_sk_PKCS7_pop_free")
 external fun sk_PKCS7_pop_free(sk: CValuesRef<stack_st_PKCS7>?, freefunc: sk_PKCS7_freefunc?): Unit
 
-@CCall("knifunptr_openssl2615_sk_PKCS7_insert")
+@CCall("knifunptr_openssl2620_sk_PKCS7_insert")
 external fun sk_PKCS7_insert(sk: CValuesRef<stack_st_PKCS7>?, ptr: CValuesRef<PKCS7>?, idx: Int): Int
 
-@CCall("knifunptr_openssl2616_sk_PKCS7_set")
+@CCall("knifunptr_openssl2621_sk_PKCS7_set")
 external fun sk_PKCS7_set(sk: CValuesRef<stack_st_PKCS7>?, idx: Int, ptr: CValuesRef<PKCS7>?): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2617_sk_PKCS7_find")
+@CCall("knifunptr_openssl2622_sk_PKCS7_find")
 external fun sk_PKCS7_find(sk: CValuesRef<stack_st_PKCS7>?, ptr: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl2618_sk_PKCS7_find_ex")
+@CCall("knifunptr_openssl2623_sk_PKCS7_find_ex")
 external fun sk_PKCS7_find_ex(sk: CValuesRef<stack_st_PKCS7>?, ptr: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl2619_sk_PKCS7_sort")
+@CCall("knifunptr_openssl2624_sk_PKCS7_sort")
 external fun sk_PKCS7_sort(sk: CValuesRef<stack_st_PKCS7>?): Unit
 
-@CCall("knifunptr_openssl2620_sk_PKCS7_is_sorted")
+@CCall("knifunptr_openssl2625_sk_PKCS7_is_sorted")
 external fun sk_PKCS7_is_sorted(sk: CValuesRef<stack_st_PKCS7>?): Int
 
-@CCall("knifunptr_openssl2621_sk_PKCS7_dup")
+@CCall("knifunptr_openssl2626_sk_PKCS7_dup")
 external fun sk_PKCS7_dup(sk: CValuesRef<stack_st_PKCS7>?): CPointer<stack_st_PKCS7>?
 
-@CCall("knifunptr_openssl2622_sk_PKCS7_deep_copy")
+@CCall("knifunptr_openssl2627_sk_PKCS7_deep_copy")
 external fun sk_PKCS7_deep_copy(
     sk: CValuesRef<stack_st_PKCS7>?,
     copyfunc: sk_PKCS7_copyfunc?,
     freefunc: sk_PKCS7_freefunc?
 ): CPointer<stack_st_PKCS7>?
 
-@CCall("knifunptr_openssl2623_sk_PKCS7_set_cmp_func")
+@CCall("knifunptr_openssl2628_sk_PKCS7_set_cmp_func")
 external fun sk_PKCS7_set_cmp_func(sk: CValuesRef<stack_st_PKCS7>?, compare: sk_PKCS7_compfunc?): sk_PKCS7_compfunc?
 
-@CCall("knifunptr_openssl2624_PKCS7_ISSUER_AND_SERIAL_new")
+@CCall("knifunptr_openssl2629_PKCS7_ISSUER_AND_SERIAL_new")
 external fun PKCS7_ISSUER_AND_SERIAL_new(): CPointer<PKCS7_ISSUER_AND_SERIAL>?
 
-@CCall("knifunptr_openssl2625_PKCS7_ISSUER_AND_SERIAL_free")
+@CCall("knifunptr_openssl2630_PKCS7_ISSUER_AND_SERIAL_free")
 external fun PKCS7_ISSUER_AND_SERIAL_free(a: CValuesRef<PKCS7_ISSUER_AND_SERIAL>?): Unit
 
-@CCall("knifunptr_openssl2626_d2i_PKCS7_ISSUER_AND_SERIAL")
+@CCall("knifunptr_openssl2631_d2i_PKCS7_ISSUER_AND_SERIAL")
 external fun d2i_PKCS7_ISSUER_AND_SERIAL(
     a: CValuesRef<CPointerVar<PKCS7_ISSUER_AND_SERIAL>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7_ISSUER_AND_SERIAL>?
 
-@CCall("knifunptr_openssl2627_i2d_PKCS7_ISSUER_AND_SERIAL")
+@CCall("knifunptr_openssl2632_i2d_PKCS7_ISSUER_AND_SERIAL")
 external fun i2d_PKCS7_ISSUER_AND_SERIAL(
     a: CValuesRef<PKCS7_ISSUER_AND_SERIAL>?,
     out: CValuesRef<CPointerVar<UByteVar>>?
 ): Int
 
-@CCall("knifunptr_openssl2628_PKCS7_ISSUER_AND_SERIAL_digest")
+@CCall("knifunptr_openssl2633_PKCS7_ISSUER_AND_SERIAL_digest")
 external fun PKCS7_ISSUER_AND_SERIAL_digest(
     data: CValuesRef<PKCS7_ISSUER_AND_SERIAL>?,
     type: CValuesRef<EVP_MD>?,
@@ -12715,22 +12810,22 @@ external fun PKCS7_ISSUER_AND_SERIAL_digest(
     len: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl2629_d2i_PKCS7_fp")
+@CCall("knifunptr_openssl2634_d2i_PKCS7_fp")
 external fun d2i_PKCS7_fp(fp: CValuesRef<FILE>?, p7: CValuesRef<CPointerVar<PKCS7>>?): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2630_i2d_PKCS7_fp")
+@CCall("knifunptr_openssl2635_i2d_PKCS7_fp")
 external fun i2d_PKCS7_fp(fp: CValuesRef<FILE>?, p7: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl2631_PKCS7_dup")
+@CCall("knifunptr_openssl2636_PKCS7_dup")
 external fun PKCS7_dup(p7: CValuesRef<PKCS7>?): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2632_d2i_PKCS7_bio")
+@CCall("knifunptr_openssl2637_d2i_PKCS7_bio")
 external fun d2i_PKCS7_bio(bp: CValuesRef<BIO>?, p7: CValuesRef<CPointerVar<PKCS7>>?): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2633_i2d_PKCS7_bio")
+@CCall("knifunptr_openssl2638_i2d_PKCS7_bio")
 external fun i2d_PKCS7_bio(bp: CValuesRef<BIO>?, p7: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl2634_i2d_PKCS7_bio_stream")
+@CCall("knifunptr_openssl2639_i2d_PKCS7_bio_stream")
 external fun i2d_PKCS7_bio_stream(
     out: CValuesRef<BIO>?,
     p7: CValuesRef<PKCS7>?,
@@ -12738,7 +12833,7 @@ external fun i2d_PKCS7_bio_stream(
     flags: Int
 ): Int
 
-@CCall("knifunptr_openssl2635_PEM_write_bio_PKCS7_stream")
+@CCall("knifunptr_openssl2640_PEM_write_bio_PKCS7_stream")
 external fun PEM_write_bio_PKCS7_stream(
     out: CValuesRef<BIO>?,
     p7: CValuesRef<PKCS7>?,
@@ -12746,154 +12841,154 @@ external fun PEM_write_bio_PKCS7_stream(
     flags: Int
 ): Int
 
-@CCall("knifunptr_openssl2636_PKCS7_SIGNER_INFO_new")
+@CCall("knifunptr_openssl2641_PKCS7_SIGNER_INFO_new")
 external fun PKCS7_SIGNER_INFO_new(): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2637_PKCS7_SIGNER_INFO_free")
+@CCall("knifunptr_openssl2642_PKCS7_SIGNER_INFO_free")
 external fun PKCS7_SIGNER_INFO_free(a: CValuesRef<PKCS7_SIGNER_INFO>?): Unit
 
-@CCall("knifunptr_openssl2638_d2i_PKCS7_SIGNER_INFO")
+@CCall("knifunptr_openssl2643_d2i_PKCS7_SIGNER_INFO")
 external fun d2i_PKCS7_SIGNER_INFO(
     a: CValuesRef<CPointerVar<PKCS7_SIGNER_INFO>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2639_i2d_PKCS7_SIGNER_INFO")
+@CCall("knifunptr_openssl2644_i2d_PKCS7_SIGNER_INFO")
 external fun i2d_PKCS7_SIGNER_INFO(a: CValuesRef<PKCS7_SIGNER_INFO>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2640_PKCS7_RECIP_INFO_new")
+@CCall("knifunptr_openssl2645_PKCS7_RECIP_INFO_new")
 external fun PKCS7_RECIP_INFO_new(): CPointer<PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2641_PKCS7_RECIP_INFO_free")
+@CCall("knifunptr_openssl2646_PKCS7_RECIP_INFO_free")
 external fun PKCS7_RECIP_INFO_free(a: CValuesRef<PKCS7_RECIP_INFO>?): Unit
 
-@CCall("knifunptr_openssl2642_d2i_PKCS7_RECIP_INFO")
+@CCall("knifunptr_openssl2647_d2i_PKCS7_RECIP_INFO")
 external fun d2i_PKCS7_RECIP_INFO(
     a: CValuesRef<CPointerVar<PKCS7_RECIP_INFO>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2643_i2d_PKCS7_RECIP_INFO")
+@CCall("knifunptr_openssl2648_i2d_PKCS7_RECIP_INFO")
 external fun i2d_PKCS7_RECIP_INFO(a: CValuesRef<PKCS7_RECIP_INFO>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2644_PKCS7_SIGNED_new")
+@CCall("knifunptr_openssl2649_PKCS7_SIGNED_new")
 external fun PKCS7_SIGNED_new(): CPointer<PKCS7_SIGNED>?
 
-@CCall("knifunptr_openssl2645_PKCS7_SIGNED_free")
+@CCall("knifunptr_openssl2650_PKCS7_SIGNED_free")
 external fun PKCS7_SIGNED_free(a: CValuesRef<PKCS7_SIGNED>?): Unit
 
-@CCall("knifunptr_openssl2646_d2i_PKCS7_SIGNED")
+@CCall("knifunptr_openssl2651_d2i_PKCS7_SIGNED")
 external fun d2i_PKCS7_SIGNED(
     a: CValuesRef<CPointerVar<PKCS7_SIGNED>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7_SIGNED>?
 
-@CCall("knifunptr_openssl2647_i2d_PKCS7_SIGNED")
+@CCall("knifunptr_openssl2652_i2d_PKCS7_SIGNED")
 external fun i2d_PKCS7_SIGNED(a: CValuesRef<PKCS7_SIGNED>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2648_PKCS7_ENC_CONTENT_new")
+@CCall("knifunptr_openssl2653_PKCS7_ENC_CONTENT_new")
 external fun PKCS7_ENC_CONTENT_new(): CPointer<PKCS7_ENC_CONTENT>?
 
-@CCall("knifunptr_openssl2649_PKCS7_ENC_CONTENT_free")
+@CCall("knifunptr_openssl2654_PKCS7_ENC_CONTENT_free")
 external fun PKCS7_ENC_CONTENT_free(a: CValuesRef<PKCS7_ENC_CONTENT>?): Unit
 
-@CCall("knifunptr_openssl2650_d2i_PKCS7_ENC_CONTENT")
+@CCall("knifunptr_openssl2655_d2i_PKCS7_ENC_CONTENT")
 external fun d2i_PKCS7_ENC_CONTENT(
     a: CValuesRef<CPointerVar<PKCS7_ENC_CONTENT>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7_ENC_CONTENT>?
 
-@CCall("knifunptr_openssl2651_i2d_PKCS7_ENC_CONTENT")
+@CCall("knifunptr_openssl2656_i2d_PKCS7_ENC_CONTENT")
 external fun i2d_PKCS7_ENC_CONTENT(a: CValuesRef<PKCS7_ENC_CONTENT>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2652_PKCS7_ENVELOPE_new")
+@CCall("knifunptr_openssl2657_PKCS7_ENVELOPE_new")
 external fun PKCS7_ENVELOPE_new(): CPointer<PKCS7_ENVELOPE>?
 
-@CCall("knifunptr_openssl2653_PKCS7_ENVELOPE_free")
+@CCall("knifunptr_openssl2658_PKCS7_ENVELOPE_free")
 external fun PKCS7_ENVELOPE_free(a: CValuesRef<PKCS7_ENVELOPE>?): Unit
 
-@CCall("knifunptr_openssl2654_d2i_PKCS7_ENVELOPE")
+@CCall("knifunptr_openssl2659_d2i_PKCS7_ENVELOPE")
 external fun d2i_PKCS7_ENVELOPE(
     a: CValuesRef<CPointerVar<PKCS7_ENVELOPE>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7_ENVELOPE>?
 
-@CCall("knifunptr_openssl2655_i2d_PKCS7_ENVELOPE")
+@CCall("knifunptr_openssl2660_i2d_PKCS7_ENVELOPE")
 external fun i2d_PKCS7_ENVELOPE(a: CValuesRef<PKCS7_ENVELOPE>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2656_PKCS7_SIGN_ENVELOPE_new")
+@CCall("knifunptr_openssl2661_PKCS7_SIGN_ENVELOPE_new")
 external fun PKCS7_SIGN_ENVELOPE_new(): CPointer<PKCS7_SIGN_ENVELOPE>?
 
-@CCall("knifunptr_openssl2657_PKCS7_SIGN_ENVELOPE_free")
+@CCall("knifunptr_openssl2662_PKCS7_SIGN_ENVELOPE_free")
 external fun PKCS7_SIGN_ENVELOPE_free(a: CValuesRef<PKCS7_SIGN_ENVELOPE>?): Unit
 
-@CCall("knifunptr_openssl2658_d2i_PKCS7_SIGN_ENVELOPE")
+@CCall("knifunptr_openssl2663_d2i_PKCS7_SIGN_ENVELOPE")
 external fun d2i_PKCS7_SIGN_ENVELOPE(
     a: CValuesRef<CPointerVar<PKCS7_SIGN_ENVELOPE>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7_SIGN_ENVELOPE>?
 
-@CCall("knifunptr_openssl2659_i2d_PKCS7_SIGN_ENVELOPE")
+@CCall("knifunptr_openssl2664_i2d_PKCS7_SIGN_ENVELOPE")
 external fun i2d_PKCS7_SIGN_ENVELOPE(a: CValuesRef<PKCS7_SIGN_ENVELOPE>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2660_PKCS7_DIGEST_new")
+@CCall("knifunptr_openssl2665_PKCS7_DIGEST_new")
 external fun PKCS7_DIGEST_new(): CPointer<PKCS7_DIGEST>?
 
-@CCall("knifunptr_openssl2661_PKCS7_DIGEST_free")
+@CCall("knifunptr_openssl2666_PKCS7_DIGEST_free")
 external fun PKCS7_DIGEST_free(a: CValuesRef<PKCS7_DIGEST>?): Unit
 
-@CCall("knifunptr_openssl2662_d2i_PKCS7_DIGEST")
+@CCall("knifunptr_openssl2667_d2i_PKCS7_DIGEST")
 external fun d2i_PKCS7_DIGEST(
     a: CValuesRef<CPointerVar<PKCS7_DIGEST>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7_DIGEST>?
 
-@CCall("knifunptr_openssl2663_i2d_PKCS7_DIGEST")
+@CCall("knifunptr_openssl2668_i2d_PKCS7_DIGEST")
 external fun i2d_PKCS7_DIGEST(a: CValuesRef<PKCS7_DIGEST>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2664_PKCS7_ENCRYPT_new")
+@CCall("knifunptr_openssl2669_PKCS7_ENCRYPT_new")
 external fun PKCS7_ENCRYPT_new(): CPointer<PKCS7_ENCRYPT>?
 
-@CCall("knifunptr_openssl2665_PKCS7_ENCRYPT_free")
+@CCall("knifunptr_openssl2670_PKCS7_ENCRYPT_free")
 external fun PKCS7_ENCRYPT_free(a: CValuesRef<PKCS7_ENCRYPT>?): Unit
 
-@CCall("knifunptr_openssl2666_d2i_PKCS7_ENCRYPT")
+@CCall("knifunptr_openssl2671_d2i_PKCS7_ENCRYPT")
 external fun d2i_PKCS7_ENCRYPT(
     a: CValuesRef<CPointerVar<PKCS7_ENCRYPT>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7_ENCRYPT>?
 
-@CCall("knifunptr_openssl2667_i2d_PKCS7_ENCRYPT")
+@CCall("knifunptr_openssl2672_i2d_PKCS7_ENCRYPT")
 external fun i2d_PKCS7_ENCRYPT(a: CValuesRef<PKCS7_ENCRYPT>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2668_PKCS7_new")
+@CCall("knifunptr_openssl2673_PKCS7_new")
 external fun PKCS7_new(): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2669_PKCS7_free")
+@CCall("knifunptr_openssl2674_PKCS7_free")
 external fun PKCS7_free(a: CValuesRef<PKCS7>?): Unit
 
-@CCall("knifunptr_openssl2670_d2i_PKCS7")
+@CCall("knifunptr_openssl2675_d2i_PKCS7")
 external fun d2i_PKCS7(
     a: CValuesRef<CPointerVar<PKCS7>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2671_i2d_PKCS7")
+@CCall("knifunptr_openssl2676_i2d_PKCS7")
 external fun i2d_PKCS7(a: CValuesRef<PKCS7>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2672_i2d_PKCS7_NDEF")
+@CCall("knifunptr_openssl2677_i2d_PKCS7_NDEF")
 external fun i2d_PKCS7_NDEF(a: CValuesRef<PKCS7>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2673_PKCS7_print_ctx")
+@CCall("knifunptr_openssl2678_PKCS7_print_ctx")
 external fun PKCS7_print_ctx(
     out: CValuesRef<BIO>?,
     x: CValuesRef<PKCS7>?,
@@ -12901,19 +12996,19 @@ external fun PKCS7_print_ctx(
     pctx: CValuesRef<ASN1_PCTX>?
 ): Int
 
-@CCall("knifunptr_openssl2674_PKCS7_ctrl")
+@CCall("knifunptr_openssl2679_PKCS7_ctrl")
 external fun PKCS7_ctrl(p7: CValuesRef<PKCS7>?, cmd: Int, larg: Int, parg: CValuesRef<ByteVar>?): Int
 
-@CCall("knifunptr_openssl2675_PKCS7_set_type")
+@CCall("knifunptr_openssl2680_PKCS7_set_type")
 external fun PKCS7_set_type(p7: CValuesRef<PKCS7>?, type: Int): Int
 
-@CCall("knifunptr_openssl2676_PKCS7_set0_type_other")
+@CCall("knifunptr_openssl2681_PKCS7_set0_type_other")
 external fun PKCS7_set0_type_other(p7: CValuesRef<PKCS7>?, type: Int, other: CValuesRef<ASN1_TYPE>?): Int
 
-@CCall("knifunptr_openssl2677_PKCS7_set_content")
+@CCall("knifunptr_openssl2682_PKCS7_set_content")
 external fun PKCS7_set_content(p7: CValuesRef<PKCS7>?, p7_data: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl2678_PKCS7_SIGNER_INFO_set")
+@CCall("knifunptr_openssl2683_PKCS7_SIGNER_INFO_set")
 external fun PKCS7_SIGNER_INFO_set(
     p7i: CValuesRef<PKCS7_SIGNER_INFO>?,
     x509: CValuesRef<X509>?,
@@ -12921,22 +13016,22 @@ external fun PKCS7_SIGNER_INFO_set(
     dgst: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl2679_PKCS7_SIGNER_INFO_sign")
+@CCall("knifunptr_openssl2684_PKCS7_SIGNER_INFO_sign")
 external fun PKCS7_SIGNER_INFO_sign(si: CValuesRef<PKCS7_SIGNER_INFO>?): Int
 
-@CCall("knifunptr_openssl2680_PKCS7_add_signer")
+@CCall("knifunptr_openssl2685_PKCS7_add_signer")
 external fun PKCS7_add_signer(p7: CValuesRef<PKCS7>?, p7i: CValuesRef<PKCS7_SIGNER_INFO>?): Int
 
-@CCall("knifunptr_openssl2681_PKCS7_add_certificate")
+@CCall("knifunptr_openssl2686_PKCS7_add_certificate")
 external fun PKCS7_add_certificate(p7: CValuesRef<PKCS7>?, x509: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2682_PKCS7_add_crl")
+@CCall("knifunptr_openssl2687_PKCS7_add_crl")
 external fun PKCS7_add_crl(p7: CValuesRef<PKCS7>?, x509: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2683_PKCS7_content_new")
+@CCall("knifunptr_openssl2688_PKCS7_content_new")
 external fun PKCS7_content_new(p7: CValuesRef<PKCS7>?, nid: Int): Int
 
-@CCall("knifunptr_openssl2684_PKCS7_dataVerify")
+@CCall("knifunptr_openssl2689_PKCS7_dataVerify")
 external fun PKCS7_dataVerify(
     cert_store: CValuesRef<X509_STORE>?,
     ctx: CValuesRef<X509_STORE_CTX>?,
@@ -12945,7 +13040,7 @@ external fun PKCS7_dataVerify(
     si: CValuesRef<PKCS7_SIGNER_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl2685_PKCS7_signatureVerify")
+@CCall("knifunptr_openssl2690_PKCS7_signatureVerify")
 external fun PKCS7_signatureVerify(
     bio: CValuesRef<BIO>?,
     p7: CValuesRef<PKCS7>?,
@@ -12953,13 +13048,13 @@ external fun PKCS7_signatureVerify(
     x509: CValuesRef<X509>?
 ): Int
 
-@CCall("knifunptr_openssl2686_PKCS7_dataInit")
+@CCall("knifunptr_openssl2691_PKCS7_dataInit")
 external fun PKCS7_dataInit(p7: CValuesRef<PKCS7>?, bio: CValuesRef<BIO>?): CPointer<BIO>?
 
-@CCall("knifunptr_openssl2687_PKCS7_dataFinal")
+@CCall("knifunptr_openssl2692_PKCS7_dataFinal")
 external fun PKCS7_dataFinal(p7: CValuesRef<PKCS7>?, bio: CValuesRef<BIO>?): Int
 
-@CCall("knifunptr_openssl2688_PKCS7_dataDecode")
+@CCall("knifunptr_openssl2693_PKCS7_dataDecode")
 external fun PKCS7_dataDecode(
     p7: CValuesRef<PKCS7>?,
     pkey: CValuesRef<EVP_PKEY>?,
@@ -12967,7 +13062,7 @@ external fun PKCS7_dataDecode(
     pcert: CValuesRef<X509>?
 ): CPointer<BIO>?
 
-@CCall("knifunptr_openssl2689_PKCS7_add_signature")
+@CCall("knifunptr_openssl2694_PKCS7_add_signature")
 external fun PKCS7_add_signature(
     p7: CValuesRef<PKCS7>?,
     x509: CValuesRef<X509>?,
@@ -12975,19 +13070,19 @@ external fun PKCS7_add_signature(
     dgst: CValuesRef<EVP_MD>?
 ): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2690_PKCS7_cert_from_signer_info")
+@CCall("knifunptr_openssl2695_PKCS7_cert_from_signer_info")
 external fun PKCS7_cert_from_signer_info(p7: CValuesRef<PKCS7>?, si: CValuesRef<PKCS7_SIGNER_INFO>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2691_PKCS7_set_digest")
+@CCall("knifunptr_openssl2696_PKCS7_set_digest")
 external fun PKCS7_set_digest(p7: CValuesRef<PKCS7>?, md: CValuesRef<EVP_MD>?): Int
 
-@CCall("knifunptr_openssl2692_PKCS7_get_signer_info")
+@CCall("knifunptr_openssl2697_PKCS7_get_signer_info")
 external fun PKCS7_get_signer_info(p7: CValuesRef<PKCS7>?): CPointer<stack_st_PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2693_PKCS7_add_recipient")
+@CCall("knifunptr_openssl2698_PKCS7_add_recipient")
 external fun PKCS7_add_recipient(p7: CValuesRef<PKCS7>?, x509: CValuesRef<X509>?): CPointer<PKCS7_RECIP_INFO>?
 
-@CCall("knifunptr_openssl2694_PKCS7_SIGNER_INFO_get0_algs")
+@CCall("knifunptr_openssl2699_PKCS7_SIGNER_INFO_get0_algs")
 external fun PKCS7_SIGNER_INFO_get0_algs(
     si: CValuesRef<PKCS7_SIGNER_INFO>?,
     pk: CValuesRef<CPointerVar<EVP_PKEY>>?,
@@ -12995,31 +13090,31 @@ external fun PKCS7_SIGNER_INFO_get0_algs(
     psig: CValuesRef<CPointerVar<X509_ALGOR>>?
 ): Unit
 
-@CCall("knifunptr_openssl2695_PKCS7_RECIP_INFO_get0_alg")
+@CCall("knifunptr_openssl2700_PKCS7_RECIP_INFO_get0_alg")
 external fun PKCS7_RECIP_INFO_get0_alg(
     ri: CValuesRef<PKCS7_RECIP_INFO>?,
     penc: CValuesRef<CPointerVar<X509_ALGOR>>?
 ): Unit
 
-@CCall("knifunptr_openssl2696_PKCS7_add_recipient_info")
+@CCall("knifunptr_openssl2701_PKCS7_add_recipient_info")
 external fun PKCS7_add_recipient_info(p7: CValuesRef<PKCS7>?, ri: CValuesRef<PKCS7_RECIP_INFO>?): Int
 
-@CCall("knifunptr_openssl2697_PKCS7_RECIP_INFO_set")
+@CCall("knifunptr_openssl2702_PKCS7_RECIP_INFO_set")
 external fun PKCS7_RECIP_INFO_set(p7i: CValuesRef<PKCS7_RECIP_INFO>?, x509: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2698_PKCS7_set_cipher")
+@CCall("knifunptr_openssl2703_PKCS7_set_cipher")
 external fun PKCS7_set_cipher(p7: CValuesRef<PKCS7>?, cipher: CValuesRef<EVP_CIPHER>?): Int
 
-@CCall("knifunptr_openssl2699_PKCS7_stream")
+@CCall("knifunptr_openssl2704_PKCS7_stream")
 external fun PKCS7_stream(boundary: CValuesRef<CPointerVar<CPointerVar<UByteVar>>>?, p7: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl2700_PKCS7_get_issuer_and_serial")
+@CCall("knifunptr_openssl2705_PKCS7_get_issuer_and_serial")
 external fun PKCS7_get_issuer_and_serial(p7: CValuesRef<PKCS7>?, idx: Int): CPointer<PKCS7_ISSUER_AND_SERIAL>?
 
-@CCall("knifunptr_openssl2701_PKCS7_digest_from_attributes")
+@CCall("knifunptr_openssl2706_PKCS7_digest_from_attributes")
 external fun PKCS7_digest_from_attributes(sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): CPointer<ASN1_OCTET_STRING>?
 
-@CCall("knifunptr_openssl2702_PKCS7_add_signed_attribute")
+@CCall("knifunptr_openssl2707_PKCS7_add_signed_attribute")
 external fun PKCS7_add_signed_attribute(
     p7si: CValuesRef<PKCS7_SIGNER_INFO>?,
     nid: Int,
@@ -13027,7 +13122,7 @@ external fun PKCS7_add_signed_attribute(
     data: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl2703_PKCS7_add_attribute")
+@CCall("knifunptr_openssl2708_PKCS7_add_attribute")
 external fun PKCS7_add_attribute(
     p7si: CValuesRef<PKCS7_SIGNER_INFO>?,
     nid: Int,
@@ -13035,22 +13130,22 @@ external fun PKCS7_add_attribute(
     value: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl2704_PKCS7_get_attribute")
+@CCall("knifunptr_openssl2709_PKCS7_get_attribute")
 external fun PKCS7_get_attribute(si: CValuesRef<PKCS7_SIGNER_INFO>?, nid: Int): CPointer<ASN1_TYPE>?
 
-@CCall("knifunptr_openssl2705_PKCS7_get_signed_attribute")
+@CCall("knifunptr_openssl2710_PKCS7_get_signed_attribute")
 external fun PKCS7_get_signed_attribute(si: CValuesRef<PKCS7_SIGNER_INFO>?, nid: Int): CPointer<ASN1_TYPE>?
 
-@CCall("knifunptr_openssl2706_PKCS7_set_signed_attributes")
+@CCall("knifunptr_openssl2711_PKCS7_set_signed_attributes")
 external fun PKCS7_set_signed_attributes(
     p7si: CValuesRef<PKCS7_SIGNER_INFO>?,
     sk: CValuesRef<stack_st_X509_ATTRIBUTE>?
 ): Int
 
-@CCall("knifunptr_openssl2707_PKCS7_set_attributes")
+@CCall("knifunptr_openssl2712_PKCS7_set_attributes")
 external fun PKCS7_set_attributes(p7si: CValuesRef<PKCS7_SIGNER_INFO>?, sk: CValuesRef<stack_st_X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl2708_PKCS7_sign")
+@CCall("knifunptr_openssl2713_PKCS7_sign")
 external fun PKCS7_sign(
     signcert: CValuesRef<X509>?,
     pkey: CValuesRef<EVP_PKEY>?,
@@ -13059,7 +13154,7 @@ external fun PKCS7_sign(
     flags: Int
 ): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2709_PKCS7_sign_add_signer")
+@CCall("knifunptr_openssl2714_PKCS7_sign_add_signer")
 external fun PKCS7_sign_add_signer(
     p7: CValuesRef<PKCS7>?,
     signcert: CValuesRef<X509>?,
@@ -13068,10 +13163,10 @@ external fun PKCS7_sign_add_signer(
     flags: Int
 ): CPointer<PKCS7_SIGNER_INFO>?
 
-@CCall("knifunptr_openssl2710_PKCS7_final")
+@CCall("knifunptr_openssl2715_PKCS7_final")
 external fun PKCS7_final(p7: CValuesRef<PKCS7>?, data: CValuesRef<BIO>?, flags: Int): Int
 
-@CCall("knifunptr_openssl2711_PKCS7_verify")
+@CCall("knifunptr_openssl2716_PKCS7_verify")
 external fun PKCS7_verify(
     p7: CValuesRef<PKCS7>?,
     certs: CValuesRef<stack_st_X509>?,
@@ -13081,14 +13176,14 @@ external fun PKCS7_verify(
     flags: Int
 ): Int
 
-@CCall("knifunptr_openssl2712_PKCS7_get0_signers")
+@CCall("knifunptr_openssl2717_PKCS7_get0_signers")
 external fun PKCS7_get0_signers(
     p7: CValuesRef<PKCS7>?,
     certs: CValuesRef<stack_st_X509>?,
     flags: Int
 ): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl2713_PKCS7_encrypt")
+@CCall("knifunptr_openssl2718_PKCS7_encrypt")
 external fun PKCS7_encrypt(
     certs: CValuesRef<stack_st_X509>?,
     `in`: CValuesRef<BIO>?,
@@ -13096,7 +13191,7 @@ external fun PKCS7_encrypt(
     flags: Int
 ): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2714_PKCS7_decrypt")
+@CCall("knifunptr_openssl2719_PKCS7_decrypt")
 external fun PKCS7_decrypt(
     p7: CValuesRef<PKCS7>?,
     pkey: CValuesRef<EVP_PKEY>?,
@@ -13105,37 +13200,37 @@ external fun PKCS7_decrypt(
     flags: Int
 ): Int
 
-@CCall("knifunptr_openssl2715_PKCS7_add_attrib_smimecap")
+@CCall("knifunptr_openssl2720_PKCS7_add_attrib_smimecap")
 external fun PKCS7_add_attrib_smimecap(si: CValuesRef<PKCS7_SIGNER_INFO>?, cap: CValuesRef<stack_st_X509_ALGOR>?): Int
 
-@CCall("knifunptr_openssl2716_PKCS7_get_smimecap")
+@CCall("knifunptr_openssl2721_PKCS7_get_smimecap")
 external fun PKCS7_get_smimecap(si: CValuesRef<PKCS7_SIGNER_INFO>?): CPointer<stack_st_X509_ALGOR>?
 
-@CCall("knifunptr_openssl2717_PKCS7_simple_smimecap")
+@CCall("knifunptr_openssl2722_PKCS7_simple_smimecap")
 external fun PKCS7_simple_smimecap(sk: CValuesRef<stack_st_X509_ALGOR>?, nid: Int, arg: Int): Int
 
-@CCall("knifunptr_openssl2718_PKCS7_add_attrib_content_type")
+@CCall("knifunptr_openssl2723_PKCS7_add_attrib_content_type")
 external fun PKCS7_add_attrib_content_type(si: CValuesRef<PKCS7_SIGNER_INFO>?, coid: CValuesRef<ASN1_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2719_PKCS7_add0_attrib_signing_time")
+@CCall("knifunptr_openssl2724_PKCS7_add0_attrib_signing_time")
 external fun PKCS7_add0_attrib_signing_time(si: CValuesRef<PKCS7_SIGNER_INFO>?, t: CValuesRef<ASN1_TIME>?): Int
 
-@CCall("knifunptr_openssl2720_PKCS7_add1_attrib_digest")
+@CCall("knifunptr_openssl2725_PKCS7_add1_attrib_digest")
 external fun PKCS7_add1_attrib_digest(si: CValuesRef<PKCS7_SIGNER_INFO>?, md: CValuesRef<UByteVar>?, mdlen: Int): Int
 
-@CCall("knifunptr_openssl2721_SMIME_write_PKCS7")
+@CCall("knifunptr_openssl2726_SMIME_write_PKCS7")
 external fun SMIME_write_PKCS7(bio: CValuesRef<BIO>?, p7: CValuesRef<PKCS7>?, data: CValuesRef<BIO>?, flags: Int): Int
 
-@CCall("knifunptr_openssl2722_SMIME_read_PKCS7")
+@CCall("knifunptr_openssl2727_SMIME_read_PKCS7")
 external fun SMIME_read_PKCS7(bio: CValuesRef<BIO>?, bcont: CValuesRef<CPointerVar<BIO>>?): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl2723_BIO_new_PKCS7")
+@CCall("knifunptr_openssl2728_BIO_new_PKCS7")
 external fun BIO_new_PKCS7(out: CValuesRef<BIO>?, p7: CValuesRef<PKCS7>?): CPointer<BIO>?
 
-@CCall("knifunptr_openssl2724_X509_CRL_set_default_method")
+@CCall("knifunptr_openssl2729_X509_CRL_set_default_method")
 external fun X509_CRL_set_default_method(meth: CValuesRef<X509_CRL_METHOD>?): Unit
 
-@CCall("knifunptr_openssl2725_X509_CRL_METHOD_new")
+@CCall("knifunptr_openssl2730_X509_CRL_METHOD_new")
 external fun X509_CRL_METHOD_new(
     crl_init: CPointer<CFunction<(CPointer<X509_CRL>?) -> Int>>?,
     crl_free: CPointer<CFunction<(CPointer<X509_CRL>?) -> Int>>?,
@@ -13143,87 +13238,87 @@ external fun X509_CRL_METHOD_new(
     crl_verify: CPointer<CFunction<(CPointer<X509_CRL>?, CPointer<EVP_PKEY>?) -> Int>>?
 ): CPointer<X509_CRL_METHOD>?
 
-@CCall("knifunptr_openssl2726_X509_CRL_METHOD_free")
+@CCall("knifunptr_openssl2731_X509_CRL_METHOD_free")
 external fun X509_CRL_METHOD_free(m: CValuesRef<X509_CRL_METHOD>?): Unit
 
-@CCall("knifunptr_openssl2727_X509_CRL_set_meth_data")
+@CCall("knifunptr_openssl2732_X509_CRL_set_meth_data")
 external fun X509_CRL_set_meth_data(crl: CValuesRef<X509_CRL>?, dat: CValuesRef<*>?): Unit
 
-@CCall("knifunptr_openssl2728_X509_CRL_get_meth_data")
+@CCall("knifunptr_openssl2733_X509_CRL_get_meth_data")
 external fun X509_CRL_get_meth_data(crl: CValuesRef<X509_CRL>?): COpaquePointer?
 
-@CCall("knifunptr_openssl2729_X509_verify_cert_error_string")
+@CCall("knifunptr_openssl2734_X509_verify_cert_error_string")
 external fun X509_verify_cert_error_string(n: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2730_X509_verify")
+@CCall("knifunptr_openssl2735_X509_verify")
 external fun X509_verify(a: CValuesRef<X509>?, r: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2731_X509_REQ_verify")
+@CCall("knifunptr_openssl2736_X509_REQ_verify")
 external fun X509_REQ_verify(a: CValuesRef<X509_REQ>?, r: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2732_X509_CRL_verify")
+@CCall("knifunptr_openssl2737_X509_CRL_verify")
 external fun X509_CRL_verify(a: CValuesRef<X509_CRL>?, r: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2733_NETSCAPE_SPKI_verify")
+@CCall("knifunptr_openssl2738_NETSCAPE_SPKI_verify")
 external fun NETSCAPE_SPKI_verify(a: CValuesRef<NETSCAPE_SPKI>?, r: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2734_NETSCAPE_SPKI_b64_decode")
+@CCall("knifunptr_openssl2739_NETSCAPE_SPKI_b64_decode")
 external fun NETSCAPE_SPKI_b64_decode(@CCall.CString str: String?, len: Int): CPointer<NETSCAPE_SPKI>?
 
-@CCall("knifunptr_openssl2735_NETSCAPE_SPKI_b64_encode")
+@CCall("knifunptr_openssl2740_NETSCAPE_SPKI_b64_encode")
 external fun NETSCAPE_SPKI_b64_encode(x: CValuesRef<NETSCAPE_SPKI>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2736_NETSCAPE_SPKI_get_pubkey")
+@CCall("knifunptr_openssl2741_NETSCAPE_SPKI_get_pubkey")
 external fun NETSCAPE_SPKI_get_pubkey(x: CValuesRef<NETSCAPE_SPKI>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2737_NETSCAPE_SPKI_set_pubkey")
+@CCall("knifunptr_openssl2742_NETSCAPE_SPKI_set_pubkey")
 external fun NETSCAPE_SPKI_set_pubkey(x: CValuesRef<NETSCAPE_SPKI>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2738_NETSCAPE_SPKI_print")
+@CCall("knifunptr_openssl2743_NETSCAPE_SPKI_print")
 external fun NETSCAPE_SPKI_print(out: CValuesRef<BIO>?, spki: CValuesRef<NETSCAPE_SPKI>?): Int
 
-@CCall("knifunptr_openssl2739_X509_signature_dump")
+@CCall("knifunptr_openssl2744_X509_signature_dump")
 external fun X509_signature_dump(bp: CValuesRef<BIO>?, sig: CValuesRef<ASN1_STRING>?, indent: Int): Int
 
-@CCall("knifunptr_openssl2740_X509_signature_print")
+@CCall("knifunptr_openssl2745_X509_signature_print")
 external fun X509_signature_print(
     bp: CValuesRef<BIO>?,
     alg: CValuesRef<X509_ALGOR>?,
     sig: CValuesRef<ASN1_STRING>?
 ): Int
 
-@CCall("knifunptr_openssl2741_X509_sign")
+@CCall("knifunptr_openssl2746_X509_sign")
 external fun X509_sign(x: CValuesRef<X509>?, pkey: CValuesRef<EVP_PKEY>?, md: CValuesRef<EVP_MD>?): Int
 
-@CCall("knifunptr_openssl2742_X509_sign_ctx")
+@CCall("knifunptr_openssl2747_X509_sign_ctx")
 external fun X509_sign_ctx(x: CValuesRef<X509>?, ctx: CValuesRef<EVP_MD_CTX>?): Int
 
-@CCall("knifunptr_openssl2743_X509_http_nbio")
+@CCall("knifunptr_openssl2748_X509_http_nbio")
 external fun X509_http_nbio(rctx: CValuesRef<OCSP_REQ_CTX>?, pcert: CValuesRef<CPointerVar<X509>>?): Int
 
-@CCall("knifunptr_openssl2744_X509_REQ_sign")
+@CCall("knifunptr_openssl2749_X509_REQ_sign")
 external fun X509_REQ_sign(x: CValuesRef<X509_REQ>?, pkey: CValuesRef<EVP_PKEY>?, md: CValuesRef<EVP_MD>?): Int
 
-@CCall("knifunptr_openssl2745_X509_REQ_sign_ctx")
+@CCall("knifunptr_openssl2750_X509_REQ_sign_ctx")
 external fun X509_REQ_sign_ctx(x: CValuesRef<X509_REQ>?, ctx: CValuesRef<EVP_MD_CTX>?): Int
 
-@CCall("knifunptr_openssl2746_X509_CRL_sign")
+@CCall("knifunptr_openssl2751_X509_CRL_sign")
 external fun X509_CRL_sign(x: CValuesRef<X509_CRL>?, pkey: CValuesRef<EVP_PKEY>?, md: CValuesRef<EVP_MD>?): Int
 
-@CCall("knifunptr_openssl2747_X509_CRL_sign_ctx")
+@CCall("knifunptr_openssl2752_X509_CRL_sign_ctx")
 external fun X509_CRL_sign_ctx(x: CValuesRef<X509_CRL>?, ctx: CValuesRef<EVP_MD_CTX>?): Int
 
-@CCall("knifunptr_openssl2748_X509_CRL_http_nbio")
+@CCall("knifunptr_openssl2753_X509_CRL_http_nbio")
 external fun X509_CRL_http_nbio(rctx: CValuesRef<OCSP_REQ_CTX>?, pcrl: CValuesRef<CPointerVar<X509_CRL>>?): Int
 
-@CCall("knifunptr_openssl2749_NETSCAPE_SPKI_sign")
+@CCall("knifunptr_openssl2754_NETSCAPE_SPKI_sign")
 external fun NETSCAPE_SPKI_sign(
     x: CValuesRef<NETSCAPE_SPKI>?,
     pkey: CValuesRef<EVP_PKEY>?,
     md: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl2750_X509_pubkey_digest")
+@CCall("knifunptr_openssl2755_X509_pubkey_digest")
 external fun X509_pubkey_digest(
     data: CValuesRef<X509>?,
     type: CValuesRef<EVP_MD>?,
@@ -13231,7 +13326,7 @@ external fun X509_pubkey_digest(
     len: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl2751_X509_digest")
+@CCall("knifunptr_openssl2756_X509_digest")
 external fun X509_digest(
     data: CValuesRef<X509>?,
     type: CValuesRef<EVP_MD>?,
@@ -13239,7 +13334,7 @@ external fun X509_digest(
     len: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl2752_X509_CRL_digest")
+@CCall("knifunptr_openssl2757_X509_CRL_digest")
 external fun X509_CRL_digest(
     data: CValuesRef<X509_CRL>?,
     type: CValuesRef<EVP_MD>?,
@@ -13247,7 +13342,7 @@ external fun X509_CRL_digest(
     len: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl2753_X509_REQ_digest")
+@CCall("knifunptr_openssl2758_X509_REQ_digest")
 external fun X509_REQ_digest(
     data: CValuesRef<X509_REQ>?,
     type: CValuesRef<EVP_MD>?,
@@ -13255,7 +13350,7 @@ external fun X509_REQ_digest(
     len: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl2754_X509_NAME_digest")
+@CCall("knifunptr_openssl2759_X509_NAME_digest")
 external fun X509_NAME_digest(
     data: CValuesRef<X509_NAME>?,
     type: CValuesRef<EVP_MD>?,
@@ -13263,208 +13358,208 @@ external fun X509_NAME_digest(
     len: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl2755_d2i_X509_fp")
+@CCall("knifunptr_openssl2760_d2i_X509_fp")
 external fun d2i_X509_fp(fp: CValuesRef<FILE>?, x509: CValuesRef<CPointerVar<X509>>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2756_i2d_X509_fp")
+@CCall("knifunptr_openssl2761_i2d_X509_fp")
 external fun i2d_X509_fp(fp: CValuesRef<FILE>?, x509: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2757_d2i_X509_CRL_fp")
+@CCall("knifunptr_openssl2762_d2i_X509_CRL_fp")
 external fun d2i_X509_CRL_fp(fp: CValuesRef<FILE>?, crl: CValuesRef<CPointerVar<X509_CRL>>?): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2758_i2d_X509_CRL_fp")
+@CCall("knifunptr_openssl2763_i2d_X509_CRL_fp")
 external fun i2d_X509_CRL_fp(fp: CValuesRef<FILE>?, crl: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2759_d2i_X509_REQ_fp")
+@CCall("knifunptr_openssl2764_d2i_X509_REQ_fp")
 external fun d2i_X509_REQ_fp(fp: CValuesRef<FILE>?, req: CValuesRef<CPointerVar<X509_REQ>>?): CPointer<X509_REQ>?
 
-@CCall("knifunptr_openssl2760_i2d_X509_REQ_fp")
+@CCall("knifunptr_openssl2765_i2d_X509_REQ_fp")
 external fun i2d_X509_REQ_fp(fp: CValuesRef<FILE>?, req: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl2761_d2i_RSAPrivateKey_fp")
+@CCall("knifunptr_openssl2766_d2i_RSAPrivateKey_fp")
 external fun d2i_RSAPrivateKey_fp(fp: CValuesRef<FILE>?, rsa: CValuesRef<CPointerVar<RSA>>?): CPointer<RSA>?
 
-@CCall("knifunptr_openssl2762_i2d_RSAPrivateKey_fp")
+@CCall("knifunptr_openssl2767_i2d_RSAPrivateKey_fp")
 external fun i2d_RSAPrivateKey_fp(fp: CValuesRef<FILE>?, rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl2763_d2i_RSAPublicKey_fp")
+@CCall("knifunptr_openssl2768_d2i_RSAPublicKey_fp")
 external fun d2i_RSAPublicKey_fp(fp: CValuesRef<FILE>?, rsa: CValuesRef<CPointerVar<RSA>>?): CPointer<RSA>?
 
-@CCall("knifunptr_openssl2764_i2d_RSAPublicKey_fp")
+@CCall("knifunptr_openssl2769_i2d_RSAPublicKey_fp")
 external fun i2d_RSAPublicKey_fp(fp: CValuesRef<FILE>?, rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl2765_d2i_RSA_PUBKEY_fp")
+@CCall("knifunptr_openssl2770_d2i_RSA_PUBKEY_fp")
 external fun d2i_RSA_PUBKEY_fp(fp: CValuesRef<FILE>?, rsa: CValuesRef<CPointerVar<RSA>>?): CPointer<RSA>?
 
-@CCall("knifunptr_openssl2766_i2d_RSA_PUBKEY_fp")
+@CCall("knifunptr_openssl2771_i2d_RSA_PUBKEY_fp")
 external fun i2d_RSA_PUBKEY_fp(fp: CValuesRef<FILE>?, rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl2767_d2i_DSA_PUBKEY_fp")
+@CCall("knifunptr_openssl2772_d2i_DSA_PUBKEY_fp")
 external fun d2i_DSA_PUBKEY_fp(fp: CValuesRef<FILE>?, dsa: CValuesRef<CPointerVar<DSA>>?): CPointer<DSA>?
 
-@CCall("knifunptr_openssl2768_i2d_DSA_PUBKEY_fp")
+@CCall("knifunptr_openssl2773_i2d_DSA_PUBKEY_fp")
 external fun i2d_DSA_PUBKEY_fp(fp: CValuesRef<FILE>?, dsa: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl2769_d2i_DSAPrivateKey_fp")
+@CCall("knifunptr_openssl2774_d2i_DSAPrivateKey_fp")
 external fun d2i_DSAPrivateKey_fp(fp: CValuesRef<FILE>?, dsa: CValuesRef<CPointerVar<DSA>>?): CPointer<DSA>?
 
-@CCall("knifunptr_openssl2770_i2d_DSAPrivateKey_fp")
+@CCall("knifunptr_openssl2775_i2d_DSAPrivateKey_fp")
 external fun i2d_DSAPrivateKey_fp(fp: CValuesRef<FILE>?, dsa: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl2771_d2i_EC_PUBKEY_fp")
+@CCall("knifunptr_openssl2776_d2i_EC_PUBKEY_fp")
 external fun d2i_EC_PUBKEY_fp(fp: CValuesRef<FILE>?, eckey: CValuesRef<CPointerVar<EC_KEY>>?): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl2772_i2d_EC_PUBKEY_fp")
+@CCall("knifunptr_openssl2777_i2d_EC_PUBKEY_fp")
 external fun i2d_EC_PUBKEY_fp(fp: CValuesRef<FILE>?, eckey: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl2773_d2i_ECPrivateKey_fp")
+@CCall("knifunptr_openssl2778_d2i_ECPrivateKey_fp")
 external fun d2i_ECPrivateKey_fp(fp: CValuesRef<FILE>?, eckey: CValuesRef<CPointerVar<EC_KEY>>?): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl2774_i2d_ECPrivateKey_fp")
+@CCall("knifunptr_openssl2779_i2d_ECPrivateKey_fp")
 external fun i2d_ECPrivateKey_fp(fp: CValuesRef<FILE>?, eckey: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl2775_d2i_PKCS8_fp")
+@CCall("knifunptr_openssl2780_d2i_PKCS8_fp")
 external fun d2i_PKCS8_fp(fp: CValuesRef<FILE>?, p8: CValuesRef<CPointerVar<X509_SIG>>?): CPointer<X509_SIG>?
 
-@CCall("knifunptr_openssl2776_i2d_PKCS8_fp")
+@CCall("knifunptr_openssl2781_i2d_PKCS8_fp")
 external fun i2d_PKCS8_fp(fp: CValuesRef<FILE>?, p8: CValuesRef<X509_SIG>?): Int
 
-@CCall("knifunptr_openssl2777_d2i_PKCS8_PRIV_KEY_INFO_fp")
+@CCall("knifunptr_openssl2782_d2i_PKCS8_PRIV_KEY_INFO_fp")
 external fun d2i_PKCS8_PRIV_KEY_INFO_fp(
     fp: CValuesRef<FILE>?,
     p8inf: CValuesRef<CPointerVar<PKCS8_PRIV_KEY_INFO>>?
 ): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl2778_i2d_PKCS8_PRIV_KEY_INFO_fp")
+@CCall("knifunptr_openssl2783_i2d_PKCS8_PRIV_KEY_INFO_fp")
 external fun i2d_PKCS8_PRIV_KEY_INFO_fp(fp: CValuesRef<FILE>?, p8inf: CValuesRef<PKCS8_PRIV_KEY_INFO>?): Int
 
-@CCall("knifunptr_openssl2779_i2d_PKCS8PrivateKeyInfo_fp")
+@CCall("knifunptr_openssl2784_i2d_PKCS8PrivateKeyInfo_fp")
 external fun i2d_PKCS8PrivateKeyInfo_fp(fp: CValuesRef<FILE>?, key: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2780_i2d_PrivateKey_fp")
+@CCall("knifunptr_openssl2785_i2d_PrivateKey_fp")
 external fun i2d_PrivateKey_fp(fp: CValuesRef<FILE>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2781_d2i_PrivateKey_fp")
+@CCall("knifunptr_openssl2786_d2i_PrivateKey_fp")
 external fun d2i_PrivateKey_fp(fp: CValuesRef<FILE>?, a: CValuesRef<CPointerVar<EVP_PKEY>>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2782_i2d_PUBKEY_fp")
+@CCall("knifunptr_openssl2787_i2d_PUBKEY_fp")
 external fun i2d_PUBKEY_fp(fp: CValuesRef<FILE>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2783_d2i_PUBKEY_fp")
+@CCall("knifunptr_openssl2788_d2i_PUBKEY_fp")
 external fun d2i_PUBKEY_fp(fp: CValuesRef<FILE>?, a: CValuesRef<CPointerVar<EVP_PKEY>>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2784_d2i_X509_bio")
+@CCall("knifunptr_openssl2789_d2i_X509_bio")
 external fun d2i_X509_bio(bp: CValuesRef<BIO>?, x509: CValuesRef<CPointerVar<X509>>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2785_i2d_X509_bio")
+@CCall("knifunptr_openssl2790_i2d_X509_bio")
 external fun i2d_X509_bio(bp: CValuesRef<BIO>?, x509: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2786_d2i_X509_CRL_bio")
+@CCall("knifunptr_openssl2791_d2i_X509_CRL_bio")
 external fun d2i_X509_CRL_bio(bp: CValuesRef<BIO>?, crl: CValuesRef<CPointerVar<X509_CRL>>?): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2787_i2d_X509_CRL_bio")
+@CCall("knifunptr_openssl2792_i2d_X509_CRL_bio")
 external fun i2d_X509_CRL_bio(bp: CValuesRef<BIO>?, crl: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl2788_d2i_X509_REQ_bio")
+@CCall("knifunptr_openssl2793_d2i_X509_REQ_bio")
 external fun d2i_X509_REQ_bio(bp: CValuesRef<BIO>?, req: CValuesRef<CPointerVar<X509_REQ>>?): CPointer<X509_REQ>?
 
-@CCall("knifunptr_openssl2789_i2d_X509_REQ_bio")
+@CCall("knifunptr_openssl2794_i2d_X509_REQ_bio")
 external fun i2d_X509_REQ_bio(bp: CValuesRef<BIO>?, req: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl2790_d2i_RSAPrivateKey_bio")
+@CCall("knifunptr_openssl2795_d2i_RSAPrivateKey_bio")
 external fun d2i_RSAPrivateKey_bio(bp: CValuesRef<BIO>?, rsa: CValuesRef<CPointerVar<RSA>>?): CPointer<RSA>?
 
-@CCall("knifunptr_openssl2791_i2d_RSAPrivateKey_bio")
+@CCall("knifunptr_openssl2796_i2d_RSAPrivateKey_bio")
 external fun i2d_RSAPrivateKey_bio(bp: CValuesRef<BIO>?, rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl2792_d2i_RSAPublicKey_bio")
+@CCall("knifunptr_openssl2797_d2i_RSAPublicKey_bio")
 external fun d2i_RSAPublicKey_bio(bp: CValuesRef<BIO>?, rsa: CValuesRef<CPointerVar<RSA>>?): CPointer<RSA>?
 
-@CCall("knifunptr_openssl2793_i2d_RSAPublicKey_bio")
+@CCall("knifunptr_openssl2798_i2d_RSAPublicKey_bio")
 external fun i2d_RSAPublicKey_bio(bp: CValuesRef<BIO>?, rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl2794_d2i_RSA_PUBKEY_bio")
+@CCall("knifunptr_openssl2799_d2i_RSA_PUBKEY_bio")
 external fun d2i_RSA_PUBKEY_bio(bp: CValuesRef<BIO>?, rsa: CValuesRef<CPointerVar<RSA>>?): CPointer<RSA>?
 
-@CCall("knifunptr_openssl2795_i2d_RSA_PUBKEY_bio")
+@CCall("knifunptr_openssl2800_i2d_RSA_PUBKEY_bio")
 external fun i2d_RSA_PUBKEY_bio(bp: CValuesRef<BIO>?, rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl2796_d2i_DSA_PUBKEY_bio")
+@CCall("knifunptr_openssl2801_d2i_DSA_PUBKEY_bio")
 external fun d2i_DSA_PUBKEY_bio(bp: CValuesRef<BIO>?, dsa: CValuesRef<CPointerVar<DSA>>?): CPointer<DSA>?
 
-@CCall("knifunptr_openssl2797_i2d_DSA_PUBKEY_bio")
+@CCall("knifunptr_openssl2802_i2d_DSA_PUBKEY_bio")
 external fun i2d_DSA_PUBKEY_bio(bp: CValuesRef<BIO>?, dsa: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl2798_d2i_DSAPrivateKey_bio")
+@CCall("knifunptr_openssl2803_d2i_DSAPrivateKey_bio")
 external fun d2i_DSAPrivateKey_bio(bp: CValuesRef<BIO>?, dsa: CValuesRef<CPointerVar<DSA>>?): CPointer<DSA>?
 
-@CCall("knifunptr_openssl2799_i2d_DSAPrivateKey_bio")
+@CCall("knifunptr_openssl2804_i2d_DSAPrivateKey_bio")
 external fun i2d_DSAPrivateKey_bio(bp: CValuesRef<BIO>?, dsa: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl2800_d2i_EC_PUBKEY_bio")
+@CCall("knifunptr_openssl2805_d2i_EC_PUBKEY_bio")
 external fun d2i_EC_PUBKEY_bio(bp: CValuesRef<BIO>?, eckey: CValuesRef<CPointerVar<EC_KEY>>?): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl2801_i2d_EC_PUBKEY_bio")
+@CCall("knifunptr_openssl2806_i2d_EC_PUBKEY_bio")
 external fun i2d_EC_PUBKEY_bio(bp: CValuesRef<BIO>?, eckey: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl2802_d2i_ECPrivateKey_bio")
+@CCall("knifunptr_openssl2807_d2i_ECPrivateKey_bio")
 external fun d2i_ECPrivateKey_bio(bp: CValuesRef<BIO>?, eckey: CValuesRef<CPointerVar<EC_KEY>>?): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl2803_i2d_ECPrivateKey_bio")
+@CCall("knifunptr_openssl2808_i2d_ECPrivateKey_bio")
 external fun i2d_ECPrivateKey_bio(bp: CValuesRef<BIO>?, eckey: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl2804_d2i_PKCS8_bio")
+@CCall("knifunptr_openssl2809_d2i_PKCS8_bio")
 external fun d2i_PKCS8_bio(bp: CValuesRef<BIO>?, p8: CValuesRef<CPointerVar<X509_SIG>>?): CPointer<X509_SIG>?
 
-@CCall("knifunptr_openssl2805_i2d_PKCS8_bio")
+@CCall("knifunptr_openssl2810_i2d_PKCS8_bio")
 external fun i2d_PKCS8_bio(bp: CValuesRef<BIO>?, p8: CValuesRef<X509_SIG>?): Int
 
-@CCall("knifunptr_openssl2806_d2i_PKCS8_PRIV_KEY_INFO_bio")
+@CCall("knifunptr_openssl2811_d2i_PKCS8_PRIV_KEY_INFO_bio")
 external fun d2i_PKCS8_PRIV_KEY_INFO_bio(
     bp: CValuesRef<BIO>?,
     p8inf: CValuesRef<CPointerVar<PKCS8_PRIV_KEY_INFO>>?
 ): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl2807_i2d_PKCS8_PRIV_KEY_INFO_bio")
+@CCall("knifunptr_openssl2812_i2d_PKCS8_PRIV_KEY_INFO_bio")
 external fun i2d_PKCS8_PRIV_KEY_INFO_bio(bp: CValuesRef<BIO>?, p8inf: CValuesRef<PKCS8_PRIV_KEY_INFO>?): Int
 
-@CCall("knifunptr_openssl2808_i2d_PKCS8PrivateKeyInfo_bio")
+@CCall("knifunptr_openssl2813_i2d_PKCS8PrivateKeyInfo_bio")
 external fun i2d_PKCS8PrivateKeyInfo_bio(bp: CValuesRef<BIO>?, key: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2809_i2d_PrivateKey_bio")
+@CCall("knifunptr_openssl2814_i2d_PrivateKey_bio")
 external fun i2d_PrivateKey_bio(bp: CValuesRef<BIO>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2810_d2i_PrivateKey_bio")
+@CCall("knifunptr_openssl2815_d2i_PrivateKey_bio")
 external fun d2i_PrivateKey_bio(bp: CValuesRef<BIO>?, a: CValuesRef<CPointerVar<EVP_PKEY>>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2811_i2d_PUBKEY_bio")
+@CCall("knifunptr_openssl2816_i2d_PUBKEY_bio")
 external fun i2d_PUBKEY_bio(bp: CValuesRef<BIO>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2812_d2i_PUBKEY_bio")
+@CCall("knifunptr_openssl2817_d2i_PUBKEY_bio")
 external fun d2i_PUBKEY_bio(bp: CValuesRef<BIO>?, a: CValuesRef<CPointerVar<EVP_PKEY>>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2813_X509_dup")
+@CCall("knifunptr_openssl2818_X509_dup")
 external fun X509_dup(x509: CValuesRef<X509>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2814_X509_ATTRIBUTE_dup")
+@CCall("knifunptr_openssl2819_X509_ATTRIBUTE_dup")
 external fun X509_ATTRIBUTE_dup(xa: CValuesRef<X509_ATTRIBUTE>?): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2815_X509_EXTENSION_dup")
+@CCall("knifunptr_openssl2820_X509_EXTENSION_dup")
 external fun X509_EXTENSION_dup(ex: CValuesRef<X509_EXTENSION>?): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2816_X509_CRL_dup")
+@CCall("knifunptr_openssl2821_X509_CRL_dup")
 external fun X509_CRL_dup(crl: CValuesRef<X509_CRL>?): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2817_X509_REVOKED_dup")
+@CCall("knifunptr_openssl2822_X509_REVOKED_dup")
 external fun X509_REVOKED_dup(rev: CValuesRef<X509_REVOKED>?): CPointer<X509_REVOKED>?
 
-@CCall("knifunptr_openssl2818_X509_REQ_dup")
+@CCall("knifunptr_openssl2823_X509_REQ_dup")
 external fun X509_REQ_dup(req: CValuesRef<X509_REQ>?): CPointer<X509_REQ>?
 
-@CCall("knifunptr_openssl2819_X509_ALGOR_dup")
+@CCall("knifunptr_openssl2824_X509_ALGOR_dup")
 external fun X509_ALGOR_dup(xn: CValuesRef<X509_ALGOR>?): CPointer<X509_ALGOR>?
 
-@CCall("knifunptr_openssl2820_X509_ALGOR_set0")
+@CCall("knifunptr_openssl2825_X509_ALGOR_set0")
 external fun X509_ALGOR_set0(
     alg: CValuesRef<X509_ALGOR>?,
     aobj: CValuesRef<ASN1_OBJECT>?,
@@ -13472,7 +13567,7 @@ external fun X509_ALGOR_set0(
     pval: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl2821_X509_ALGOR_get0")
+@CCall("knifunptr_openssl2826_X509_ALGOR_get0")
 external fun X509_ALGOR_get0(
     paobj: CValuesRef<CPointerVar<ASN1_OBJECT>>?,
     pptype: CValuesRef<IntVar>?,
@@ -13480,28 +13575,28 @@ external fun X509_ALGOR_get0(
     algor: CValuesRef<X509_ALGOR>?
 ): Unit
 
-@CCall("knifunptr_openssl2822_X509_ALGOR_set_md")
+@CCall("knifunptr_openssl2827_X509_ALGOR_set_md")
 external fun X509_ALGOR_set_md(alg: CValuesRef<X509_ALGOR>?, md: CValuesRef<EVP_MD>?): Unit
 
-@CCall("knifunptr_openssl2823_X509_ALGOR_cmp")
+@CCall("knifunptr_openssl2828_X509_ALGOR_cmp")
 external fun X509_ALGOR_cmp(a: CValuesRef<X509_ALGOR>?, b: CValuesRef<X509_ALGOR>?): Int
 
-@CCall("knifunptr_openssl2824_X509_NAME_dup")
+@CCall("knifunptr_openssl2829_X509_NAME_dup")
 external fun X509_NAME_dup(xn: CValuesRef<X509_NAME>?): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2825_X509_NAME_ENTRY_dup")
+@CCall("knifunptr_openssl2830_X509_NAME_ENTRY_dup")
 external fun X509_NAME_ENTRY_dup(ne: CValuesRef<X509_NAME_ENTRY>?): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2826_X509_cmp_time")
+@CCall("knifunptr_openssl2831_X509_cmp_time")
 external fun X509_cmp_time(s: CValuesRef<ASN1_TIME>?, t: CValuesRef<time_tVar>?): Int
 
-@CCall("knifunptr_openssl2827_X509_cmp_current_time")
+@CCall("knifunptr_openssl2832_X509_cmp_current_time")
 external fun X509_cmp_current_time(s: CValuesRef<ASN1_TIME>?): Int
 
-@CCall("knifunptr_openssl2828_X509_time_adj")
+@CCall("knifunptr_openssl2833_X509_time_adj")
 external fun X509_time_adj(s: CValuesRef<ASN1_TIME>?, adj: Int, t: CValuesRef<time_tVar>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl2829_X509_time_adj_ex")
+@CCall("knifunptr_openssl2834_X509_time_adj_ex")
 external fun X509_time_adj_ex(
     s: CValuesRef<ASN1_TIME>?,
     offset_day: Int,
@@ -13509,360 +13604,360 @@ external fun X509_time_adj_ex(
     t: CValuesRef<time_tVar>?
 ): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl2830_X509_gmtime_adj")
+@CCall("knifunptr_openssl2835_X509_gmtime_adj")
 external fun X509_gmtime_adj(s: CValuesRef<ASN1_TIME>?, adj: Int): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl2831_X509_get_default_cert_area")
+@CCall("knifunptr_openssl2836_X509_get_default_cert_area")
 external fun X509_get_default_cert_area(): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2832_X509_get_default_cert_dir")
+@CCall("knifunptr_openssl2837_X509_get_default_cert_dir")
 external fun X509_get_default_cert_dir(): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2833_X509_get_default_cert_file")
+@CCall("knifunptr_openssl2838_X509_get_default_cert_file")
 external fun X509_get_default_cert_file(): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2834_X509_get_default_cert_dir_env")
+@CCall("knifunptr_openssl2839_X509_get_default_cert_dir_env")
 external fun X509_get_default_cert_dir_env(): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2835_X509_get_default_cert_file_env")
+@CCall("knifunptr_openssl2840_X509_get_default_cert_file_env")
 external fun X509_get_default_cert_file_env(): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2836_X509_get_default_private_dir")
+@CCall("knifunptr_openssl2841_X509_get_default_private_dir")
 external fun X509_get_default_private_dir(): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2837_X509_to_X509_REQ")
+@CCall("knifunptr_openssl2842_X509_to_X509_REQ")
 external fun X509_to_X509_REQ(
     x: CValuesRef<X509>?,
     pkey: CValuesRef<EVP_PKEY>?,
     md: CValuesRef<EVP_MD>?
 ): CPointer<X509_REQ>?
 
-@CCall("knifunptr_openssl2838_X509_REQ_to_X509")
+@CCall("knifunptr_openssl2843_X509_REQ_to_X509")
 external fun X509_REQ_to_X509(r: CValuesRef<X509_REQ>?, days: Int, pkey: CValuesRef<EVP_PKEY>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl2839_X509_ALGOR_new")
+@CCall("knifunptr_openssl2844_X509_ALGOR_new")
 external fun X509_ALGOR_new(): CPointer<X509_ALGOR>?
 
-@CCall("knifunptr_openssl2840_X509_ALGOR_free")
+@CCall("knifunptr_openssl2845_X509_ALGOR_free")
 external fun X509_ALGOR_free(a: CValuesRef<X509_ALGOR>?): Unit
 
-@CCall("knifunptr_openssl2841_d2i_X509_ALGOR")
+@CCall("knifunptr_openssl2846_d2i_X509_ALGOR")
 external fun d2i_X509_ALGOR(
     a: CValuesRef<CPointerVar<X509_ALGOR>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_ALGOR>?
 
-@CCall("knifunptr_openssl2842_i2d_X509_ALGOR")
+@CCall("knifunptr_openssl2847_i2d_X509_ALGOR")
 external fun i2d_X509_ALGOR(a: CValuesRef<X509_ALGOR>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2843_d2i_X509_ALGORS")
+@CCall("knifunptr_openssl2848_d2i_X509_ALGORS")
 external fun d2i_X509_ALGORS(
     a: CValuesRef<CPointerVar<X509_ALGORS>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_ALGORS>?
 
-@CCall("knifunptr_openssl2844_i2d_X509_ALGORS")
+@CCall("knifunptr_openssl2849_i2d_X509_ALGORS")
 external fun i2d_X509_ALGORS(a: CValuesRef<X509_ALGORS>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2845_X509_VAL_new")
+@CCall("knifunptr_openssl2850_X509_VAL_new")
 external fun X509_VAL_new(): CPointer<X509_VAL>?
 
-@CCall("knifunptr_openssl2846_X509_VAL_free")
+@CCall("knifunptr_openssl2851_X509_VAL_free")
 external fun X509_VAL_free(a: CValuesRef<X509_VAL>?): Unit
 
-@CCall("knifunptr_openssl2847_d2i_X509_VAL")
+@CCall("knifunptr_openssl2852_d2i_X509_VAL")
 external fun d2i_X509_VAL(
     a: CValuesRef<CPointerVar<X509_VAL>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_VAL>?
 
-@CCall("knifunptr_openssl2848_i2d_X509_VAL")
+@CCall("knifunptr_openssl2853_i2d_X509_VAL")
 external fun i2d_X509_VAL(a: CValuesRef<X509_VAL>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2849_X509_PUBKEY_new")
+@CCall("knifunptr_openssl2854_X509_PUBKEY_new")
 external fun X509_PUBKEY_new(): CPointer<X509_PUBKEY>?
 
-@CCall("knifunptr_openssl2850_X509_PUBKEY_free")
+@CCall("knifunptr_openssl2855_X509_PUBKEY_free")
 external fun X509_PUBKEY_free(a: CValuesRef<X509_PUBKEY>?): Unit
 
-@CCall("knifunptr_openssl2851_d2i_X509_PUBKEY")
+@CCall("knifunptr_openssl2856_d2i_X509_PUBKEY")
 external fun d2i_X509_PUBKEY(
     a: CValuesRef<CPointerVar<X509_PUBKEY>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_PUBKEY>?
 
-@CCall("knifunptr_openssl2852_i2d_X509_PUBKEY")
+@CCall("knifunptr_openssl2857_i2d_X509_PUBKEY")
 external fun i2d_X509_PUBKEY(a: CValuesRef<X509_PUBKEY>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2853_X509_PUBKEY_set")
+@CCall("knifunptr_openssl2858_X509_PUBKEY_set")
 external fun X509_PUBKEY_set(x: CValuesRef<CPointerVar<X509_PUBKEY>>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2854_X509_PUBKEY_get0")
+@CCall("knifunptr_openssl2859_X509_PUBKEY_get0")
 external fun X509_PUBKEY_get0(key: CValuesRef<X509_PUBKEY>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2855_X509_PUBKEY_get")
+@CCall("knifunptr_openssl2860_X509_PUBKEY_get")
 external fun X509_PUBKEY_get(key: CValuesRef<X509_PUBKEY>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2856_X509_get_pubkey_parameters")
+@CCall("knifunptr_openssl2861_X509_get_pubkey_parameters")
 external fun X509_get_pubkey_parameters(pkey: CValuesRef<EVP_PKEY>?, chain: CValuesRef<stack_st_X509>?): Int
 
-@CCall("knifunptr_openssl2857_X509_get_pathlen")
+@CCall("knifunptr_openssl2862_X509_get_pathlen")
 external fun X509_get_pathlen(x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2858_i2d_PUBKEY")
+@CCall("knifunptr_openssl2863_i2d_PUBKEY")
 external fun i2d_PUBKEY(a: CValuesRef<EVP_PKEY>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2859_d2i_PUBKEY")
+@CCall("knifunptr_openssl2864_d2i_PUBKEY")
 external fun d2i_PUBKEY(
     a: CValuesRef<CPointerVar<EVP_PKEY>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2860_i2d_RSA_PUBKEY")
+@CCall("knifunptr_openssl2865_i2d_RSA_PUBKEY")
 external fun i2d_RSA_PUBKEY(a: CValuesRef<RSA>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2861_d2i_RSA_PUBKEY")
+@CCall("knifunptr_openssl2866_d2i_RSA_PUBKEY")
 external fun d2i_RSA_PUBKEY(
     a: CValuesRef<CPointerVar<RSA>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl2862_i2d_DSA_PUBKEY")
+@CCall("knifunptr_openssl2867_i2d_DSA_PUBKEY")
 external fun i2d_DSA_PUBKEY(a: CValuesRef<DSA>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2863_d2i_DSA_PUBKEY")
+@CCall("knifunptr_openssl2868_d2i_DSA_PUBKEY")
 external fun d2i_DSA_PUBKEY(
     a: CValuesRef<CPointerVar<DSA>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl2864_i2d_EC_PUBKEY")
+@CCall("knifunptr_openssl2869_i2d_EC_PUBKEY")
 external fun i2d_EC_PUBKEY(a: CValuesRef<EC_KEY>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2865_d2i_EC_PUBKEY")
+@CCall("knifunptr_openssl2870_d2i_EC_PUBKEY")
 external fun d2i_EC_PUBKEY(
     a: CValuesRef<CPointerVar<EC_KEY>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl2866_X509_SIG_new")
+@CCall("knifunptr_openssl2871_X509_SIG_new")
 external fun X509_SIG_new(): CPointer<X509_SIG>?
 
-@CCall("knifunptr_openssl2867_X509_SIG_free")
+@CCall("knifunptr_openssl2872_X509_SIG_free")
 external fun X509_SIG_free(a: CValuesRef<X509_SIG>?): Unit
 
-@CCall("knifunptr_openssl2868_d2i_X509_SIG")
+@CCall("knifunptr_openssl2873_d2i_X509_SIG")
 external fun d2i_X509_SIG(
     a: CValuesRef<CPointerVar<X509_SIG>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_SIG>?
 
-@CCall("knifunptr_openssl2869_i2d_X509_SIG")
+@CCall("knifunptr_openssl2874_i2d_X509_SIG")
 external fun i2d_X509_SIG(a: CValuesRef<X509_SIG>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2870_X509_SIG_get0")
+@CCall("knifunptr_openssl2875_X509_SIG_get0")
 external fun X509_SIG_get0(
     sig: CValuesRef<X509_SIG>?,
     palg: CValuesRef<CPointerVar<X509_ALGOR>>?,
     pdigest: CValuesRef<CPointerVar<ASN1_OCTET_STRING>>?
 ): Unit
 
-@CCall("knifunptr_openssl2871_X509_SIG_getm")
+@CCall("knifunptr_openssl2876_X509_SIG_getm")
 external fun X509_SIG_getm(
     sig: CValuesRef<X509_SIG>?,
     palg: CValuesRef<CPointerVar<X509_ALGOR>>?,
     pdigest: CValuesRef<CPointerVar<ASN1_OCTET_STRING>>?
 ): Unit
 
-@CCall("knifunptr_openssl2872_X509_REQ_INFO_new")
+@CCall("knifunptr_openssl2877_X509_REQ_INFO_new")
 external fun X509_REQ_INFO_new(): CPointer<X509_REQ_INFO>?
 
-@CCall("knifunptr_openssl2873_X509_REQ_INFO_free")
+@CCall("knifunptr_openssl2878_X509_REQ_INFO_free")
 external fun X509_REQ_INFO_free(a: CValuesRef<X509_REQ_INFO>?): Unit
 
-@CCall("knifunptr_openssl2874_d2i_X509_REQ_INFO")
+@CCall("knifunptr_openssl2879_d2i_X509_REQ_INFO")
 external fun d2i_X509_REQ_INFO(
     a: CValuesRef<CPointerVar<X509_REQ_INFO>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_REQ_INFO>?
 
-@CCall("knifunptr_openssl2875_i2d_X509_REQ_INFO")
+@CCall("knifunptr_openssl2880_i2d_X509_REQ_INFO")
 external fun i2d_X509_REQ_INFO(a: CValuesRef<X509_REQ_INFO>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2876_X509_REQ_new")
+@CCall("knifunptr_openssl2881_X509_REQ_new")
 external fun X509_REQ_new(): CPointer<X509_REQ>?
 
-@CCall("knifunptr_openssl2877_X509_REQ_free")
+@CCall("knifunptr_openssl2882_X509_REQ_free")
 external fun X509_REQ_free(a: CValuesRef<X509_REQ>?): Unit
 
-@CCall("knifunptr_openssl2878_d2i_X509_REQ")
+@CCall("knifunptr_openssl2883_d2i_X509_REQ")
 external fun d2i_X509_REQ(
     a: CValuesRef<CPointerVar<X509_REQ>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_REQ>?
 
-@CCall("knifunptr_openssl2879_i2d_X509_REQ")
+@CCall("knifunptr_openssl2884_i2d_X509_REQ")
 external fun i2d_X509_REQ(a: CValuesRef<X509_REQ>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2880_X509_ATTRIBUTE_new")
+@CCall("knifunptr_openssl2885_X509_ATTRIBUTE_new")
 external fun X509_ATTRIBUTE_new(): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2881_X509_ATTRIBUTE_free")
+@CCall("knifunptr_openssl2886_X509_ATTRIBUTE_free")
 external fun X509_ATTRIBUTE_free(a: CValuesRef<X509_ATTRIBUTE>?): Unit
 
-@CCall("knifunptr_openssl2882_d2i_X509_ATTRIBUTE")
+@CCall("knifunptr_openssl2887_d2i_X509_ATTRIBUTE")
 external fun d2i_X509_ATTRIBUTE(
     a: CValuesRef<CPointerVar<X509_ATTRIBUTE>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2883_i2d_X509_ATTRIBUTE")
+@CCall("knifunptr_openssl2888_i2d_X509_ATTRIBUTE")
 external fun i2d_X509_ATTRIBUTE(a: CValuesRef<X509_ATTRIBUTE>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2884_X509_ATTRIBUTE_create")
+@CCall("knifunptr_openssl2889_X509_ATTRIBUTE_create")
 external fun X509_ATTRIBUTE_create(nid: Int, atrtype: Int, value: CValuesRef<*>?): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl2885_X509_EXTENSION_new")
+@CCall("knifunptr_openssl2890_X509_EXTENSION_new")
 external fun X509_EXTENSION_new(): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2886_X509_EXTENSION_free")
+@CCall("knifunptr_openssl2891_X509_EXTENSION_free")
 external fun X509_EXTENSION_free(a: CValuesRef<X509_EXTENSION>?): Unit
 
-@CCall("knifunptr_openssl2887_d2i_X509_EXTENSION")
+@CCall("knifunptr_openssl2892_d2i_X509_EXTENSION")
 external fun d2i_X509_EXTENSION(
     a: CValuesRef<CPointerVar<X509_EXTENSION>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2888_i2d_X509_EXTENSION")
+@CCall("knifunptr_openssl2893_i2d_X509_EXTENSION")
 external fun i2d_X509_EXTENSION(a: CValuesRef<X509_EXTENSION>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2889_d2i_X509_EXTENSIONS")
+@CCall("knifunptr_openssl2894_d2i_X509_EXTENSIONS")
 external fun d2i_X509_EXTENSIONS(
     a: CValuesRef<CPointerVar<X509_EXTENSIONS>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_EXTENSIONS>?
 
-@CCall("knifunptr_openssl2890_i2d_X509_EXTENSIONS")
+@CCall("knifunptr_openssl2895_i2d_X509_EXTENSIONS")
 external fun i2d_X509_EXTENSIONS(a: CValuesRef<X509_EXTENSIONS>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2891_X509_NAME_ENTRY_new")
+@CCall("knifunptr_openssl2896_X509_NAME_ENTRY_new")
 external fun X509_NAME_ENTRY_new(): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2892_X509_NAME_ENTRY_free")
+@CCall("knifunptr_openssl2897_X509_NAME_ENTRY_free")
 external fun X509_NAME_ENTRY_free(a: CValuesRef<X509_NAME_ENTRY>?): Unit
 
-@CCall("knifunptr_openssl2893_d2i_X509_NAME_ENTRY")
+@CCall("knifunptr_openssl2898_d2i_X509_NAME_ENTRY")
 external fun d2i_X509_NAME_ENTRY(
     a: CValuesRef<CPointerVar<X509_NAME_ENTRY>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl2894_i2d_X509_NAME_ENTRY")
+@CCall("knifunptr_openssl2899_i2d_X509_NAME_ENTRY")
 external fun i2d_X509_NAME_ENTRY(a: CValuesRef<X509_NAME_ENTRY>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2895_X509_NAME_new")
+@CCall("knifunptr_openssl2900_X509_NAME_new")
 external fun X509_NAME_new(): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2896_X509_NAME_free")
+@CCall("knifunptr_openssl2901_X509_NAME_free")
 external fun X509_NAME_free(a: CValuesRef<X509_NAME>?): Unit
 
-@CCall("knifunptr_openssl2897_d2i_X509_NAME")
+@CCall("knifunptr_openssl2902_d2i_X509_NAME")
 external fun d2i_X509_NAME(
     a: CValuesRef<CPointerVar<X509_NAME>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2898_i2d_X509_NAME")
+@CCall("knifunptr_openssl2903_i2d_X509_NAME")
 external fun i2d_X509_NAME(a: CValuesRef<X509_NAME>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2899_X509_NAME_set")
+@CCall("knifunptr_openssl2904_X509_NAME_set")
 external fun X509_NAME_set(xn: CValuesRef<CPointerVar<X509_NAME>>?, name: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl2900_X509_CINF_new")
+@CCall("knifunptr_openssl2905_X509_CINF_new")
 external fun X509_CINF_new(): CPointer<X509_CINF>?
 
-@CCall("knifunptr_openssl2901_X509_CINF_free")
+@CCall("knifunptr_openssl2906_X509_CINF_free")
 external fun X509_CINF_free(a: CValuesRef<X509_CINF>?): Unit
 
-@CCall("knifunptr_openssl2902_d2i_X509_CINF")
+@CCall("knifunptr_openssl2907_d2i_X509_CINF")
 external fun d2i_X509_CINF(
     a: CValuesRef<CPointerVar<X509_CINF>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_CINF>?
 
-@CCall("knifunptr_openssl2903_i2d_X509_CINF")
+@CCall("knifunptr_openssl2908_i2d_X509_CINF")
 external fun i2d_X509_CINF(a: CValuesRef<X509_CINF>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2904_X509_new")
+@CCall("knifunptr_openssl2909_X509_new")
 external fun X509_new(): CPointer<X509>?
 
-@CCall("knifunptr_openssl2905_X509_free")
+@CCall("knifunptr_openssl2910_X509_free")
 external fun X509_free(a: CValuesRef<X509>?): Unit
 
-@CCall("knifunptr_openssl2906_d2i_X509")
+@CCall("knifunptr_openssl2911_d2i_X509")
 external fun d2i_X509(
     a: CValuesRef<CPointerVar<X509>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509>?
 
-@CCall("knifunptr_openssl2907_i2d_X509")
+@CCall("knifunptr_openssl2912_i2d_X509")
 external fun i2d_X509(a: CValuesRef<X509>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2908_X509_CERT_AUX_new")
+@CCall("knifunptr_openssl2913_X509_CERT_AUX_new")
 external fun X509_CERT_AUX_new(): CPointer<X509_CERT_AUX>?
 
-@CCall("knifunptr_openssl2909_X509_CERT_AUX_free")
+@CCall("knifunptr_openssl2914_X509_CERT_AUX_free")
 external fun X509_CERT_AUX_free(a: CValuesRef<X509_CERT_AUX>?): Unit
 
-@CCall("knifunptr_openssl2910_d2i_X509_CERT_AUX")
+@CCall("knifunptr_openssl2915_d2i_X509_CERT_AUX")
 external fun d2i_X509_CERT_AUX(
     a: CValuesRef<CPointerVar<X509_CERT_AUX>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_CERT_AUX>?
 
-@CCall("knifunptr_openssl2911_i2d_X509_CERT_AUX")
+@CCall("knifunptr_openssl2916_i2d_X509_CERT_AUX")
 external fun i2d_X509_CERT_AUX(a: CValuesRef<X509_CERT_AUX>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2912_X509_set_ex_data")
+@CCall("knifunptr_openssl2917_X509_set_ex_data")
 external fun X509_set_ex_data(r: CValuesRef<X509>?, idx: Int, arg: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl2913_X509_get_ex_data")
+@CCall("knifunptr_openssl2918_X509_get_ex_data")
 external fun X509_get_ex_data(r: CValuesRef<X509>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl2914_i2d_X509_AUX")
+@CCall("knifunptr_openssl2919_i2d_X509_AUX")
 external fun i2d_X509_AUX(a: CValuesRef<X509>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2915_d2i_X509_AUX")
+@CCall("knifunptr_openssl2920_d2i_X509_AUX")
 external fun d2i_X509_AUX(
     a: CValuesRef<CPointerVar<X509>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<X509>?
 
-@CCall("knifunptr_openssl2916_i2d_re_X509_tbs")
+@CCall("knifunptr_openssl2921_i2d_re_X509_tbs")
 external fun i2d_re_X509_tbs(x: CValuesRef<X509>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2917_X509_SIG_INFO_get")
+@CCall("knifunptr_openssl2922_X509_SIG_INFO_get")
 external fun X509_SIG_INFO_get(
     siginf: CValuesRef<X509_SIG_INFO>?,
     mdnid: CValuesRef<IntVar>?,
@@ -13871,7 +13966,7 @@ external fun X509_SIG_INFO_get(
     flags: CValuesRef<uint32_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl2918_X509_SIG_INFO_set")
+@CCall("knifunptr_openssl2923_X509_SIG_INFO_set")
 external fun X509_SIG_INFO_set(
     siginf: CValuesRef<X509_SIG_INFO>?,
     mdnid: Int,
@@ -13880,7 +13975,7 @@ external fun X509_SIG_INFO_set(
     flags: uint32_t
 ): Unit
 
-@CCall("knifunptr_openssl2919_X509_get_signature_info")
+@CCall("knifunptr_openssl2924_X509_get_signature_info")
 external fun X509_get_signature_info(
     x: CValuesRef<X509>?,
     mdnid: CValuesRef<IntVar>?,
@@ -13889,187 +13984,187 @@ external fun X509_get_signature_info(
     flags: CValuesRef<uint32_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl2920_X509_get0_signature")
+@CCall("knifunptr_openssl2925_X509_get0_signature")
 external fun X509_get0_signature(
     psig: CValuesRef<CPointerVar<ASN1_BIT_STRING>>?,
     palg: CValuesRef<CPointerVar<X509_ALGOR>>?,
     x: CValuesRef<X509>?
 ): Unit
 
-@CCall("knifunptr_openssl2921_X509_get_signature_nid")
+@CCall("knifunptr_openssl2926_X509_get_signature_nid")
 external fun X509_get_signature_nid(x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2922_X509_trusted")
+@CCall("knifunptr_openssl2927_X509_trusted")
 external fun X509_trusted(x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2923_X509_alias_set1")
+@CCall("knifunptr_openssl2928_X509_alias_set1")
 external fun X509_alias_set1(x: CValuesRef<X509>?, name: CValuesRef<UByteVar>?, len: Int): Int
 
-@CCall("knifunptr_openssl2924_X509_keyid_set1")
+@CCall("knifunptr_openssl2929_X509_keyid_set1")
 external fun X509_keyid_set1(x: CValuesRef<X509>?, id: CValuesRef<UByteVar>?, len: Int): Int
 
-@CCall("knifunptr_openssl2925_X509_alias_get0")
+@CCall("knifunptr_openssl2930_X509_alias_get0")
 external fun X509_alias_get0(x: CValuesRef<X509>?, len: CValuesRef<IntVar>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl2926_X509_keyid_get0")
+@CCall("knifunptr_openssl2931_X509_keyid_get0")
 external fun X509_keyid_get0(x: CValuesRef<X509>?, len: CValuesRef<IntVar>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl2927_X509_TRUST_set_default")
+@CCall("knifunptr_openssl2932_X509_TRUST_set_default")
 external fun X509_TRUST_set_default(trust: CPointer<CFunction<(Int, CPointer<X509>?, Int) -> Int>>?): CPointer<CFunction<(Int, CPointer<X509>?, Int) -> Int>>?
 
-@CCall("knifunptr_openssl2928_X509_TRUST_set")
+@CCall("knifunptr_openssl2933_X509_TRUST_set")
 external fun X509_TRUST_set(t: CValuesRef<IntVar>?, trust: Int): Int
 
-@CCall("knifunptr_openssl2929_X509_add1_trust_object")
+@CCall("knifunptr_openssl2934_X509_add1_trust_object")
 external fun X509_add1_trust_object(x: CValuesRef<X509>?, obj: CValuesRef<ASN1_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2930_X509_add1_reject_object")
+@CCall("knifunptr_openssl2935_X509_add1_reject_object")
 external fun X509_add1_reject_object(x: CValuesRef<X509>?, obj: CValuesRef<ASN1_OBJECT>?): Int
 
-@CCall("knifunptr_openssl2931_X509_trust_clear")
+@CCall("knifunptr_openssl2936_X509_trust_clear")
 external fun X509_trust_clear(x: CValuesRef<X509>?): Unit
 
-@CCall("knifunptr_openssl2932_X509_reject_clear")
+@CCall("knifunptr_openssl2937_X509_reject_clear")
 external fun X509_reject_clear(x: CValuesRef<X509>?): Unit
 
-@CCall("knifunptr_openssl2933_X509_get0_trust_objects")
+@CCall("knifunptr_openssl2938_X509_get0_trust_objects")
 external fun X509_get0_trust_objects(x: CValuesRef<X509>?): CPointer<stack_st_ASN1_OBJECT>?
 
-@CCall("knifunptr_openssl2934_X509_get0_reject_objects")
+@CCall("knifunptr_openssl2939_X509_get0_reject_objects")
 external fun X509_get0_reject_objects(x: CValuesRef<X509>?): CPointer<stack_st_ASN1_OBJECT>?
 
-@CCall("knifunptr_openssl2935_X509_REVOKED_new")
+@CCall("knifunptr_openssl2940_X509_REVOKED_new")
 external fun X509_REVOKED_new(): CPointer<X509_REVOKED>?
 
-@CCall("knifunptr_openssl2936_X509_REVOKED_free")
+@CCall("knifunptr_openssl2941_X509_REVOKED_free")
 external fun X509_REVOKED_free(a: CValuesRef<X509_REVOKED>?): Unit
 
-@CCall("knifunptr_openssl2937_d2i_X509_REVOKED")
+@CCall("knifunptr_openssl2942_d2i_X509_REVOKED")
 external fun d2i_X509_REVOKED(
     a: CValuesRef<CPointerVar<X509_REVOKED>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_REVOKED>?
 
-@CCall("knifunptr_openssl2938_i2d_X509_REVOKED")
+@CCall("knifunptr_openssl2943_i2d_X509_REVOKED")
 external fun i2d_X509_REVOKED(a: CValuesRef<X509_REVOKED>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2939_X509_CRL_INFO_new")
+@CCall("knifunptr_openssl2944_X509_CRL_INFO_new")
 external fun X509_CRL_INFO_new(): CPointer<X509_CRL_INFO>?
 
-@CCall("knifunptr_openssl2940_X509_CRL_INFO_free")
+@CCall("knifunptr_openssl2945_X509_CRL_INFO_free")
 external fun X509_CRL_INFO_free(a: CValuesRef<X509_CRL_INFO>?): Unit
 
-@CCall("knifunptr_openssl2941_d2i_X509_CRL_INFO")
+@CCall("knifunptr_openssl2946_d2i_X509_CRL_INFO")
 external fun d2i_X509_CRL_INFO(
     a: CValuesRef<CPointerVar<X509_CRL_INFO>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_CRL_INFO>?
 
-@CCall("knifunptr_openssl2942_i2d_X509_CRL_INFO")
+@CCall("knifunptr_openssl2947_i2d_X509_CRL_INFO")
 external fun i2d_X509_CRL_INFO(a: CValuesRef<X509_CRL_INFO>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2943_X509_CRL_new")
+@CCall("knifunptr_openssl2948_X509_CRL_new")
 external fun X509_CRL_new(): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2944_X509_CRL_free")
+@CCall("knifunptr_openssl2949_X509_CRL_free")
 external fun X509_CRL_free(a: CValuesRef<X509_CRL>?): Unit
 
-@CCall("knifunptr_openssl2945_d2i_X509_CRL")
+@CCall("knifunptr_openssl2950_d2i_X509_CRL")
 external fun d2i_X509_CRL(
     a: CValuesRef<CPointerVar<X509_CRL>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl2946_i2d_X509_CRL")
+@CCall("knifunptr_openssl2951_i2d_X509_CRL")
 external fun i2d_X509_CRL(a: CValuesRef<X509_CRL>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2947_X509_CRL_add0_revoked")
+@CCall("knifunptr_openssl2952_X509_CRL_add0_revoked")
 external fun X509_CRL_add0_revoked(crl: CValuesRef<X509_CRL>?, rev: CValuesRef<X509_REVOKED>?): Int
 
-@CCall("knifunptr_openssl2948_X509_CRL_get0_by_serial")
+@CCall("knifunptr_openssl2953_X509_CRL_get0_by_serial")
 external fun X509_CRL_get0_by_serial(
     crl: CValuesRef<X509_CRL>?,
     ret: CValuesRef<CPointerVar<X509_REVOKED>>?,
     serial: CValuesRef<ASN1_INTEGER>?
 ): Int
 
-@CCall("knifunptr_openssl2949_X509_CRL_get0_by_cert")
+@CCall("knifunptr_openssl2954_X509_CRL_get0_by_cert")
 external fun X509_CRL_get0_by_cert(
     crl: CValuesRef<X509_CRL>?,
     ret: CValuesRef<CPointerVar<X509_REVOKED>>?,
     x: CValuesRef<X509>?
 ): Int
 
-@CCall("knifunptr_openssl2950_X509_PKEY_new")
+@CCall("knifunptr_openssl2955_X509_PKEY_new")
 external fun X509_PKEY_new(): CPointer<X509_PKEY>?
 
-@CCall("knifunptr_openssl2951_X509_PKEY_free")
+@CCall("knifunptr_openssl2956_X509_PKEY_free")
 external fun X509_PKEY_free(a: CValuesRef<X509_PKEY>?): Unit
 
-@CCall("knifunptr_openssl2952_NETSCAPE_SPKI_new")
+@CCall("knifunptr_openssl2957_NETSCAPE_SPKI_new")
 external fun NETSCAPE_SPKI_new(): CPointer<NETSCAPE_SPKI>?
 
-@CCall("knifunptr_openssl2953_NETSCAPE_SPKI_free")
+@CCall("knifunptr_openssl2958_NETSCAPE_SPKI_free")
 external fun NETSCAPE_SPKI_free(a: CValuesRef<NETSCAPE_SPKI>?): Unit
 
-@CCall("knifunptr_openssl2954_d2i_NETSCAPE_SPKI")
+@CCall("knifunptr_openssl2959_d2i_NETSCAPE_SPKI")
 external fun d2i_NETSCAPE_SPKI(
     a: CValuesRef<CPointerVar<NETSCAPE_SPKI>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<NETSCAPE_SPKI>?
 
-@CCall("knifunptr_openssl2955_i2d_NETSCAPE_SPKI")
+@CCall("knifunptr_openssl2960_i2d_NETSCAPE_SPKI")
 external fun i2d_NETSCAPE_SPKI(a: CValuesRef<NETSCAPE_SPKI>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2956_NETSCAPE_SPKAC_new")
+@CCall("knifunptr_openssl2961_NETSCAPE_SPKAC_new")
 external fun NETSCAPE_SPKAC_new(): CPointer<NETSCAPE_SPKAC>?
 
-@CCall("knifunptr_openssl2957_NETSCAPE_SPKAC_free")
+@CCall("knifunptr_openssl2962_NETSCAPE_SPKAC_free")
 external fun NETSCAPE_SPKAC_free(a: CValuesRef<NETSCAPE_SPKAC>?): Unit
 
-@CCall("knifunptr_openssl2958_d2i_NETSCAPE_SPKAC")
+@CCall("knifunptr_openssl2963_d2i_NETSCAPE_SPKAC")
 external fun d2i_NETSCAPE_SPKAC(
     a: CValuesRef<CPointerVar<NETSCAPE_SPKAC>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<NETSCAPE_SPKAC>?
 
-@CCall("knifunptr_openssl2959_i2d_NETSCAPE_SPKAC")
+@CCall("knifunptr_openssl2964_i2d_NETSCAPE_SPKAC")
 external fun i2d_NETSCAPE_SPKAC(a: CValuesRef<NETSCAPE_SPKAC>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl2960_NETSCAPE_CERT_SEQUENCE_new")
+@CCall("knifunptr_openssl2965_NETSCAPE_CERT_SEQUENCE_new")
 external fun NETSCAPE_CERT_SEQUENCE_new(): CPointer<NETSCAPE_CERT_SEQUENCE>?
 
-@CCall("knifunptr_openssl2961_NETSCAPE_CERT_SEQUENCE_free")
+@CCall("knifunptr_openssl2966_NETSCAPE_CERT_SEQUENCE_free")
 external fun NETSCAPE_CERT_SEQUENCE_free(a: CValuesRef<NETSCAPE_CERT_SEQUENCE>?): Unit
 
-@CCall("knifunptr_openssl2962_d2i_NETSCAPE_CERT_SEQUENCE")
+@CCall("knifunptr_openssl2967_d2i_NETSCAPE_CERT_SEQUENCE")
 external fun d2i_NETSCAPE_CERT_SEQUENCE(
     a: CValuesRef<CPointerVar<NETSCAPE_CERT_SEQUENCE>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<NETSCAPE_CERT_SEQUENCE>?
 
-@CCall("knifunptr_openssl2963_i2d_NETSCAPE_CERT_SEQUENCE")
+@CCall("knifunptr_openssl2968_i2d_NETSCAPE_CERT_SEQUENCE")
 external fun i2d_NETSCAPE_CERT_SEQUENCE(
     a: CValuesRef<NETSCAPE_CERT_SEQUENCE>?,
     out: CValuesRef<CPointerVar<UByteVar>>?
 ): Int
 
-@CCall("knifunptr_openssl2964_X509_INFO_new")
+@CCall("knifunptr_openssl2969_X509_INFO_new")
 external fun X509_INFO_new(): CPointer<X509_INFO>?
 
-@CCall("knifunptr_openssl2965_X509_INFO_free")
+@CCall("knifunptr_openssl2970_X509_INFO_free")
 external fun X509_INFO_free(a: CValuesRef<X509_INFO>?): Unit
 
-@CCall("knifunptr_openssl2966_X509_NAME_oneline")
+@CCall("knifunptr_openssl2971_X509_NAME_oneline")
 external fun X509_NAME_oneline(a: CValuesRef<X509_NAME>?, buf: CValuesRef<ByteVar>?, size: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl2967_ASN1_verify")
+@CCall("knifunptr_openssl2972_ASN1_verify")
 external fun ASN1_verify(
     i2d: CPointer<i2d_of_void>?,
     algor1: CValuesRef<X509_ALGOR>?,
@@ -14078,7 +14173,7 @@ external fun ASN1_verify(
     pkey: CValuesRef<EVP_PKEY>?
 ): Int
 
-@CCall("knifunptr_openssl2968_ASN1_digest")
+@CCall("knifunptr_openssl2973_ASN1_digest")
 external fun ASN1_digest(
     i2d: CPointer<i2d_of_void>?,
     type: CValuesRef<EVP_MD>?,
@@ -14087,7 +14182,7 @@ external fun ASN1_digest(
     len: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl2969_ASN1_sign")
+@CCall("knifunptr_openssl2974_ASN1_sign")
 external fun ASN1_sign(
     i2d: CPointer<i2d_of_void>?,
     algor1: CValuesRef<X509_ALGOR>?,
@@ -14098,7 +14193,7 @@ external fun ASN1_sign(
     type: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl2970_ASN1_item_digest")
+@CCall("knifunptr_openssl2975_ASN1_item_digest")
 external fun ASN1_item_digest(
     it: CValuesRef<ASN1_ITEM>?,
     type: CValuesRef<EVP_MD>?,
@@ -14107,7 +14202,7 @@ external fun ASN1_item_digest(
     len: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl2971_ASN1_item_verify")
+@CCall("knifunptr_openssl2976_ASN1_item_verify")
 external fun ASN1_item_verify(
     it: CValuesRef<ASN1_ITEM>?,
     algor1: CValuesRef<X509_ALGOR>?,
@@ -14116,7 +14211,7 @@ external fun ASN1_item_verify(
     pkey: CValuesRef<EVP_PKEY>?
 ): Int
 
-@CCall("knifunptr_openssl2972_ASN1_item_sign")
+@CCall("knifunptr_openssl2977_ASN1_item_sign")
 external fun ASN1_item_sign(
     it: CValuesRef<ASN1_ITEM>?,
     algor1: CValuesRef<X509_ALGOR>?,
@@ -14127,7 +14222,7 @@ external fun ASN1_item_sign(
     type: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl2973_ASN1_item_sign_ctx")
+@CCall("knifunptr_openssl2978_ASN1_item_sign_ctx")
 external fun ASN1_item_sign_ctx(
     it: CValuesRef<ASN1_ITEM>?,
     algor1: CValuesRef<X509_ALGOR>?,
@@ -14137,166 +14232,166 @@ external fun ASN1_item_sign_ctx(
     ctx: CValuesRef<EVP_MD_CTX>?
 ): Int
 
-@CCall("knifunptr_openssl2974_X509_get_version")
+@CCall("knifunptr_openssl2979_X509_get_version")
 external fun X509_get_version(x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2975_X509_set_version")
+@CCall("knifunptr_openssl2980_X509_set_version")
 external fun X509_set_version(x: CValuesRef<X509>?, version: Int): Int
 
-@CCall("knifunptr_openssl2976_X509_set_serialNumber")
+@CCall("knifunptr_openssl2981_X509_set_serialNumber")
 external fun X509_set_serialNumber(x: CValuesRef<X509>?, serial: CValuesRef<ASN1_INTEGER>?): Int
 
-@CCall("knifunptr_openssl2977_X509_get_serialNumber")
+@CCall("knifunptr_openssl2982_X509_get_serialNumber")
 external fun X509_get_serialNumber(x: CValuesRef<X509>?): CPointer<ASN1_INTEGER>?
 
-@CCall("knifunptr_openssl2978_X509_get0_serialNumber")
+@CCall("knifunptr_openssl2983_X509_get0_serialNumber")
 external fun X509_get0_serialNumber(x: CValuesRef<X509>?): CPointer<ASN1_INTEGER>?
 
-@CCall("knifunptr_openssl2979_X509_set_issuer_name")
+@CCall("knifunptr_openssl2984_X509_set_issuer_name")
 external fun X509_set_issuer_name(x: CValuesRef<X509>?, name: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl2980_X509_get_issuer_name")
+@CCall("knifunptr_openssl2985_X509_get_issuer_name")
 external fun X509_get_issuer_name(a: CValuesRef<X509>?): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2981_X509_set_subject_name")
+@CCall("knifunptr_openssl2986_X509_set_subject_name")
 external fun X509_set_subject_name(x: CValuesRef<X509>?, name: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl2982_X509_get_subject_name")
+@CCall("knifunptr_openssl2987_X509_get_subject_name")
 external fun X509_get_subject_name(a: CValuesRef<X509>?): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl2983_X509_get0_notBefore")
+@CCall("knifunptr_openssl2988_X509_get0_notBefore")
 external fun X509_get0_notBefore(x: CValuesRef<X509>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl2984_X509_getm_notBefore")
+@CCall("knifunptr_openssl2989_X509_getm_notBefore")
 external fun X509_getm_notBefore(x: CValuesRef<X509>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl2985_X509_set1_notBefore")
+@CCall("knifunptr_openssl2990_X509_set1_notBefore")
 external fun X509_set1_notBefore(x: CValuesRef<X509>?, tm: CValuesRef<ASN1_TIME>?): Int
 
-@CCall("knifunptr_openssl2986_X509_get0_notAfter")
+@CCall("knifunptr_openssl2991_X509_get0_notAfter")
 external fun X509_get0_notAfter(x: CValuesRef<X509>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl2987_X509_getm_notAfter")
+@CCall("knifunptr_openssl2992_X509_getm_notAfter")
 external fun X509_getm_notAfter(x: CValuesRef<X509>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl2988_X509_set1_notAfter")
+@CCall("knifunptr_openssl2993_X509_set1_notAfter")
 external fun X509_set1_notAfter(x: CValuesRef<X509>?, tm: CValuesRef<ASN1_TIME>?): Int
 
-@CCall("knifunptr_openssl2989_X509_set_pubkey")
+@CCall("knifunptr_openssl2994_X509_set_pubkey")
 external fun X509_set_pubkey(x: CValuesRef<X509>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl2990_X509_up_ref")
+@CCall("knifunptr_openssl2995_X509_up_ref")
 external fun X509_up_ref(x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2991_X509_get_signature_type")
+@CCall("knifunptr_openssl2996_X509_get_signature_type")
 external fun X509_get_signature_type(x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl2992_X509_get_X509_PUBKEY")
+@CCall("knifunptr_openssl2997_X509_get_X509_PUBKEY")
 external fun X509_get_X509_PUBKEY(x: CValuesRef<X509>?): CPointer<X509_PUBKEY>?
 
-@CCall("knifunptr_openssl2993_X509_get0_extensions")
+@CCall("knifunptr_openssl2998_X509_get0_extensions")
 external fun X509_get0_extensions(x: CValuesRef<X509>?): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl2994_X509_get0_uids")
+@CCall("knifunptr_openssl2999_X509_get0_uids")
 external fun X509_get0_uids(
     x: CValuesRef<X509>?,
     piuid: CValuesRef<CPointerVar<ASN1_BIT_STRING>>?,
     psuid: CValuesRef<CPointerVar<ASN1_BIT_STRING>>?
 ): Unit
 
-@CCall("knifunptr_openssl2995_X509_get0_tbs_sigalg")
+@CCall("knifunptr_openssl3000_X509_get0_tbs_sigalg")
 external fun X509_get0_tbs_sigalg(x: CValuesRef<X509>?): CPointer<X509_ALGOR>?
 
-@CCall("knifunptr_openssl2996_X509_get0_pubkey")
+@CCall("knifunptr_openssl3001_X509_get0_pubkey")
 external fun X509_get0_pubkey(x: CValuesRef<X509>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2997_X509_get_pubkey")
+@CCall("knifunptr_openssl3002_X509_get_pubkey")
 external fun X509_get_pubkey(x: CValuesRef<X509>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl2998_X509_get0_pubkey_bitstr")
+@CCall("knifunptr_openssl3003_X509_get0_pubkey_bitstr")
 external fun X509_get0_pubkey_bitstr(x: CValuesRef<X509>?): CPointer<ASN1_BIT_STRING>?
 
-@CCall("knifunptr_openssl2999_X509_certificate_type")
+@CCall("knifunptr_openssl3004_X509_certificate_type")
 external fun X509_certificate_type(x: CValuesRef<X509>?, pubkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3000_X509_REQ_get_version")
+@CCall("knifunptr_openssl3005_X509_REQ_get_version")
 external fun X509_REQ_get_version(req: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl3001_X509_REQ_set_version")
+@CCall("knifunptr_openssl3006_X509_REQ_set_version")
 external fun X509_REQ_set_version(x: CValuesRef<X509_REQ>?, version: Int): Int
 
-@CCall("knifunptr_openssl3002_X509_REQ_get_subject_name")
+@CCall("knifunptr_openssl3007_X509_REQ_get_subject_name")
 external fun X509_REQ_get_subject_name(req: CValuesRef<X509_REQ>?): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl3003_X509_REQ_set_subject_name")
+@CCall("knifunptr_openssl3008_X509_REQ_set_subject_name")
 external fun X509_REQ_set_subject_name(req: CValuesRef<X509_REQ>?, name: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl3004_X509_REQ_get0_signature")
+@CCall("knifunptr_openssl3009_X509_REQ_get0_signature")
 external fun X509_REQ_get0_signature(
     req: CValuesRef<X509_REQ>?,
     psig: CValuesRef<CPointerVar<ASN1_BIT_STRING>>?,
     palg: CValuesRef<CPointerVar<X509_ALGOR>>?
 ): Unit
 
-@CCall("knifunptr_openssl3005_X509_REQ_get_signature_nid")
+@CCall("knifunptr_openssl3010_X509_REQ_get_signature_nid")
 external fun X509_REQ_get_signature_nid(req: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl3006_i2d_re_X509_REQ_tbs")
+@CCall("knifunptr_openssl3011_i2d_re_X509_REQ_tbs")
 external fun i2d_re_X509_REQ_tbs(req: CValuesRef<X509_REQ>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3007_X509_REQ_set_pubkey")
+@CCall("knifunptr_openssl3012_X509_REQ_set_pubkey")
 external fun X509_REQ_set_pubkey(x: CValuesRef<X509_REQ>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3008_X509_REQ_get_pubkey")
+@CCall("knifunptr_openssl3013_X509_REQ_get_pubkey")
 external fun X509_REQ_get_pubkey(req: CValuesRef<X509_REQ>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3009_X509_REQ_get0_pubkey")
+@CCall("knifunptr_openssl3014_X509_REQ_get0_pubkey")
 external fun X509_REQ_get0_pubkey(req: CValuesRef<X509_REQ>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3010_X509_REQ_get_X509_PUBKEY")
+@CCall("knifunptr_openssl3015_X509_REQ_get_X509_PUBKEY")
 external fun X509_REQ_get_X509_PUBKEY(req: CValuesRef<X509_REQ>?): CPointer<X509_PUBKEY>?
 
-@CCall("knifunptr_openssl3011_X509_REQ_extension_nid")
+@CCall("knifunptr_openssl3016_X509_REQ_extension_nid")
 external fun X509_REQ_extension_nid(nid: Int): Int
 
-@CCall("knifunptr_openssl3012_X509_REQ_get_extension_nids")
+@CCall("knifunptr_openssl3017_X509_REQ_get_extension_nids")
 external fun X509_REQ_get_extension_nids(): CPointer<IntVar>?
 
-@CCall("knifunptr_openssl3013_X509_REQ_set_extension_nids")
+@CCall("knifunptr_openssl3018_X509_REQ_set_extension_nids")
 external fun X509_REQ_set_extension_nids(nids: CValuesRef<IntVar>?): Unit
 
-@CCall("knifunptr_openssl3014_X509_REQ_get_extensions")
+@CCall("knifunptr_openssl3019_X509_REQ_get_extensions")
 external fun X509_REQ_get_extensions(req: CValuesRef<X509_REQ>?): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3015_X509_REQ_add_extensions_nid")
+@CCall("knifunptr_openssl3020_X509_REQ_add_extensions_nid")
 external fun X509_REQ_add_extensions_nid(
     req: CValuesRef<X509_REQ>?,
     exts: CValuesRef<stack_st_X509_EXTENSION>?,
     nid: Int
 ): Int
 
-@CCall("knifunptr_openssl3016_X509_REQ_add_extensions")
+@CCall("knifunptr_openssl3021_X509_REQ_add_extensions")
 external fun X509_REQ_add_extensions(req: CValuesRef<X509_REQ>?, exts: CValuesRef<stack_st_X509_EXTENSION>?): Int
 
-@CCall("knifunptr_openssl3017_X509_REQ_get_attr_count")
+@CCall("knifunptr_openssl3022_X509_REQ_get_attr_count")
 external fun X509_REQ_get_attr_count(req: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl3018_X509_REQ_get_attr_by_NID")
+@CCall("knifunptr_openssl3023_X509_REQ_get_attr_by_NID")
 external fun X509_REQ_get_attr_by_NID(req: CValuesRef<X509_REQ>?, nid: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3019_X509_REQ_get_attr_by_OBJ")
+@CCall("knifunptr_openssl3024_X509_REQ_get_attr_by_OBJ")
 external fun X509_REQ_get_attr_by_OBJ(req: CValuesRef<X509_REQ>?, obj: CValuesRef<ASN1_OBJECT>?, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3020_X509_REQ_get_attr")
+@CCall("knifunptr_openssl3025_X509_REQ_get_attr")
 external fun X509_REQ_get_attr(req: CValuesRef<X509_REQ>?, loc: Int): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3021_X509_REQ_delete_attr")
+@CCall("knifunptr_openssl3026_X509_REQ_delete_attr")
 external fun X509_REQ_delete_attr(req: CValuesRef<X509_REQ>?, loc: Int): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3022_X509_REQ_add1_attr")
+@CCall("knifunptr_openssl3027_X509_REQ_add1_attr")
 external fun X509_REQ_add1_attr(req: CValuesRef<X509_REQ>?, attr: CValuesRef<X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl3023_X509_REQ_add1_attr_by_OBJ")
+@CCall("knifunptr_openssl3028_X509_REQ_add1_attr_by_OBJ")
 external fun X509_REQ_add1_attr_by_OBJ(
     req: CValuesRef<X509_REQ>?,
     obj: CValuesRef<ASN1_OBJECT>?,
@@ -14305,7 +14400,7 @@ external fun X509_REQ_add1_attr_by_OBJ(
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3024_X509_REQ_add1_attr_by_NID")
+@CCall("knifunptr_openssl3029_X509_REQ_add1_attr_by_NID")
 external fun X509_REQ_add1_attr_by_NID(
     req: CValuesRef<X509_REQ>?,
     nid: Int,
@@ -14314,85 +14409,86 @@ external fun X509_REQ_add1_attr_by_NID(
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3025_X509_REQ_add1_attr_by_txt")
+@CCall("knifunptr_openssl3030_X509_REQ_add1_attr_by_txt")
 external fun X509_REQ_add1_attr_by_txt(
-    req: CValuesRef<X509_REQ>?, @CCall.CString attrname: String?,
+    req: CValuesRef<X509_REQ>?,
+    @CCall.CString attrname: String?,
     type: Int,
     bytes: CValuesRef<UByteVar>?,
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3026_X509_CRL_set_version")
+@CCall("knifunptr_openssl3031_X509_CRL_set_version")
 external fun X509_CRL_set_version(x: CValuesRef<X509_CRL>?, version: Int): Int
 
-@CCall("knifunptr_openssl3027_X509_CRL_set_issuer_name")
+@CCall("knifunptr_openssl3032_X509_CRL_set_issuer_name")
 external fun X509_CRL_set_issuer_name(x: CValuesRef<X509_CRL>?, name: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl3028_X509_CRL_set1_lastUpdate")
+@CCall("knifunptr_openssl3033_X509_CRL_set1_lastUpdate")
 external fun X509_CRL_set1_lastUpdate(x: CValuesRef<X509_CRL>?, tm: CValuesRef<ASN1_TIME>?): Int
 
-@CCall("knifunptr_openssl3029_X509_CRL_set1_nextUpdate")
+@CCall("knifunptr_openssl3034_X509_CRL_set1_nextUpdate")
 external fun X509_CRL_set1_nextUpdate(x: CValuesRef<X509_CRL>?, tm: CValuesRef<ASN1_TIME>?): Int
 
-@CCall("knifunptr_openssl3030_X509_CRL_sort")
+@CCall("knifunptr_openssl3035_X509_CRL_sort")
 external fun X509_CRL_sort(crl: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3031_X509_CRL_up_ref")
+@CCall("knifunptr_openssl3036_X509_CRL_up_ref")
 external fun X509_CRL_up_ref(crl: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3032_X509_CRL_get_version")
+@CCall("knifunptr_openssl3037_X509_CRL_get_version")
 external fun X509_CRL_get_version(crl: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3033_X509_CRL_get0_lastUpdate")
+@CCall("knifunptr_openssl3038_X509_CRL_get0_lastUpdate")
 external fun X509_CRL_get0_lastUpdate(crl: CValuesRef<X509_CRL>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl3034_X509_CRL_get0_nextUpdate")
+@CCall("knifunptr_openssl3039_X509_CRL_get0_nextUpdate")
 external fun X509_CRL_get0_nextUpdate(crl: CValuesRef<X509_CRL>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl3035_X509_CRL_get_lastUpdate")
+@CCall("knifunptr_openssl3040_X509_CRL_get_lastUpdate")
 external fun X509_CRL_get_lastUpdate(crl: CValuesRef<X509_CRL>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl3036_X509_CRL_get_nextUpdate")
+@CCall("knifunptr_openssl3041_X509_CRL_get_nextUpdate")
 external fun X509_CRL_get_nextUpdate(crl: CValuesRef<X509_CRL>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl3037_X509_CRL_get_issuer")
+@CCall("knifunptr_openssl3042_X509_CRL_get_issuer")
 external fun X509_CRL_get_issuer(crl: CValuesRef<X509_CRL>?): CPointer<X509_NAME>?
 
-@CCall("knifunptr_openssl3038_X509_CRL_get0_extensions")
+@CCall("knifunptr_openssl3043_X509_CRL_get0_extensions")
 external fun X509_CRL_get0_extensions(crl: CValuesRef<X509_CRL>?): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3039_X509_CRL_get_REVOKED")
+@CCall("knifunptr_openssl3044_X509_CRL_get_REVOKED")
 external fun X509_CRL_get_REVOKED(crl: CValuesRef<X509_CRL>?): CPointer<stack_st_X509_REVOKED>?
 
-@CCall("knifunptr_openssl3040_X509_CRL_get0_signature")
+@CCall("knifunptr_openssl3045_X509_CRL_get0_signature")
 external fun X509_CRL_get0_signature(
     crl: CValuesRef<X509_CRL>?,
     psig: CValuesRef<CPointerVar<ASN1_BIT_STRING>>?,
     palg: CValuesRef<CPointerVar<X509_ALGOR>>?
 ): Unit
 
-@CCall("knifunptr_openssl3041_X509_CRL_get_signature_nid")
+@CCall("knifunptr_openssl3046_X509_CRL_get_signature_nid")
 external fun X509_CRL_get_signature_nid(crl: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3042_i2d_re_X509_CRL_tbs")
+@CCall("knifunptr_openssl3047_i2d_re_X509_CRL_tbs")
 external fun i2d_re_X509_CRL_tbs(req: CValuesRef<X509_CRL>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3043_X509_REVOKED_get0_serialNumber")
+@CCall("knifunptr_openssl3048_X509_REVOKED_get0_serialNumber")
 external fun X509_REVOKED_get0_serialNumber(x: CValuesRef<X509_REVOKED>?): CPointer<ASN1_INTEGER>?
 
-@CCall("knifunptr_openssl3044_X509_REVOKED_set_serialNumber")
+@CCall("knifunptr_openssl3049_X509_REVOKED_set_serialNumber")
 external fun X509_REVOKED_set_serialNumber(x: CValuesRef<X509_REVOKED>?, serial: CValuesRef<ASN1_INTEGER>?): Int
 
-@CCall("knifunptr_openssl3045_X509_REVOKED_get0_revocationDate")
+@CCall("knifunptr_openssl3050_X509_REVOKED_get0_revocationDate")
 external fun X509_REVOKED_get0_revocationDate(x: CValuesRef<X509_REVOKED>?): CPointer<ASN1_TIME>?
 
-@CCall("knifunptr_openssl3046_X509_REVOKED_set_revocationDate")
+@CCall("knifunptr_openssl3051_X509_REVOKED_set_revocationDate")
 external fun X509_REVOKED_set_revocationDate(r: CValuesRef<X509_REVOKED>?, tm: CValuesRef<ASN1_TIME>?): Int
 
-@CCall("knifunptr_openssl3047_X509_REVOKED_get0_extensions")
+@CCall("knifunptr_openssl3052_X509_REVOKED_get0_extensions")
 external fun X509_REVOKED_get0_extensions(r: CValuesRef<X509_REVOKED>?): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3048_X509_CRL_diff")
+@CCall("knifunptr_openssl3053_X509_CRL_diff")
 external fun X509_CRL_diff(
     base: CValuesRef<X509_CRL>?,
     newer: CValuesRef<X509_CRL>?,
@@ -14401,13 +14497,13 @@ external fun X509_CRL_diff(
     flags: UInt
 ): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl3049_X509_REQ_check_private_key")
+@CCall("knifunptr_openssl3054_X509_REQ_check_private_key")
 external fun X509_REQ_check_private_key(x509: CValuesRef<X509_REQ>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3050_X509_check_private_key")
+@CCall("knifunptr_openssl3055_X509_check_private_key")
 external fun X509_check_private_key(x509: CValuesRef<X509>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3051_X509_chain_check_suiteb")
+@CCall("knifunptr_openssl3056_X509_chain_check_suiteb")
 external fun X509_chain_check_suiteb(
     perror_depth: CValuesRef<IntVar>?,
     x: CValuesRef<X509>?,
@@ -14415,106 +14511,106 @@ external fun X509_chain_check_suiteb(
     flags: UInt
 ): Int
 
-@CCall("knifunptr_openssl3052_X509_CRL_check_suiteb")
+@CCall("knifunptr_openssl3057_X509_CRL_check_suiteb")
 external fun X509_CRL_check_suiteb(crl: CValuesRef<X509_CRL>?, pk: CValuesRef<EVP_PKEY>?, flags: UInt): Int
 
-@CCall("knifunptr_openssl3053_X509_chain_up_ref")
+@CCall("knifunptr_openssl3058_X509_chain_up_ref")
 external fun X509_chain_up_ref(chain: CValuesRef<stack_st_X509>?): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl3054_X509_issuer_and_serial_cmp")
+@CCall("knifunptr_openssl3059_X509_issuer_and_serial_cmp")
 external fun X509_issuer_and_serial_cmp(a: CValuesRef<X509>?, b: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3055_X509_issuer_and_serial_hash")
+@CCall("knifunptr_openssl3060_X509_issuer_and_serial_hash")
 external fun X509_issuer_and_serial_hash(a: CValuesRef<X509>?): UInt
 
-@CCall("knifunptr_openssl3056_X509_issuer_name_cmp")
+@CCall("knifunptr_openssl3061_X509_issuer_name_cmp")
 external fun X509_issuer_name_cmp(a: CValuesRef<X509>?, b: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3057_X509_issuer_name_hash")
+@CCall("knifunptr_openssl3062_X509_issuer_name_hash")
 external fun X509_issuer_name_hash(a: CValuesRef<X509>?): UInt
 
-@CCall("knifunptr_openssl3058_X509_subject_name_cmp")
+@CCall("knifunptr_openssl3063_X509_subject_name_cmp")
 external fun X509_subject_name_cmp(a: CValuesRef<X509>?, b: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3059_X509_subject_name_hash")
+@CCall("knifunptr_openssl3064_X509_subject_name_hash")
 external fun X509_subject_name_hash(x: CValuesRef<X509>?): UInt
 
-@CCall("knifunptr_openssl3060_X509_issuer_name_hash_old")
+@CCall("knifunptr_openssl3065_X509_issuer_name_hash_old")
 external fun X509_issuer_name_hash_old(a: CValuesRef<X509>?): UInt
 
-@CCall("knifunptr_openssl3061_X509_subject_name_hash_old")
+@CCall("knifunptr_openssl3066_X509_subject_name_hash_old")
 external fun X509_subject_name_hash_old(x: CValuesRef<X509>?): UInt
 
-@CCall("knifunptr_openssl3062_X509_cmp")
+@CCall("knifunptr_openssl3067_X509_cmp")
 external fun X509_cmp(a: CValuesRef<X509>?, b: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3063_X509_NAME_cmp")
+@CCall("knifunptr_openssl3068_X509_NAME_cmp")
 external fun X509_NAME_cmp(a: CValuesRef<X509_NAME>?, b: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl3064_X509_NAME_hash")
+@CCall("knifunptr_openssl3069_X509_NAME_hash")
 external fun X509_NAME_hash(x: CValuesRef<X509_NAME>?): UInt
 
-@CCall("knifunptr_openssl3065_X509_NAME_hash_old")
+@CCall("knifunptr_openssl3070_X509_NAME_hash_old")
 external fun X509_NAME_hash_old(x: CValuesRef<X509_NAME>?): UInt
 
-@CCall("knifunptr_openssl3066_X509_CRL_cmp")
+@CCall("knifunptr_openssl3071_X509_CRL_cmp")
 external fun X509_CRL_cmp(a: CValuesRef<X509_CRL>?, b: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3067_X509_CRL_match")
+@CCall("knifunptr_openssl3072_X509_CRL_match")
 external fun X509_CRL_match(a: CValuesRef<X509_CRL>?, b: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3068_X509_aux_print")
+@CCall("knifunptr_openssl3073_X509_aux_print")
 external fun X509_aux_print(out: CValuesRef<BIO>?, x: CValuesRef<X509>?, indent: Int): Int
 
-@CCall("knifunptr_openssl3069_X509_print_ex_fp")
+@CCall("knifunptr_openssl3074_X509_print_ex_fp")
 external fun X509_print_ex_fp(bp: CValuesRef<FILE>?, x: CValuesRef<X509>?, nmflag: UInt, cflag: UInt): Int
 
-@CCall("knifunptr_openssl3070_X509_print_fp")
+@CCall("knifunptr_openssl3075_X509_print_fp")
 external fun X509_print_fp(bp: CValuesRef<FILE>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3071_X509_CRL_print_fp")
+@CCall("knifunptr_openssl3076_X509_CRL_print_fp")
 external fun X509_CRL_print_fp(bp: CValuesRef<FILE>?, x: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3072_X509_REQ_print_fp")
+@CCall("knifunptr_openssl3077_X509_REQ_print_fp")
 external fun X509_REQ_print_fp(bp: CValuesRef<FILE>?, req: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl3073_X509_NAME_print_ex_fp")
+@CCall("knifunptr_openssl3078_X509_NAME_print_ex_fp")
 external fun X509_NAME_print_ex_fp(fp: CValuesRef<FILE>?, nm: CValuesRef<X509_NAME>?, indent: Int, flags: UInt): Int
 
-@CCall("knifunptr_openssl3074_X509_NAME_print")
+@CCall("knifunptr_openssl3079_X509_NAME_print")
 external fun X509_NAME_print(bp: CValuesRef<BIO>?, name: CValuesRef<X509_NAME>?, obase: Int): Int
 
-@CCall("knifunptr_openssl3075_X509_NAME_print_ex")
+@CCall("knifunptr_openssl3080_X509_NAME_print_ex")
 external fun X509_NAME_print_ex(out: CValuesRef<BIO>?, nm: CValuesRef<X509_NAME>?, indent: Int, flags: UInt): Int
 
-@CCall("knifunptr_openssl3076_X509_print_ex")
+@CCall("knifunptr_openssl3081_X509_print_ex")
 external fun X509_print_ex(bp: CValuesRef<BIO>?, x: CValuesRef<X509>?, nmflag: UInt, cflag: UInt): Int
 
-@CCall("knifunptr_openssl3077_X509_print")
+@CCall("knifunptr_openssl3082_X509_print")
 external fun X509_print(bp: CValuesRef<BIO>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3078_X509_ocspid_print")
+@CCall("knifunptr_openssl3083_X509_ocspid_print")
 external fun X509_ocspid_print(bp: CValuesRef<BIO>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3079_X509_CRL_print_ex")
+@CCall("knifunptr_openssl3084_X509_CRL_print_ex")
 external fun X509_CRL_print_ex(out: CValuesRef<BIO>?, x: CValuesRef<X509_CRL>?, nmflag: UInt): Int
 
-@CCall("knifunptr_openssl3080_X509_CRL_print")
+@CCall("knifunptr_openssl3085_X509_CRL_print")
 external fun X509_CRL_print(bp: CValuesRef<BIO>?, x: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3081_X509_REQ_print_ex")
+@CCall("knifunptr_openssl3086_X509_REQ_print_ex")
 external fun X509_REQ_print_ex(bp: CValuesRef<BIO>?, x: CValuesRef<X509_REQ>?, nmflag: UInt, cflag: UInt): Int
 
-@CCall("knifunptr_openssl3082_X509_REQ_print")
+@CCall("knifunptr_openssl3087_X509_REQ_print")
 external fun X509_REQ_print(bp: CValuesRef<BIO>?, req: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl3083_X509_NAME_entry_count")
+@CCall("knifunptr_openssl3088_X509_NAME_entry_count")
 external fun X509_NAME_entry_count(name: CValuesRef<X509_NAME>?): Int
 
-@CCall("knifunptr_openssl3084_X509_NAME_get_text_by_NID")
+@CCall("knifunptr_openssl3089_X509_NAME_get_text_by_NID")
 external fun X509_NAME_get_text_by_NID(name: CValuesRef<X509_NAME>?, nid: Int, buf: CValuesRef<ByteVar>?, len: Int): Int
 
-@CCall("knifunptr_openssl3085_X509_NAME_get_text_by_OBJ")
+@CCall("knifunptr_openssl3090_X509_NAME_get_text_by_OBJ")
 external fun X509_NAME_get_text_by_OBJ(
     name: CValuesRef<X509_NAME>?,
     obj: CValuesRef<ASN1_OBJECT>?,
@@ -14522,19 +14618,19 @@ external fun X509_NAME_get_text_by_OBJ(
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3086_X509_NAME_get_index_by_NID")
+@CCall("knifunptr_openssl3091_X509_NAME_get_index_by_NID")
 external fun X509_NAME_get_index_by_NID(name: CValuesRef<X509_NAME>?, nid: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3087_X509_NAME_get_index_by_OBJ")
+@CCall("knifunptr_openssl3092_X509_NAME_get_index_by_OBJ")
 external fun X509_NAME_get_index_by_OBJ(name: CValuesRef<X509_NAME>?, obj: CValuesRef<ASN1_OBJECT>?, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3088_X509_NAME_get_entry")
+@CCall("knifunptr_openssl3093_X509_NAME_get_entry")
 external fun X509_NAME_get_entry(name: CValuesRef<X509_NAME>?, loc: Int): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl3089_X509_NAME_delete_entry")
+@CCall("knifunptr_openssl3094_X509_NAME_delete_entry")
 external fun X509_NAME_delete_entry(name: CValuesRef<X509_NAME>?, loc: Int): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl3090_X509_NAME_add_entry")
+@CCall("knifunptr_openssl3095_X509_NAME_add_entry")
 external fun X509_NAME_add_entry(
     name: CValuesRef<X509_NAME>?,
     ne: CValuesRef<X509_NAME_ENTRY>?,
@@ -14542,7 +14638,7 @@ external fun X509_NAME_add_entry(
     set: Int
 ): Int
 
-@CCall("knifunptr_openssl3091_X509_NAME_add_entry_by_OBJ")
+@CCall("knifunptr_openssl3096_X509_NAME_add_entry_by_OBJ")
 external fun X509_NAME_add_entry_by_OBJ(
     name: CValuesRef<X509_NAME>?,
     obj: CValuesRef<ASN1_OBJECT>?,
@@ -14553,7 +14649,7 @@ external fun X509_NAME_add_entry_by_OBJ(
     set: Int
 ): Int
 
-@CCall("knifunptr_openssl3092_X509_NAME_add_entry_by_NID")
+@CCall("knifunptr_openssl3097_X509_NAME_add_entry_by_NID")
 external fun X509_NAME_add_entry_by_NID(
     name: CValuesRef<X509_NAME>?,
     nid: Int,
@@ -14564,15 +14660,16 @@ external fun X509_NAME_add_entry_by_NID(
     set: Int
 ): Int
 
-@CCall("knifunptr_openssl3093_X509_NAME_ENTRY_create_by_txt")
+@CCall("knifunptr_openssl3098_X509_NAME_ENTRY_create_by_txt")
 external fun X509_NAME_ENTRY_create_by_txt(
-    ne: CValuesRef<CPointerVar<X509_NAME_ENTRY>>?, @CCall.CString field: String?,
+    ne: CValuesRef<CPointerVar<X509_NAME_ENTRY>>?,
+    @CCall.CString field: String?,
     type: Int,
     bytes: CValuesRef<UByteVar>?,
     len: Int
 ): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl3094_X509_NAME_ENTRY_create_by_NID")
+@CCall("knifunptr_openssl3099_X509_NAME_ENTRY_create_by_NID")
 external fun X509_NAME_ENTRY_create_by_NID(
     ne: CValuesRef<CPointerVar<X509_NAME_ENTRY>>?,
     nid: Int,
@@ -14581,9 +14678,10 @@ external fun X509_NAME_ENTRY_create_by_NID(
     len: Int
 ): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl3095_X509_NAME_add_entry_by_txt")
+@CCall("knifunptr_openssl3100_X509_NAME_add_entry_by_txt")
 external fun X509_NAME_add_entry_by_txt(
-    name: CValuesRef<X509_NAME>?, @CCall.CString field: String?,
+    name: CValuesRef<X509_NAME>?,
+    @CCall.CString field: String?,
     type: Int,
     bytes: CValuesRef<UByteVar>?,
     len: Int,
@@ -14591,7 +14689,7 @@ external fun X509_NAME_add_entry_by_txt(
     set: Int
 ): Int
 
-@CCall("knifunptr_openssl3096_X509_NAME_ENTRY_create_by_OBJ")
+@CCall("knifunptr_openssl3101_X509_NAME_ENTRY_create_by_OBJ")
 external fun X509_NAME_ENTRY_create_by_OBJ(
     ne: CValuesRef<CPointerVar<X509_NAME_ENTRY>>?,
     obj: CValuesRef<ASN1_OBJECT>?,
@@ -14600,10 +14698,10 @@ external fun X509_NAME_ENTRY_create_by_OBJ(
     len: Int
 ): CPointer<X509_NAME_ENTRY>?
 
-@CCall("knifunptr_openssl3097_X509_NAME_ENTRY_set_object")
+@CCall("knifunptr_openssl3102_X509_NAME_ENTRY_set_object")
 external fun X509_NAME_ENTRY_set_object(ne: CValuesRef<X509_NAME_ENTRY>?, obj: CValuesRef<ASN1_OBJECT>?): Int
 
-@CCall("knifunptr_openssl3098_X509_NAME_ENTRY_set_data")
+@CCall("knifunptr_openssl3103_X509_NAME_ENTRY_set_data")
 external fun X509_NAME_ENTRY_set_data(
     ne: CValuesRef<X509_NAME_ENTRY>?,
     type: Int,
@@ -14611,73 +14709,73 @@ external fun X509_NAME_ENTRY_set_data(
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3099_X509_NAME_ENTRY_get_object")
+@CCall("knifunptr_openssl3104_X509_NAME_ENTRY_get_object")
 external fun X509_NAME_ENTRY_get_object(ne: CValuesRef<X509_NAME_ENTRY>?): CPointer<ASN1_OBJECT>?
 
-@CCall("knifunptr_openssl3100_X509_NAME_ENTRY_get_data")
+@CCall("knifunptr_openssl3105_X509_NAME_ENTRY_get_data")
 external fun X509_NAME_ENTRY_get_data(ne: CValuesRef<X509_NAME_ENTRY>?): CPointer<ASN1_STRING>?
 
-@CCall("knifunptr_openssl3101_X509_NAME_ENTRY_set")
+@CCall("knifunptr_openssl3106_X509_NAME_ENTRY_set")
 external fun X509_NAME_ENTRY_set(ne: CValuesRef<X509_NAME_ENTRY>?): Int
 
-@CCall("knifunptr_openssl3102_X509_NAME_get0_der")
+@CCall("knifunptr_openssl3107_X509_NAME_get0_der")
 external fun X509_NAME_get0_der(
     nm: CValuesRef<X509_NAME>?,
     pder: CValuesRef<CPointerVar<UByteVar>>?,
     pderlen: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3103_X509v3_get_ext_count")
+@CCall("knifunptr_openssl3108_X509v3_get_ext_count")
 external fun X509v3_get_ext_count(x: CValuesRef<stack_st_X509_EXTENSION>?): Int
 
-@CCall("knifunptr_openssl3104_X509v3_get_ext_by_NID")
+@CCall("knifunptr_openssl3109_X509v3_get_ext_by_NID")
 external fun X509v3_get_ext_by_NID(x: CValuesRef<stack_st_X509_EXTENSION>?, nid: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3105_X509v3_get_ext_by_OBJ")
+@CCall("knifunptr_openssl3110_X509v3_get_ext_by_OBJ")
 external fun X509v3_get_ext_by_OBJ(
     x: CValuesRef<stack_st_X509_EXTENSION>?,
     obj: CValuesRef<ASN1_OBJECT>?,
     lastpos: Int
 ): Int
 
-@CCall("knifunptr_openssl3106_X509v3_get_ext_by_critical")
+@CCall("knifunptr_openssl3111_X509v3_get_ext_by_critical")
 external fun X509v3_get_ext_by_critical(x: CValuesRef<stack_st_X509_EXTENSION>?, crit: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3107_X509v3_get_ext")
+@CCall("knifunptr_openssl3112_X509v3_get_ext")
 external fun X509v3_get_ext(x: CValuesRef<stack_st_X509_EXTENSION>?, loc: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3108_X509v3_delete_ext")
+@CCall("knifunptr_openssl3113_X509v3_delete_ext")
 external fun X509v3_delete_ext(x: CValuesRef<stack_st_X509_EXTENSION>?, loc: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3109_X509v3_add_ext")
+@CCall("knifunptr_openssl3114_X509v3_add_ext")
 external fun X509v3_add_ext(
     x: CValuesRef<CPointerVar<stack_st_X509_EXTENSION>>?,
     ex: CValuesRef<X509_EXTENSION>?,
     loc: Int
 ): CPointer<stack_st_X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3110_X509_get_ext_count")
+@CCall("knifunptr_openssl3115_X509_get_ext_count")
 external fun X509_get_ext_count(x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3111_X509_get_ext_by_NID")
+@CCall("knifunptr_openssl3116_X509_get_ext_by_NID")
 external fun X509_get_ext_by_NID(x: CValuesRef<X509>?, nid: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3112_X509_get_ext_by_OBJ")
+@CCall("knifunptr_openssl3117_X509_get_ext_by_OBJ")
 external fun X509_get_ext_by_OBJ(x: CValuesRef<X509>?, obj: CValuesRef<ASN1_OBJECT>?, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3113_X509_get_ext_by_critical")
+@CCall("knifunptr_openssl3118_X509_get_ext_by_critical")
 external fun X509_get_ext_by_critical(x: CValuesRef<X509>?, crit: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3114_X509_get_ext")
+@CCall("knifunptr_openssl3119_X509_get_ext")
 external fun X509_get_ext(x: CValuesRef<X509>?, loc: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3115_X509_delete_ext")
+@CCall("knifunptr_openssl3120_X509_delete_ext")
 external fun X509_delete_ext(x: CValuesRef<X509>?, loc: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3116_X509_add_ext")
+@CCall("knifunptr_openssl3121_X509_add_ext")
 external fun X509_add_ext(x: CValuesRef<X509>?, ex: CValuesRef<X509_EXTENSION>?, loc: Int): Int
 
-@CCall("knifunptr_openssl3117_X509_get_ext_d2i")
+@CCall("knifunptr_openssl3122_X509_get_ext_d2i")
 external fun X509_get_ext_d2i(
     x: CValuesRef<X509>?,
     nid: Int,
@@ -14685,31 +14783,31 @@ external fun X509_get_ext_d2i(
     idx: CValuesRef<IntVar>?
 ): COpaquePointer?
 
-@CCall("knifunptr_openssl3118_X509_add1_ext_i2d")
+@CCall("knifunptr_openssl3123_X509_add1_ext_i2d")
 external fun X509_add1_ext_i2d(x: CValuesRef<X509>?, nid: Int, value: CValuesRef<*>?, crit: Int, flags: UInt): Int
 
-@CCall("knifunptr_openssl3119_X509_CRL_get_ext_count")
+@CCall("knifunptr_openssl3124_X509_CRL_get_ext_count")
 external fun X509_CRL_get_ext_count(x: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3120_X509_CRL_get_ext_by_NID")
+@CCall("knifunptr_openssl3125_X509_CRL_get_ext_by_NID")
 external fun X509_CRL_get_ext_by_NID(x: CValuesRef<X509_CRL>?, nid: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3121_X509_CRL_get_ext_by_OBJ")
+@CCall("knifunptr_openssl3126_X509_CRL_get_ext_by_OBJ")
 external fun X509_CRL_get_ext_by_OBJ(x: CValuesRef<X509_CRL>?, obj: CValuesRef<ASN1_OBJECT>?, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3122_X509_CRL_get_ext_by_critical")
+@CCall("knifunptr_openssl3127_X509_CRL_get_ext_by_critical")
 external fun X509_CRL_get_ext_by_critical(x: CValuesRef<X509_CRL>?, crit: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3123_X509_CRL_get_ext")
+@CCall("knifunptr_openssl3128_X509_CRL_get_ext")
 external fun X509_CRL_get_ext(x: CValuesRef<X509_CRL>?, loc: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3124_X509_CRL_delete_ext")
+@CCall("knifunptr_openssl3129_X509_CRL_delete_ext")
 external fun X509_CRL_delete_ext(x: CValuesRef<X509_CRL>?, loc: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3125_X509_CRL_add_ext")
+@CCall("knifunptr_openssl3130_X509_CRL_add_ext")
 external fun X509_CRL_add_ext(x: CValuesRef<X509_CRL>?, ex: CValuesRef<X509_EXTENSION>?, loc: Int): Int
 
-@CCall("knifunptr_openssl3126_X509_CRL_get_ext_d2i")
+@CCall("knifunptr_openssl3131_X509_CRL_get_ext_d2i")
 external fun X509_CRL_get_ext_d2i(
     x: CValuesRef<X509_CRL>?,
     nid: Int,
@@ -14717,7 +14815,7 @@ external fun X509_CRL_get_ext_d2i(
     idx: CValuesRef<IntVar>?
 ): COpaquePointer?
 
-@CCall("knifunptr_openssl3127_X509_CRL_add1_ext_i2d")
+@CCall("knifunptr_openssl3132_X509_CRL_add1_ext_i2d")
 external fun X509_CRL_add1_ext_i2d(
     x: CValuesRef<X509_CRL>?,
     nid: Int,
@@ -14726,28 +14824,28 @@ external fun X509_CRL_add1_ext_i2d(
     flags: UInt
 ): Int
 
-@CCall("knifunptr_openssl3128_X509_REVOKED_get_ext_count")
+@CCall("knifunptr_openssl3133_X509_REVOKED_get_ext_count")
 external fun X509_REVOKED_get_ext_count(x: CValuesRef<X509_REVOKED>?): Int
 
-@CCall("knifunptr_openssl3129_X509_REVOKED_get_ext_by_NID")
+@CCall("knifunptr_openssl3134_X509_REVOKED_get_ext_by_NID")
 external fun X509_REVOKED_get_ext_by_NID(x: CValuesRef<X509_REVOKED>?, nid: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3130_X509_REVOKED_get_ext_by_OBJ")
+@CCall("knifunptr_openssl3135_X509_REVOKED_get_ext_by_OBJ")
 external fun X509_REVOKED_get_ext_by_OBJ(x: CValuesRef<X509_REVOKED>?, obj: CValuesRef<ASN1_OBJECT>?, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3131_X509_REVOKED_get_ext_by_critical")
+@CCall("knifunptr_openssl3136_X509_REVOKED_get_ext_by_critical")
 external fun X509_REVOKED_get_ext_by_critical(x: CValuesRef<X509_REVOKED>?, crit: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3132_X509_REVOKED_get_ext")
+@CCall("knifunptr_openssl3137_X509_REVOKED_get_ext")
 external fun X509_REVOKED_get_ext(x: CValuesRef<X509_REVOKED>?, loc: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3133_X509_REVOKED_delete_ext")
+@CCall("knifunptr_openssl3138_X509_REVOKED_delete_ext")
 external fun X509_REVOKED_delete_ext(x: CValuesRef<X509_REVOKED>?, loc: Int): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3134_X509_REVOKED_add_ext")
+@CCall("knifunptr_openssl3139_X509_REVOKED_add_ext")
 external fun X509_REVOKED_add_ext(x: CValuesRef<X509_REVOKED>?, ex: CValuesRef<X509_EXTENSION>?, loc: Int): Int
 
-@CCall("knifunptr_openssl3135_X509_REVOKED_get_ext_d2i")
+@CCall("knifunptr_openssl3140_X509_REVOKED_get_ext_d2i")
 external fun X509_REVOKED_get_ext_d2i(
     x: CValuesRef<X509_REVOKED>?,
     nid: Int,
@@ -14755,7 +14853,7 @@ external fun X509_REVOKED_get_ext_d2i(
     idx: CValuesRef<IntVar>?
 ): COpaquePointer?
 
-@CCall("knifunptr_openssl3136_X509_REVOKED_add1_ext_i2d")
+@CCall("knifunptr_openssl3141_X509_REVOKED_add1_ext_i2d")
 external fun X509_REVOKED_add1_ext_i2d(
     x: CValuesRef<X509_REVOKED>?,
     nid: Int,
@@ -14764,7 +14862,7 @@ external fun X509_REVOKED_add1_ext_i2d(
     flags: UInt
 ): Int
 
-@CCall("knifunptr_openssl3137_X509_EXTENSION_create_by_NID")
+@CCall("knifunptr_openssl3142_X509_EXTENSION_create_by_NID")
 external fun X509_EXTENSION_create_by_NID(
     ex: CValuesRef<CPointerVar<X509_EXTENSION>>?,
     nid: Int,
@@ -14772,7 +14870,7 @@ external fun X509_EXTENSION_create_by_NID(
     data: CValuesRef<ASN1_OCTET_STRING>?
 ): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3138_X509_EXTENSION_create_by_OBJ")
+@CCall("knifunptr_openssl3143_X509_EXTENSION_create_by_OBJ")
 external fun X509_EXTENSION_create_by_OBJ(
     ex: CValuesRef<CPointerVar<X509_EXTENSION>>?,
     obj: CValuesRef<ASN1_OBJECT>?,
@@ -14780,50 +14878,50 @@ external fun X509_EXTENSION_create_by_OBJ(
     data: CValuesRef<ASN1_OCTET_STRING>?
 ): CPointer<X509_EXTENSION>?
 
-@CCall("knifunptr_openssl3139_X509_EXTENSION_set_object")
+@CCall("knifunptr_openssl3144_X509_EXTENSION_set_object")
 external fun X509_EXTENSION_set_object(ex: CValuesRef<X509_EXTENSION>?, obj: CValuesRef<ASN1_OBJECT>?): Int
 
-@CCall("knifunptr_openssl3140_X509_EXTENSION_set_critical")
+@CCall("knifunptr_openssl3145_X509_EXTENSION_set_critical")
 external fun X509_EXTENSION_set_critical(ex: CValuesRef<X509_EXTENSION>?, crit: Int): Int
 
-@CCall("knifunptr_openssl3141_X509_EXTENSION_set_data")
+@CCall("knifunptr_openssl3146_X509_EXTENSION_set_data")
 external fun X509_EXTENSION_set_data(ex: CValuesRef<X509_EXTENSION>?, data: CValuesRef<ASN1_OCTET_STRING>?): Int
 
-@CCall("knifunptr_openssl3142_X509_EXTENSION_get_object")
+@CCall("knifunptr_openssl3147_X509_EXTENSION_get_object")
 external fun X509_EXTENSION_get_object(ex: CValuesRef<X509_EXTENSION>?): CPointer<ASN1_OBJECT>?
 
-@CCall("knifunptr_openssl3143_X509_EXTENSION_get_data")
+@CCall("knifunptr_openssl3148_X509_EXTENSION_get_data")
 external fun X509_EXTENSION_get_data(ne: CValuesRef<X509_EXTENSION>?): CPointer<ASN1_OCTET_STRING>?
 
-@CCall("knifunptr_openssl3144_X509_EXTENSION_get_critical")
+@CCall("knifunptr_openssl3149_X509_EXTENSION_get_critical")
 external fun X509_EXTENSION_get_critical(ex: CValuesRef<X509_EXTENSION>?): Int
 
-@CCall("knifunptr_openssl3145_X509at_get_attr_count")
+@CCall("knifunptr_openssl3150_X509at_get_attr_count")
 external fun X509at_get_attr_count(x: CValuesRef<stack_st_X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl3146_X509at_get_attr_by_NID")
+@CCall("knifunptr_openssl3151_X509at_get_attr_by_NID")
 external fun X509at_get_attr_by_NID(x: CValuesRef<stack_st_X509_ATTRIBUTE>?, nid: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3147_X509at_get_attr_by_OBJ")
+@CCall("knifunptr_openssl3152_X509at_get_attr_by_OBJ")
 external fun X509at_get_attr_by_OBJ(
     sk: CValuesRef<stack_st_X509_ATTRIBUTE>?,
     obj: CValuesRef<ASN1_OBJECT>?,
     lastpos: Int
 ): Int
 
-@CCall("knifunptr_openssl3148_X509at_get_attr")
+@CCall("knifunptr_openssl3153_X509at_get_attr")
 external fun X509at_get_attr(x: CValuesRef<stack_st_X509_ATTRIBUTE>?, loc: Int): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3149_X509at_delete_attr")
+@CCall("knifunptr_openssl3154_X509at_delete_attr")
 external fun X509at_delete_attr(x: CValuesRef<stack_st_X509_ATTRIBUTE>?, loc: Int): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3150_X509at_add1_attr")
+@CCall("knifunptr_openssl3155_X509at_add1_attr")
 external fun X509at_add1_attr(
     x: CValuesRef<CPointerVar<stack_st_X509_ATTRIBUTE>>?,
     attr: CValuesRef<X509_ATTRIBUTE>?
 ): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3151_X509at_add1_attr_by_OBJ")
+@CCall("knifunptr_openssl3156_X509at_add1_attr_by_OBJ")
 external fun X509at_add1_attr_by_OBJ(
     x: CValuesRef<CPointerVar<stack_st_X509_ATTRIBUTE>>?,
     obj: CValuesRef<ASN1_OBJECT>?,
@@ -14832,7 +14930,7 @@ external fun X509at_add1_attr_by_OBJ(
     len: Int
 ): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3152_X509at_add1_attr_by_NID")
+@CCall("knifunptr_openssl3157_X509at_add1_attr_by_NID")
 external fun X509at_add1_attr_by_NID(
     x: CValuesRef<CPointerVar<stack_st_X509_ATTRIBUTE>>?,
     nid: Int,
@@ -14841,15 +14939,16 @@ external fun X509at_add1_attr_by_NID(
     len: Int
 ): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3153_X509at_add1_attr_by_txt")
+@CCall("knifunptr_openssl3158_X509at_add1_attr_by_txt")
 external fun X509at_add1_attr_by_txt(
-    x: CValuesRef<CPointerVar<stack_st_X509_ATTRIBUTE>>?, @CCall.CString attrname: String?,
+    x: CValuesRef<CPointerVar<stack_st_X509_ATTRIBUTE>>?,
+    @CCall.CString attrname: String?,
     type: Int,
     bytes: CValuesRef<UByteVar>?,
     len: Int
 ): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3154_X509at_get0_data_by_OBJ")
+@CCall("knifunptr_openssl3159_X509at_get0_data_by_OBJ")
 external fun X509at_get0_data_by_OBJ(
     x: CValuesRef<stack_st_X509_ATTRIBUTE>?,
     obj: CValuesRef<ASN1_OBJECT>?,
@@ -14857,7 +14956,7 @@ external fun X509at_get0_data_by_OBJ(
     type: Int
 ): COpaquePointer?
 
-@CCall("knifunptr_openssl3155_X509_ATTRIBUTE_create_by_NID")
+@CCall("knifunptr_openssl3160_X509_ATTRIBUTE_create_by_NID")
 external fun X509_ATTRIBUTE_create_by_NID(
     attr: CValuesRef<CPointerVar<X509_ATTRIBUTE>>?,
     nid: Int,
@@ -14866,7 +14965,7 @@ external fun X509_ATTRIBUTE_create_by_NID(
     len: Int
 ): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3156_X509_ATTRIBUTE_create_by_OBJ")
+@CCall("knifunptr_openssl3161_X509_ATTRIBUTE_create_by_OBJ")
 external fun X509_ATTRIBUTE_create_by_OBJ(
     attr: CValuesRef<CPointerVar<X509_ATTRIBUTE>>?,
     obj: CValuesRef<ASN1_OBJECT>?,
@@ -14875,18 +14974,19 @@ external fun X509_ATTRIBUTE_create_by_OBJ(
     len: Int
 ): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3157_X509_ATTRIBUTE_create_by_txt")
+@CCall("knifunptr_openssl3162_X509_ATTRIBUTE_create_by_txt")
 external fun X509_ATTRIBUTE_create_by_txt(
-    attr: CValuesRef<CPointerVar<X509_ATTRIBUTE>>?, @CCall.CString atrname: String?,
+    attr: CValuesRef<CPointerVar<X509_ATTRIBUTE>>?,
+    @CCall.CString atrname: String?,
     type: Int,
     bytes: CValuesRef<UByteVar>?,
     len: Int
 ): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3158_X509_ATTRIBUTE_set1_object")
+@CCall("knifunptr_openssl3163_X509_ATTRIBUTE_set1_object")
 external fun X509_ATTRIBUTE_set1_object(attr: CValuesRef<X509_ATTRIBUTE>?, obj: CValuesRef<ASN1_OBJECT>?): Int
 
-@CCall("knifunptr_openssl3159_X509_ATTRIBUTE_set1_data")
+@CCall("knifunptr_openssl3164_X509_ATTRIBUTE_set1_data")
 external fun X509_ATTRIBUTE_set1_data(
     attr: CValuesRef<X509_ATTRIBUTE>?,
     attrtype: Int,
@@ -14894,7 +14994,7 @@ external fun X509_ATTRIBUTE_set1_data(
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3160_X509_ATTRIBUTE_get0_data")
+@CCall("knifunptr_openssl3165_X509_ATTRIBUTE_get0_data")
 external fun X509_ATTRIBUTE_get0_data(
     attr: CValuesRef<X509_ATTRIBUTE>?,
     idx: Int,
@@ -14902,34 +15002,34 @@ external fun X509_ATTRIBUTE_get0_data(
     data: CValuesRef<*>?
 ): COpaquePointer?
 
-@CCall("knifunptr_openssl3161_X509_ATTRIBUTE_count")
+@CCall("knifunptr_openssl3166_X509_ATTRIBUTE_count")
 external fun X509_ATTRIBUTE_count(attr: CValuesRef<X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl3162_X509_ATTRIBUTE_get0_object")
+@CCall("knifunptr_openssl3167_X509_ATTRIBUTE_get0_object")
 external fun X509_ATTRIBUTE_get0_object(attr: CValuesRef<X509_ATTRIBUTE>?): CPointer<ASN1_OBJECT>?
 
-@CCall("knifunptr_openssl3163_X509_ATTRIBUTE_get0_type")
+@CCall("knifunptr_openssl3168_X509_ATTRIBUTE_get0_type")
 external fun X509_ATTRIBUTE_get0_type(attr: CValuesRef<X509_ATTRIBUTE>?, idx: Int): CPointer<ASN1_TYPE>?
 
-@CCall("knifunptr_openssl3164_EVP_PKEY_get_attr_count")
+@CCall("knifunptr_openssl3169_EVP_PKEY_get_attr_count")
 external fun EVP_PKEY_get_attr_count(key: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3165_EVP_PKEY_get_attr_by_NID")
+@CCall("knifunptr_openssl3170_EVP_PKEY_get_attr_by_NID")
 external fun EVP_PKEY_get_attr_by_NID(key: CValuesRef<EVP_PKEY>?, nid: Int, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3166_EVP_PKEY_get_attr_by_OBJ")
+@CCall("knifunptr_openssl3171_EVP_PKEY_get_attr_by_OBJ")
 external fun EVP_PKEY_get_attr_by_OBJ(key: CValuesRef<EVP_PKEY>?, obj: CValuesRef<ASN1_OBJECT>?, lastpos: Int): Int
 
-@CCall("knifunptr_openssl3167_EVP_PKEY_get_attr")
+@CCall("knifunptr_openssl3172_EVP_PKEY_get_attr")
 external fun EVP_PKEY_get_attr(key: CValuesRef<EVP_PKEY>?, loc: Int): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3168_EVP_PKEY_delete_attr")
+@CCall("knifunptr_openssl3173_EVP_PKEY_delete_attr")
 external fun EVP_PKEY_delete_attr(key: CValuesRef<EVP_PKEY>?, loc: Int): CPointer<X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3169_EVP_PKEY_add1_attr")
+@CCall("knifunptr_openssl3174_EVP_PKEY_add1_attr")
 external fun EVP_PKEY_add1_attr(key: CValuesRef<EVP_PKEY>?, attr: CValuesRef<X509_ATTRIBUTE>?): Int
 
-@CCall("knifunptr_openssl3170_EVP_PKEY_add1_attr_by_OBJ")
+@CCall("knifunptr_openssl3175_EVP_PKEY_add1_attr_by_OBJ")
 external fun EVP_PKEY_add1_attr_by_OBJ(
     key: CValuesRef<EVP_PKEY>?,
     obj: CValuesRef<ASN1_OBJECT>?,
@@ -14938,7 +15038,7 @@ external fun EVP_PKEY_add1_attr_by_OBJ(
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3171_EVP_PKEY_add1_attr_by_NID")
+@CCall("knifunptr_openssl3176_EVP_PKEY_add1_attr_by_NID")
 external fun EVP_PKEY_add1_attr_by_NID(
     key: CValuesRef<EVP_PKEY>?,
     nid: Int,
@@ -14947,92 +15047,93 @@ external fun EVP_PKEY_add1_attr_by_NID(
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3172_EVP_PKEY_add1_attr_by_txt")
+@CCall("knifunptr_openssl3177_EVP_PKEY_add1_attr_by_txt")
 external fun EVP_PKEY_add1_attr_by_txt(
-    key: CValuesRef<EVP_PKEY>?, @CCall.CString attrname: String?,
+    key: CValuesRef<EVP_PKEY>?,
+    @CCall.CString attrname: String?,
     type: Int,
     bytes: CValuesRef<UByteVar>?,
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3173_X509_verify_cert")
+@CCall("knifunptr_openssl3178_X509_verify_cert")
 external fun X509_verify_cert(ctx: CValuesRef<X509_STORE_CTX>?): Int
 
-@CCall("knifunptr_openssl3174_X509_find_by_issuer_and_serial")
+@CCall("knifunptr_openssl3179_X509_find_by_issuer_and_serial")
 external fun X509_find_by_issuer_and_serial(
     sk: CValuesRef<stack_st_X509>?,
     name: CValuesRef<X509_NAME>?,
     serial: CValuesRef<ASN1_INTEGER>?
 ): CPointer<X509>?
 
-@CCall("knifunptr_openssl3175_X509_find_by_subject")
+@CCall("knifunptr_openssl3180_X509_find_by_subject")
 external fun X509_find_by_subject(sk: CValuesRef<stack_st_X509>?, name: CValuesRef<X509_NAME>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl3176_PBEPARAM_new")
+@CCall("knifunptr_openssl3181_PBEPARAM_new")
 external fun PBEPARAM_new(): CPointer<PBEPARAM>?
 
-@CCall("knifunptr_openssl3177_PBEPARAM_free")
+@CCall("knifunptr_openssl3182_PBEPARAM_free")
 external fun PBEPARAM_free(a: CValuesRef<PBEPARAM>?): Unit
 
-@CCall("knifunptr_openssl3178_d2i_PBEPARAM")
+@CCall("knifunptr_openssl3183_d2i_PBEPARAM")
 external fun d2i_PBEPARAM(
     a: CValuesRef<CPointerVar<PBEPARAM>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PBEPARAM>?
 
-@CCall("knifunptr_openssl3179_i2d_PBEPARAM")
+@CCall("knifunptr_openssl3184_i2d_PBEPARAM")
 external fun i2d_PBEPARAM(a: CValuesRef<PBEPARAM>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3180_PBE2PARAM_new")
+@CCall("knifunptr_openssl3185_PBE2PARAM_new")
 external fun PBE2PARAM_new(): CPointer<PBE2PARAM>?
 
-@CCall("knifunptr_openssl3181_PBE2PARAM_free")
+@CCall("knifunptr_openssl3186_PBE2PARAM_free")
 external fun PBE2PARAM_free(a: CValuesRef<PBE2PARAM>?): Unit
 
-@CCall("knifunptr_openssl3182_d2i_PBE2PARAM")
+@CCall("knifunptr_openssl3187_d2i_PBE2PARAM")
 external fun d2i_PBE2PARAM(
     a: CValuesRef<CPointerVar<PBE2PARAM>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PBE2PARAM>?
 
-@CCall("knifunptr_openssl3183_i2d_PBE2PARAM")
+@CCall("knifunptr_openssl3188_i2d_PBE2PARAM")
 external fun i2d_PBE2PARAM(a: CValuesRef<PBE2PARAM>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3184_PBKDF2PARAM_new")
+@CCall("knifunptr_openssl3189_PBKDF2PARAM_new")
 external fun PBKDF2PARAM_new(): CPointer<PBKDF2PARAM>?
 
-@CCall("knifunptr_openssl3185_PBKDF2PARAM_free")
+@CCall("knifunptr_openssl3190_PBKDF2PARAM_free")
 external fun PBKDF2PARAM_free(a: CValuesRef<PBKDF2PARAM>?): Unit
 
-@CCall("knifunptr_openssl3186_d2i_PBKDF2PARAM")
+@CCall("knifunptr_openssl3191_d2i_PBKDF2PARAM")
 external fun d2i_PBKDF2PARAM(
     a: CValuesRef<CPointerVar<PBKDF2PARAM>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PBKDF2PARAM>?
 
-@CCall("knifunptr_openssl3187_i2d_PBKDF2PARAM")
+@CCall("knifunptr_openssl3192_i2d_PBKDF2PARAM")
 external fun i2d_PBKDF2PARAM(a: CValuesRef<PBKDF2PARAM>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3188_SCRYPT_PARAMS_new")
+@CCall("knifunptr_openssl3193_SCRYPT_PARAMS_new")
 external fun SCRYPT_PARAMS_new(): CPointer<SCRYPT_PARAMS>?
 
-@CCall("knifunptr_openssl3189_SCRYPT_PARAMS_free")
+@CCall("knifunptr_openssl3194_SCRYPT_PARAMS_free")
 external fun SCRYPT_PARAMS_free(a: CValuesRef<SCRYPT_PARAMS>?): Unit
 
-@CCall("knifunptr_openssl3190_d2i_SCRYPT_PARAMS")
+@CCall("knifunptr_openssl3195_d2i_SCRYPT_PARAMS")
 external fun d2i_SCRYPT_PARAMS(
     a: CValuesRef<CPointerVar<SCRYPT_PARAMS>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<SCRYPT_PARAMS>?
 
-@CCall("knifunptr_openssl3191_i2d_SCRYPT_PARAMS")
+@CCall("knifunptr_openssl3196_i2d_SCRYPT_PARAMS")
 external fun i2d_SCRYPT_PARAMS(a: CValuesRef<SCRYPT_PARAMS>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3192_PKCS5_pbe_set0_algor")
+@CCall("knifunptr_openssl3197_PKCS5_pbe_set0_algor")
 external fun PKCS5_pbe_set0_algor(
     algor: CValuesRef<X509_ALGOR>?,
     alg: Int,
@@ -15041,10 +15142,10 @@ external fun PKCS5_pbe_set0_algor(
     saltlen: Int
 ): Int
 
-@CCall("knifunptr_openssl3193_PKCS5_pbe_set")
+@CCall("knifunptr_openssl3198_PKCS5_pbe_set")
 external fun PKCS5_pbe_set(alg: Int, iter: Int, salt: CValuesRef<UByteVar>?, saltlen: Int): CPointer<X509_ALGOR>?
 
-@CCall("knifunptr_openssl3194_PKCS5_pbe2_set")
+@CCall("knifunptr_openssl3199_PKCS5_pbe2_set")
 external fun PKCS5_pbe2_set(
     cipher: CValuesRef<EVP_CIPHER>?,
     iter: Int,
@@ -15052,7 +15153,7 @@ external fun PKCS5_pbe2_set(
     saltlen: Int
 ): CPointer<X509_ALGOR>?
 
-@CCall("knifunptr_openssl3195_PKCS5_pbe2_set_iv")
+@CCall("knifunptr_openssl3200_PKCS5_pbe2_set_iv")
 external fun PKCS5_pbe2_set_iv(
     cipher: CValuesRef<EVP_CIPHER>?,
     iter: Int,
@@ -15062,7 +15163,7 @@ external fun PKCS5_pbe2_set_iv(
     prf_nid: Int
 ): CPointer<X509_ALGOR>?
 
-@CCall("knifunptr_openssl3196_PKCS5_pbe2_set_scrypt")
+@CCall("knifunptr_openssl3201_PKCS5_pbe2_set_scrypt")
 external fun PKCS5_pbe2_set_scrypt(
     cipher: CValuesRef<EVP_CIPHER>?,
     salt: CValuesRef<UByteVar>?,
@@ -15073,7 +15174,7 @@ external fun PKCS5_pbe2_set_scrypt(
     p: uint64_t
 ): CPointer<X509_ALGOR>?
 
-@CCall("knifunptr_openssl3197_PKCS5_pbkdf2_set")
+@CCall("knifunptr_openssl3202_PKCS5_pbkdf2_set")
 external fun PKCS5_pbkdf2_set(
     iter: Int,
     salt: CValuesRef<UByteVar>?,
@@ -15082,29 +15183,29 @@ external fun PKCS5_pbkdf2_set(
     keylen: Int
 ): CPointer<X509_ALGOR>?
 
-@CCall("knifunptr_openssl3198_PKCS8_PRIV_KEY_INFO_new")
+@CCall("knifunptr_openssl3203_PKCS8_PRIV_KEY_INFO_new")
 external fun PKCS8_PRIV_KEY_INFO_new(): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl3199_PKCS8_PRIV_KEY_INFO_free")
+@CCall("knifunptr_openssl3204_PKCS8_PRIV_KEY_INFO_free")
 external fun PKCS8_PRIV_KEY_INFO_free(a: CValuesRef<PKCS8_PRIV_KEY_INFO>?): Unit
 
-@CCall("knifunptr_openssl3200_d2i_PKCS8_PRIV_KEY_INFO")
+@CCall("knifunptr_openssl3205_d2i_PKCS8_PRIV_KEY_INFO")
 external fun d2i_PKCS8_PRIV_KEY_INFO(
     a: CValuesRef<CPointerVar<PKCS8_PRIV_KEY_INFO>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl3201_i2d_PKCS8_PRIV_KEY_INFO")
+@CCall("knifunptr_openssl3206_i2d_PKCS8_PRIV_KEY_INFO")
 external fun i2d_PKCS8_PRIV_KEY_INFO(a: CValuesRef<PKCS8_PRIV_KEY_INFO>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3202_EVP_PKCS82PKEY")
+@CCall("knifunptr_openssl3207_EVP_PKCS82PKEY")
 external fun EVP_PKCS82PKEY(p8: CValuesRef<PKCS8_PRIV_KEY_INFO>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3203_EVP_PKEY2PKCS8")
+@CCall("knifunptr_openssl3208_EVP_PKEY2PKCS8")
 external fun EVP_PKEY2PKCS8(pkey: CValuesRef<EVP_PKEY>?): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl3204_PKCS8_pkey_set0")
+@CCall("knifunptr_openssl3209_PKCS8_pkey_set0")
 external fun PKCS8_pkey_set0(
     priv: CValuesRef<PKCS8_PRIV_KEY_INFO>?,
     aobj: CValuesRef<ASN1_OBJECT>?,
@@ -15115,7 +15216,7 @@ external fun PKCS8_pkey_set0(
     penclen: Int
 ): Int
 
-@CCall("knifunptr_openssl3205_PKCS8_pkey_get0")
+@CCall("knifunptr_openssl3210_PKCS8_pkey_get0")
 external fun PKCS8_pkey_get0(
     ppkalg: CValuesRef<CPointerVar<ASN1_OBJECT>>?,
     pk: CValuesRef<CPointerVar<UByteVar>>?,
@@ -15124,10 +15225,10 @@ external fun PKCS8_pkey_get0(
     p8: CValuesRef<PKCS8_PRIV_KEY_INFO>?
 ): Int
 
-@CCall("knifunptr_openssl3206_PKCS8_pkey_get0_attrs")
+@CCall("knifunptr_openssl3211_PKCS8_pkey_get0_attrs")
 external fun PKCS8_pkey_get0_attrs(p8: CValuesRef<PKCS8_PRIV_KEY_INFO>?): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl3207_PKCS8_pkey_add1_attr_by_NID")
+@CCall("knifunptr_openssl3212_PKCS8_pkey_add1_attr_by_NID")
 external fun PKCS8_pkey_add1_attr_by_NID(
     p8: CValuesRef<PKCS8_PRIV_KEY_INFO>?,
     nid: Int,
@@ -15136,7 +15237,7 @@ external fun PKCS8_pkey_add1_attr_by_NID(
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3208_X509_PUBKEY_set0_param")
+@CCall("knifunptr_openssl3213_X509_PUBKEY_set0_param")
 external fun X509_PUBKEY_set0_param(
     pub: CValuesRef<X509_PUBKEY>?,
     aobj: CValuesRef<ASN1_OBJECT>?,
@@ -15146,7 +15247,7 @@ external fun X509_PUBKEY_set0_param(
     penclen: Int
 ): Int
 
-@CCall("knifunptr_openssl3209_X509_PUBKEY_get0_param")
+@CCall("knifunptr_openssl3214_X509_PUBKEY_get0_param")
 external fun X509_PUBKEY_get0_param(
     ppkalg: CValuesRef<CPointerVar<ASN1_OBJECT>>?,
     pk: CValuesRef<CPointerVar<UByteVar>>?,
@@ -15155,46 +15256,47 @@ external fun X509_PUBKEY_get0_param(
     pub: CValuesRef<X509_PUBKEY>?
 ): Int
 
-@CCall("knifunptr_openssl3210_X509_check_trust")
+@CCall("knifunptr_openssl3215_X509_check_trust")
 external fun X509_check_trust(x: CValuesRef<X509>?, id: Int, flags: Int): Int
 
-@CCall("knifunptr_openssl3211_X509_TRUST_get_count")
+@CCall("knifunptr_openssl3216_X509_TRUST_get_count")
 external fun X509_TRUST_get_count(): Int
 
-@CCall("knifunptr_openssl3212_X509_TRUST_get0")
+@CCall("knifunptr_openssl3217_X509_TRUST_get0")
 external fun X509_TRUST_get0(idx: Int): CPointer<X509_TRUST>?
 
-@CCall("knifunptr_openssl3213_X509_TRUST_get_by_id")
+@CCall("knifunptr_openssl3218_X509_TRUST_get_by_id")
 external fun X509_TRUST_get_by_id(id: Int): Int
 
-@CCall("knifunptr_openssl3214_X509_TRUST_add")
+@CCall("knifunptr_openssl3219_X509_TRUST_add")
 external fun X509_TRUST_add(
     id: Int,
     flags: Int,
-    ck: CPointer<CFunction<(CPointer<X509_TRUST>?, CPointer<X509>?, Int) -> Int>>?, @CCall.CString name: String?,
+    ck: CPointer<CFunction<(CPointer<X509_TRUST>?, CPointer<X509>?, Int) -> Int>>?,
+    @CCall.CString name: String?,
     arg1: Int,
     arg2: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3215_X509_TRUST_cleanup")
+@CCall("knifunptr_openssl3220_X509_TRUST_cleanup")
 external fun X509_TRUST_cleanup(): Unit
 
-@CCall("knifunptr_openssl3216_X509_TRUST_get_flags")
+@CCall("knifunptr_openssl3221_X509_TRUST_get_flags")
 external fun X509_TRUST_get_flags(xp: CValuesRef<X509_TRUST>?): Int
 
-@CCall("knifunptr_openssl3217_X509_TRUST_get0_name")
+@CCall("knifunptr_openssl3222_X509_TRUST_get0_name")
 external fun X509_TRUST_get0_name(xp: CValuesRef<X509_TRUST>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3218_X509_TRUST_get_trust")
+@CCall("knifunptr_openssl3223_X509_TRUST_get_trust")
 external fun X509_TRUST_get_trust(xp: CValuesRef<X509_TRUST>?): Int
 
-@CCall("knifunptr_openssl3219_ERR_load_PEM_strings")
+@CCall("knifunptr_openssl3224_ERR_load_PEM_strings")
 external fun ERR_load_PEM_strings(): Int
 
-@CCall("knifunptr_openssl3220_PEM_get_EVP_CIPHER_INFO")
+@CCall("knifunptr_openssl3225_PEM_get_EVP_CIPHER_INFO")
 external fun PEM_get_EVP_CIPHER_INFO(header: CValuesRef<ByteVar>?, cipher: CValuesRef<EVP_CIPHER_INFO>?): Int
 
-@CCall("knifunptr_openssl3221_PEM_do_header")
+@CCall("knifunptr_openssl3226_PEM_do_header")
 external fun PEM_do_header(
     cipher: CValuesRef<EVP_CIPHER_INFO>?,
     data: CValuesRef<UByteVar>?,
@@ -15203,7 +15305,7 @@ external fun PEM_do_header(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3222_PEM_read_bio")
+@CCall("knifunptr_openssl3227_PEM_read_bio")
 external fun PEM_read_bio(
     bp: CValuesRef<BIO>?,
     name: CValuesRef<CPointerVar<ByteVar>>?,
@@ -15212,7 +15314,7 @@ external fun PEM_read_bio(
     len: CValuesRef<IntVar>?
 ): Int
 
-@CCall("knifunptr_openssl3223_PEM_read_bio_ex")
+@CCall("knifunptr_openssl3228_PEM_read_bio_ex")
 external fun PEM_read_bio_ex(
     bp: CValuesRef<BIO>?,
     name: CValuesRef<CPointerVar<ByteVar>>?,
@@ -15222,45 +15324,51 @@ external fun PEM_read_bio_ex(
     flags: UInt
 ): Int
 
-@CCall("knifunptr_openssl3224_PEM_bytes_read_bio_secmem")
+@CCall("knifunptr_openssl3229_PEM_bytes_read_bio_secmem")
 external fun PEM_bytes_read_bio_secmem(
     pdata: CValuesRef<CPointerVar<UByteVar>>?,
     plen: CValuesRef<IntVar>?,
-    pnm: CValuesRef<CPointerVar<ByteVar>>?, @CCall.CString name: String?,
+    pnm: CValuesRef<CPointerVar<ByteVar>>?,
+    @CCall.CString name: String?,
     bp: CValuesRef<BIO>?,
     cb: CPointer<pem_password_cb>?,
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3225_PEM_write_bio")
+@CCall("knifunptr_openssl3230_PEM_write_bio")
 external fun PEM_write_bio(
-    bp: CValuesRef<BIO>?, @CCall.CString name: String?, @CCall.CString hdr: String?,
+    bp: CValuesRef<BIO>?,
+    @CCall.CString name: String?,
+    @CCall.CString hdr: String?,
     data: CValuesRef<UByteVar>?,
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3226_PEM_bytes_read_bio")
+@CCall("knifunptr_openssl3231_PEM_bytes_read_bio")
 external fun PEM_bytes_read_bio(
     pdata: CValuesRef<CPointerVar<UByteVar>>?,
     plen: CValuesRef<IntVar>?,
-    pnm: CValuesRef<CPointerVar<ByteVar>>?, @CCall.CString name: String?,
+    pnm: CValuesRef<CPointerVar<ByteVar>>?,
+    @CCall.CString name: String?,
     bp: CValuesRef<BIO>?,
     cb: CPointer<pem_password_cb>?,
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3227_PEM_ASN1_read_bio")
+@CCall("knifunptr_openssl3232_PEM_ASN1_read_bio")
 external fun PEM_ASN1_read_bio(
-    d2i: CPointer<d2i_of_void>?, @CCall.CString name: String?,
+    d2i: CPointer<d2i_of_void>?,
+    @CCall.CString name: String?,
     bp: CValuesRef<BIO>?,
     x: CValuesRef<COpaquePointerVar>?,
     cb: CPointer<pem_password_cb>?,
     u: CValuesRef<*>?
 ): COpaquePointer?
 
-@CCall("knifunptr_openssl3228_PEM_ASN1_write_bio")
+@CCall("knifunptr_openssl3233_PEM_ASN1_write_bio")
 external fun PEM_ASN1_write_bio(
-    i2d: CPointer<i2d_of_void>?, @CCall.CString name: String?,
+    i2d: CPointer<i2d_of_void>?,
+    @CCall.CString name: String?,
     bp: CValuesRef<BIO>?,
     x: CValuesRef<*>?,
     enc: CValuesRef<EVP_CIPHER>?,
@@ -15270,7 +15378,7 @@ external fun PEM_ASN1_write_bio(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3229_PEM_X509_INFO_read_bio")
+@CCall("knifunptr_openssl3234_PEM_X509_INFO_read_bio")
 external fun PEM_X509_INFO_read_bio(
     bp: CValuesRef<BIO>?,
     sk: CValuesRef<stack_st_X509_INFO>?,
@@ -15278,7 +15386,7 @@ external fun PEM_X509_INFO_read_bio(
     u: CValuesRef<*>?
 ): CPointer<stack_st_X509_INFO>?
 
-@CCall("knifunptr_openssl3230_PEM_X509_INFO_write_bio")
+@CCall("knifunptr_openssl3235_PEM_X509_INFO_write_bio")
 external fun PEM_X509_INFO_write_bio(
     bp: CValuesRef<BIO>?,
     xi: CValuesRef<X509_INFO>?,
@@ -15289,7 +15397,7 @@ external fun PEM_X509_INFO_write_bio(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3231_PEM_read")
+@CCall("knifunptr_openssl3236_PEM_read")
 external fun PEM_read(
     fp: CValuesRef<FILE>?,
     name: CValuesRef<CPointerVar<ByteVar>>?,
@@ -15298,25 +15406,29 @@ external fun PEM_read(
     len: CValuesRef<IntVar>?
 ): Int
 
-@CCall("knifunptr_openssl3232_PEM_write")
+@CCall("knifunptr_openssl3237_PEM_write")
 external fun PEM_write(
-    fp: CValuesRef<FILE>?, @CCall.CString name: String?, @CCall.CString hdr: String?,
+    fp: CValuesRef<FILE>?,
+    @CCall.CString name: String?,
+    @CCall.CString hdr: String?,
     data: CValuesRef<UByteVar>?,
     len: Int
 ): Int
 
-@CCall("knifunptr_openssl3233_PEM_ASN1_read")
+@CCall("knifunptr_openssl3238_PEM_ASN1_read")
 external fun PEM_ASN1_read(
-    d2i: CPointer<d2i_of_void>?, @CCall.CString name: String?,
+    d2i: CPointer<d2i_of_void>?,
+    @CCall.CString name: String?,
     fp: CValuesRef<FILE>?,
     x: CValuesRef<COpaquePointerVar>?,
     cb: CPointer<pem_password_cb>?,
     u: CValuesRef<*>?
 ): COpaquePointer?
 
-@CCall("knifunptr_openssl3234_PEM_ASN1_write")
+@CCall("knifunptr_openssl3239_PEM_ASN1_write")
 external fun PEM_ASN1_write(
-    i2d: CPointer<i2d_of_void>?, @CCall.CString name: String?,
+    i2d: CPointer<i2d_of_void>?,
+    @CCall.CString name: String?,
     fp: CValuesRef<FILE>?,
     x: CValuesRef<*>?,
     enc: CValuesRef<EVP_CIPHER>?,
@@ -15326,7 +15438,7 @@ external fun PEM_ASN1_write(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3235_PEM_X509_INFO_read")
+@CCall("knifunptr_openssl3240_PEM_X509_INFO_read")
 external fun PEM_X509_INFO_read(
     fp: CValuesRef<FILE>?,
     sk: CValuesRef<stack_st_X509_INFO>?,
@@ -15334,13 +15446,13 @@ external fun PEM_X509_INFO_read(
     u: CValuesRef<*>?
 ): CPointer<stack_st_X509_INFO>?
 
-@CCall("knifunptr_openssl3236_PEM_SignInit")
+@CCall("knifunptr_openssl3241_PEM_SignInit")
 external fun PEM_SignInit(ctx: CValuesRef<EVP_MD_CTX>?, type: CValuesRef<EVP_MD>?): Int
 
-@CCall("knifunptr_openssl3237_PEM_SignUpdate")
+@CCall("knifunptr_openssl3242_PEM_SignUpdate")
 external fun PEM_SignUpdate(ctx: CValuesRef<EVP_MD_CTX>?, d: CValuesRef<UByteVar>?, cnt: UInt): Int
 
-@CCall("knifunptr_openssl3238_PEM_SignFinal")
+@CCall("knifunptr_openssl3243_PEM_SignFinal")
 external fun PEM_SignFinal(
     ctx: CValuesRef<EVP_MD_CTX>?,
     sigret: CValuesRef<UByteVar>?,
@@ -15348,20 +15460,21 @@ external fun PEM_SignFinal(
     pkey: CValuesRef<EVP_PKEY>?
 ): Int
 
-@CCall("knifunptr_openssl3239_PEM_def_callback")
+@CCall("knifunptr_openssl3244_PEM_def_callback")
 external fun PEM_def_callback(buf: CValuesRef<ByteVar>?, num: Int, rwflag: Int, userdata: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl3240_PEM_proc_type")
+@CCall("knifunptr_openssl3245_PEM_proc_type")
 external fun PEM_proc_type(buf: CValuesRef<ByteVar>?, type: Int): Unit
 
-@CCall("knifunptr_openssl3241_PEM_dek_info")
+@CCall("knifunptr_openssl3246_PEM_dek_info")
 external fun PEM_dek_info(
-    buf: CValuesRef<ByteVar>?, @CCall.CString type: String?,
+    buf: CValuesRef<ByteVar>?,
+    @CCall.CString type: String?,
     len: Int,
     str: CValuesRef<ByteVar>?
 ): Unit
 
-@CCall("knifunptr_openssl3242_PEM_read_bio_X509")
+@CCall("knifunptr_openssl3247_PEM_read_bio_X509")
 external fun PEM_read_bio_X509(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<X509>>?,
@@ -15369,7 +15482,7 @@ external fun PEM_read_bio_X509(
     u: CValuesRef<*>?
 ): CPointer<X509>?
 
-@CCall("knifunptr_openssl3243_PEM_read_X509")
+@CCall("knifunptr_openssl3248_PEM_read_X509")
 external fun PEM_read_X509(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<X509>>?,
@@ -15377,13 +15490,13 @@ external fun PEM_read_X509(
     u: CValuesRef<*>?
 ): CPointer<X509>?
 
-@CCall("knifunptr_openssl3244_PEM_write_bio_X509")
+@CCall("knifunptr_openssl3249_PEM_write_bio_X509")
 external fun PEM_write_bio_X509(bp: CValuesRef<BIO>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3245_PEM_write_X509")
+@CCall("knifunptr_openssl3250_PEM_write_X509")
 external fun PEM_write_X509(fp: CValuesRef<FILE>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3246_PEM_read_bio_X509_AUX")
+@CCall("knifunptr_openssl3251_PEM_read_bio_X509_AUX")
 external fun PEM_read_bio_X509_AUX(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<X509>>?,
@@ -15391,7 +15504,7 @@ external fun PEM_read_bio_X509_AUX(
     u: CValuesRef<*>?
 ): CPointer<X509>?
 
-@CCall("knifunptr_openssl3247_PEM_read_X509_AUX")
+@CCall("knifunptr_openssl3252_PEM_read_X509_AUX")
 external fun PEM_read_X509_AUX(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<X509>>?,
@@ -15399,13 +15512,13 @@ external fun PEM_read_X509_AUX(
     u: CValuesRef<*>?
 ): CPointer<X509>?
 
-@CCall("knifunptr_openssl3248_PEM_write_bio_X509_AUX")
+@CCall("knifunptr_openssl3253_PEM_write_bio_X509_AUX")
 external fun PEM_write_bio_X509_AUX(bp: CValuesRef<BIO>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3249_PEM_write_X509_AUX")
+@CCall("knifunptr_openssl3254_PEM_write_X509_AUX")
 external fun PEM_write_X509_AUX(fp: CValuesRef<FILE>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3250_PEM_read_bio_X509_REQ")
+@CCall("knifunptr_openssl3255_PEM_read_bio_X509_REQ")
 external fun PEM_read_bio_X509_REQ(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<X509_REQ>>?,
@@ -15413,7 +15526,7 @@ external fun PEM_read_bio_X509_REQ(
     u: CValuesRef<*>?
 ): CPointer<X509_REQ>?
 
-@CCall("knifunptr_openssl3251_PEM_read_X509_REQ")
+@CCall("knifunptr_openssl3256_PEM_read_X509_REQ")
 external fun PEM_read_X509_REQ(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<X509_REQ>>?,
@@ -15421,19 +15534,19 @@ external fun PEM_read_X509_REQ(
     u: CValuesRef<*>?
 ): CPointer<X509_REQ>?
 
-@CCall("knifunptr_openssl3252_PEM_write_bio_X509_REQ")
+@CCall("knifunptr_openssl3257_PEM_write_bio_X509_REQ")
 external fun PEM_write_bio_X509_REQ(bp: CValuesRef<BIO>?, x: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl3253_PEM_write_X509_REQ")
+@CCall("knifunptr_openssl3258_PEM_write_X509_REQ")
 external fun PEM_write_X509_REQ(fp: CValuesRef<FILE>?, x: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl3254_PEM_write_bio_X509_REQ_NEW")
+@CCall("knifunptr_openssl3259_PEM_write_bio_X509_REQ_NEW")
 external fun PEM_write_bio_X509_REQ_NEW(bp: CValuesRef<BIO>?, x: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl3255_PEM_write_X509_REQ_NEW")
+@CCall("knifunptr_openssl3260_PEM_write_X509_REQ_NEW")
 external fun PEM_write_X509_REQ_NEW(fp: CValuesRef<FILE>?, x: CValuesRef<X509_REQ>?): Int
 
-@CCall("knifunptr_openssl3256_PEM_read_bio_X509_CRL")
+@CCall("knifunptr_openssl3261_PEM_read_bio_X509_CRL")
 external fun PEM_read_bio_X509_CRL(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<X509_CRL>>?,
@@ -15441,7 +15554,7 @@ external fun PEM_read_bio_X509_CRL(
     u: CValuesRef<*>?
 ): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl3257_PEM_read_X509_CRL")
+@CCall("knifunptr_openssl3262_PEM_read_X509_CRL")
 external fun PEM_read_X509_CRL(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<X509_CRL>>?,
@@ -15449,13 +15562,13 @@ external fun PEM_read_X509_CRL(
     u: CValuesRef<*>?
 ): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl3258_PEM_write_bio_X509_CRL")
+@CCall("knifunptr_openssl3263_PEM_write_bio_X509_CRL")
 external fun PEM_write_bio_X509_CRL(bp: CValuesRef<BIO>?, x: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3259_PEM_write_X509_CRL")
+@CCall("knifunptr_openssl3264_PEM_write_X509_CRL")
 external fun PEM_write_X509_CRL(fp: CValuesRef<FILE>?, x: CValuesRef<X509_CRL>?): Int
 
-@CCall("knifunptr_openssl3260_PEM_read_bio_PKCS7")
+@CCall("knifunptr_openssl3265_PEM_read_bio_PKCS7")
 external fun PEM_read_bio_PKCS7(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<PKCS7>>?,
@@ -15463,7 +15576,7 @@ external fun PEM_read_bio_PKCS7(
     u: CValuesRef<*>?
 ): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl3261_PEM_read_PKCS7")
+@CCall("knifunptr_openssl3266_PEM_read_PKCS7")
 external fun PEM_read_PKCS7(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<PKCS7>>?,
@@ -15471,13 +15584,13 @@ external fun PEM_read_PKCS7(
     u: CValuesRef<*>?
 ): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl3262_PEM_write_bio_PKCS7")
+@CCall("knifunptr_openssl3267_PEM_write_bio_PKCS7")
 external fun PEM_write_bio_PKCS7(bp: CValuesRef<BIO>?, x: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl3263_PEM_write_PKCS7")
+@CCall("knifunptr_openssl3268_PEM_write_PKCS7")
 external fun PEM_write_PKCS7(fp: CValuesRef<FILE>?, x: CValuesRef<PKCS7>?): Int
 
-@CCall("knifunptr_openssl3264_PEM_read_bio_NETSCAPE_CERT_SEQUENCE")
+@CCall("knifunptr_openssl3269_PEM_read_bio_NETSCAPE_CERT_SEQUENCE")
 external fun PEM_read_bio_NETSCAPE_CERT_SEQUENCE(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<NETSCAPE_CERT_SEQUENCE>>?,
@@ -15485,7 +15598,7 @@ external fun PEM_read_bio_NETSCAPE_CERT_SEQUENCE(
     u: CValuesRef<*>?
 ): CPointer<NETSCAPE_CERT_SEQUENCE>?
 
-@CCall("knifunptr_openssl3265_PEM_read_NETSCAPE_CERT_SEQUENCE")
+@CCall("knifunptr_openssl3270_PEM_read_NETSCAPE_CERT_SEQUENCE")
 external fun PEM_read_NETSCAPE_CERT_SEQUENCE(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<NETSCAPE_CERT_SEQUENCE>>?,
@@ -15493,13 +15606,13 @@ external fun PEM_read_NETSCAPE_CERT_SEQUENCE(
     u: CValuesRef<*>?
 ): CPointer<NETSCAPE_CERT_SEQUENCE>?
 
-@CCall("knifunptr_openssl3266_PEM_write_bio_NETSCAPE_CERT_SEQUENCE")
+@CCall("knifunptr_openssl3271_PEM_write_bio_NETSCAPE_CERT_SEQUENCE")
 external fun PEM_write_bio_NETSCAPE_CERT_SEQUENCE(bp: CValuesRef<BIO>?, x: CValuesRef<NETSCAPE_CERT_SEQUENCE>?): Int
 
-@CCall("knifunptr_openssl3267_PEM_write_NETSCAPE_CERT_SEQUENCE")
+@CCall("knifunptr_openssl3272_PEM_write_NETSCAPE_CERT_SEQUENCE")
 external fun PEM_write_NETSCAPE_CERT_SEQUENCE(fp: CValuesRef<FILE>?, x: CValuesRef<NETSCAPE_CERT_SEQUENCE>?): Int
 
-@CCall("knifunptr_openssl3268_PEM_read_bio_PKCS8")
+@CCall("knifunptr_openssl3273_PEM_read_bio_PKCS8")
 external fun PEM_read_bio_PKCS8(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<X509_SIG>>?,
@@ -15507,7 +15620,7 @@ external fun PEM_read_bio_PKCS8(
     u: CValuesRef<*>?
 ): CPointer<X509_SIG>?
 
-@CCall("knifunptr_openssl3269_PEM_read_PKCS8")
+@CCall("knifunptr_openssl3274_PEM_read_PKCS8")
 external fun PEM_read_PKCS8(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<X509_SIG>>?,
@@ -15515,13 +15628,13 @@ external fun PEM_read_PKCS8(
     u: CValuesRef<*>?
 ): CPointer<X509_SIG>?
 
-@CCall("knifunptr_openssl3270_PEM_write_bio_PKCS8")
+@CCall("knifunptr_openssl3275_PEM_write_bio_PKCS8")
 external fun PEM_write_bio_PKCS8(bp: CValuesRef<BIO>?, x: CValuesRef<X509_SIG>?): Int
 
-@CCall("knifunptr_openssl3271_PEM_write_PKCS8")
+@CCall("knifunptr_openssl3276_PEM_write_PKCS8")
 external fun PEM_write_PKCS8(fp: CValuesRef<FILE>?, x: CValuesRef<X509_SIG>?): Int
 
-@CCall("knifunptr_openssl3272_PEM_read_bio_PKCS8_PRIV_KEY_INFO")
+@CCall("knifunptr_openssl3277_PEM_read_bio_PKCS8_PRIV_KEY_INFO")
 external fun PEM_read_bio_PKCS8_PRIV_KEY_INFO(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<PKCS8_PRIV_KEY_INFO>>?,
@@ -15529,7 +15642,7 @@ external fun PEM_read_bio_PKCS8_PRIV_KEY_INFO(
     u: CValuesRef<*>?
 ): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl3273_PEM_read_PKCS8_PRIV_KEY_INFO")
+@CCall("knifunptr_openssl3278_PEM_read_PKCS8_PRIV_KEY_INFO")
 external fun PEM_read_PKCS8_PRIV_KEY_INFO(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<PKCS8_PRIV_KEY_INFO>>?,
@@ -15537,13 +15650,13 @@ external fun PEM_read_PKCS8_PRIV_KEY_INFO(
     u: CValuesRef<*>?
 ): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl3274_PEM_write_bio_PKCS8_PRIV_KEY_INFO")
+@CCall("knifunptr_openssl3279_PEM_write_bio_PKCS8_PRIV_KEY_INFO")
 external fun PEM_write_bio_PKCS8_PRIV_KEY_INFO(bp: CValuesRef<BIO>?, x: CValuesRef<PKCS8_PRIV_KEY_INFO>?): Int
 
-@CCall("knifunptr_openssl3275_PEM_write_PKCS8_PRIV_KEY_INFO")
+@CCall("knifunptr_openssl3280_PEM_write_PKCS8_PRIV_KEY_INFO")
 external fun PEM_write_PKCS8_PRIV_KEY_INFO(fp: CValuesRef<FILE>?, x: CValuesRef<PKCS8_PRIV_KEY_INFO>?): Int
 
-@CCall("knifunptr_openssl3276_PEM_read_bio_RSAPrivateKey")
+@CCall("knifunptr_openssl3281_PEM_read_bio_RSAPrivateKey")
 external fun PEM_read_bio_RSAPrivateKey(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<RSA>>?,
@@ -15551,7 +15664,7 @@ external fun PEM_read_bio_RSAPrivateKey(
     u: CValuesRef<*>?
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl3277_PEM_read_RSAPrivateKey")
+@CCall("knifunptr_openssl3282_PEM_read_RSAPrivateKey")
 external fun PEM_read_RSAPrivateKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<RSA>>?,
@@ -15559,7 +15672,7 @@ external fun PEM_read_RSAPrivateKey(
     u: CValuesRef<*>?
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl3278_PEM_write_bio_RSAPrivateKey")
+@CCall("knifunptr_openssl3283_PEM_write_bio_RSAPrivateKey")
 external fun PEM_write_bio_RSAPrivateKey(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<RSA>?,
@@ -15570,7 +15683,7 @@ external fun PEM_write_bio_RSAPrivateKey(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3279_PEM_write_RSAPrivateKey")
+@CCall("knifunptr_openssl3284_PEM_write_RSAPrivateKey")
 external fun PEM_write_RSAPrivateKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<RSA>?,
@@ -15581,7 +15694,7 @@ external fun PEM_write_RSAPrivateKey(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3280_PEM_read_bio_RSAPublicKey")
+@CCall("knifunptr_openssl3285_PEM_read_bio_RSAPublicKey")
 external fun PEM_read_bio_RSAPublicKey(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<RSA>>?,
@@ -15589,7 +15702,7 @@ external fun PEM_read_bio_RSAPublicKey(
     u: CValuesRef<*>?
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl3281_PEM_read_RSAPublicKey")
+@CCall("knifunptr_openssl3286_PEM_read_RSAPublicKey")
 external fun PEM_read_RSAPublicKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<RSA>>?,
@@ -15597,13 +15710,13 @@ external fun PEM_read_RSAPublicKey(
     u: CValuesRef<*>?
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl3282_PEM_write_bio_RSAPublicKey")
+@CCall("knifunptr_openssl3287_PEM_write_bio_RSAPublicKey")
 external fun PEM_write_bio_RSAPublicKey(bp: CValuesRef<BIO>?, x: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl3283_PEM_write_RSAPublicKey")
+@CCall("knifunptr_openssl3288_PEM_write_RSAPublicKey")
 external fun PEM_write_RSAPublicKey(fp: CValuesRef<FILE>?, x: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl3284_PEM_read_bio_RSA_PUBKEY")
+@CCall("knifunptr_openssl3289_PEM_read_bio_RSA_PUBKEY")
 external fun PEM_read_bio_RSA_PUBKEY(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<RSA>>?,
@@ -15611,7 +15724,7 @@ external fun PEM_read_bio_RSA_PUBKEY(
     u: CValuesRef<*>?
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl3285_PEM_read_RSA_PUBKEY")
+@CCall("knifunptr_openssl3290_PEM_read_RSA_PUBKEY")
 external fun PEM_read_RSA_PUBKEY(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<RSA>>?,
@@ -15619,13 +15732,13 @@ external fun PEM_read_RSA_PUBKEY(
     u: CValuesRef<*>?
 ): CPointer<RSA>?
 
-@CCall("knifunptr_openssl3286_PEM_write_bio_RSA_PUBKEY")
+@CCall("knifunptr_openssl3291_PEM_write_bio_RSA_PUBKEY")
 external fun PEM_write_bio_RSA_PUBKEY(bp: CValuesRef<BIO>?, x: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl3287_PEM_write_RSA_PUBKEY")
+@CCall("knifunptr_openssl3292_PEM_write_RSA_PUBKEY")
 external fun PEM_write_RSA_PUBKEY(fp: CValuesRef<FILE>?, x: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl3288_PEM_read_bio_DSAPrivateKey")
+@CCall("knifunptr_openssl3293_PEM_read_bio_DSAPrivateKey")
 external fun PEM_read_bio_DSAPrivateKey(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<DSA>>?,
@@ -15633,7 +15746,7 @@ external fun PEM_read_bio_DSAPrivateKey(
     u: CValuesRef<*>?
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl3289_PEM_read_DSAPrivateKey")
+@CCall("knifunptr_openssl3294_PEM_read_DSAPrivateKey")
 external fun PEM_read_DSAPrivateKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<DSA>>?,
@@ -15641,7 +15754,7 @@ external fun PEM_read_DSAPrivateKey(
     u: CValuesRef<*>?
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl3290_PEM_write_bio_DSAPrivateKey")
+@CCall("knifunptr_openssl3295_PEM_write_bio_DSAPrivateKey")
 external fun PEM_write_bio_DSAPrivateKey(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<DSA>?,
@@ -15652,7 +15765,7 @@ external fun PEM_write_bio_DSAPrivateKey(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3291_PEM_write_DSAPrivateKey")
+@CCall("knifunptr_openssl3296_PEM_write_DSAPrivateKey")
 external fun PEM_write_DSAPrivateKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<DSA>?,
@@ -15663,7 +15776,7 @@ external fun PEM_write_DSAPrivateKey(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3292_PEM_read_bio_DSA_PUBKEY")
+@CCall("knifunptr_openssl3297_PEM_read_bio_DSA_PUBKEY")
 external fun PEM_read_bio_DSA_PUBKEY(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<DSA>>?,
@@ -15671,7 +15784,7 @@ external fun PEM_read_bio_DSA_PUBKEY(
     u: CValuesRef<*>?
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl3293_PEM_read_DSA_PUBKEY")
+@CCall("knifunptr_openssl3298_PEM_read_DSA_PUBKEY")
 external fun PEM_read_DSA_PUBKEY(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<DSA>>?,
@@ -15679,13 +15792,13 @@ external fun PEM_read_DSA_PUBKEY(
     u: CValuesRef<*>?
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl3294_PEM_write_bio_DSA_PUBKEY")
+@CCall("knifunptr_openssl3299_PEM_write_bio_DSA_PUBKEY")
 external fun PEM_write_bio_DSA_PUBKEY(bp: CValuesRef<BIO>?, x: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl3295_PEM_write_DSA_PUBKEY")
+@CCall("knifunptr_openssl3300_PEM_write_DSA_PUBKEY")
 external fun PEM_write_DSA_PUBKEY(fp: CValuesRef<FILE>?, x: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl3296_PEM_read_bio_DSAparams")
+@CCall("knifunptr_openssl3301_PEM_read_bio_DSAparams")
 external fun PEM_read_bio_DSAparams(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<DSA>>?,
@@ -15693,7 +15806,7 @@ external fun PEM_read_bio_DSAparams(
     u: CValuesRef<*>?
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl3297_PEM_read_DSAparams")
+@CCall("knifunptr_openssl3302_PEM_read_DSAparams")
 external fun PEM_read_DSAparams(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<DSA>>?,
@@ -15701,13 +15814,13 @@ external fun PEM_read_DSAparams(
     u: CValuesRef<*>?
 ): CPointer<DSA>?
 
-@CCall("knifunptr_openssl3298_PEM_write_bio_DSAparams")
+@CCall("knifunptr_openssl3303_PEM_write_bio_DSAparams")
 external fun PEM_write_bio_DSAparams(bp: CValuesRef<BIO>?, x: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl3299_PEM_write_DSAparams")
+@CCall("knifunptr_openssl3304_PEM_write_DSAparams")
 external fun PEM_write_DSAparams(fp: CValuesRef<FILE>?, x: CValuesRef<DSA>?): Int
 
-@CCall("knifunptr_openssl3300_PEM_read_bio_ECPKParameters")
+@CCall("knifunptr_openssl3305_PEM_read_bio_ECPKParameters")
 external fun PEM_read_bio_ECPKParameters(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<EC_GROUP>>?,
@@ -15715,7 +15828,7 @@ external fun PEM_read_bio_ECPKParameters(
     u: CValuesRef<*>?
 ): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl3301_PEM_read_ECPKParameters")
+@CCall("knifunptr_openssl3306_PEM_read_ECPKParameters")
 external fun PEM_read_ECPKParameters(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<EC_GROUP>>?,
@@ -15723,13 +15836,13 @@ external fun PEM_read_ECPKParameters(
     u: CValuesRef<*>?
 ): CPointer<EC_GROUP>?
 
-@CCall("knifunptr_openssl3302_PEM_write_bio_ECPKParameters")
+@CCall("knifunptr_openssl3307_PEM_write_bio_ECPKParameters")
 external fun PEM_write_bio_ECPKParameters(bp: CValuesRef<BIO>?, x: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl3303_PEM_write_ECPKParameters")
+@CCall("knifunptr_openssl3308_PEM_write_ECPKParameters")
 external fun PEM_write_ECPKParameters(fp: CValuesRef<FILE>?, x: CValuesRef<EC_GROUP>?): Int
 
-@CCall("knifunptr_openssl3304_PEM_read_bio_ECPrivateKey")
+@CCall("knifunptr_openssl3309_PEM_read_bio_ECPrivateKey")
 external fun PEM_read_bio_ECPrivateKey(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<EC_KEY>>?,
@@ -15737,7 +15850,7 @@ external fun PEM_read_bio_ECPrivateKey(
     u: CValuesRef<*>?
 ): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl3305_PEM_read_ECPrivateKey")
+@CCall("knifunptr_openssl3310_PEM_read_ECPrivateKey")
 external fun PEM_read_ECPrivateKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<EC_KEY>>?,
@@ -15745,7 +15858,7 @@ external fun PEM_read_ECPrivateKey(
     u: CValuesRef<*>?
 ): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl3306_PEM_write_bio_ECPrivateKey")
+@CCall("knifunptr_openssl3311_PEM_write_bio_ECPrivateKey")
 external fun PEM_write_bio_ECPrivateKey(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<EC_KEY>?,
@@ -15756,7 +15869,7 @@ external fun PEM_write_bio_ECPrivateKey(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3307_PEM_write_ECPrivateKey")
+@CCall("knifunptr_openssl3312_PEM_write_ECPrivateKey")
 external fun PEM_write_ECPrivateKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<EC_KEY>?,
@@ -15767,7 +15880,7 @@ external fun PEM_write_ECPrivateKey(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3308_PEM_read_bio_EC_PUBKEY")
+@CCall("knifunptr_openssl3313_PEM_read_bio_EC_PUBKEY")
 external fun PEM_read_bio_EC_PUBKEY(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<EC_KEY>>?,
@@ -15775,7 +15888,7 @@ external fun PEM_read_bio_EC_PUBKEY(
     u: CValuesRef<*>?
 ): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl3309_PEM_read_EC_PUBKEY")
+@CCall("knifunptr_openssl3314_PEM_read_EC_PUBKEY")
 external fun PEM_read_EC_PUBKEY(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<EC_KEY>>?,
@@ -15783,13 +15896,13 @@ external fun PEM_read_EC_PUBKEY(
     u: CValuesRef<*>?
 ): CPointer<EC_KEY>?
 
-@CCall("knifunptr_openssl3310_PEM_write_bio_EC_PUBKEY")
+@CCall("knifunptr_openssl3315_PEM_write_bio_EC_PUBKEY")
 external fun PEM_write_bio_EC_PUBKEY(bp: CValuesRef<BIO>?, x: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl3311_PEM_write_EC_PUBKEY")
+@CCall("knifunptr_openssl3316_PEM_write_EC_PUBKEY")
 external fun PEM_write_EC_PUBKEY(fp: CValuesRef<FILE>?, x: CValuesRef<EC_KEY>?): Int
 
-@CCall("knifunptr_openssl3312_PEM_read_bio_DHparams")
+@CCall("knifunptr_openssl3317_PEM_read_bio_DHparams")
 external fun PEM_read_bio_DHparams(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<DH>>?,
@@ -15797,7 +15910,7 @@ external fun PEM_read_bio_DHparams(
     u: CValuesRef<*>?
 ): CPointer<DH>?
 
-@CCall("knifunptr_openssl3313_PEM_read_DHparams")
+@CCall("knifunptr_openssl3318_PEM_read_DHparams")
 external fun PEM_read_DHparams(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<DH>>?,
@@ -15805,19 +15918,19 @@ external fun PEM_read_DHparams(
     u: CValuesRef<*>?
 ): CPointer<DH>?
 
-@CCall("knifunptr_openssl3314_PEM_write_bio_DHparams")
+@CCall("knifunptr_openssl3319_PEM_write_bio_DHparams")
 external fun PEM_write_bio_DHparams(bp: CValuesRef<BIO>?, x: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl3315_PEM_write_DHparams")
+@CCall("knifunptr_openssl3320_PEM_write_DHparams")
 external fun PEM_write_DHparams(fp: CValuesRef<FILE>?, x: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl3316_PEM_write_bio_DHxparams")
+@CCall("knifunptr_openssl3321_PEM_write_bio_DHxparams")
 external fun PEM_write_bio_DHxparams(bp: CValuesRef<BIO>?, x: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl3317_PEM_write_DHxparams")
+@CCall("knifunptr_openssl3322_PEM_write_DHxparams")
 external fun PEM_write_DHxparams(fp: CValuesRef<FILE>?, x: CValuesRef<DH>?): Int
 
-@CCall("knifunptr_openssl3318_PEM_read_bio_PrivateKey")
+@CCall("knifunptr_openssl3323_PEM_read_bio_PrivateKey")
 external fun PEM_read_bio_PrivateKey(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<EVP_PKEY>>?,
@@ -15825,7 +15938,7 @@ external fun PEM_read_bio_PrivateKey(
     u: CValuesRef<*>?
 ): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3319_PEM_read_PrivateKey")
+@CCall("knifunptr_openssl3324_PEM_read_PrivateKey")
 external fun PEM_read_PrivateKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<EVP_PKEY>>?,
@@ -15833,7 +15946,7 @@ external fun PEM_read_PrivateKey(
     u: CValuesRef<*>?
 ): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3320_PEM_write_bio_PrivateKey")
+@CCall("knifunptr_openssl3325_PEM_write_bio_PrivateKey")
 external fun PEM_write_bio_PrivateKey(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15844,7 +15957,7 @@ external fun PEM_write_bio_PrivateKey(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3321_PEM_write_PrivateKey")
+@CCall("knifunptr_openssl3326_PEM_write_PrivateKey")
 external fun PEM_write_PrivateKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15855,7 +15968,7 @@ external fun PEM_write_PrivateKey(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3322_PEM_read_bio_PUBKEY")
+@CCall("knifunptr_openssl3327_PEM_read_bio_PUBKEY")
 external fun PEM_read_bio_PUBKEY(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<EVP_PKEY>>?,
@@ -15863,7 +15976,7 @@ external fun PEM_read_bio_PUBKEY(
     u: CValuesRef<*>?
 ): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3323_PEM_read_PUBKEY")
+@CCall("knifunptr_openssl3328_PEM_read_PUBKEY")
 external fun PEM_read_PUBKEY(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<EVP_PKEY>>?,
@@ -15871,13 +15984,13 @@ external fun PEM_read_PUBKEY(
     u: CValuesRef<*>?
 ): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3324_PEM_write_bio_PUBKEY")
+@CCall("knifunptr_openssl3329_PEM_write_bio_PUBKEY")
 external fun PEM_write_bio_PUBKEY(bp: CValuesRef<BIO>?, x: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3325_PEM_write_PUBKEY")
+@CCall("knifunptr_openssl3330_PEM_write_PUBKEY")
 external fun PEM_write_PUBKEY(fp: CValuesRef<FILE>?, x: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3326_PEM_write_bio_PrivateKey_traditional")
+@CCall("knifunptr_openssl3331_PEM_write_bio_PrivateKey_traditional")
 external fun PEM_write_bio_PrivateKey_traditional(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15888,7 +16001,7 @@ external fun PEM_write_bio_PrivateKey_traditional(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3327_PEM_write_bio_PKCS8PrivateKey_nid")
+@CCall("knifunptr_openssl3332_PEM_write_bio_PKCS8PrivateKey_nid")
 external fun PEM_write_bio_PKCS8PrivateKey_nid(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15899,7 +16012,7 @@ external fun PEM_write_bio_PKCS8PrivateKey_nid(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3328_PEM_write_bio_PKCS8PrivateKey")
+@CCall("knifunptr_openssl3333_PEM_write_bio_PKCS8PrivateKey")
 external fun PEM_write_bio_PKCS8PrivateKey(
     arg0: CValuesRef<BIO>?,
     arg1: CValuesRef<EVP_PKEY>?,
@@ -15910,7 +16023,7 @@ external fun PEM_write_bio_PKCS8PrivateKey(
     arg6: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3329_i2d_PKCS8PrivateKey_bio")
+@CCall("knifunptr_openssl3334_i2d_PKCS8PrivateKey_bio")
 external fun i2d_PKCS8PrivateKey_bio(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15921,7 +16034,7 @@ external fun i2d_PKCS8PrivateKey_bio(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3330_i2d_PKCS8PrivateKey_nid_bio")
+@CCall("knifunptr_openssl3335_i2d_PKCS8PrivateKey_nid_bio")
 external fun i2d_PKCS8PrivateKey_nid_bio(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15932,7 +16045,7 @@ external fun i2d_PKCS8PrivateKey_nid_bio(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3331_d2i_PKCS8PrivateKey_bio")
+@CCall("knifunptr_openssl3336_d2i_PKCS8PrivateKey_bio")
 external fun d2i_PKCS8PrivateKey_bio(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<EVP_PKEY>>?,
@@ -15940,7 +16053,7 @@ external fun d2i_PKCS8PrivateKey_bio(
     u: CValuesRef<*>?
 ): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3332_i2d_PKCS8PrivateKey_fp")
+@CCall("knifunptr_openssl3337_i2d_PKCS8PrivateKey_fp")
 external fun i2d_PKCS8PrivateKey_fp(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15951,7 +16064,7 @@ external fun i2d_PKCS8PrivateKey_fp(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3333_i2d_PKCS8PrivateKey_nid_fp")
+@CCall("knifunptr_openssl3338_i2d_PKCS8PrivateKey_nid_fp")
 external fun i2d_PKCS8PrivateKey_nid_fp(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15962,7 +16075,7 @@ external fun i2d_PKCS8PrivateKey_nid_fp(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3334_PEM_write_PKCS8PrivateKey_nid")
+@CCall("knifunptr_openssl3339_PEM_write_PKCS8PrivateKey_nid")
 external fun PEM_write_PKCS8PrivateKey_nid(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15973,7 +16086,7 @@ external fun PEM_write_PKCS8PrivateKey_nid(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3335_d2i_PKCS8PrivateKey_fp")
+@CCall("knifunptr_openssl3340_d2i_PKCS8PrivateKey_fp")
 external fun d2i_PKCS8PrivateKey_fp(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<EVP_PKEY>>?,
@@ -15981,7 +16094,7 @@ external fun d2i_PKCS8PrivateKey_fp(
     u: CValuesRef<*>?
 ): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3336_PEM_write_PKCS8PrivateKey")
+@CCall("knifunptr_openssl3341_PEM_write_PKCS8PrivateKey")
 external fun PEM_write_PKCS8PrivateKey(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<EVP_PKEY>?,
@@ -15992,34 +16105,34 @@ external fun PEM_write_PKCS8PrivateKey(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3337_PEM_read_bio_Parameters")
+@CCall("knifunptr_openssl3342_PEM_read_bio_Parameters")
 external fun PEM_read_bio_Parameters(bp: CValuesRef<BIO>?, x: CValuesRef<CPointerVar<EVP_PKEY>>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3338_PEM_write_bio_Parameters")
+@CCall("knifunptr_openssl3343_PEM_write_bio_Parameters")
 external fun PEM_write_bio_Parameters(bp: CValuesRef<BIO>?, x: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3339_b2i_PrivateKey")
+@CCall("knifunptr_openssl3344_b2i_PrivateKey")
 external fun b2i_PrivateKey(`in`: CValuesRef<CPointerVar<UByteVar>>?, length: Int): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3340_b2i_PublicKey")
+@CCall("knifunptr_openssl3345_b2i_PublicKey")
 external fun b2i_PublicKey(`in`: CValuesRef<CPointerVar<UByteVar>>?, length: Int): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3341_b2i_PrivateKey_bio")
+@CCall("knifunptr_openssl3346_b2i_PrivateKey_bio")
 external fun b2i_PrivateKey_bio(`in`: CValuesRef<BIO>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3342_b2i_PublicKey_bio")
+@CCall("knifunptr_openssl3347_b2i_PublicKey_bio")
 external fun b2i_PublicKey_bio(`in`: CValuesRef<BIO>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3343_i2b_PrivateKey_bio")
+@CCall("knifunptr_openssl3348_i2b_PrivateKey_bio")
 external fun i2b_PrivateKey_bio(out: CValuesRef<BIO>?, pk: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3344_i2b_PublicKey_bio")
+@CCall("knifunptr_openssl3349_i2b_PublicKey_bio")
 external fun i2b_PublicKey_bio(out: CValuesRef<BIO>?, pk: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3345_b2i_PVK_bio")
+@CCall("knifunptr_openssl3350_b2i_PVK_bio")
 external fun b2i_PVK_bio(`in`: CValuesRef<BIO>?, cb: CPointer<pem_password_cb>?, u: CValuesRef<*>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3346_i2b_PVK_bio")
+@CCall("knifunptr_openssl3351_i2b_PVK_bio")
 external fun i2b_PVK_bio(
     out: CValuesRef<BIO>?,
     pk: CValuesRef<EVP_PKEY>?,
@@ -16028,22 +16141,22 @@ external fun i2b_PVK_bio(
     u: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3347_HMAC_size")
+@CCall("knifunptr_openssl3352_HMAC_size")
 external fun HMAC_size(e: CValuesRef<HMAC_CTX>?): size_t
 
-@CCall("knifunptr_openssl3348_HMAC_CTX_new")
+@CCall("knifunptr_openssl3353_HMAC_CTX_new")
 external fun HMAC_CTX_new(): CPointer<HMAC_CTX>?
 
-@CCall("knifunptr_openssl3349_HMAC_CTX_reset")
+@CCall("knifunptr_openssl3354_HMAC_CTX_reset")
 external fun HMAC_CTX_reset(ctx: CValuesRef<HMAC_CTX>?): Int
 
-@CCall("knifunptr_openssl3350_HMAC_CTX_free")
+@CCall("knifunptr_openssl3355_HMAC_CTX_free")
 external fun HMAC_CTX_free(ctx: CValuesRef<HMAC_CTX>?): Unit
 
-@CCall("knifunptr_openssl3351_HMAC_Init")
+@CCall("knifunptr_openssl3356_HMAC_Init")
 external fun HMAC_Init(ctx: CValuesRef<HMAC_CTX>?, key: CValuesRef<*>?, len: Int, md: CValuesRef<EVP_MD>?): Int
 
-@CCall("knifunptr_openssl3352_HMAC_Init_ex")
+@CCall("knifunptr_openssl3357_HMAC_Init_ex")
 external fun HMAC_Init_ex(
     ctx: CValuesRef<HMAC_CTX>?,
     key: CValuesRef<*>?,
@@ -16052,13 +16165,13 @@ external fun HMAC_Init_ex(
     impl: CValuesRef<ENGINE>?
 ): Int
 
-@CCall("knifunptr_openssl3353_HMAC_Update")
+@CCall("knifunptr_openssl3358_HMAC_Update")
 external fun HMAC_Update(ctx: CValuesRef<HMAC_CTX>?, data: CValuesRef<UByteVar>?, len: size_t): Int
 
-@CCall("knifunptr_openssl3354_HMAC_Final")
+@CCall("knifunptr_openssl3359_HMAC_Final")
 external fun HMAC_Final(ctx: CValuesRef<HMAC_CTX>?, md: CValuesRef<UByteVar>?, len: CValuesRef<UIntVar>?): Int
 
-@CCall("knifunptr_openssl3355_HMAC")
+@CCall("knifunptr_openssl3360_HMAC")
 external fun HMAC(
     evp_md: CValuesRef<EVP_MD>?,
     key: CValuesRef<*>?,
@@ -16069,31 +16182,31 @@ external fun HMAC(
     md_len: CValuesRef<UIntVar>?
 ): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl3356_HMAC_CTX_copy")
+@CCall("knifunptr_openssl3361_HMAC_CTX_copy")
 external fun HMAC_CTX_copy(dctx: CValuesRef<HMAC_CTX>?, sctx: CValuesRef<HMAC_CTX>?): Int
 
-@CCall("knifunptr_openssl3357_HMAC_CTX_set_flags")
+@CCall("knifunptr_openssl3362_HMAC_CTX_set_flags")
 external fun HMAC_CTX_set_flags(ctx: CValuesRef<HMAC_CTX>?, flags: UInt): Unit
 
-@CCall("knifunptr_openssl3358_HMAC_CTX_get_md")
+@CCall("knifunptr_openssl3363_HMAC_CTX_get_md")
 external fun HMAC_CTX_get_md(ctx: CValuesRef<HMAC_CTX>?): CPointer<EVP_MD>?
 
-@CCall("knifunptr_openssl3359_ERR_load_ASYNC_strings")
+@CCall("knifunptr_openssl3364_ERR_load_ASYNC_strings")
 external fun ERR_load_ASYNC_strings(): Int
 
-@CCall("knifunptr_openssl3360_ASYNC_init_thread")
+@CCall("knifunptr_openssl3365_ASYNC_init_thread")
 external fun ASYNC_init_thread(max_size: size_t, init_size: size_t): Int
 
-@CCall("knifunptr_openssl3361_ASYNC_cleanup_thread")
+@CCall("knifunptr_openssl3366_ASYNC_cleanup_thread")
 external fun ASYNC_cleanup_thread(): Unit
 
-@CCall("knifunptr_openssl3362_ASYNC_WAIT_CTX_new")
+@CCall("knifunptr_openssl3367_ASYNC_WAIT_CTX_new")
 external fun ASYNC_WAIT_CTX_new(): CPointer<ASYNC_WAIT_CTX>?
 
-@CCall("knifunptr_openssl3363_ASYNC_WAIT_CTX_free")
+@CCall("knifunptr_openssl3368_ASYNC_WAIT_CTX_free")
 external fun ASYNC_WAIT_CTX_free(ctx: CValuesRef<ASYNC_WAIT_CTX>?): Unit
 
-@CCall("knifunptr_openssl3364_ASYNC_WAIT_CTX_set_wait_fd")
+@CCall("knifunptr_openssl3369_ASYNC_WAIT_CTX_set_wait_fd")
 external fun ASYNC_WAIT_CTX_set_wait_fd(
     ctx: CValuesRef<ASYNC_WAIT_CTX>?,
     key: CValuesRef<*>?,
@@ -16102,7 +16215,7 @@ external fun ASYNC_WAIT_CTX_set_wait_fd(
     cleanup: CPointer<CFunction<(CPointer<ASYNC_WAIT_CTX>?, COpaquePointer?, Int, COpaquePointer?) -> Unit>>?
 ): Int
 
-@CCall("knifunptr_openssl3365_ASYNC_WAIT_CTX_get_fd")
+@CCall("knifunptr_openssl3370_ASYNC_WAIT_CTX_get_fd")
 external fun ASYNC_WAIT_CTX_get_fd(
     ctx: CValuesRef<ASYNC_WAIT_CTX>?,
     key: CValuesRef<*>?,
@@ -16110,14 +16223,14 @@ external fun ASYNC_WAIT_CTX_get_fd(
     custom_data: CValuesRef<COpaquePointerVar>?
 ): Int
 
-@CCall("knifunptr_openssl3366_ASYNC_WAIT_CTX_get_all_fds")
+@CCall("knifunptr_openssl3371_ASYNC_WAIT_CTX_get_all_fds")
 external fun ASYNC_WAIT_CTX_get_all_fds(
     ctx: CValuesRef<ASYNC_WAIT_CTX>?,
     fd: CValuesRef<IntVar>?,
     numfds: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3367_ASYNC_WAIT_CTX_get_changed_fds")
+@CCall("knifunptr_openssl3372_ASYNC_WAIT_CTX_get_changed_fds")
 external fun ASYNC_WAIT_CTX_get_changed_fds(
     ctx: CValuesRef<ASYNC_WAIT_CTX>?,
     addfd: CValuesRef<IntVar>?,
@@ -16126,13 +16239,13 @@ external fun ASYNC_WAIT_CTX_get_changed_fds(
     numdelfds: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3368_ASYNC_WAIT_CTX_clear_fd")
+@CCall("knifunptr_openssl3373_ASYNC_WAIT_CTX_clear_fd")
 external fun ASYNC_WAIT_CTX_clear_fd(ctx: CValuesRef<ASYNC_WAIT_CTX>?, key: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl3369_ASYNC_is_capable")
+@CCall("knifunptr_openssl3374_ASYNC_is_capable")
 external fun ASYNC_is_capable(): Int
 
-@CCall("knifunptr_openssl3370_ASYNC_start_job")
+@CCall("knifunptr_openssl3375_ASYNC_start_job")
 external fun ASYNC_start_job(
     job: CValuesRef<CPointerVar<ASYNC_JOB>>?,
     ctx: CValuesRef<ASYNC_WAIT_CTX>?,
@@ -16142,638 +16255,642 @@ external fun ASYNC_start_job(
     size: size_t
 ): Int
 
-@CCall("knifunptr_openssl3371_ASYNC_pause_job")
+@CCall("knifunptr_openssl3376_ASYNC_pause_job")
 external fun ASYNC_pause_job(): Int
 
-@CCall("knifunptr_openssl3372_ASYNC_get_current_job")
+@CCall("knifunptr_openssl3377_ASYNC_get_current_job")
 external fun ASYNC_get_current_job(): CPointer<ASYNC_JOB>?
 
-@CCall("knifunptr_openssl3373_ASYNC_get_wait_ctx")
+@CCall("knifunptr_openssl3378_ASYNC_get_wait_ctx")
 external fun ASYNC_get_wait_ctx(job: CValuesRef<ASYNC_JOB>?): CPointer<ASYNC_WAIT_CTX>?
 
-@CCall("knifunptr_openssl3374_ASYNC_block_pause")
+@CCall("knifunptr_openssl3379_ASYNC_block_pause")
 external fun ASYNC_block_pause(): Unit
 
-@CCall("knifunptr_openssl3375_ASYNC_unblock_pause")
+@CCall("knifunptr_openssl3380_ASYNC_unblock_pause")
 external fun ASYNC_unblock_pause(): Unit
 
-@CCall("knifunptr_openssl3376_ERR_load_CT_strings")
+@CCall("knifunptr_openssl3381_ERR_load_CT_strings")
 external fun ERR_load_CT_strings(): Int
 
-@CCall("knifunptr_openssl3377_sk_SCT_num")
+@CCall("knifunptr_openssl3382_sk_SCT_num")
 external fun sk_SCT_num(sk: CValuesRef<stack_st_SCT>?): Int
 
-@CCall("knifunptr_openssl3378_sk_SCT_value")
+@CCall("knifunptr_openssl3383_sk_SCT_value")
 external fun sk_SCT_value(sk: CValuesRef<stack_st_SCT>?, idx: Int): CPointer<SCT>?
 
-@CCall("knifunptr_openssl3379_sk_SCT_new")
+@CCall("knifunptr_openssl3384_sk_SCT_new")
 external fun sk_SCT_new(compare: sk_SCT_compfunc?): CPointer<stack_st_SCT>?
 
-@CCall("knifunptr_openssl3380_sk_SCT_new_null")
+@CCall("knifunptr_openssl3385_sk_SCT_new_null")
 external fun sk_SCT_new_null(): CPointer<stack_st_SCT>?
 
-@CCall("knifunptr_openssl3381_sk_SCT_new_reserve")
+@CCall("knifunptr_openssl3386_sk_SCT_new_reserve")
 external fun sk_SCT_new_reserve(compare: sk_SCT_compfunc?, n: Int): CPointer<stack_st_SCT>?
 
-@CCall("knifunptr_openssl3382_sk_SCT_reserve")
+@CCall("knifunptr_openssl3387_sk_SCT_reserve")
 external fun sk_SCT_reserve(sk: CValuesRef<stack_st_SCT>?, n: Int): Int
 
-@CCall("knifunptr_openssl3383_sk_SCT_free")
+@CCall("knifunptr_openssl3388_sk_SCT_free")
 external fun sk_SCT_free(sk: CValuesRef<stack_st_SCT>?): Unit
 
-@CCall("knifunptr_openssl3384_sk_SCT_zero")
+@CCall("knifunptr_openssl3389_sk_SCT_zero")
 external fun sk_SCT_zero(sk: CValuesRef<stack_st_SCT>?): Unit
 
-@CCall("knifunptr_openssl3385_sk_SCT_delete")
+@CCall("knifunptr_openssl3390_sk_SCT_delete")
 external fun sk_SCT_delete(sk: CValuesRef<stack_st_SCT>?, i: Int): CPointer<SCT>?
 
-@CCall("knifunptr_openssl3386_sk_SCT_delete_ptr")
+@CCall("knifunptr_openssl3391_sk_SCT_delete_ptr")
 external fun sk_SCT_delete_ptr(sk: CValuesRef<stack_st_SCT>?, ptr: CValuesRef<SCT>?): CPointer<SCT>?
 
-@CCall("knifunptr_openssl3387_sk_SCT_push")
+@CCall("knifunptr_openssl3392_sk_SCT_push")
 external fun sk_SCT_push(sk: CValuesRef<stack_st_SCT>?, ptr: CValuesRef<SCT>?): Int
 
-@CCall("knifunptr_openssl3388_sk_SCT_unshift")
+@CCall("knifunptr_openssl3393_sk_SCT_unshift")
 external fun sk_SCT_unshift(sk: CValuesRef<stack_st_SCT>?, ptr: CValuesRef<SCT>?): Int
 
-@CCall("knifunptr_openssl3389_sk_SCT_pop")
+@CCall("knifunptr_openssl3394_sk_SCT_pop")
 external fun sk_SCT_pop(sk: CValuesRef<stack_st_SCT>?): CPointer<SCT>?
 
-@CCall("knifunptr_openssl3390_sk_SCT_shift")
+@CCall("knifunptr_openssl3395_sk_SCT_shift")
 external fun sk_SCT_shift(sk: CValuesRef<stack_st_SCT>?): CPointer<SCT>?
 
-@CCall("knifunptr_openssl3391_sk_SCT_pop_free")
+@CCall("knifunptr_openssl3396_sk_SCT_pop_free")
 external fun sk_SCT_pop_free(sk: CValuesRef<stack_st_SCT>?, freefunc: sk_SCT_freefunc?): Unit
 
-@CCall("knifunptr_openssl3392_sk_SCT_insert")
+@CCall("knifunptr_openssl3397_sk_SCT_insert")
 external fun sk_SCT_insert(sk: CValuesRef<stack_st_SCT>?, ptr: CValuesRef<SCT>?, idx: Int): Int
 
-@CCall("knifunptr_openssl3393_sk_SCT_set")
+@CCall("knifunptr_openssl3398_sk_SCT_set")
 external fun sk_SCT_set(sk: CValuesRef<stack_st_SCT>?, idx: Int, ptr: CValuesRef<SCT>?): CPointer<SCT>?
 
-@CCall("knifunptr_openssl3394_sk_SCT_find")
+@CCall("knifunptr_openssl3399_sk_SCT_find")
 external fun sk_SCT_find(sk: CValuesRef<stack_st_SCT>?, ptr: CValuesRef<SCT>?): Int
 
-@CCall("knifunptr_openssl3395_sk_SCT_find_ex")
+@CCall("knifunptr_openssl3400_sk_SCT_find_ex")
 external fun sk_SCT_find_ex(sk: CValuesRef<stack_st_SCT>?, ptr: CValuesRef<SCT>?): Int
 
-@CCall("knifunptr_openssl3396_sk_SCT_sort")
+@CCall("knifunptr_openssl3401_sk_SCT_sort")
 external fun sk_SCT_sort(sk: CValuesRef<stack_st_SCT>?): Unit
 
-@CCall("knifunptr_openssl3397_sk_SCT_is_sorted")
+@CCall("knifunptr_openssl3402_sk_SCT_is_sorted")
 external fun sk_SCT_is_sorted(sk: CValuesRef<stack_st_SCT>?): Int
 
-@CCall("knifunptr_openssl3398_sk_SCT_dup")
+@CCall("knifunptr_openssl3403_sk_SCT_dup")
 external fun sk_SCT_dup(sk: CValuesRef<stack_st_SCT>?): CPointer<stack_st_SCT>?
 
-@CCall("knifunptr_openssl3399_sk_SCT_deep_copy")
+@CCall("knifunptr_openssl3404_sk_SCT_deep_copy")
 external fun sk_SCT_deep_copy(
     sk: CValuesRef<stack_st_SCT>?,
     copyfunc: sk_SCT_copyfunc?,
     freefunc: sk_SCT_freefunc?
 ): CPointer<stack_st_SCT>?
 
-@CCall("knifunptr_openssl3400_sk_SCT_set_cmp_func")
+@CCall("knifunptr_openssl3405_sk_SCT_set_cmp_func")
 external fun sk_SCT_set_cmp_func(sk: CValuesRef<stack_st_SCT>?, compare: sk_SCT_compfunc?): sk_SCT_compfunc?
 
-@CCall("knifunptr_openssl3401_sk_CTLOG_num")
+@CCall("knifunptr_openssl3406_sk_CTLOG_num")
 external fun sk_CTLOG_num(sk: CValuesRef<stack_st_CTLOG>?): Int
 
-@CCall("knifunptr_openssl3402_sk_CTLOG_value")
+@CCall("knifunptr_openssl3407_sk_CTLOG_value")
 external fun sk_CTLOG_value(sk: CValuesRef<stack_st_CTLOG>?, idx: Int): CPointer<CTLOG>?
 
-@CCall("knifunptr_openssl3403_sk_CTLOG_new")
+@CCall("knifunptr_openssl3408_sk_CTLOG_new")
 external fun sk_CTLOG_new(compare: sk_CTLOG_compfunc?): CPointer<stack_st_CTLOG>?
 
-@CCall("knifunptr_openssl3404_sk_CTLOG_new_null")
+@CCall("knifunptr_openssl3409_sk_CTLOG_new_null")
 external fun sk_CTLOG_new_null(): CPointer<stack_st_CTLOG>?
 
-@CCall("knifunptr_openssl3405_sk_CTLOG_new_reserve")
+@CCall("knifunptr_openssl3410_sk_CTLOG_new_reserve")
 external fun sk_CTLOG_new_reserve(compare: sk_CTLOG_compfunc?, n: Int): CPointer<stack_st_CTLOG>?
 
-@CCall("knifunptr_openssl3406_sk_CTLOG_reserve")
+@CCall("knifunptr_openssl3411_sk_CTLOG_reserve")
 external fun sk_CTLOG_reserve(sk: CValuesRef<stack_st_CTLOG>?, n: Int): Int
 
-@CCall("knifunptr_openssl3407_sk_CTLOG_free")
+@CCall("knifunptr_openssl3412_sk_CTLOG_free")
 external fun sk_CTLOG_free(sk: CValuesRef<stack_st_CTLOG>?): Unit
 
-@CCall("knifunptr_openssl3408_sk_CTLOG_zero")
+@CCall("knifunptr_openssl3413_sk_CTLOG_zero")
 external fun sk_CTLOG_zero(sk: CValuesRef<stack_st_CTLOG>?): Unit
 
-@CCall("knifunptr_openssl3409_sk_CTLOG_delete")
+@CCall("knifunptr_openssl3414_sk_CTLOG_delete")
 external fun sk_CTLOG_delete(sk: CValuesRef<stack_st_CTLOG>?, i: Int): CPointer<CTLOG>?
 
-@CCall("knifunptr_openssl3410_sk_CTLOG_delete_ptr")
+@CCall("knifunptr_openssl3415_sk_CTLOG_delete_ptr")
 external fun sk_CTLOG_delete_ptr(sk: CValuesRef<stack_st_CTLOG>?, ptr: CValuesRef<CTLOG>?): CPointer<CTLOG>?
 
-@CCall("knifunptr_openssl3411_sk_CTLOG_push")
+@CCall("knifunptr_openssl3416_sk_CTLOG_push")
 external fun sk_CTLOG_push(sk: CValuesRef<stack_st_CTLOG>?, ptr: CValuesRef<CTLOG>?): Int
 
-@CCall("knifunptr_openssl3412_sk_CTLOG_unshift")
+@CCall("knifunptr_openssl3417_sk_CTLOG_unshift")
 external fun sk_CTLOG_unshift(sk: CValuesRef<stack_st_CTLOG>?, ptr: CValuesRef<CTLOG>?): Int
 
-@CCall("knifunptr_openssl3413_sk_CTLOG_pop")
+@CCall("knifunptr_openssl3418_sk_CTLOG_pop")
 external fun sk_CTLOG_pop(sk: CValuesRef<stack_st_CTLOG>?): CPointer<CTLOG>?
 
-@CCall("knifunptr_openssl3414_sk_CTLOG_shift")
+@CCall("knifunptr_openssl3419_sk_CTLOG_shift")
 external fun sk_CTLOG_shift(sk: CValuesRef<stack_st_CTLOG>?): CPointer<CTLOG>?
 
-@CCall("knifunptr_openssl3415_sk_CTLOG_pop_free")
+@CCall("knifunptr_openssl3420_sk_CTLOG_pop_free")
 external fun sk_CTLOG_pop_free(sk: CValuesRef<stack_st_CTLOG>?, freefunc: sk_CTLOG_freefunc?): Unit
 
-@CCall("knifunptr_openssl3416_sk_CTLOG_insert")
+@CCall("knifunptr_openssl3421_sk_CTLOG_insert")
 external fun sk_CTLOG_insert(sk: CValuesRef<stack_st_CTLOG>?, ptr: CValuesRef<CTLOG>?, idx: Int): Int
 
-@CCall("knifunptr_openssl3417_sk_CTLOG_set")
+@CCall("knifunptr_openssl3422_sk_CTLOG_set")
 external fun sk_CTLOG_set(sk: CValuesRef<stack_st_CTLOG>?, idx: Int, ptr: CValuesRef<CTLOG>?): CPointer<CTLOG>?
 
-@CCall("knifunptr_openssl3418_sk_CTLOG_find")
+@CCall("knifunptr_openssl3423_sk_CTLOG_find")
 external fun sk_CTLOG_find(sk: CValuesRef<stack_st_CTLOG>?, ptr: CValuesRef<CTLOG>?): Int
 
-@CCall("knifunptr_openssl3419_sk_CTLOG_find_ex")
+@CCall("knifunptr_openssl3424_sk_CTLOG_find_ex")
 external fun sk_CTLOG_find_ex(sk: CValuesRef<stack_st_CTLOG>?, ptr: CValuesRef<CTLOG>?): Int
 
-@CCall("knifunptr_openssl3420_sk_CTLOG_sort")
+@CCall("knifunptr_openssl3425_sk_CTLOG_sort")
 external fun sk_CTLOG_sort(sk: CValuesRef<stack_st_CTLOG>?): Unit
 
-@CCall("knifunptr_openssl3421_sk_CTLOG_is_sorted")
+@CCall("knifunptr_openssl3426_sk_CTLOG_is_sorted")
 external fun sk_CTLOG_is_sorted(sk: CValuesRef<stack_st_CTLOG>?): Int
 
-@CCall("knifunptr_openssl3422_sk_CTLOG_dup")
+@CCall("knifunptr_openssl3427_sk_CTLOG_dup")
 external fun sk_CTLOG_dup(sk: CValuesRef<stack_st_CTLOG>?): CPointer<stack_st_CTLOG>?
 
-@CCall("knifunptr_openssl3423_sk_CTLOG_deep_copy")
+@CCall("knifunptr_openssl3428_sk_CTLOG_deep_copy")
 external fun sk_CTLOG_deep_copy(
     sk: CValuesRef<stack_st_CTLOG>?,
     copyfunc: sk_CTLOG_copyfunc?,
     freefunc: sk_CTLOG_freefunc?
 ): CPointer<stack_st_CTLOG>?
 
-@CCall("knifunptr_openssl3424_sk_CTLOG_set_cmp_func")
+@CCall("knifunptr_openssl3429_sk_CTLOG_set_cmp_func")
 external fun sk_CTLOG_set_cmp_func(sk: CValuesRef<stack_st_CTLOG>?, compare: sk_CTLOG_compfunc?): sk_CTLOG_compfunc?
 
-@CCall("knifunptr_openssl3425_CT_POLICY_EVAL_CTX_new")
+@CCall("knifunptr_openssl3430_CT_POLICY_EVAL_CTX_new")
 external fun CT_POLICY_EVAL_CTX_new(): CPointer<CT_POLICY_EVAL_CTX>?
 
-@CCall("knifunptr_openssl3426_CT_POLICY_EVAL_CTX_free")
+@CCall("knifunptr_openssl3431_CT_POLICY_EVAL_CTX_free")
 external fun CT_POLICY_EVAL_CTX_free(ctx: CValuesRef<CT_POLICY_EVAL_CTX>?): Unit
 
-@CCall("knifunptr_openssl3427_CT_POLICY_EVAL_CTX_get0_cert")
+@CCall("knifunptr_openssl3432_CT_POLICY_EVAL_CTX_get0_cert")
 external fun CT_POLICY_EVAL_CTX_get0_cert(ctx: CValuesRef<CT_POLICY_EVAL_CTX>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl3428_CT_POLICY_EVAL_CTX_set1_cert")
+@CCall("knifunptr_openssl3433_CT_POLICY_EVAL_CTX_set1_cert")
 external fun CT_POLICY_EVAL_CTX_set1_cert(ctx: CValuesRef<CT_POLICY_EVAL_CTX>?, cert: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3429_CT_POLICY_EVAL_CTX_get0_issuer")
+@CCall("knifunptr_openssl3434_CT_POLICY_EVAL_CTX_get0_issuer")
 external fun CT_POLICY_EVAL_CTX_get0_issuer(ctx: CValuesRef<CT_POLICY_EVAL_CTX>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl3430_CT_POLICY_EVAL_CTX_set1_issuer")
+@CCall("knifunptr_openssl3435_CT_POLICY_EVAL_CTX_set1_issuer")
 external fun CT_POLICY_EVAL_CTX_set1_issuer(ctx: CValuesRef<CT_POLICY_EVAL_CTX>?, issuer: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3431_CT_POLICY_EVAL_CTX_get0_log_store")
+@CCall("knifunptr_openssl3436_CT_POLICY_EVAL_CTX_get0_log_store")
 external fun CT_POLICY_EVAL_CTX_get0_log_store(ctx: CValuesRef<CT_POLICY_EVAL_CTX>?): CPointer<CTLOG_STORE>?
 
-@CCall("knifunptr_openssl3432_CT_POLICY_EVAL_CTX_set_shared_CTLOG_STORE")
+@CCall("knifunptr_openssl3437_CT_POLICY_EVAL_CTX_set_shared_CTLOG_STORE")
 external fun CT_POLICY_EVAL_CTX_set_shared_CTLOG_STORE(
     ctx: CValuesRef<CT_POLICY_EVAL_CTX>?,
     log_store: CValuesRef<CTLOG_STORE>?
 ): Unit
 
-@CCall("knifunptr_openssl3433_CT_POLICY_EVAL_CTX_get_time")
+@CCall("knifunptr_openssl3438_CT_POLICY_EVAL_CTX_get_time")
 external fun CT_POLICY_EVAL_CTX_get_time(ctx: CValuesRef<CT_POLICY_EVAL_CTX>?): uint64_t
 
-@CCall("knifunptr_openssl3434_CT_POLICY_EVAL_CTX_set_time")
+@CCall("knifunptr_openssl3439_CT_POLICY_EVAL_CTX_set_time")
 external fun CT_POLICY_EVAL_CTX_set_time(ctx: CValuesRef<CT_POLICY_EVAL_CTX>?, time_in_ms: uint64_t): Unit
 
-@CCall("knifunptr_openssl3435_SCT_new")
+@CCall("knifunptr_openssl3440_SCT_new")
 external fun SCT_new(): CPointer<SCT>?
 
-@CCall("knifunptr_openssl3436_SCT_new_from_base64")
+@CCall("knifunptr_openssl3441_SCT_new_from_base64")
 external fun SCT_new_from_base64(
-    version: UByte, @CCall.CString logid_base64: String?,
+    version: UByte,
+    @CCall.CString logid_base64: String?,
     entry_type: ct_log_entry_type_t,
-    timestamp: uint64_t, @CCall.CString extensions_base64: String?, @CCall.CString signature_base64: String?
+    timestamp: uint64_t,
+    @CCall.CString extensions_base64: String?,
+    @CCall.CString signature_base64: String?
 ): CPointer<SCT>?
 
-@CCall("knifunptr_openssl3437_SCT_free")
+@CCall("knifunptr_openssl3442_SCT_free")
 external fun SCT_free(sct: CValuesRef<SCT>?): Unit
 
-@CCall("knifunptr_openssl3438_SCT_LIST_free")
+@CCall("knifunptr_openssl3443_SCT_LIST_free")
 external fun SCT_LIST_free(a: CValuesRef<stack_st_SCT>?): Unit
 
-@CCall("knifunptr_openssl3439_SCT_get_version")
+@CCall("knifunptr_openssl3444_SCT_get_version")
 external fun SCT_get_version(sct: CValuesRef<SCT>?): sct_version_t
 
-@CCall("knifunptr_openssl3440_SCT_set_version")
+@CCall("knifunptr_openssl3445_SCT_set_version")
 external fun SCT_set_version(sct: CValuesRef<SCT>?, version: sct_version_t): Int
 
-@CCall("knifunptr_openssl3441_SCT_get_log_entry_type")
+@CCall("knifunptr_openssl3446_SCT_get_log_entry_type")
 external fun SCT_get_log_entry_type(sct: CValuesRef<SCT>?): ct_log_entry_type_t
 
-@CCall("knifunptr_openssl3442_SCT_set_log_entry_type")
+@CCall("knifunptr_openssl3447_SCT_set_log_entry_type")
 external fun SCT_set_log_entry_type(sct: CValuesRef<SCT>?, entry_type: ct_log_entry_type_t): Int
 
-@CCall("knifunptr_openssl3443_SCT_get0_log_id")
+@CCall("knifunptr_openssl3448_SCT_get0_log_id")
 external fun SCT_get0_log_id(sct: CValuesRef<SCT>?, log_id: CValuesRef<CPointerVar<UByteVar>>?): size_t
 
-@CCall("knifunptr_openssl3444_SCT_set0_log_id")
+@CCall("knifunptr_openssl3449_SCT_set0_log_id")
 external fun SCT_set0_log_id(sct: CValuesRef<SCT>?, log_id: CValuesRef<UByteVar>?, log_id_len: size_t): Int
 
-@CCall("knifunptr_openssl3445_SCT_set1_log_id")
+@CCall("knifunptr_openssl3450_SCT_set1_log_id")
 external fun SCT_set1_log_id(sct: CValuesRef<SCT>?, log_id: CValuesRef<UByteVar>?, log_id_len: size_t): Int
 
-@CCall("knifunptr_openssl3446_SCT_get_timestamp")
+@CCall("knifunptr_openssl3451_SCT_get_timestamp")
 external fun SCT_get_timestamp(sct: CValuesRef<SCT>?): uint64_t
 
-@CCall("knifunptr_openssl3447_SCT_set_timestamp")
+@CCall("knifunptr_openssl3452_SCT_set_timestamp")
 external fun SCT_set_timestamp(sct: CValuesRef<SCT>?, timestamp: uint64_t): Unit
 
-@CCall("knifunptr_openssl3448_SCT_get_signature_nid")
+@CCall("knifunptr_openssl3453_SCT_get_signature_nid")
 external fun SCT_get_signature_nid(sct: CValuesRef<SCT>?): Int
 
-@CCall("knifunptr_openssl3449_SCT_set_signature_nid")
+@CCall("knifunptr_openssl3454_SCT_set_signature_nid")
 external fun SCT_set_signature_nid(sct: CValuesRef<SCT>?, nid: Int): Int
 
-@CCall("knifunptr_openssl3450_SCT_get0_extensions")
+@CCall("knifunptr_openssl3455_SCT_get0_extensions")
 external fun SCT_get0_extensions(sct: CValuesRef<SCT>?, ext: CValuesRef<CPointerVar<UByteVar>>?): size_t
 
-@CCall("knifunptr_openssl3451_SCT_set0_extensions")
+@CCall("knifunptr_openssl3456_SCT_set0_extensions")
 external fun SCT_set0_extensions(sct: CValuesRef<SCT>?, ext: CValuesRef<UByteVar>?, ext_len: size_t): Unit
 
-@CCall("knifunptr_openssl3452_SCT_set1_extensions")
+@CCall("knifunptr_openssl3457_SCT_set1_extensions")
 external fun SCT_set1_extensions(sct: CValuesRef<SCT>?, ext: CValuesRef<UByteVar>?, ext_len: size_t): Int
 
-@CCall("knifunptr_openssl3453_SCT_get0_signature")
+@CCall("knifunptr_openssl3458_SCT_get0_signature")
 external fun SCT_get0_signature(sct: CValuesRef<SCT>?, sig: CValuesRef<CPointerVar<UByteVar>>?): size_t
 
-@CCall("knifunptr_openssl3454_SCT_set0_signature")
+@CCall("knifunptr_openssl3459_SCT_set0_signature")
 external fun SCT_set0_signature(sct: CValuesRef<SCT>?, sig: CValuesRef<UByteVar>?, sig_len: size_t): Unit
 
-@CCall("knifunptr_openssl3455_SCT_set1_signature")
+@CCall("knifunptr_openssl3460_SCT_set1_signature")
 external fun SCT_set1_signature(sct: CValuesRef<SCT>?, sig: CValuesRef<UByteVar>?, sig_len: size_t): Int
 
-@CCall("knifunptr_openssl3456_SCT_get_source")
+@CCall("knifunptr_openssl3461_SCT_get_source")
 external fun SCT_get_source(sct: CValuesRef<SCT>?): sct_source_t
 
-@CCall("knifunptr_openssl3457_SCT_set_source")
+@CCall("knifunptr_openssl3462_SCT_set_source")
 external fun SCT_set_source(sct: CValuesRef<SCT>?, source: sct_source_t): Int
 
-@CCall("knifunptr_openssl3458_SCT_validation_status_string")
+@CCall("knifunptr_openssl3463_SCT_validation_status_string")
 external fun SCT_validation_status_string(sct: CValuesRef<SCT>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3459_SCT_print")
+@CCall("knifunptr_openssl3464_SCT_print")
 external fun SCT_print(sct: CValuesRef<SCT>?, out: CValuesRef<BIO>?, indent: Int, logs: CValuesRef<CTLOG_STORE>?): Unit
 
-@CCall("knifunptr_openssl3460_SCT_LIST_print")
+@CCall("knifunptr_openssl3465_SCT_LIST_print")
 external fun SCT_LIST_print(
     sct_list: CValuesRef<stack_st_SCT>?,
     out: CValuesRef<BIO>?,
-    indent: Int, @CCall.CString separator: String?,
+    indent: Int,
+    @CCall.CString separator: String?,
     logs: CValuesRef<CTLOG_STORE>?
 ): Unit
 
-@CCall("knifunptr_openssl3461_SCT_get_validation_status")
+@CCall("knifunptr_openssl3466_SCT_get_validation_status")
 external fun SCT_get_validation_status(sct: CValuesRef<SCT>?): sct_validation_status_t
 
-@CCall("knifunptr_openssl3462_SCT_validate")
+@CCall("knifunptr_openssl3467_SCT_validate")
 external fun SCT_validate(sct: CValuesRef<SCT>?, ctx: CValuesRef<CT_POLICY_EVAL_CTX>?): Int
 
-@CCall("knifunptr_openssl3463_SCT_LIST_validate")
+@CCall("knifunptr_openssl3468_SCT_LIST_validate")
 external fun SCT_LIST_validate(scts: CValuesRef<stack_st_SCT>?, ctx: CValuesRef<CT_POLICY_EVAL_CTX>?): Int
 
-@CCall("knifunptr_openssl3464_i2o_SCT_LIST")
+@CCall("knifunptr_openssl3469_i2o_SCT_LIST")
 external fun i2o_SCT_LIST(a: CValuesRef<stack_st_SCT>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3465_o2i_SCT_LIST")
+@CCall("knifunptr_openssl3470_o2i_SCT_LIST")
 external fun o2i_SCT_LIST(
     a: CValuesRef<CPointerVar<stack_st_SCT>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     len: size_t
 ): CPointer<stack_st_SCT>?
 
-@CCall("knifunptr_openssl3466_i2d_SCT_LIST")
+@CCall("knifunptr_openssl3471_i2d_SCT_LIST")
 external fun i2d_SCT_LIST(a: CValuesRef<stack_st_SCT>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3467_d2i_SCT_LIST")
+@CCall("knifunptr_openssl3472_d2i_SCT_LIST")
 external fun d2i_SCT_LIST(
     a: CValuesRef<CPointerVar<stack_st_SCT>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<stack_st_SCT>?
 
-@CCall("knifunptr_openssl3468_i2o_SCT")
+@CCall("knifunptr_openssl3473_i2o_SCT")
 external fun i2o_SCT(sct: CValuesRef<SCT>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3469_o2i_SCT")
+@CCall("knifunptr_openssl3474_o2i_SCT")
 external fun o2i_SCT(
     psct: CValuesRef<CPointerVar<SCT>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: size_t
 ): CPointer<SCT>?
 
-@CCall("knifunptr_openssl3470_CTLOG_new")
+@CCall("knifunptr_openssl3475_CTLOG_new")
 external fun CTLOG_new(public_key: CValuesRef<EVP_PKEY>?, @CCall.CString name: String?): CPointer<CTLOG>?
 
-@CCall("knifunptr_openssl3471_CTLOG_new_from_base64")
+@CCall("knifunptr_openssl3476_CTLOG_new_from_base64")
 external fun CTLOG_new_from_base64(ct_log: CValuesRef<CPointerVar<CTLOG>>?, @CCall.CString pkey_base64: String?, @CCall.CString name: String?): Int
 
-@CCall("knifunptr_openssl3472_CTLOG_free")
+@CCall("knifunptr_openssl3477_CTLOG_free")
 external fun CTLOG_free(log: CValuesRef<CTLOG>?): Unit
 
-@CCall("knifunptr_openssl3473_CTLOG_get0_name")
+@CCall("knifunptr_openssl3478_CTLOG_get0_name")
 external fun CTLOG_get0_name(log: CValuesRef<CTLOG>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3474_CTLOG_get0_log_id")
+@CCall("knifunptr_openssl3479_CTLOG_get0_log_id")
 external fun CTLOG_get0_log_id(
     log: CValuesRef<CTLOG>?,
     log_id: CValuesRef<CPointerVar<uint8_tVar>>?,
     log_id_len: CValuesRef<size_tVar>?
 ): Unit
 
-@CCall("knifunptr_openssl3475_CTLOG_get0_public_key")
+@CCall("knifunptr_openssl3480_CTLOG_get0_public_key")
 external fun CTLOG_get0_public_key(log: CValuesRef<CTLOG>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3476_CTLOG_STORE_new")
+@CCall("knifunptr_openssl3481_CTLOG_STORE_new")
 external fun CTLOG_STORE_new(): CPointer<CTLOG_STORE>?
 
-@CCall("knifunptr_openssl3477_CTLOG_STORE_free")
+@CCall("knifunptr_openssl3482_CTLOG_STORE_free")
 external fun CTLOG_STORE_free(store: CValuesRef<CTLOG_STORE>?): Unit
 
-@CCall("knifunptr_openssl3478_CTLOG_STORE_get0_log_by_id")
+@CCall("knifunptr_openssl3483_CTLOG_STORE_get0_log_by_id")
 external fun CTLOG_STORE_get0_log_by_id(
     store: CValuesRef<CTLOG_STORE>?,
     log_id: CValuesRef<uint8_tVar>?,
     log_id_len: size_t
 ): CPointer<CTLOG>?
 
-@CCall("knifunptr_openssl3479_CTLOG_STORE_load_file")
+@CCall("knifunptr_openssl3484_CTLOG_STORE_load_file")
 external fun CTLOG_STORE_load_file(store: CValuesRef<CTLOG_STORE>?, @CCall.CString file: String?): Int
 
-@CCall("knifunptr_openssl3480_CTLOG_STORE_load_default_file")
+@CCall("knifunptr_openssl3485_CTLOG_STORE_load_default_file")
 external fun CTLOG_STORE_load_default_file(store: CValuesRef<CTLOG_STORE>?): Int
 
-@CCall("knifunptr_openssl3481_ERR_load_SSL_strings")
+@CCall("knifunptr_openssl3486_ERR_load_SSL_strings")
 external fun ERR_load_SSL_strings(): Int
 
-@CCall("knifunptr_openssl3482_sk_SRTP_PROTECTION_PROFILE_num")
+@CCall("knifunptr_openssl3487_sk_SRTP_PROTECTION_PROFILE_num")
 external fun sk_SRTP_PROTECTION_PROFILE_num(sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?): Int
 
-@CCall("knifunptr_openssl3483_sk_SRTP_PROTECTION_PROFILE_value")
+@CCall("knifunptr_openssl3488_sk_SRTP_PROTECTION_PROFILE_value")
 external fun sk_SRTP_PROTECTION_PROFILE_value(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     idx: Int
 ): CPointer<SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3484_sk_SRTP_PROTECTION_PROFILE_new")
+@CCall("knifunptr_openssl3489_sk_SRTP_PROTECTION_PROFILE_new")
 external fun sk_SRTP_PROTECTION_PROFILE_new(compare: sk_SRTP_PROTECTION_PROFILE_compfunc?): CPointer<stack_st_SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3485_sk_SRTP_PROTECTION_PROFILE_new_null")
+@CCall("knifunptr_openssl3490_sk_SRTP_PROTECTION_PROFILE_new_null")
 external fun sk_SRTP_PROTECTION_PROFILE_new_null(): CPointer<stack_st_SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3486_sk_SRTP_PROTECTION_PROFILE_new_reserve")
+@CCall("knifunptr_openssl3491_sk_SRTP_PROTECTION_PROFILE_new_reserve")
 external fun sk_SRTP_PROTECTION_PROFILE_new_reserve(
     compare: sk_SRTP_PROTECTION_PROFILE_compfunc?,
     n: Int
 ): CPointer<stack_st_SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3487_sk_SRTP_PROTECTION_PROFILE_reserve")
+@CCall("knifunptr_openssl3492_sk_SRTP_PROTECTION_PROFILE_reserve")
 external fun sk_SRTP_PROTECTION_PROFILE_reserve(sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?, n: Int): Int
 
-@CCall("knifunptr_openssl3488_sk_SRTP_PROTECTION_PROFILE_free")
+@CCall("knifunptr_openssl3493_sk_SRTP_PROTECTION_PROFILE_free")
 external fun sk_SRTP_PROTECTION_PROFILE_free(sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?): Unit
 
-@CCall("knifunptr_openssl3489_sk_SRTP_PROTECTION_PROFILE_zero")
+@CCall("knifunptr_openssl3494_sk_SRTP_PROTECTION_PROFILE_zero")
 external fun sk_SRTP_PROTECTION_PROFILE_zero(sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?): Unit
 
-@CCall("knifunptr_openssl3490_sk_SRTP_PROTECTION_PROFILE_delete")
+@CCall("knifunptr_openssl3495_sk_SRTP_PROTECTION_PROFILE_delete")
 external fun sk_SRTP_PROTECTION_PROFILE_delete(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     i: Int
 ): CPointer<SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3491_sk_SRTP_PROTECTION_PROFILE_delete_ptr")
+@CCall("knifunptr_openssl3496_sk_SRTP_PROTECTION_PROFILE_delete_ptr")
 external fun sk_SRTP_PROTECTION_PROFILE_delete_ptr(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     ptr: CValuesRef<SRTP_PROTECTION_PROFILE>?
 ): CPointer<SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3492_sk_SRTP_PROTECTION_PROFILE_push")
+@CCall("knifunptr_openssl3497_sk_SRTP_PROTECTION_PROFILE_push")
 external fun sk_SRTP_PROTECTION_PROFILE_push(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     ptr: CValuesRef<SRTP_PROTECTION_PROFILE>?
 ): Int
 
-@CCall("knifunptr_openssl3493_sk_SRTP_PROTECTION_PROFILE_unshift")
+@CCall("knifunptr_openssl3498_sk_SRTP_PROTECTION_PROFILE_unshift")
 external fun sk_SRTP_PROTECTION_PROFILE_unshift(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     ptr: CValuesRef<SRTP_PROTECTION_PROFILE>?
 ): Int
 
-@CCall("knifunptr_openssl3494_sk_SRTP_PROTECTION_PROFILE_pop")
+@CCall("knifunptr_openssl3499_sk_SRTP_PROTECTION_PROFILE_pop")
 external fun sk_SRTP_PROTECTION_PROFILE_pop(sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?): CPointer<SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3495_sk_SRTP_PROTECTION_PROFILE_shift")
+@CCall("knifunptr_openssl3500_sk_SRTP_PROTECTION_PROFILE_shift")
 external fun sk_SRTP_PROTECTION_PROFILE_shift(sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?): CPointer<SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3496_sk_SRTP_PROTECTION_PROFILE_pop_free")
+@CCall("knifunptr_openssl3501_sk_SRTP_PROTECTION_PROFILE_pop_free")
 external fun sk_SRTP_PROTECTION_PROFILE_pop_free(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     freefunc: sk_SRTP_PROTECTION_PROFILE_freefunc?
 ): Unit
 
-@CCall("knifunptr_openssl3497_sk_SRTP_PROTECTION_PROFILE_insert")
+@CCall("knifunptr_openssl3502_sk_SRTP_PROTECTION_PROFILE_insert")
 external fun sk_SRTP_PROTECTION_PROFILE_insert(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     ptr: CValuesRef<SRTP_PROTECTION_PROFILE>?,
     idx: Int
 ): Int
 
-@CCall("knifunptr_openssl3498_sk_SRTP_PROTECTION_PROFILE_set")
+@CCall("knifunptr_openssl3503_sk_SRTP_PROTECTION_PROFILE_set")
 external fun sk_SRTP_PROTECTION_PROFILE_set(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     idx: Int,
     ptr: CValuesRef<SRTP_PROTECTION_PROFILE>?
 ): CPointer<SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3499_sk_SRTP_PROTECTION_PROFILE_find")
+@CCall("knifunptr_openssl3504_sk_SRTP_PROTECTION_PROFILE_find")
 external fun sk_SRTP_PROTECTION_PROFILE_find(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     ptr: CValuesRef<SRTP_PROTECTION_PROFILE>?
 ): Int
 
-@CCall("knifunptr_openssl3500_sk_SRTP_PROTECTION_PROFILE_find_ex")
+@CCall("knifunptr_openssl3505_sk_SRTP_PROTECTION_PROFILE_find_ex")
 external fun sk_SRTP_PROTECTION_PROFILE_find_ex(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     ptr: CValuesRef<SRTP_PROTECTION_PROFILE>?
 ): Int
 
-@CCall("knifunptr_openssl3501_sk_SRTP_PROTECTION_PROFILE_sort")
+@CCall("knifunptr_openssl3506_sk_SRTP_PROTECTION_PROFILE_sort")
 external fun sk_SRTP_PROTECTION_PROFILE_sort(sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?): Unit
 
-@CCall("knifunptr_openssl3502_sk_SRTP_PROTECTION_PROFILE_is_sorted")
+@CCall("knifunptr_openssl3507_sk_SRTP_PROTECTION_PROFILE_is_sorted")
 external fun sk_SRTP_PROTECTION_PROFILE_is_sorted(sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?): Int
 
-@CCall("knifunptr_openssl3503_sk_SRTP_PROTECTION_PROFILE_dup")
+@CCall("knifunptr_openssl3508_sk_SRTP_PROTECTION_PROFILE_dup")
 external fun sk_SRTP_PROTECTION_PROFILE_dup(sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?): CPointer<stack_st_SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3504_sk_SRTP_PROTECTION_PROFILE_deep_copy")
+@CCall("knifunptr_openssl3509_sk_SRTP_PROTECTION_PROFILE_deep_copy")
 external fun sk_SRTP_PROTECTION_PROFILE_deep_copy(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     copyfunc: sk_SRTP_PROTECTION_PROFILE_copyfunc?,
     freefunc: sk_SRTP_PROTECTION_PROFILE_freefunc?
 ): CPointer<stack_st_SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3505_sk_SRTP_PROTECTION_PROFILE_set_cmp_func")
+@CCall("knifunptr_openssl3510_sk_SRTP_PROTECTION_PROFILE_set_cmp_func")
 external fun sk_SRTP_PROTECTION_PROFILE_set_cmp_func(
     sk: CValuesRef<stack_st_SRTP_PROTECTION_PROFILE>?,
     compare: sk_SRTP_PROTECTION_PROFILE_compfunc?
 ): sk_SRTP_PROTECTION_PROFILE_compfunc?
 
-@CCall("knifunptr_openssl3506_SSL_CTX_get_options")
+@CCall("knifunptr_openssl3511_SSL_CTX_get_options")
 external fun SSL_CTX_get_options(ctx: CValuesRef<SSL_CTX>?): UInt
 
-@CCall("knifunptr_openssl3507_SSL_get_options")
+@CCall("knifunptr_openssl3512_SSL_get_options")
 external fun SSL_get_options(s: CValuesRef<SSL>?): UInt
 
-@CCall("knifunptr_openssl3508_SSL_CTX_clear_options")
+@CCall("knifunptr_openssl3513_SSL_CTX_clear_options")
 external fun SSL_CTX_clear_options(ctx: CValuesRef<SSL_CTX>?, op: UInt): UInt
 
-@CCall("knifunptr_openssl3509_SSL_clear_options")
+@CCall("knifunptr_openssl3514_SSL_clear_options")
 external fun SSL_clear_options(s: CValuesRef<SSL>?, op: UInt): UInt
 
-@CCall("knifunptr_openssl3510_SSL_CTX_set_options")
+@CCall("knifunptr_openssl3515_SSL_CTX_set_options")
 external fun SSL_CTX_set_options(ctx: CValuesRef<SSL_CTX>?, op: UInt): UInt
 
-@CCall("knifunptr_openssl3511_SSL_set_options")
+@CCall("knifunptr_openssl3516_SSL_set_options")
 external fun SSL_set_options(s: CValuesRef<SSL>?, op: UInt): UInt
 
-@CCall("knifunptr_openssl3512_SSL_CTX_set_msg_callback")
+@CCall("knifunptr_openssl3517_SSL_CTX_set_msg_callback")
 external fun SSL_CTX_set_msg_callback(
     ctx: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(Int, Int, Int, COpaquePointer?, size_t, CPointer<SSL>?, COpaquePointer?) -> Unit>>?
 ): Unit
 
-@CCall("knifunptr_openssl3513_SSL_set_msg_callback")
+@CCall("knifunptr_openssl3518_SSL_set_msg_callback")
 external fun SSL_set_msg_callback(
     ssl: CValuesRef<SSL>?,
     cb: CPointer<CFunction<(Int, Int, Int, COpaquePointer?, size_t, CPointer<SSL>?, COpaquePointer?) -> Unit>>?
 ): Unit
 
-@CCall("knifunptr_openssl3514_SSL_SRP_CTX_init")
+@CCall("knifunptr_openssl3519_SSL_SRP_CTX_init")
 external fun SSL_SRP_CTX_init(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3515_SSL_CTX_SRP_CTX_init")
+@CCall("knifunptr_openssl3520_SSL_CTX_SRP_CTX_init")
 external fun SSL_CTX_SRP_CTX_init(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3516_SSL_SRP_CTX_free")
+@CCall("knifunptr_openssl3521_SSL_SRP_CTX_free")
 external fun SSL_SRP_CTX_free(ctx: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3517_SSL_CTX_SRP_CTX_free")
+@CCall("knifunptr_openssl3522_SSL_CTX_SRP_CTX_free")
 external fun SSL_CTX_SRP_CTX_free(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3518_SSL_srp_server_param_with_username")
+@CCall("knifunptr_openssl3523_SSL_srp_server_param_with_username")
 external fun SSL_srp_server_param_with_username(s: CValuesRef<SSL>?, ad: CValuesRef<IntVar>?): Int
 
-@CCall("knifunptr_openssl3519_SRP_Calc_A_param")
+@CCall("knifunptr_openssl3524_SRP_Calc_A_param")
 external fun SRP_Calc_A_param(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3520_SSL_CTX_sessions")
+@CCall("knifunptr_openssl3525_SSL_CTX_sessions")
 external fun SSL_CTX_sessions(ctx: CValuesRef<SSL_CTX>?): CPointer<lhash_st_SSL_SESSION>?
 
-@CCall("knifunptr_openssl3521_SSL_CTX_sess_set_new_cb")
+@CCall("knifunptr_openssl3526_SSL_CTX_sess_set_new_cb")
 external fun SSL_CTX_sess_set_new_cb(
     ctx: CValuesRef<SSL_CTX>?,
     new_session_cb: CPointer<CFunction<(CPointer<ssl_st>?, CPointer<SSL_SESSION>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl3522_SSL_CTX_sess_get_new_cb")
+@CCall("knifunptr_openssl3527_SSL_CTX_sess_get_new_cb")
 external fun SSL_CTX_sess_get_new_cb(ctx: CValuesRef<SSL_CTX>?): CPointer<CFunction<(CPointer<ssl_st>?, CPointer<SSL_SESSION>?) -> Int>>?
 
-@CCall("knifunptr_openssl3523_SSL_CTX_sess_set_remove_cb")
+@CCall("knifunptr_openssl3528_SSL_CTX_sess_set_remove_cb")
 external fun SSL_CTX_sess_set_remove_cb(
     ctx: CValuesRef<SSL_CTX>?,
     remove_session_cb: CPointer<CFunction<(CPointer<ssl_ctx_st>?, CPointer<SSL_SESSION>?) -> Unit>>?
 ): Unit
 
-@CCall("knifunptr_openssl3524_SSL_CTX_sess_get_remove_cb")
+@CCall("knifunptr_openssl3529_SSL_CTX_sess_get_remove_cb")
 external fun SSL_CTX_sess_get_remove_cb(ctx: CValuesRef<SSL_CTX>?): CPointer<CFunction<(CPointer<ssl_ctx_st>?, CPointer<SSL_SESSION>?) -> Unit>>?
 
-@CCall("knifunptr_openssl3525_SSL_CTX_sess_set_get_cb")
+@CCall("knifunptr_openssl3530_SSL_CTX_sess_set_get_cb")
 external fun SSL_CTX_sess_set_get_cb(
     ctx: CValuesRef<SSL_CTX>?,
     get_session_cb: CPointer<CFunction<(CPointer<ssl_st>?, CPointer<UByteVar>?, Int, CPointer<IntVar>?) -> CPointer<SSL_SESSION>?>>?
 ): Unit
 
-@CCall("knifunptr_openssl3526_SSL_CTX_sess_get_get_cb")
+@CCall("knifunptr_openssl3531_SSL_CTX_sess_get_get_cb")
 external fun SSL_CTX_sess_get_get_cb(ctx: CValuesRef<SSL_CTX>?): CPointer<CFunction<(CPointer<ssl_st>?, CPointer<UByteVar>?, Int, CPointer<IntVar>?) -> CPointer<SSL_SESSION>?>>?
 
-@CCall("knifunptr_openssl3527_SSL_CTX_set_info_callback")
+@CCall("knifunptr_openssl3532_SSL_CTX_set_info_callback")
 external fun SSL_CTX_set_info_callback(
     ctx: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, Int, Int) -> Unit>>?
 ): Unit
 
-@CCall("knifunptr_openssl3528_SSL_CTX_get_info_callback")
+@CCall("knifunptr_openssl3533_SSL_CTX_get_info_callback")
 external fun SSL_CTX_get_info_callback(ctx: CValuesRef<SSL_CTX>?): CPointer<CFunction<(CPointer<SSL>?, Int, Int) -> Unit>>?
 
-@CCall("knifunptr_openssl3529_SSL_CTX_set_client_cert_cb")
+@CCall("knifunptr_openssl3534_SSL_CTX_set_client_cert_cb")
 external fun SSL_CTX_set_client_cert_cb(
     ctx: CValuesRef<SSL_CTX>?,
     client_cert_cb: CPointer<CFunction<(CPointer<SSL>?, CPointer<CPointerVar<X509>>?, CPointer<CPointerVar<EVP_PKEY>>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl3530_SSL_CTX_get_client_cert_cb")
+@CCall("knifunptr_openssl3535_SSL_CTX_get_client_cert_cb")
 external fun SSL_CTX_get_client_cert_cb(ctx: CValuesRef<SSL_CTX>?): CPointer<CFunction<(CPointer<SSL>?, CPointer<CPointerVar<X509>>?, CPointer<CPointerVar<EVP_PKEY>>?) -> Int>>?
 
-@CCall("knifunptr_openssl3531_SSL_CTX_set_client_cert_engine")
+@CCall("knifunptr_openssl3536_SSL_CTX_set_client_cert_engine")
 external fun SSL_CTX_set_client_cert_engine(ctx: CValuesRef<SSL_CTX>?, e: CValuesRef<ENGINE>?): Int
 
-@CCall("knifunptr_openssl3532_SSL_CTX_set_cookie_generate_cb")
+@CCall("knifunptr_openssl3537_SSL_CTX_set_cookie_generate_cb")
 external fun SSL_CTX_set_cookie_generate_cb(
     ctx: CValuesRef<SSL_CTX>?,
     app_gen_cookie_cb: CPointer<CFunction<(CPointer<SSL>?, CPointer<UByteVar>?, CPointer<UIntVar>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl3533_SSL_CTX_set_cookie_verify_cb")
+@CCall("knifunptr_openssl3538_SSL_CTX_set_cookie_verify_cb")
 external fun SSL_CTX_set_cookie_verify_cb(
     ctx: CValuesRef<SSL_CTX>?,
     app_verify_cookie_cb: CPointer<CFunction<(CPointer<SSL>?, CPointer<UByteVar>?, UInt) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl3534_SSL_CTX_set_stateless_cookie_generate_cb")
+@CCall("knifunptr_openssl3539_SSL_CTX_set_stateless_cookie_generate_cb")
 external fun SSL_CTX_set_stateless_cookie_generate_cb(
     ctx: CValuesRef<SSL_CTX>?,
     gen_stateless_cookie_cb: CPointer<CFunction<(CPointer<SSL>?, CPointer<UByteVar>?, CPointer<size_tVar>?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl3535_SSL_CTX_set_stateless_cookie_verify_cb")
+@CCall("knifunptr_openssl3540_SSL_CTX_set_stateless_cookie_verify_cb")
 external fun SSL_CTX_set_stateless_cookie_verify_cb(
     ctx: CValuesRef<SSL_CTX>?,
     verify_stateless_cookie_cb: CPointer<CFunction<(CPointer<SSL>?, CPointer<UByteVar>?, size_t) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl3536_SSL_CTX_set_next_protos_advertised_cb")
+@CCall("knifunptr_openssl3541_SSL_CTX_set_next_protos_advertised_cb")
 external fun SSL_CTX_set_next_protos_advertised_cb(
     s: CValuesRef<SSL_CTX>?,
     cb: SSL_CTX_npn_advertised_cb_func?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl3537_SSL_CTX_set_next_proto_select_cb")
+@CCall("knifunptr_openssl3542_SSL_CTX_set_next_proto_select_cb")
 external fun SSL_CTX_set_next_proto_select_cb(
     s: CValuesRef<SSL_CTX>?,
     cb: SSL_CTX_npn_select_cb_func?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl3538_SSL_get0_next_proto_negotiated")
+@CCall("knifunptr_openssl3543_SSL_get0_next_proto_negotiated")
 external fun SSL_get0_next_proto_negotiated(
     s: CValuesRef<SSL>?,
     data: CValuesRef<CPointerVar<UByteVar>>?,
     len: CValuesRef<UIntVar>?
 ): Unit
 
-@CCall("knifunptr_openssl3539_SSL_select_next_proto")
+@CCall("knifunptr_openssl3544_SSL_select_next_proto")
 external fun SSL_select_next_proto(
     out: CValuesRef<CPointerVar<UByteVar>>?,
     outlen: CValuesRef<UByteVar>?,
@@ -16783,66 +16900,66 @@ external fun SSL_select_next_proto(
     client_len: UInt
 ): Int
 
-@CCall("knifunptr_openssl3540_SSL_CTX_set_alpn_protos")
+@CCall("knifunptr_openssl3545_SSL_CTX_set_alpn_protos")
 external fun SSL_CTX_set_alpn_protos(ctx: CValuesRef<SSL_CTX>?, protos: CValuesRef<UByteVar>?, protos_len: UInt): Int
 
-@CCall("knifunptr_openssl3541_SSL_set_alpn_protos")
+@CCall("knifunptr_openssl3546_SSL_set_alpn_protos")
 external fun SSL_set_alpn_protos(ssl: CValuesRef<SSL>?, protos: CValuesRef<UByteVar>?, protos_len: UInt): Int
 
-@CCall("knifunptr_openssl3542_SSL_CTX_set_alpn_select_cb")
+@CCall("knifunptr_openssl3547_SSL_CTX_set_alpn_select_cb")
 external fun SSL_CTX_set_alpn_select_cb(
     ctx: CValuesRef<SSL_CTX>?,
     cb: SSL_CTX_alpn_select_cb_func?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl3543_SSL_get0_alpn_selected")
+@CCall("knifunptr_openssl3548_SSL_get0_alpn_selected")
 external fun SSL_get0_alpn_selected(
     ssl: CValuesRef<SSL>?,
     data: CValuesRef<CPointerVar<UByteVar>>?,
     len: CValuesRef<UIntVar>?
 ): Unit
 
-@CCall("knifunptr_openssl3544_SSL_CTX_set_psk_client_callback")
+@CCall("knifunptr_openssl3549_SSL_CTX_set_psk_client_callback")
 external fun SSL_CTX_set_psk_client_callback(ctx: CValuesRef<SSL_CTX>?, cb: SSL_psk_client_cb_func?): Unit
 
-@CCall("knifunptr_openssl3545_SSL_set_psk_client_callback")
+@CCall("knifunptr_openssl3550_SSL_set_psk_client_callback")
 external fun SSL_set_psk_client_callback(ssl: CValuesRef<SSL>?, cb: SSL_psk_client_cb_func?): Unit
 
-@CCall("knifunptr_openssl3546_SSL_CTX_set_psk_server_callback")
+@CCall("knifunptr_openssl3551_SSL_CTX_set_psk_server_callback")
 external fun SSL_CTX_set_psk_server_callback(ctx: CValuesRef<SSL_CTX>?, cb: SSL_psk_server_cb_func?): Unit
 
-@CCall("knifunptr_openssl3547_SSL_set_psk_server_callback")
+@CCall("knifunptr_openssl3552_SSL_set_psk_server_callback")
 external fun SSL_set_psk_server_callback(ssl: CValuesRef<SSL>?, cb: SSL_psk_server_cb_func?): Unit
 
-@CCall("knifunptr_openssl3548_SSL_CTX_use_psk_identity_hint")
+@CCall("knifunptr_openssl3553_SSL_CTX_use_psk_identity_hint")
 external fun SSL_CTX_use_psk_identity_hint(ctx: CValuesRef<SSL_CTX>?, @CCall.CString identity_hint: String?): Int
 
-@CCall("knifunptr_openssl3549_SSL_use_psk_identity_hint")
+@CCall("knifunptr_openssl3554_SSL_use_psk_identity_hint")
 external fun SSL_use_psk_identity_hint(s: CValuesRef<SSL>?, @CCall.CString identity_hint: String?): Int
 
-@CCall("knifunptr_openssl3550_SSL_get_psk_identity_hint")
+@CCall("knifunptr_openssl3555_SSL_get_psk_identity_hint")
 external fun SSL_get_psk_identity_hint(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3551_SSL_get_psk_identity")
+@CCall("knifunptr_openssl3556_SSL_get_psk_identity")
 external fun SSL_get_psk_identity(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3552_SSL_set_psk_find_session_callback")
+@CCall("knifunptr_openssl3557_SSL_set_psk_find_session_callback")
 external fun SSL_set_psk_find_session_callback(s: CValuesRef<SSL>?, cb: SSL_psk_find_session_cb_func?): Unit
 
-@CCall("knifunptr_openssl3553_SSL_CTX_set_psk_find_session_callback")
+@CCall("knifunptr_openssl3558_SSL_CTX_set_psk_find_session_callback")
 external fun SSL_CTX_set_psk_find_session_callback(ctx: CValuesRef<SSL_CTX>?, cb: SSL_psk_find_session_cb_func?): Unit
 
-@CCall("knifunptr_openssl3554_SSL_set_psk_use_session_callback")
+@CCall("knifunptr_openssl3559_SSL_set_psk_use_session_callback")
 external fun SSL_set_psk_use_session_callback(s: CValuesRef<SSL>?, cb: SSL_psk_use_session_cb_func?): Unit
 
-@CCall("knifunptr_openssl3555_SSL_CTX_set_psk_use_session_callback")
+@CCall("knifunptr_openssl3560_SSL_CTX_set_psk_use_session_callback")
 external fun SSL_CTX_set_psk_use_session_callback(ctx: CValuesRef<SSL_CTX>?, cb: SSL_psk_use_session_cb_func?): Unit
 
-@CCall("knifunptr_openssl3556_SSL_CTX_has_client_custom_ext")
+@CCall("knifunptr_openssl3561_SSL_CTX_has_client_custom_ext")
 external fun SSL_CTX_has_client_custom_ext(ctx: CValuesRef<SSL_CTX>?, ext_type: UInt): Int
 
-@CCall("knifunptr_openssl3557_SSL_CTX_add_client_custom_ext")
+@CCall("knifunptr_openssl3562_SSL_CTX_add_client_custom_ext")
 external fun SSL_CTX_add_client_custom_ext(
     ctx: CValuesRef<SSL_CTX>?,
     ext_type: UInt,
@@ -16853,7 +16970,7 @@ external fun SSL_CTX_add_client_custom_ext(
     parse_arg: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3558_SSL_CTX_add_server_custom_ext")
+@CCall("knifunptr_openssl3563_SSL_CTX_add_server_custom_ext")
 external fun SSL_CTX_add_server_custom_ext(
     ctx: CValuesRef<SSL_CTX>?,
     ext_type: UInt,
@@ -16864,7 +16981,7 @@ external fun SSL_CTX_add_server_custom_ext(
     parse_arg: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3559_SSL_CTX_add_custom_ext")
+@CCall("knifunptr_openssl3564_SSL_CTX_add_custom_ext")
 external fun SSL_CTX_add_custom_ext(
     ctx: CValuesRef<SSL_CTX>?,
     ext_type: UInt,
@@ -16876,79 +16993,81 @@ external fun SSL_CTX_add_custom_ext(
     parse_arg: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3560_SSL_extension_supported")
+@CCall("knifunptr_openssl3565_SSL_extension_supported")
 external fun SSL_extension_supported(ext_type: UInt): Int
 
-@CCall("knifunptr_openssl3561_SSL_CTX_set_keylog_callback")
+@CCall("knifunptr_openssl3566_SSL_CTX_set_keylog_callback")
 external fun SSL_CTX_set_keylog_callback(ctx: CValuesRef<SSL_CTX>?, cb: SSL_CTX_keylog_cb_func?): Unit
 
-@CCall("knifunptr_openssl3562_SSL_CTX_get_keylog_callback")
+@CCall("knifunptr_openssl3567_SSL_CTX_get_keylog_callback")
 external fun SSL_CTX_get_keylog_callback(ctx: CValuesRef<SSL_CTX>?): SSL_CTX_keylog_cb_func?
 
-@CCall("knifunptr_openssl3563_SSL_CTX_set_max_early_data")
+@CCall("knifunptr_openssl3568_SSL_CTX_set_max_early_data")
 external fun SSL_CTX_set_max_early_data(ctx: CValuesRef<SSL_CTX>?, max_early_data: uint32_t): Int
 
-@CCall("knifunptr_openssl3564_SSL_CTX_get_max_early_data")
+@CCall("knifunptr_openssl3569_SSL_CTX_get_max_early_data")
 external fun SSL_CTX_get_max_early_data(ctx: CValuesRef<SSL_CTX>?): uint32_t
 
-@CCall("knifunptr_openssl3565_SSL_set_max_early_data")
+@CCall("knifunptr_openssl3570_SSL_set_max_early_data")
 external fun SSL_set_max_early_data(s: CValuesRef<SSL>?, max_early_data: uint32_t): Int
 
-@CCall("knifunptr_openssl3566_SSL_get_max_early_data")
+@CCall("knifunptr_openssl3571_SSL_get_max_early_data")
 external fun SSL_get_max_early_data(s: CValuesRef<SSL>?): uint32_t
 
-@CCall("knifunptr_openssl3567_SSL_CTX_set_recv_max_early_data")
+@CCall("knifunptr_openssl3572_SSL_CTX_set_recv_max_early_data")
 external fun SSL_CTX_set_recv_max_early_data(ctx: CValuesRef<SSL_CTX>?, recv_max_early_data: uint32_t): Int
 
-@CCall("knifunptr_openssl3568_SSL_CTX_get_recv_max_early_data")
+@CCall("knifunptr_openssl3573_SSL_CTX_get_recv_max_early_data")
 external fun SSL_CTX_get_recv_max_early_data(ctx: CValuesRef<SSL_CTX>?): uint32_t
 
-@CCall("knifunptr_openssl3569_SSL_set_recv_max_early_data")
+@CCall("knifunptr_openssl3574_SSL_set_recv_max_early_data")
 external fun SSL_set_recv_max_early_data(s: CValuesRef<SSL>?, recv_max_early_data: uint32_t): Int
 
-@CCall("knifunptr_openssl3570_SSL_get_recv_max_early_data")
+@CCall("knifunptr_openssl3575_SSL_get_recv_max_early_data")
 external fun SSL_get_recv_max_early_data(s: CValuesRef<SSL>?): uint32_t
 
-@CCall("knifunptr_openssl3571_SSL_CTX_set_tlsext_max_fragment_length")
+@CCall("knifunptr_openssl3576_SSL_CTX_set_tlsext_max_fragment_length")
 external fun SSL_CTX_set_tlsext_max_fragment_length(ctx: CValuesRef<SSL_CTX>?, mode: uint8_t): Int
 
-@CCall("knifunptr_openssl3572_SSL_set_tlsext_max_fragment_length")
+@CCall("knifunptr_openssl3577_SSL_set_tlsext_max_fragment_length")
 external fun SSL_set_tlsext_max_fragment_length(ssl: CValuesRef<SSL>?, mode: uint8_t): Int
 
-@CCall("knifunptr_openssl3573_SSL_get_servername")
+@CCall("knifunptr_openssl3578_SSL_get_servername")
 external fun SSL_get_servername(s: CValuesRef<SSL>?, type: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3574_SSL_get_servername_type")
+@CCall("knifunptr_openssl3579_SSL_get_servername_type")
 external fun SSL_get_servername_type(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3575_SSL_export_keying_material")
+@CCall("knifunptr_openssl3580_SSL_export_keying_material")
 external fun SSL_export_keying_material(
     s: CValuesRef<SSL>?,
     out: CValuesRef<UByteVar>?,
-    olen: size_t, @CCall.CString label: String?,
+    olen: size_t,
+    @CCall.CString label: String?,
     llen: size_t,
     context: CValuesRef<UByteVar>?,
     contextlen: size_t,
     use_context: Int
 ): Int
 
-@CCall("knifunptr_openssl3576_SSL_export_keying_material_early")
+@CCall("knifunptr_openssl3581_SSL_export_keying_material_early")
 external fun SSL_export_keying_material_early(
     s: CValuesRef<SSL>?,
     out: CValuesRef<UByteVar>?,
-    olen: size_t, @CCall.CString label: String?,
+    olen: size_t,
+    @CCall.CString label: String?,
     llen: size_t,
     context: CValuesRef<UByteVar>?,
     contextlen: size_t
 ): Int
 
-@CCall("knifunptr_openssl3577_SSL_get_peer_signature_type_nid")
+@CCall("knifunptr_openssl3582_SSL_get_peer_signature_type_nid")
 external fun SSL_get_peer_signature_type_nid(s: CValuesRef<SSL>?, pnid: CValuesRef<IntVar>?): Int
 
-@CCall("knifunptr_openssl3578_SSL_get_signature_type_nid")
+@CCall("knifunptr_openssl3583_SSL_get_signature_type_nid")
 external fun SSL_get_signature_type_nid(s: CValuesRef<SSL>?, pnid: CValuesRef<IntVar>?): Int
 
-@CCall("knifunptr_openssl3579_SSL_get_sigalgs")
+@CCall("knifunptr_openssl3584_SSL_get_sigalgs")
 external fun SSL_get_sigalgs(
     s: CValuesRef<SSL>?,
     idx: Int,
@@ -16959,7 +17078,7 @@ external fun SSL_get_sigalgs(
     rhash: CValuesRef<UByteVar>?
 ): Int
 
-@CCall("knifunptr_openssl3580_SSL_get_shared_sigalgs")
+@CCall("knifunptr_openssl3585_SSL_get_shared_sigalgs")
 external fun SSL_get_shared_sigalgs(
     s: CValuesRef<SSL>?,
     idx: Int,
@@ -16970,7 +17089,7 @@ external fun SSL_get_shared_sigalgs(
     rhash: CValuesRef<UByteVar>?
 ): Int
 
-@CCall("knifunptr_openssl3581_SSL_check_chain")
+@CCall("knifunptr_openssl3586_SSL_check_chain")
 external fun SSL_check_chain(
     s: CValuesRef<SSL>?,
     x: CValuesRef<X509>?,
@@ -16978,206 +17097,206 @@ external fun SSL_check_chain(
     chain: CValuesRef<stack_st_X509>?
 ): Int
 
-@CCall("knifunptr_openssl3582_SSL_CTX_set_tlsext_use_srtp")
+@CCall("knifunptr_openssl3587_SSL_CTX_set_tlsext_use_srtp")
 external fun SSL_CTX_set_tlsext_use_srtp(ctx: CValuesRef<SSL_CTX>?, @CCall.CString profiles: String?): Int
 
-@CCall("knifunptr_openssl3583_SSL_set_tlsext_use_srtp")
+@CCall("knifunptr_openssl3588_SSL_set_tlsext_use_srtp")
 external fun SSL_set_tlsext_use_srtp(ssl: CValuesRef<SSL>?, @CCall.CString profiles: String?): Int
 
-@CCall("knifunptr_openssl3584_SSL_get_srtp_profiles")
+@CCall("knifunptr_openssl3589_SSL_get_srtp_profiles")
 external fun SSL_get_srtp_profiles(ssl: CValuesRef<SSL>?): CPointer<stack_st_SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3585_SSL_get_selected_srtp_profile")
+@CCall("knifunptr_openssl3590_SSL_get_selected_srtp_profile")
 external fun SSL_get_selected_srtp_profile(s: CValuesRef<SSL>?): CPointer<SRTP_PROTECTION_PROFILE>?
 
-@CCall("knifunptr_openssl3586_sk_SSL_CIPHER_num")
+@CCall("knifunptr_openssl3591_sk_SSL_CIPHER_num")
 external fun sk_SSL_CIPHER_num(sk: CValuesRef<stack_st_SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3587_sk_SSL_CIPHER_value")
+@CCall("knifunptr_openssl3592_sk_SSL_CIPHER_value")
 external fun sk_SSL_CIPHER_value(sk: CValuesRef<stack_st_SSL_CIPHER>?, idx: Int): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3588_sk_SSL_CIPHER_new")
+@CCall("knifunptr_openssl3593_sk_SSL_CIPHER_new")
 external fun sk_SSL_CIPHER_new(compare: sk_SSL_CIPHER_compfunc?): CPointer<stack_st_SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3589_sk_SSL_CIPHER_new_null")
+@CCall("knifunptr_openssl3594_sk_SSL_CIPHER_new_null")
 external fun sk_SSL_CIPHER_new_null(): CPointer<stack_st_SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3590_sk_SSL_CIPHER_new_reserve")
+@CCall("knifunptr_openssl3595_sk_SSL_CIPHER_new_reserve")
 external fun sk_SSL_CIPHER_new_reserve(compare: sk_SSL_CIPHER_compfunc?, n: Int): CPointer<stack_st_SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3591_sk_SSL_CIPHER_reserve")
+@CCall("knifunptr_openssl3596_sk_SSL_CIPHER_reserve")
 external fun sk_SSL_CIPHER_reserve(sk: CValuesRef<stack_st_SSL_CIPHER>?, n: Int): Int
 
-@CCall("knifunptr_openssl3592_sk_SSL_CIPHER_free")
+@CCall("knifunptr_openssl3597_sk_SSL_CIPHER_free")
 external fun sk_SSL_CIPHER_free(sk: CValuesRef<stack_st_SSL_CIPHER>?): Unit
 
-@CCall("knifunptr_openssl3593_sk_SSL_CIPHER_zero")
+@CCall("knifunptr_openssl3598_sk_SSL_CIPHER_zero")
 external fun sk_SSL_CIPHER_zero(sk: CValuesRef<stack_st_SSL_CIPHER>?): Unit
 
-@CCall("knifunptr_openssl3594_sk_SSL_CIPHER_delete")
+@CCall("knifunptr_openssl3599_sk_SSL_CIPHER_delete")
 external fun sk_SSL_CIPHER_delete(sk: CValuesRef<stack_st_SSL_CIPHER>?, i: Int): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3595_sk_SSL_CIPHER_delete_ptr")
+@CCall("knifunptr_openssl3600_sk_SSL_CIPHER_delete_ptr")
 external fun sk_SSL_CIPHER_delete_ptr(
     sk: CValuesRef<stack_st_SSL_CIPHER>?,
     ptr: CValuesRef<SSL_CIPHER>?
 ): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3596_sk_SSL_CIPHER_push")
+@CCall("knifunptr_openssl3601_sk_SSL_CIPHER_push")
 external fun sk_SSL_CIPHER_push(sk: CValuesRef<stack_st_SSL_CIPHER>?, ptr: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3597_sk_SSL_CIPHER_unshift")
+@CCall("knifunptr_openssl3602_sk_SSL_CIPHER_unshift")
 external fun sk_SSL_CIPHER_unshift(sk: CValuesRef<stack_st_SSL_CIPHER>?, ptr: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3598_sk_SSL_CIPHER_pop")
+@CCall("knifunptr_openssl3603_sk_SSL_CIPHER_pop")
 external fun sk_SSL_CIPHER_pop(sk: CValuesRef<stack_st_SSL_CIPHER>?): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3599_sk_SSL_CIPHER_shift")
+@CCall("knifunptr_openssl3604_sk_SSL_CIPHER_shift")
 external fun sk_SSL_CIPHER_shift(sk: CValuesRef<stack_st_SSL_CIPHER>?): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3600_sk_SSL_CIPHER_pop_free")
+@CCall("knifunptr_openssl3605_sk_SSL_CIPHER_pop_free")
 external fun sk_SSL_CIPHER_pop_free(sk: CValuesRef<stack_st_SSL_CIPHER>?, freefunc: sk_SSL_CIPHER_freefunc?): Unit
 
-@CCall("knifunptr_openssl3601_sk_SSL_CIPHER_insert")
+@CCall("knifunptr_openssl3606_sk_SSL_CIPHER_insert")
 external fun sk_SSL_CIPHER_insert(sk: CValuesRef<stack_st_SSL_CIPHER>?, ptr: CValuesRef<SSL_CIPHER>?, idx: Int): Int
 
-@CCall("knifunptr_openssl3602_sk_SSL_CIPHER_set")
+@CCall("knifunptr_openssl3607_sk_SSL_CIPHER_set")
 external fun sk_SSL_CIPHER_set(
     sk: CValuesRef<stack_st_SSL_CIPHER>?,
     idx: Int,
     ptr: CValuesRef<SSL_CIPHER>?
 ): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3603_sk_SSL_CIPHER_find")
+@CCall("knifunptr_openssl3608_sk_SSL_CIPHER_find")
 external fun sk_SSL_CIPHER_find(sk: CValuesRef<stack_st_SSL_CIPHER>?, ptr: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3604_sk_SSL_CIPHER_find_ex")
+@CCall("knifunptr_openssl3609_sk_SSL_CIPHER_find_ex")
 external fun sk_SSL_CIPHER_find_ex(sk: CValuesRef<stack_st_SSL_CIPHER>?, ptr: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3605_sk_SSL_CIPHER_sort")
+@CCall("knifunptr_openssl3610_sk_SSL_CIPHER_sort")
 external fun sk_SSL_CIPHER_sort(sk: CValuesRef<stack_st_SSL_CIPHER>?): Unit
 
-@CCall("knifunptr_openssl3606_sk_SSL_CIPHER_is_sorted")
+@CCall("knifunptr_openssl3611_sk_SSL_CIPHER_is_sorted")
 external fun sk_SSL_CIPHER_is_sorted(sk: CValuesRef<stack_st_SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3607_sk_SSL_CIPHER_dup")
+@CCall("knifunptr_openssl3612_sk_SSL_CIPHER_dup")
 external fun sk_SSL_CIPHER_dup(sk: CValuesRef<stack_st_SSL_CIPHER>?): CPointer<stack_st_SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3608_sk_SSL_CIPHER_deep_copy")
+@CCall("knifunptr_openssl3613_sk_SSL_CIPHER_deep_copy")
 external fun sk_SSL_CIPHER_deep_copy(
     sk: CValuesRef<stack_st_SSL_CIPHER>?,
     copyfunc: sk_SSL_CIPHER_copyfunc?,
     freefunc: sk_SSL_CIPHER_freefunc?
 ): CPointer<stack_st_SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3609_sk_SSL_CIPHER_set_cmp_func")
+@CCall("knifunptr_openssl3614_sk_SSL_CIPHER_set_cmp_func")
 external fun sk_SSL_CIPHER_set_cmp_func(
     sk: CValuesRef<stack_st_SSL_CIPHER>?,
     compare: sk_SSL_CIPHER_compfunc?
 ): sk_SSL_CIPHER_compfunc?
 
-@CCall("knifunptr_openssl3610_sk_SSL_COMP_num")
+@CCall("knifunptr_openssl3615_sk_SSL_COMP_num")
 external fun sk_SSL_COMP_num(sk: CValuesRef<stack_st_SSL_COMP>?): Int
 
-@CCall("knifunptr_openssl3611_sk_SSL_COMP_value")
+@CCall("knifunptr_openssl3616_sk_SSL_COMP_value")
 external fun sk_SSL_COMP_value(sk: CValuesRef<stack_st_SSL_COMP>?, idx: Int): CPointer<SSL_COMP>?
 
-@CCall("knifunptr_openssl3612_sk_SSL_COMP_new")
+@CCall("knifunptr_openssl3617_sk_SSL_COMP_new")
 external fun sk_SSL_COMP_new(compare: sk_SSL_COMP_compfunc?): CPointer<stack_st_SSL_COMP>?
 
-@CCall("knifunptr_openssl3613_sk_SSL_COMP_new_null")
+@CCall("knifunptr_openssl3618_sk_SSL_COMP_new_null")
 external fun sk_SSL_COMP_new_null(): CPointer<stack_st_SSL_COMP>?
 
-@CCall("knifunptr_openssl3614_sk_SSL_COMP_new_reserve")
+@CCall("knifunptr_openssl3619_sk_SSL_COMP_new_reserve")
 external fun sk_SSL_COMP_new_reserve(compare: sk_SSL_COMP_compfunc?, n: Int): CPointer<stack_st_SSL_COMP>?
 
-@CCall("knifunptr_openssl3615_sk_SSL_COMP_reserve")
+@CCall("knifunptr_openssl3620_sk_SSL_COMP_reserve")
 external fun sk_SSL_COMP_reserve(sk: CValuesRef<stack_st_SSL_COMP>?, n: Int): Int
 
-@CCall("knifunptr_openssl3616_sk_SSL_COMP_free")
+@CCall("knifunptr_openssl3621_sk_SSL_COMP_free")
 external fun sk_SSL_COMP_free(sk: CValuesRef<stack_st_SSL_COMP>?): Unit
 
-@CCall("knifunptr_openssl3617_sk_SSL_COMP_zero")
+@CCall("knifunptr_openssl3622_sk_SSL_COMP_zero")
 external fun sk_SSL_COMP_zero(sk: CValuesRef<stack_st_SSL_COMP>?): Unit
 
-@CCall("knifunptr_openssl3618_sk_SSL_COMP_delete")
+@CCall("knifunptr_openssl3623_sk_SSL_COMP_delete")
 external fun sk_SSL_COMP_delete(sk: CValuesRef<stack_st_SSL_COMP>?, i: Int): CPointer<SSL_COMP>?
 
-@CCall("knifunptr_openssl3619_sk_SSL_COMP_delete_ptr")
+@CCall("knifunptr_openssl3624_sk_SSL_COMP_delete_ptr")
 external fun sk_SSL_COMP_delete_ptr(sk: CValuesRef<stack_st_SSL_COMP>?, ptr: CValuesRef<SSL_COMP>?): CPointer<SSL_COMP>?
 
-@CCall("knifunptr_openssl3620_sk_SSL_COMP_push")
+@CCall("knifunptr_openssl3625_sk_SSL_COMP_push")
 external fun sk_SSL_COMP_push(sk: CValuesRef<stack_st_SSL_COMP>?, ptr: CValuesRef<SSL_COMP>?): Int
 
-@CCall("knifunptr_openssl3621_sk_SSL_COMP_unshift")
+@CCall("knifunptr_openssl3626_sk_SSL_COMP_unshift")
 external fun sk_SSL_COMP_unshift(sk: CValuesRef<stack_st_SSL_COMP>?, ptr: CValuesRef<SSL_COMP>?): Int
 
-@CCall("knifunptr_openssl3622_sk_SSL_COMP_pop")
+@CCall("knifunptr_openssl3627_sk_SSL_COMP_pop")
 external fun sk_SSL_COMP_pop(sk: CValuesRef<stack_st_SSL_COMP>?): CPointer<SSL_COMP>?
 
-@CCall("knifunptr_openssl3623_sk_SSL_COMP_shift")
+@CCall("knifunptr_openssl3628_sk_SSL_COMP_shift")
 external fun sk_SSL_COMP_shift(sk: CValuesRef<stack_st_SSL_COMP>?): CPointer<SSL_COMP>?
 
-@CCall("knifunptr_openssl3624_sk_SSL_COMP_pop_free")
+@CCall("knifunptr_openssl3629_sk_SSL_COMP_pop_free")
 external fun sk_SSL_COMP_pop_free(sk: CValuesRef<stack_st_SSL_COMP>?, freefunc: sk_SSL_COMP_freefunc?): Unit
 
-@CCall("knifunptr_openssl3625_sk_SSL_COMP_insert")
+@CCall("knifunptr_openssl3630_sk_SSL_COMP_insert")
 external fun sk_SSL_COMP_insert(sk: CValuesRef<stack_st_SSL_COMP>?, ptr: CValuesRef<SSL_COMP>?, idx: Int): Int
 
-@CCall("knifunptr_openssl3626_sk_SSL_COMP_set")
+@CCall("knifunptr_openssl3631_sk_SSL_COMP_set")
 external fun sk_SSL_COMP_set(
     sk: CValuesRef<stack_st_SSL_COMP>?,
     idx: Int,
     ptr: CValuesRef<SSL_COMP>?
 ): CPointer<SSL_COMP>?
 
-@CCall("knifunptr_openssl3627_sk_SSL_COMP_find")
+@CCall("knifunptr_openssl3632_sk_SSL_COMP_find")
 external fun sk_SSL_COMP_find(sk: CValuesRef<stack_st_SSL_COMP>?, ptr: CValuesRef<SSL_COMP>?): Int
 
-@CCall("knifunptr_openssl3628_sk_SSL_COMP_find_ex")
+@CCall("knifunptr_openssl3633_sk_SSL_COMP_find_ex")
 external fun sk_SSL_COMP_find_ex(sk: CValuesRef<stack_st_SSL_COMP>?, ptr: CValuesRef<SSL_COMP>?): Int
 
-@CCall("knifunptr_openssl3629_sk_SSL_COMP_sort")
+@CCall("knifunptr_openssl3634_sk_SSL_COMP_sort")
 external fun sk_SSL_COMP_sort(sk: CValuesRef<stack_st_SSL_COMP>?): Unit
 
-@CCall("knifunptr_openssl3630_sk_SSL_COMP_is_sorted")
+@CCall("knifunptr_openssl3635_sk_SSL_COMP_is_sorted")
 external fun sk_SSL_COMP_is_sorted(sk: CValuesRef<stack_st_SSL_COMP>?): Int
 
-@CCall("knifunptr_openssl3631_sk_SSL_COMP_dup")
+@CCall("knifunptr_openssl3636_sk_SSL_COMP_dup")
 external fun sk_SSL_COMP_dup(sk: CValuesRef<stack_st_SSL_COMP>?): CPointer<stack_st_SSL_COMP>?
 
-@CCall("knifunptr_openssl3632_sk_SSL_COMP_deep_copy")
+@CCall("knifunptr_openssl3637_sk_SSL_COMP_deep_copy")
 external fun sk_SSL_COMP_deep_copy(
     sk: CValuesRef<stack_st_SSL_COMP>?,
     copyfunc: sk_SSL_COMP_copyfunc?,
     freefunc: sk_SSL_COMP_freefunc?
 ): CPointer<stack_st_SSL_COMP>?
 
-@CCall("knifunptr_openssl3633_sk_SSL_COMP_set_cmp_func")
+@CCall("knifunptr_openssl3638_sk_SSL_COMP_set_cmp_func")
 external fun sk_SSL_COMP_set_cmp_func(
     sk: CValuesRef<stack_st_SSL_COMP>?,
     compare: sk_SSL_COMP_compfunc?
 ): sk_SSL_COMP_compfunc?
 
-@CCall("knifunptr_openssl3634_SSL_set_debug")
+@CCall("knifunptr_openssl3639_SSL_set_debug")
 external fun SSL_set_debug(s: CValuesRef<SSL>?, debug: Int): Unit
 
-@CCall("knifunptr_openssl3635_SSL_in_init")
+@CCall("knifunptr_openssl3640_SSL_in_init")
 external fun SSL_in_init(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3636_SSL_in_before")
+@CCall("knifunptr_openssl3641_SSL_in_before")
 external fun SSL_in_before(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3637_SSL_is_init_finished")
+@CCall("knifunptr_openssl3642_SSL_is_init_finished")
 external fun SSL_is_init_finished(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3638_SSL_get_finished")
+@CCall("knifunptr_openssl3643_SSL_get_finished")
 external fun SSL_get_finished(s: CValuesRef<SSL>?, buf: CValuesRef<*>?, count: size_t): size_t
 
-@CCall("knifunptr_openssl3639_SSL_get_peer_finished")
+@CCall("knifunptr_openssl3644_SSL_get_peer_finished")
 external fun SSL_get_peer_finished(s: CValuesRef<SSL>?, buf: CValuesRef<*>?, count: size_t): size_t
 
-@CCall("knifunptr_openssl3640_PEM_read_bio_SSL_SESSION")
+@CCall("knifunptr_openssl3645_PEM_read_bio_SSL_SESSION")
 external fun PEM_read_bio_SSL_SESSION(
     bp: CValuesRef<BIO>?,
     x: CValuesRef<CPointerVar<SSL_SESSION>>?,
@@ -17185,7 +17304,7 @@ external fun PEM_read_bio_SSL_SESSION(
     u: CValuesRef<*>?
 ): CPointer<SSL_SESSION>?
 
-@CCall("knifunptr_openssl3641_PEM_read_SSL_SESSION")
+@CCall("knifunptr_openssl3646_PEM_read_SSL_SESSION")
 external fun PEM_read_SSL_SESSION(
     fp: CValuesRef<FILE>?,
     x: CValuesRef<CPointerVar<SSL_SESSION>>?,
@@ -17193,206 +17312,206 @@ external fun PEM_read_SSL_SESSION(
     u: CValuesRef<*>?
 ): CPointer<SSL_SESSION>?
 
-@CCall("knifunptr_openssl3642_PEM_write_bio_SSL_SESSION")
+@CCall("knifunptr_openssl3647_PEM_write_bio_SSL_SESSION")
 external fun PEM_write_bio_SSL_SESSION(bp: CValuesRef<BIO>?, x: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3643_PEM_write_SSL_SESSION")
+@CCall("knifunptr_openssl3648_PEM_write_SSL_SESSION")
 external fun PEM_write_SSL_SESSION(fp: CValuesRef<FILE>?, x: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3644_BIO_f_ssl")
+@CCall("knifunptr_openssl3649_BIO_f_ssl")
 external fun BIO_f_ssl(): CPointer<BIO_METHOD>?
 
-@CCall("knifunptr_openssl3645_BIO_new_ssl")
+@CCall("knifunptr_openssl3650_BIO_new_ssl")
 external fun BIO_new_ssl(ctx: CValuesRef<SSL_CTX>?, client: Int): CPointer<BIO>?
 
-@CCall("knifunptr_openssl3646_BIO_new_ssl_connect")
+@CCall("knifunptr_openssl3651_BIO_new_ssl_connect")
 external fun BIO_new_ssl_connect(ctx: CValuesRef<SSL_CTX>?): CPointer<BIO>?
 
-@CCall("knifunptr_openssl3647_BIO_new_buffer_ssl_connect")
+@CCall("knifunptr_openssl3652_BIO_new_buffer_ssl_connect")
 external fun BIO_new_buffer_ssl_connect(ctx: CValuesRef<SSL_CTX>?): CPointer<BIO>?
 
-@CCall("knifunptr_openssl3648_BIO_ssl_copy_session_id")
+@CCall("knifunptr_openssl3653_BIO_ssl_copy_session_id")
 external fun BIO_ssl_copy_session_id(to: CValuesRef<BIO>?, from: CValuesRef<BIO>?): Int
 
-@CCall("knifunptr_openssl3649_BIO_ssl_shutdown")
+@CCall("knifunptr_openssl3654_BIO_ssl_shutdown")
 external fun BIO_ssl_shutdown(ssl_bio: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl3650_SSL_CTX_set_cipher_list")
+@CCall("knifunptr_openssl3655_SSL_CTX_set_cipher_list")
 external fun SSL_CTX_set_cipher_list(arg0: CValuesRef<SSL_CTX>?, @CCall.CString str: String?): Int
 
-@CCall("knifunptr_openssl3651_SSL_CTX_new")
+@CCall("knifunptr_openssl3656_SSL_CTX_new")
 external fun SSL_CTX_new(meth: CValuesRef<SSL_METHOD>?): CPointer<SSL_CTX>?
 
-@CCall("knifunptr_openssl3652_SSL_CTX_up_ref")
+@CCall("knifunptr_openssl3657_SSL_CTX_up_ref")
 external fun SSL_CTX_up_ref(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3653_SSL_CTX_free")
+@CCall("knifunptr_openssl3658_SSL_CTX_free")
 external fun SSL_CTX_free(arg0: CValuesRef<SSL_CTX>?): Unit
 
-@CCall("knifunptr_openssl3654_SSL_CTX_set_timeout")
+@CCall("knifunptr_openssl3659_SSL_CTX_set_timeout")
 external fun SSL_CTX_set_timeout(ctx: CValuesRef<SSL_CTX>?, t: Int): Int
 
-@CCall("knifunptr_openssl3655_SSL_CTX_get_timeout")
+@CCall("knifunptr_openssl3660_SSL_CTX_get_timeout")
 external fun SSL_CTX_get_timeout(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3656_SSL_CTX_get_cert_store")
+@CCall("knifunptr_openssl3661_SSL_CTX_get_cert_store")
 external fun SSL_CTX_get_cert_store(arg0: CValuesRef<SSL_CTX>?): CPointer<X509_STORE>?
 
-@CCall("knifunptr_openssl3657_SSL_CTX_set_cert_store")
+@CCall("knifunptr_openssl3662_SSL_CTX_set_cert_store")
 external fun SSL_CTX_set_cert_store(arg0: CValuesRef<SSL_CTX>?, arg1: CValuesRef<X509_STORE>?): Unit
 
-@CCall("knifunptr_openssl3658_SSL_CTX_set1_cert_store")
+@CCall("knifunptr_openssl3663_SSL_CTX_set1_cert_store")
 external fun SSL_CTX_set1_cert_store(arg0: CValuesRef<SSL_CTX>?, arg1: CValuesRef<X509_STORE>?): Unit
 
-@CCall("knifunptr_openssl3659_SSL_want")
+@CCall("knifunptr_openssl3664_SSL_want")
 external fun SSL_want(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3660_SSL_clear")
+@CCall("knifunptr_openssl3665_SSL_clear")
 external fun SSL_clear(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3661_SSL_CTX_flush_sessions")
+@CCall("knifunptr_openssl3666_SSL_CTX_flush_sessions")
 external fun SSL_CTX_flush_sessions(ctx: CValuesRef<SSL_CTX>?, tm: Int): Unit
 
-@CCall("knifunptr_openssl3662_SSL_get_current_cipher")
+@CCall("knifunptr_openssl3667_SSL_get_current_cipher")
 external fun SSL_get_current_cipher(s: CValuesRef<SSL>?): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3663_SSL_get_pending_cipher")
+@CCall("knifunptr_openssl3668_SSL_get_pending_cipher")
 external fun SSL_get_pending_cipher(s: CValuesRef<SSL>?): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3664_SSL_CIPHER_get_bits")
+@CCall("knifunptr_openssl3669_SSL_CIPHER_get_bits")
 external fun SSL_CIPHER_get_bits(c: CValuesRef<SSL_CIPHER>?, alg_bits: CValuesRef<IntVar>?): Int
 
-@CCall("knifunptr_openssl3665_SSL_CIPHER_get_version")
+@CCall("knifunptr_openssl3670_SSL_CIPHER_get_version")
 external fun SSL_CIPHER_get_version(c: CValuesRef<SSL_CIPHER>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3666_SSL_CIPHER_get_name")
+@CCall("knifunptr_openssl3671_SSL_CIPHER_get_name")
 external fun SSL_CIPHER_get_name(c: CValuesRef<SSL_CIPHER>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3667_SSL_CIPHER_standard_name")
+@CCall("knifunptr_openssl3672_SSL_CIPHER_standard_name")
 external fun SSL_CIPHER_standard_name(c: CValuesRef<SSL_CIPHER>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3668_OPENSSL_cipher_name")
+@CCall("knifunptr_openssl3673_OPENSSL_cipher_name")
 external fun OPENSSL_cipher_name(@CCall.CString rfc_name: String?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3669_SSL_CIPHER_get_id")
+@CCall("knifunptr_openssl3674_SSL_CIPHER_get_id")
 external fun SSL_CIPHER_get_id(c: CValuesRef<SSL_CIPHER>?): uint32_t
 
-@CCall("knifunptr_openssl3670_SSL_CIPHER_get_protocol_id")
+@CCall("knifunptr_openssl3675_SSL_CIPHER_get_protocol_id")
 external fun SSL_CIPHER_get_protocol_id(c: CValuesRef<SSL_CIPHER>?): uint16_t
 
-@CCall("knifunptr_openssl3671_SSL_CIPHER_get_kx_nid")
+@CCall("knifunptr_openssl3676_SSL_CIPHER_get_kx_nid")
 external fun SSL_CIPHER_get_kx_nid(c: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3672_SSL_CIPHER_get_auth_nid")
+@CCall("knifunptr_openssl3677_SSL_CIPHER_get_auth_nid")
 external fun SSL_CIPHER_get_auth_nid(c: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3673_SSL_CIPHER_get_handshake_digest")
+@CCall("knifunptr_openssl3678_SSL_CIPHER_get_handshake_digest")
 external fun SSL_CIPHER_get_handshake_digest(c: CValuesRef<SSL_CIPHER>?): CPointer<EVP_MD>?
 
-@CCall("knifunptr_openssl3674_SSL_CIPHER_is_aead")
+@CCall("knifunptr_openssl3679_SSL_CIPHER_is_aead")
 external fun SSL_CIPHER_is_aead(c: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3675_SSL_get_fd")
+@CCall("knifunptr_openssl3680_SSL_get_fd")
 external fun SSL_get_fd(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3676_SSL_get_rfd")
+@CCall("knifunptr_openssl3681_SSL_get_rfd")
 external fun SSL_get_rfd(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3677_SSL_get_wfd")
+@CCall("knifunptr_openssl3682_SSL_get_wfd")
 external fun SSL_get_wfd(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3678_SSL_get_cipher_list")
+@CCall("knifunptr_openssl3683_SSL_get_cipher_list")
 external fun SSL_get_cipher_list(s: CValuesRef<SSL>?, n: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3679_SSL_get_shared_ciphers")
+@CCall("knifunptr_openssl3684_SSL_get_shared_ciphers")
 external fun SSL_get_shared_ciphers(s: CValuesRef<SSL>?, buf: CValuesRef<ByteVar>?, size: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3680_SSL_get_read_ahead")
+@CCall("knifunptr_openssl3685_SSL_get_read_ahead")
 external fun SSL_get_read_ahead(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3681_SSL_pending")
+@CCall("knifunptr_openssl3686_SSL_pending")
 external fun SSL_pending(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3682_SSL_has_pending")
+@CCall("knifunptr_openssl3687_SSL_has_pending")
 external fun SSL_has_pending(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3683_SSL_set_fd")
+@CCall("knifunptr_openssl3688_SSL_set_fd")
 external fun SSL_set_fd(s: CValuesRef<SSL>?, fd: Int): Int
 
-@CCall("knifunptr_openssl3684_SSL_set_rfd")
+@CCall("knifunptr_openssl3689_SSL_set_rfd")
 external fun SSL_set_rfd(s: CValuesRef<SSL>?, fd: Int): Int
 
-@CCall("knifunptr_openssl3685_SSL_set_wfd")
+@CCall("knifunptr_openssl3690_SSL_set_wfd")
 external fun SSL_set_wfd(s: CValuesRef<SSL>?, fd: Int): Int
 
-@CCall("knifunptr_openssl3686_SSL_set0_rbio")
+@CCall("knifunptr_openssl3691_SSL_set0_rbio")
 external fun SSL_set0_rbio(s: CValuesRef<SSL>?, rbio: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl3687_SSL_set0_wbio")
+@CCall("knifunptr_openssl3692_SSL_set0_wbio")
 external fun SSL_set0_wbio(s: CValuesRef<SSL>?, wbio: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl3688_SSL_set_bio")
+@CCall("knifunptr_openssl3693_SSL_set_bio")
 external fun SSL_set_bio(s: CValuesRef<SSL>?, rbio: CValuesRef<BIO>?, wbio: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl3689_SSL_get_rbio")
+@CCall("knifunptr_openssl3694_SSL_get_rbio")
 external fun SSL_get_rbio(s: CValuesRef<SSL>?): CPointer<BIO>?
 
-@CCall("knifunptr_openssl3690_SSL_get_wbio")
+@CCall("knifunptr_openssl3695_SSL_get_wbio")
 external fun SSL_get_wbio(s: CValuesRef<SSL>?): CPointer<BIO>?
 
-@CCall("knifunptr_openssl3691_SSL_set_cipher_list")
+@CCall("knifunptr_openssl3696_SSL_set_cipher_list")
 external fun SSL_set_cipher_list(s: CValuesRef<SSL>?, @CCall.CString str: String?): Int
 
-@CCall("knifunptr_openssl3692_SSL_CTX_set_ciphersuites")
+@CCall("knifunptr_openssl3697_SSL_CTX_set_ciphersuites")
 external fun SSL_CTX_set_ciphersuites(ctx: CValuesRef<SSL_CTX>?, @CCall.CString str: String?): Int
 
-@CCall("knifunptr_openssl3693_SSL_set_ciphersuites")
+@CCall("knifunptr_openssl3698_SSL_set_ciphersuites")
 external fun SSL_set_ciphersuites(s: CValuesRef<SSL>?, @CCall.CString str: String?): Int
 
-@CCall("knifunptr_openssl3694_SSL_set_read_ahead")
+@CCall("knifunptr_openssl3699_SSL_set_read_ahead")
 external fun SSL_set_read_ahead(s: CValuesRef<SSL>?, yes: Int): Unit
 
-@CCall("knifunptr_openssl3695_SSL_get_verify_mode")
+@CCall("knifunptr_openssl3700_SSL_get_verify_mode")
 external fun SSL_get_verify_mode(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3696_SSL_get_verify_depth")
+@CCall("knifunptr_openssl3701_SSL_get_verify_depth")
 external fun SSL_get_verify_depth(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3697_SSL_get_verify_callback")
+@CCall("knifunptr_openssl3702_SSL_get_verify_callback")
 external fun SSL_get_verify_callback(s: CValuesRef<SSL>?): SSL_verify_cb?
 
-@CCall("knifunptr_openssl3698_SSL_set_verify")
+@CCall("knifunptr_openssl3703_SSL_set_verify")
 external fun SSL_set_verify(s: CValuesRef<SSL>?, mode: Int, callback: SSL_verify_cb?): Unit
 
-@CCall("knifunptr_openssl3699_SSL_set_verify_depth")
+@CCall("knifunptr_openssl3704_SSL_set_verify_depth")
 external fun SSL_set_verify_depth(s: CValuesRef<SSL>?, depth: Int): Unit
 
-@CCall("knifunptr_openssl3700_SSL_set_cert_cb")
+@CCall("knifunptr_openssl3705_SSL_set_cert_cb")
 external fun SSL_set_cert_cb(
     s: CValuesRef<SSL>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, COpaquePointer?) -> Int>>?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl3701_SSL_use_RSAPrivateKey")
+@CCall("knifunptr_openssl3706_SSL_use_RSAPrivateKey")
 external fun SSL_use_RSAPrivateKey(ssl: CValuesRef<SSL>?, rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl3702_SSL_use_RSAPrivateKey_ASN1")
+@CCall("knifunptr_openssl3707_SSL_use_RSAPrivateKey_ASN1")
 external fun SSL_use_RSAPrivateKey_ASN1(ssl: CValuesRef<SSL>?, d: CValuesRef<UByteVar>?, len: Int): Int
 
-@CCall("knifunptr_openssl3703_SSL_use_PrivateKey")
+@CCall("knifunptr_openssl3708_SSL_use_PrivateKey")
 external fun SSL_use_PrivateKey(ssl: CValuesRef<SSL>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3704_SSL_use_PrivateKey_ASN1")
+@CCall("knifunptr_openssl3709_SSL_use_PrivateKey_ASN1")
 external fun SSL_use_PrivateKey_ASN1(pk: Int, ssl: CValuesRef<SSL>?, d: CValuesRef<UByteVar>?, len: Int): Int
 
-@CCall("knifunptr_openssl3705_SSL_use_certificate")
+@CCall("knifunptr_openssl3710_SSL_use_certificate")
 external fun SSL_use_certificate(ssl: CValuesRef<SSL>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3706_SSL_use_certificate_ASN1")
+@CCall("knifunptr_openssl3711_SSL_use_certificate_ASN1")
 external fun SSL_use_certificate_ASN1(ssl: CValuesRef<SSL>?, d: CValuesRef<UByteVar>?, len: Int): Int
 
-@CCall("knifunptr_openssl3707_SSL_use_cert_and_key")
+@CCall("knifunptr_openssl3712_SSL_use_cert_and_key")
 external fun SSL_use_cert_and_key(
     ssl: CValuesRef<SSL>?,
     x509: CValuesRef<X509>?,
@@ -17401,14 +17520,14 @@ external fun SSL_use_cert_and_key(
     override: Int
 ): Int
 
-@CCall("knifunptr_openssl3708_SSL_CTX_use_serverinfo")
+@CCall("knifunptr_openssl3713_SSL_CTX_use_serverinfo")
 external fun SSL_CTX_use_serverinfo(
     ctx: CValuesRef<SSL_CTX>?,
     serverinfo: CValuesRef<UByteVar>?,
     serverinfo_length: size_t
 ): Int
 
-@CCall("knifunptr_openssl3709_SSL_CTX_use_serverinfo_ex")
+@CCall("knifunptr_openssl3714_SSL_CTX_use_serverinfo_ex")
 external fun SSL_CTX_use_serverinfo_ex(
     ctx: CValuesRef<SSL_CTX>?,
     version: UInt,
@@ -17416,244 +17535,244 @@ external fun SSL_CTX_use_serverinfo_ex(
     serverinfo_length: size_t
 ): Int
 
-@CCall("knifunptr_openssl3710_SSL_CTX_use_serverinfo_file")
+@CCall("knifunptr_openssl3715_SSL_CTX_use_serverinfo_file")
 external fun SSL_CTX_use_serverinfo_file(ctx: CValuesRef<SSL_CTX>?, @CCall.CString file: String?): Int
 
-@CCall("knifunptr_openssl3711_SSL_use_RSAPrivateKey_file")
+@CCall("knifunptr_openssl3716_SSL_use_RSAPrivateKey_file")
 external fun SSL_use_RSAPrivateKey_file(ssl: CValuesRef<SSL>?, @CCall.CString file: String?, type: Int): Int
 
-@CCall("knifunptr_openssl3712_SSL_use_PrivateKey_file")
+@CCall("knifunptr_openssl3717_SSL_use_PrivateKey_file")
 external fun SSL_use_PrivateKey_file(ssl: CValuesRef<SSL>?, @CCall.CString file: String?, type: Int): Int
 
-@CCall("knifunptr_openssl3713_SSL_use_certificate_file")
+@CCall("knifunptr_openssl3718_SSL_use_certificate_file")
 external fun SSL_use_certificate_file(ssl: CValuesRef<SSL>?, @CCall.CString file: String?, type: Int): Int
 
-@CCall("knifunptr_openssl3714_SSL_CTX_use_RSAPrivateKey_file")
+@CCall("knifunptr_openssl3719_SSL_CTX_use_RSAPrivateKey_file")
 external fun SSL_CTX_use_RSAPrivateKey_file(ctx: CValuesRef<SSL_CTX>?, @CCall.CString file: String?, type: Int): Int
 
-@CCall("knifunptr_openssl3715_SSL_CTX_use_PrivateKey_file")
+@CCall("knifunptr_openssl3720_SSL_CTX_use_PrivateKey_file")
 external fun SSL_CTX_use_PrivateKey_file(ctx: CValuesRef<SSL_CTX>?, @CCall.CString file: String?, type: Int): Int
 
-@CCall("knifunptr_openssl3716_SSL_CTX_use_certificate_file")
+@CCall("knifunptr_openssl3721_SSL_CTX_use_certificate_file")
 external fun SSL_CTX_use_certificate_file(ctx: CValuesRef<SSL_CTX>?, @CCall.CString file: String?, type: Int): Int
 
-@CCall("knifunptr_openssl3717_SSL_CTX_use_certificate_chain_file")
+@CCall("knifunptr_openssl3722_SSL_CTX_use_certificate_chain_file")
 external fun SSL_CTX_use_certificate_chain_file(ctx: CValuesRef<SSL_CTX>?, @CCall.CString file: String?): Int
 
-@CCall("knifunptr_openssl3718_SSL_use_certificate_chain_file")
+@CCall("knifunptr_openssl3723_SSL_use_certificate_chain_file")
 external fun SSL_use_certificate_chain_file(ssl: CValuesRef<SSL>?, @CCall.CString file: String?): Int
 
-@CCall("knifunptr_openssl3719_SSL_load_client_CA_file")
+@CCall("knifunptr_openssl3724_SSL_load_client_CA_file")
 external fun SSL_load_client_CA_file(@CCall.CString file: String?): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl3720_SSL_add_file_cert_subjects_to_stack")
+@CCall("knifunptr_openssl3725_SSL_add_file_cert_subjects_to_stack")
 external fun SSL_add_file_cert_subjects_to_stack(stackCAs: CValuesRef<stack_st_X509_NAME>?, @CCall.CString file: String?): Int
 
-@CCall("knifunptr_openssl3721_SSL_add_dir_cert_subjects_to_stack")
+@CCall("knifunptr_openssl3726_SSL_add_dir_cert_subjects_to_stack")
 external fun SSL_add_dir_cert_subjects_to_stack(stackCAs: CValuesRef<stack_st_X509_NAME>?, @CCall.CString dir: String?): Int
 
-@CCall("knifunptr_openssl3722_SSL_state_string")
+@CCall("knifunptr_openssl3727_SSL_state_string")
 external fun SSL_state_string(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3723_SSL_rstate_string")
+@CCall("knifunptr_openssl3728_SSL_rstate_string")
 external fun SSL_rstate_string(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3724_SSL_state_string_long")
+@CCall("knifunptr_openssl3729_SSL_state_string_long")
 external fun SSL_state_string_long(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3725_SSL_rstate_string_long")
+@CCall("knifunptr_openssl3730_SSL_rstate_string_long")
 external fun SSL_rstate_string_long(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3726_SSL_SESSION_get_time")
+@CCall("knifunptr_openssl3731_SSL_SESSION_get_time")
 external fun SSL_SESSION_get_time(s: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3727_SSL_SESSION_set_time")
+@CCall("knifunptr_openssl3732_SSL_SESSION_set_time")
 external fun SSL_SESSION_set_time(s: CValuesRef<SSL_SESSION>?, t: Int): Int
 
-@CCall("knifunptr_openssl3728_SSL_SESSION_get_timeout")
+@CCall("knifunptr_openssl3733_SSL_SESSION_get_timeout")
 external fun SSL_SESSION_get_timeout(s: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3729_SSL_SESSION_set_timeout")
+@CCall("knifunptr_openssl3734_SSL_SESSION_set_timeout")
 external fun SSL_SESSION_set_timeout(s: CValuesRef<SSL_SESSION>?, t: Int): Int
 
-@CCall("knifunptr_openssl3730_SSL_SESSION_get_protocol_version")
+@CCall("knifunptr_openssl3735_SSL_SESSION_get_protocol_version")
 external fun SSL_SESSION_get_protocol_version(s: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3731_SSL_SESSION_set_protocol_version")
+@CCall("knifunptr_openssl3736_SSL_SESSION_set_protocol_version")
 external fun SSL_SESSION_set_protocol_version(s: CValuesRef<SSL_SESSION>?, version: Int): Int
 
-@CCall("knifunptr_openssl3732_SSL_SESSION_get0_hostname")
+@CCall("knifunptr_openssl3737_SSL_SESSION_get0_hostname")
 external fun SSL_SESSION_get0_hostname(s: CValuesRef<SSL_SESSION>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3733_SSL_SESSION_set1_hostname")
+@CCall("knifunptr_openssl3738_SSL_SESSION_set1_hostname")
 external fun SSL_SESSION_set1_hostname(s: CValuesRef<SSL_SESSION>?, @CCall.CString hostname: String?): Int
 
-@CCall("knifunptr_openssl3734_SSL_SESSION_get0_alpn_selected")
+@CCall("knifunptr_openssl3739_SSL_SESSION_get0_alpn_selected")
 external fun SSL_SESSION_get0_alpn_selected(
     s: CValuesRef<SSL_SESSION>?,
     alpn: CValuesRef<CPointerVar<UByteVar>>?,
     len: CValuesRef<size_tVar>?
 ): Unit
 
-@CCall("knifunptr_openssl3735_SSL_SESSION_set1_alpn_selected")
+@CCall("knifunptr_openssl3740_SSL_SESSION_set1_alpn_selected")
 external fun SSL_SESSION_set1_alpn_selected(s: CValuesRef<SSL_SESSION>?, alpn: CValuesRef<UByteVar>?, len: size_t): Int
 
-@CCall("knifunptr_openssl3736_SSL_SESSION_get0_cipher")
+@CCall("knifunptr_openssl3741_SSL_SESSION_get0_cipher")
 external fun SSL_SESSION_get0_cipher(s: CValuesRef<SSL_SESSION>?): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3737_SSL_SESSION_set_cipher")
+@CCall("knifunptr_openssl3742_SSL_SESSION_set_cipher")
 external fun SSL_SESSION_set_cipher(s: CValuesRef<SSL_SESSION>?, cipher: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3738_SSL_SESSION_has_ticket")
+@CCall("knifunptr_openssl3743_SSL_SESSION_has_ticket")
 external fun SSL_SESSION_has_ticket(s: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3739_SSL_SESSION_get_ticket_lifetime_hint")
+@CCall("knifunptr_openssl3744_SSL_SESSION_get_ticket_lifetime_hint")
 external fun SSL_SESSION_get_ticket_lifetime_hint(s: CValuesRef<SSL_SESSION>?): UInt
 
-@CCall("knifunptr_openssl3740_SSL_SESSION_get0_ticket")
+@CCall("knifunptr_openssl3745_SSL_SESSION_get0_ticket")
 external fun SSL_SESSION_get0_ticket(
     s: CValuesRef<SSL_SESSION>?,
     tick: CValuesRef<CPointerVar<UByteVar>>?,
     len: CValuesRef<size_tVar>?
 ): Unit
 
-@CCall("knifunptr_openssl3741_SSL_SESSION_get_max_early_data")
+@CCall("knifunptr_openssl3746_SSL_SESSION_get_max_early_data")
 external fun SSL_SESSION_get_max_early_data(s: CValuesRef<SSL_SESSION>?): uint32_t
 
-@CCall("knifunptr_openssl3742_SSL_SESSION_set_max_early_data")
+@CCall("knifunptr_openssl3747_SSL_SESSION_set_max_early_data")
 external fun SSL_SESSION_set_max_early_data(s: CValuesRef<SSL_SESSION>?, max_early_data: uint32_t): Int
 
-@CCall("knifunptr_openssl3743_SSL_copy_session_id")
+@CCall("knifunptr_openssl3748_SSL_copy_session_id")
 external fun SSL_copy_session_id(to: CValuesRef<SSL>?, from: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3744_SSL_SESSION_get0_peer")
+@CCall("knifunptr_openssl3749_SSL_SESSION_get0_peer")
 external fun SSL_SESSION_get0_peer(s: CValuesRef<SSL_SESSION>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl3745_SSL_SESSION_set1_id_context")
+@CCall("knifunptr_openssl3750_SSL_SESSION_set1_id_context")
 external fun SSL_SESSION_set1_id_context(
     s: CValuesRef<SSL_SESSION>?,
     sid_ctx: CValuesRef<UByteVar>?,
     sid_ctx_len: UInt
 ): Int
 
-@CCall("knifunptr_openssl3746_SSL_SESSION_set1_id")
+@CCall("knifunptr_openssl3751_SSL_SESSION_set1_id")
 external fun SSL_SESSION_set1_id(s: CValuesRef<SSL_SESSION>?, sid: CValuesRef<UByteVar>?, sid_len: UInt): Int
 
-@CCall("knifunptr_openssl3747_SSL_SESSION_is_resumable")
+@CCall("knifunptr_openssl3752_SSL_SESSION_is_resumable")
 external fun SSL_SESSION_is_resumable(s: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3748_SSL_SESSION_new")
+@CCall("knifunptr_openssl3753_SSL_SESSION_new")
 external fun SSL_SESSION_new(): CPointer<SSL_SESSION>?
 
-@CCall("knifunptr_openssl3749_SSL_SESSION_dup")
+@CCall("knifunptr_openssl3754_SSL_SESSION_dup")
 external fun SSL_SESSION_dup(src: CValuesRef<SSL_SESSION>?): CPointer<SSL_SESSION>?
 
-@CCall("knifunptr_openssl3750_SSL_SESSION_get_id")
+@CCall("knifunptr_openssl3755_SSL_SESSION_get_id")
 external fun SSL_SESSION_get_id(s: CValuesRef<SSL_SESSION>?, len: CValuesRef<UIntVar>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl3751_SSL_SESSION_get0_id_context")
+@CCall("knifunptr_openssl3756_SSL_SESSION_get0_id_context")
 external fun SSL_SESSION_get0_id_context(s: CValuesRef<SSL_SESSION>?, len: CValuesRef<UIntVar>?): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl3752_SSL_SESSION_get_compress_id")
+@CCall("knifunptr_openssl3757_SSL_SESSION_get_compress_id")
 external fun SSL_SESSION_get_compress_id(s: CValuesRef<SSL_SESSION>?): UInt
 
-@CCall("knifunptr_openssl3753_SSL_SESSION_print_fp")
+@CCall("knifunptr_openssl3758_SSL_SESSION_print_fp")
 external fun SSL_SESSION_print_fp(fp: CValuesRef<FILE>?, ses: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3754_SSL_SESSION_print")
+@CCall("knifunptr_openssl3759_SSL_SESSION_print")
 external fun SSL_SESSION_print(fp: CValuesRef<BIO>?, ses: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3755_SSL_SESSION_print_keylog")
+@CCall("knifunptr_openssl3760_SSL_SESSION_print_keylog")
 external fun SSL_SESSION_print_keylog(bp: CValuesRef<BIO>?, x: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3756_SSL_SESSION_up_ref")
+@CCall("knifunptr_openssl3761_SSL_SESSION_up_ref")
 external fun SSL_SESSION_up_ref(ses: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3757_SSL_SESSION_free")
+@CCall("knifunptr_openssl3762_SSL_SESSION_free")
 external fun SSL_SESSION_free(ses: CValuesRef<SSL_SESSION>?): Unit
 
-@CCall("knifunptr_openssl3758_i2d_SSL_SESSION")
+@CCall("knifunptr_openssl3763_i2d_SSL_SESSION")
 external fun i2d_SSL_SESSION(`in`: CValuesRef<SSL_SESSION>?, pp: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl3759_SSL_set_session")
+@CCall("knifunptr_openssl3764_SSL_set_session")
 external fun SSL_set_session(to: CValuesRef<SSL>?, session: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3760_SSL_CTX_add_session")
+@CCall("knifunptr_openssl3765_SSL_CTX_add_session")
 external fun SSL_CTX_add_session(ctx: CValuesRef<SSL_CTX>?, session: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3761_SSL_CTX_remove_session")
+@CCall("knifunptr_openssl3766_SSL_CTX_remove_session")
 external fun SSL_CTX_remove_session(ctx: CValuesRef<SSL_CTX>?, session: CValuesRef<SSL_SESSION>?): Int
 
-@CCall("knifunptr_openssl3762_SSL_CTX_set_generate_session_id")
+@CCall("knifunptr_openssl3767_SSL_CTX_set_generate_session_id")
 external fun SSL_CTX_set_generate_session_id(ctx: CValuesRef<SSL_CTX>?, cb: GEN_SESSION_CB?): Int
 
-@CCall("knifunptr_openssl3763_SSL_set_generate_session_id")
+@CCall("knifunptr_openssl3768_SSL_set_generate_session_id")
 external fun SSL_set_generate_session_id(s: CValuesRef<SSL>?, cb: GEN_SESSION_CB?): Int
 
-@CCall("knifunptr_openssl3764_SSL_has_matching_session_id")
+@CCall("knifunptr_openssl3769_SSL_has_matching_session_id")
 external fun SSL_has_matching_session_id(s: CValuesRef<SSL>?, id: CValuesRef<UByteVar>?, id_len: UInt): Int
 
-@CCall("knifunptr_openssl3765_d2i_SSL_SESSION")
+@CCall("knifunptr_openssl3770_d2i_SSL_SESSION")
 external fun d2i_SSL_SESSION(
     a: CValuesRef<CPointerVar<SSL_SESSION>>?,
     pp: CValuesRef<CPointerVar<UByteVar>>?,
     length: Int
 ): CPointer<SSL_SESSION>?
 
-@CCall("knifunptr_openssl3766_SSL_get_peer_certificate")
+@CCall("knifunptr_openssl3771_SSL_get_peer_certificate")
 external fun SSL_get_peer_certificate(s: CValuesRef<SSL>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl3767_SSL_get_peer_cert_chain")
+@CCall("knifunptr_openssl3772_SSL_get_peer_cert_chain")
 external fun SSL_get_peer_cert_chain(s: CValuesRef<SSL>?): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl3768_SSL_CTX_get_verify_mode")
+@CCall("knifunptr_openssl3773_SSL_CTX_get_verify_mode")
 external fun SSL_CTX_get_verify_mode(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3769_SSL_CTX_get_verify_depth")
+@CCall("knifunptr_openssl3774_SSL_CTX_get_verify_depth")
 external fun SSL_CTX_get_verify_depth(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3770_SSL_CTX_get_verify_callback")
+@CCall("knifunptr_openssl3775_SSL_CTX_get_verify_callback")
 external fun SSL_CTX_get_verify_callback(ctx: CValuesRef<SSL_CTX>?): SSL_verify_cb?
 
-@CCall("knifunptr_openssl3771_SSL_CTX_set_verify")
+@CCall("knifunptr_openssl3776_SSL_CTX_set_verify")
 external fun SSL_CTX_set_verify(ctx: CValuesRef<SSL_CTX>?, mode: Int, callback: SSL_verify_cb?): Unit
 
-@CCall("knifunptr_openssl3772_SSL_CTX_set_verify_depth")
+@CCall("knifunptr_openssl3777_SSL_CTX_set_verify_depth")
 external fun SSL_CTX_set_verify_depth(ctx: CValuesRef<SSL_CTX>?, depth: Int): Unit
 
-@CCall("knifunptr_openssl3773_SSL_CTX_set_cert_verify_callback")
+@CCall("knifunptr_openssl3778_SSL_CTX_set_cert_verify_callback")
 external fun SSL_CTX_set_cert_verify_callback(
     ctx: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(CPointer<X509_STORE_CTX>?, COpaquePointer?) -> Int>>?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl3774_SSL_CTX_set_cert_cb")
+@CCall("knifunptr_openssl3779_SSL_CTX_set_cert_cb")
 external fun SSL_CTX_set_cert_cb(
     c: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, COpaquePointer?) -> Int>>?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl3775_SSL_CTX_use_RSAPrivateKey")
+@CCall("knifunptr_openssl3780_SSL_CTX_use_RSAPrivateKey")
 external fun SSL_CTX_use_RSAPrivateKey(ctx: CValuesRef<SSL_CTX>?, rsa: CValuesRef<RSA>?): Int
 
-@CCall("knifunptr_openssl3776_SSL_CTX_use_RSAPrivateKey_ASN1")
+@CCall("knifunptr_openssl3781_SSL_CTX_use_RSAPrivateKey_ASN1")
 external fun SSL_CTX_use_RSAPrivateKey_ASN1(ctx: CValuesRef<SSL_CTX>?, d: CValuesRef<UByteVar>?, len: Int): Int
 
-@CCall("knifunptr_openssl3777_SSL_CTX_use_PrivateKey")
+@CCall("knifunptr_openssl3782_SSL_CTX_use_PrivateKey")
 external fun SSL_CTX_use_PrivateKey(ctx: CValuesRef<SSL_CTX>?, pkey: CValuesRef<EVP_PKEY>?): Int
 
-@CCall("knifunptr_openssl3778_SSL_CTX_use_PrivateKey_ASN1")
+@CCall("knifunptr_openssl3783_SSL_CTX_use_PrivateKey_ASN1")
 external fun SSL_CTX_use_PrivateKey_ASN1(pk: Int, ctx: CValuesRef<SSL_CTX>?, d: CValuesRef<UByteVar>?, len: Int): Int
 
-@CCall("knifunptr_openssl3779_SSL_CTX_use_certificate")
+@CCall("knifunptr_openssl3784_SSL_CTX_use_certificate")
 external fun SSL_CTX_use_certificate(ctx: CValuesRef<SSL_CTX>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3780_SSL_CTX_use_certificate_ASN1")
+@CCall("knifunptr_openssl3785_SSL_CTX_use_certificate_ASN1")
 external fun SSL_CTX_use_certificate_ASN1(ctx: CValuesRef<SSL_CTX>?, len: Int, d: CValuesRef<UByteVar>?): Int
 
-@CCall("knifunptr_openssl3781_SSL_CTX_use_cert_and_key")
+@CCall("knifunptr_openssl3786_SSL_CTX_use_cert_and_key")
 external fun SSL_CTX_use_cert_and_key(
     ctx: CValuesRef<SSL_CTX>?,
     x509: CValuesRef<X509>?,
@@ -17662,83 +17781,83 @@ external fun SSL_CTX_use_cert_and_key(
     override: Int
 ): Int
 
-@CCall("knifunptr_openssl3782_SSL_CTX_set_default_passwd_cb")
+@CCall("knifunptr_openssl3787_SSL_CTX_set_default_passwd_cb")
 external fun SSL_CTX_set_default_passwd_cb(ctx: CValuesRef<SSL_CTX>?, cb: CPointer<pem_password_cb>?): Unit
 
-@CCall("knifunptr_openssl3783_SSL_CTX_set_default_passwd_cb_userdata")
+@CCall("knifunptr_openssl3788_SSL_CTX_set_default_passwd_cb_userdata")
 external fun SSL_CTX_set_default_passwd_cb_userdata(ctx: CValuesRef<SSL_CTX>?, u: CValuesRef<*>?): Unit
 
-@CCall("knifunptr_openssl3784_SSL_CTX_get_default_passwd_cb")
+@CCall("knifunptr_openssl3789_SSL_CTX_get_default_passwd_cb")
 external fun SSL_CTX_get_default_passwd_cb(ctx: CValuesRef<SSL_CTX>?): CPointer<pem_password_cb>?
 
-@CCall("knifunptr_openssl3785_SSL_CTX_get_default_passwd_cb_userdata")
+@CCall("knifunptr_openssl3790_SSL_CTX_get_default_passwd_cb_userdata")
 external fun SSL_CTX_get_default_passwd_cb_userdata(ctx: CValuesRef<SSL_CTX>?): COpaquePointer?
 
-@CCall("knifunptr_openssl3786_SSL_set_default_passwd_cb")
+@CCall("knifunptr_openssl3791_SSL_set_default_passwd_cb")
 external fun SSL_set_default_passwd_cb(s: CValuesRef<SSL>?, cb: CPointer<pem_password_cb>?): Unit
 
-@CCall("knifunptr_openssl3787_SSL_set_default_passwd_cb_userdata")
+@CCall("knifunptr_openssl3792_SSL_set_default_passwd_cb_userdata")
 external fun SSL_set_default_passwd_cb_userdata(s: CValuesRef<SSL>?, u: CValuesRef<*>?): Unit
 
-@CCall("knifunptr_openssl3788_SSL_get_default_passwd_cb")
+@CCall("knifunptr_openssl3793_SSL_get_default_passwd_cb")
 external fun SSL_get_default_passwd_cb(s: CValuesRef<SSL>?): CPointer<pem_password_cb>?
 
-@CCall("knifunptr_openssl3789_SSL_get_default_passwd_cb_userdata")
+@CCall("knifunptr_openssl3794_SSL_get_default_passwd_cb_userdata")
 external fun SSL_get_default_passwd_cb_userdata(s: CValuesRef<SSL>?): COpaquePointer?
 
-@CCall("knifunptr_openssl3790_SSL_CTX_check_private_key")
+@CCall("knifunptr_openssl3795_SSL_CTX_check_private_key")
 external fun SSL_CTX_check_private_key(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3791_SSL_check_private_key")
+@CCall("knifunptr_openssl3796_SSL_check_private_key")
 external fun SSL_check_private_key(ctx: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3792_SSL_CTX_set_session_id_context")
+@CCall("knifunptr_openssl3797_SSL_CTX_set_session_id_context")
 external fun SSL_CTX_set_session_id_context(
     ctx: CValuesRef<SSL_CTX>?,
     sid_ctx: CValuesRef<UByteVar>?,
     sid_ctx_len: UInt
 ): Int
 
-@CCall("knifunptr_openssl3793_SSL_new")
+@CCall("knifunptr_openssl3798_SSL_new")
 external fun SSL_new(ctx: CValuesRef<SSL_CTX>?): CPointer<SSL>?
 
-@CCall("knifunptr_openssl3794_SSL_up_ref")
+@CCall("knifunptr_openssl3799_SSL_up_ref")
 external fun SSL_up_ref(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3795_SSL_is_dtls")
+@CCall("knifunptr_openssl3800_SSL_is_dtls")
 external fun SSL_is_dtls(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3796_SSL_set_session_id_context")
+@CCall("knifunptr_openssl3801_SSL_set_session_id_context")
 external fun SSL_set_session_id_context(ssl: CValuesRef<SSL>?, sid_ctx: CValuesRef<UByteVar>?, sid_ctx_len: UInt): Int
 
-@CCall("knifunptr_openssl3797_SSL_CTX_set_purpose")
+@CCall("knifunptr_openssl3802_SSL_CTX_set_purpose")
 external fun SSL_CTX_set_purpose(ctx: CValuesRef<SSL_CTX>?, purpose: Int): Int
 
-@CCall("knifunptr_openssl3798_SSL_set_purpose")
+@CCall("knifunptr_openssl3803_SSL_set_purpose")
 external fun SSL_set_purpose(ssl: CValuesRef<SSL>?, purpose: Int): Int
 
-@CCall("knifunptr_openssl3799_SSL_CTX_set_trust")
+@CCall("knifunptr_openssl3804_SSL_CTX_set_trust")
 external fun SSL_CTX_set_trust(ctx: CValuesRef<SSL_CTX>?, trust: Int): Int
 
-@CCall("knifunptr_openssl3800_SSL_set_trust")
+@CCall("knifunptr_openssl3805_SSL_set_trust")
 external fun SSL_set_trust(ssl: CValuesRef<SSL>?, trust: Int): Int
 
-@CCall("knifunptr_openssl3801_SSL_set1_host")
+@CCall("knifunptr_openssl3806_SSL_set1_host")
 external fun SSL_set1_host(s: CValuesRef<SSL>?, @CCall.CString hostname: String?): Int
 
-@CCall("knifunptr_openssl3802_SSL_add1_host")
+@CCall("knifunptr_openssl3807_SSL_add1_host")
 external fun SSL_add1_host(s: CValuesRef<SSL>?, @CCall.CString hostname: String?): Int
 
-@CCall("knifunptr_openssl3803_SSL_get0_peername")
+@CCall("knifunptr_openssl3808_SSL_get0_peername")
 external fun SSL_get0_peername(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3804_SSL_set_hostflags")
+@CCall("knifunptr_openssl3809_SSL_set_hostflags")
 external fun SSL_set_hostflags(s: CValuesRef<SSL>?, flags: UInt): Unit
 
-@CCall("knifunptr_openssl3805_SSL_CTX_dane_enable")
+@CCall("knifunptr_openssl3810_SSL_CTX_dane_enable")
 external fun SSL_CTX_dane_enable(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3806_SSL_CTX_dane_mtype_set")
+@CCall("knifunptr_openssl3811_SSL_CTX_dane_mtype_set")
 external fun SSL_CTX_dane_mtype_set(
     ctx: CValuesRef<SSL_CTX>?,
     md: CValuesRef<EVP_MD>?,
@@ -17746,10 +17865,10 @@ external fun SSL_CTX_dane_mtype_set(
     ord: uint8_t
 ): Int
 
-@CCall("knifunptr_openssl3807_SSL_dane_enable")
+@CCall("knifunptr_openssl3812_SSL_dane_enable")
 external fun SSL_dane_enable(s: CValuesRef<SSL>?, @CCall.CString basedomain: String?): Int
 
-@CCall("knifunptr_openssl3808_SSL_dane_tlsa_add")
+@CCall("knifunptr_openssl3813_SSL_dane_tlsa_add")
 external fun SSL_dane_tlsa_add(
     s: CValuesRef<SSL>?,
     usage: uint8_t,
@@ -17759,14 +17878,14 @@ external fun SSL_dane_tlsa_add(
     dlen: size_t
 ): Int
 
-@CCall("knifunptr_openssl3809_SSL_get0_dane_authority")
+@CCall("knifunptr_openssl3814_SSL_get0_dane_authority")
 external fun SSL_get0_dane_authority(
     s: CValuesRef<SSL>?,
     mcert: CValuesRef<CPointerVar<X509>>?,
     mspki: CValuesRef<CPointerVar<EVP_PKEY>>?
 ): Int
 
-@CCall("knifunptr_openssl3810_SSL_get0_dane_tlsa")
+@CCall("knifunptr_openssl3815_SSL_get0_dane_tlsa")
 external fun SSL_get0_dane_tlsa(
     s: CValuesRef<SSL>?,
     usage: CValuesRef<uint8_tVar>?,
@@ -17776,64 +17895,64 @@ external fun SSL_get0_dane_tlsa(
     dlen: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3811_SSL_get0_dane")
+@CCall("knifunptr_openssl3816_SSL_get0_dane")
 external fun SSL_get0_dane(ssl: CValuesRef<SSL>?): CPointer<SSL_DANE>?
 
-@CCall("knifunptr_openssl3812_SSL_CTX_dane_set_flags")
+@CCall("knifunptr_openssl3817_SSL_CTX_dane_set_flags")
 external fun SSL_CTX_dane_set_flags(ctx: CValuesRef<SSL_CTX>?, flags: UInt): UInt
 
-@CCall("knifunptr_openssl3813_SSL_CTX_dane_clear_flags")
+@CCall("knifunptr_openssl3818_SSL_CTX_dane_clear_flags")
 external fun SSL_CTX_dane_clear_flags(ctx: CValuesRef<SSL_CTX>?, flags: UInt): UInt
 
-@CCall("knifunptr_openssl3814_SSL_dane_set_flags")
+@CCall("knifunptr_openssl3819_SSL_dane_set_flags")
 external fun SSL_dane_set_flags(ssl: CValuesRef<SSL>?, flags: UInt): UInt
 
-@CCall("knifunptr_openssl3815_SSL_dane_clear_flags")
+@CCall("knifunptr_openssl3820_SSL_dane_clear_flags")
 external fun SSL_dane_clear_flags(ssl: CValuesRef<SSL>?, flags: UInt): UInt
 
-@CCall("knifunptr_openssl3816_SSL_CTX_set1_param")
+@CCall("knifunptr_openssl3821_SSL_CTX_set1_param")
 external fun SSL_CTX_set1_param(ctx: CValuesRef<SSL_CTX>?, vpm: CValuesRef<X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl3817_SSL_set1_param")
+@CCall("knifunptr_openssl3822_SSL_set1_param")
 external fun SSL_set1_param(ssl: CValuesRef<SSL>?, vpm: CValuesRef<X509_VERIFY_PARAM>?): Int
 
-@CCall("knifunptr_openssl3818_SSL_CTX_get0_param")
+@CCall("knifunptr_openssl3823_SSL_CTX_get0_param")
 external fun SSL_CTX_get0_param(ctx: CValuesRef<SSL_CTX>?): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl3819_SSL_get0_param")
+@CCall("knifunptr_openssl3824_SSL_get0_param")
 external fun SSL_get0_param(ssl: CValuesRef<SSL>?): CPointer<X509_VERIFY_PARAM>?
 
-@CCall("knifunptr_openssl3820_SSL_CTX_set_srp_username")
+@CCall("knifunptr_openssl3825_SSL_CTX_set_srp_username")
 external fun SSL_CTX_set_srp_username(ctx: CValuesRef<SSL_CTX>?, name: CValuesRef<ByteVar>?): Int
 
-@CCall("knifunptr_openssl3821_SSL_CTX_set_srp_password")
+@CCall("knifunptr_openssl3826_SSL_CTX_set_srp_password")
 external fun SSL_CTX_set_srp_password(ctx: CValuesRef<SSL_CTX>?, password: CValuesRef<ByteVar>?): Int
 
-@CCall("knifunptr_openssl3822_SSL_CTX_set_srp_strength")
+@CCall("knifunptr_openssl3827_SSL_CTX_set_srp_strength")
 external fun SSL_CTX_set_srp_strength(ctx: CValuesRef<SSL_CTX>?, strength: Int): Int
 
-@CCall("knifunptr_openssl3823_SSL_CTX_set_srp_client_pwd_callback")
+@CCall("knifunptr_openssl3828_SSL_CTX_set_srp_client_pwd_callback")
 external fun SSL_CTX_set_srp_client_pwd_callback(
     ctx: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, COpaquePointer?) -> CPointer<ByteVar>?>>?
 ): Int
 
-@CCall("knifunptr_openssl3824_SSL_CTX_set_srp_verify_param_callback")
+@CCall("knifunptr_openssl3829_SSL_CTX_set_srp_verify_param_callback")
 external fun SSL_CTX_set_srp_verify_param_callback(
     ctx: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, COpaquePointer?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl3825_SSL_CTX_set_srp_username_callback")
+@CCall("knifunptr_openssl3830_SSL_CTX_set_srp_username_callback")
 external fun SSL_CTX_set_srp_username_callback(
     ctx: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, CPointer<IntVar>?, COpaquePointer?) -> Int>>?
 ): Int
 
-@CCall("knifunptr_openssl3826_SSL_CTX_set_srp_cb_arg")
+@CCall("knifunptr_openssl3831_SSL_CTX_set_srp_cb_arg")
 external fun SSL_CTX_set_srp_cb_arg(ctx: CValuesRef<SSL_CTX>?, arg: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl3827_SSL_set_srp_server_param")
+@CCall("knifunptr_openssl3832_SSL_set_srp_server_param")
 external fun SSL_set_srp_server_param(
     s: CValuesRef<SSL>?,
     N: CValuesRef<BIGNUM>?,
@@ -17843,57 +17962,57 @@ external fun SSL_set_srp_server_param(
     info: CValuesRef<ByteVar>?
 ): Int
 
-@CCall("knifunptr_openssl3828_SSL_set_srp_server_param_pw")
+@CCall("knifunptr_openssl3833_SSL_set_srp_server_param_pw")
 external fun SSL_set_srp_server_param_pw(s: CValuesRef<SSL>?, @CCall.CString user: String?, @CCall.CString pass: String?, @CCall.CString grp: String?): Int
 
-@CCall("knifunptr_openssl3829_SSL_get_srp_g")
+@CCall("knifunptr_openssl3834_SSL_get_srp_g")
 external fun SSL_get_srp_g(s: CValuesRef<SSL>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl3830_SSL_get_srp_N")
+@CCall("knifunptr_openssl3835_SSL_get_srp_N")
 external fun SSL_get_srp_N(s: CValuesRef<SSL>?): CPointer<BIGNUM>?
 
-@CCall("knifunptr_openssl3831_SSL_get_srp_username")
+@CCall("knifunptr_openssl3836_SSL_get_srp_username")
 external fun SSL_get_srp_username(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3832_SSL_get_srp_userinfo")
+@CCall("knifunptr_openssl3837_SSL_get_srp_userinfo")
 external fun SSL_get_srp_userinfo(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3833_SSL_CTX_set_client_hello_cb")
+@CCall("knifunptr_openssl3838_SSL_CTX_set_client_hello_cb")
 external fun SSL_CTX_set_client_hello_cb(
     c: CValuesRef<SSL_CTX>?,
     cb: SSL_client_hello_cb_fn?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl3834_SSL_client_hello_isv2")
+@CCall("knifunptr_openssl3839_SSL_client_hello_isv2")
 external fun SSL_client_hello_isv2(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3835_SSL_client_hello_get0_legacy_version")
+@CCall("knifunptr_openssl3840_SSL_client_hello_get0_legacy_version")
 external fun SSL_client_hello_get0_legacy_version(s: CValuesRef<SSL>?): UInt
 
-@CCall("knifunptr_openssl3836_SSL_client_hello_get0_random")
+@CCall("knifunptr_openssl3841_SSL_client_hello_get0_random")
 external fun SSL_client_hello_get0_random(s: CValuesRef<SSL>?, out: CValuesRef<CPointerVar<UByteVar>>?): size_t
 
-@CCall("knifunptr_openssl3837_SSL_client_hello_get0_session_id")
+@CCall("knifunptr_openssl3842_SSL_client_hello_get0_session_id")
 external fun SSL_client_hello_get0_session_id(s: CValuesRef<SSL>?, out: CValuesRef<CPointerVar<UByteVar>>?): size_t
 
-@CCall("knifunptr_openssl3838_SSL_client_hello_get0_ciphers")
+@CCall("knifunptr_openssl3843_SSL_client_hello_get0_ciphers")
 external fun SSL_client_hello_get0_ciphers(s: CValuesRef<SSL>?, out: CValuesRef<CPointerVar<UByteVar>>?): size_t
 
-@CCall("knifunptr_openssl3839_SSL_client_hello_get0_compression_methods")
+@CCall("knifunptr_openssl3844_SSL_client_hello_get0_compression_methods")
 external fun SSL_client_hello_get0_compression_methods(
     s: CValuesRef<SSL>?,
     out: CValuesRef<CPointerVar<UByteVar>>?
 ): size_t
 
-@CCall("knifunptr_openssl3840_SSL_client_hello_get1_extensions_present")
+@CCall("knifunptr_openssl3845_SSL_client_hello_get1_extensions_present")
 external fun SSL_client_hello_get1_extensions_present(
     s: CValuesRef<SSL>?,
     out: CValuesRef<CPointerVar<IntVar>>?,
     outlen: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3841_SSL_client_hello_get0_ext")
+@CCall("knifunptr_openssl3846_SSL_client_hello_get0_ext")
 external fun SSL_client_hello_get0_ext(
     s: CValuesRef<SSL>?,
     type: UInt,
@@ -17901,19 +18020,19 @@ external fun SSL_client_hello_get0_ext(
     outlen: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3842_SSL_certs_clear")
+@CCall("knifunptr_openssl3847_SSL_certs_clear")
 external fun SSL_certs_clear(s: CValuesRef<SSL>?): Unit
 
-@CCall("knifunptr_openssl3843_SSL_free")
+@CCall("knifunptr_openssl3848_SSL_free")
 external fun SSL_free(ssl: CValuesRef<SSL>?): Unit
 
-@CCall("knifunptr_openssl3844_SSL_waiting_for_async")
+@CCall("knifunptr_openssl3849_SSL_waiting_for_async")
 external fun SSL_waiting_for_async(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3845_SSL_get_all_async_fds")
+@CCall("knifunptr_openssl3850_SSL_get_all_async_fds")
 external fun SSL_get_all_async_fds(s: CValuesRef<SSL>?, fds: CValuesRef<IntVar>?, numfds: CValuesRef<size_tVar>?): Int
 
-@CCall("knifunptr_openssl3846_SSL_get_changed_async_fds")
+@CCall("knifunptr_openssl3851_SSL_get_changed_async_fds")
 external fun SSL_get_changed_async_fds(
     s: CValuesRef<SSL>?,
     addfd: CValuesRef<IntVar>?,
@@ -17922,19 +18041,19 @@ external fun SSL_get_changed_async_fds(
     numdelfds: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3847_SSL_accept")
+@CCall("knifunptr_openssl3852_SSL_accept")
 external fun SSL_accept(ssl: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3848_SSL_stateless")
+@CCall("knifunptr_openssl3853_SSL_stateless")
 external fun SSL_stateless(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3849_SSL_connect")
+@CCall("knifunptr_openssl3854_SSL_connect")
 external fun SSL_connect(ssl: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3850_SSL_read")
+@CCall("knifunptr_openssl3855_SSL_read")
 external fun SSL_read(ssl: CValuesRef<SSL>?, buf: CValuesRef<*>?, num: Int): Int
 
-@CCall("knifunptr_openssl3851_SSL_read_ex")
+@CCall("knifunptr_openssl3856_SSL_read_ex")
 external fun SSL_read_ex(
     ssl: CValuesRef<SSL>?,
     buf: CValuesRef<*>?,
@@ -17942,7 +18061,7 @@ external fun SSL_read_ex(
     readbytes: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3852_SSL_read_early_data")
+@CCall("knifunptr_openssl3857_SSL_read_early_data")
 external fun SSL_read_early_data(
     s: CValuesRef<SSL>?,
     buf: CValuesRef<*>?,
@@ -17950,10 +18069,10 @@ external fun SSL_read_early_data(
     readbytes: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3853_SSL_peek")
+@CCall("knifunptr_openssl3858_SSL_peek")
 external fun SSL_peek(ssl: CValuesRef<SSL>?, buf: CValuesRef<*>?, num: Int): Int
 
-@CCall("knifunptr_openssl3854_SSL_peek_ex")
+@CCall("knifunptr_openssl3859_SSL_peek_ex")
 external fun SSL_peek_ex(
     ssl: CValuesRef<SSL>?,
     buf: CValuesRef<*>?,
@@ -17961,13 +18080,13 @@ external fun SSL_peek_ex(
     readbytes: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3855_SSL_write")
+@CCall("knifunptr_openssl3860_SSL_write")
 external fun SSL_write(ssl: CValuesRef<SSL>?, buf: CValuesRef<*>?, num: Int): Int
 
-@CCall("knifunptr_openssl3856_SSL_write_ex")
+@CCall("knifunptr_openssl3861_SSL_write_ex")
 external fun SSL_write_ex(s: CValuesRef<SSL>?, buf: CValuesRef<*>?, num: size_t, written: CValuesRef<size_tVar>?): Int
 
-@CCall("knifunptr_openssl3857_SSL_write_early_data")
+@CCall("knifunptr_openssl3862_SSL_write_early_data")
 external fun SSL_write_early_data(
     s: CValuesRef<SSL>?,
     buf: CValuesRef<*>?,
@@ -17975,393 +18094,393 @@ external fun SSL_write_early_data(
     written: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl3858_SSL_ctrl")
+@CCall("knifunptr_openssl3863_SSL_ctrl")
 external fun SSL_ctrl(ssl: CValuesRef<SSL>?, cmd: Int, larg: Int, parg: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl3859_SSL_callback_ctrl")
+@CCall("knifunptr_openssl3864_SSL_callback_ctrl")
 external fun SSL_callback_ctrl(arg0: CValuesRef<SSL>?, arg1: Int, arg2: CPointer<CFunction<() -> Unit>>?): Int
 
-@CCall("knifunptr_openssl3860_SSL_CTX_ctrl")
+@CCall("knifunptr_openssl3865_SSL_CTX_ctrl")
 external fun SSL_CTX_ctrl(ctx: CValuesRef<SSL_CTX>?, cmd: Int, larg: Int, parg: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl3861_SSL_CTX_callback_ctrl")
+@CCall("knifunptr_openssl3866_SSL_CTX_callback_ctrl")
 external fun SSL_CTX_callback_ctrl(arg0: CValuesRef<SSL_CTX>?, arg1: Int, arg2: CPointer<CFunction<() -> Unit>>?): Int
 
-@CCall("knifunptr_openssl3862_SSL_get_early_data_status")
+@CCall("knifunptr_openssl3867_SSL_get_early_data_status")
 external fun SSL_get_early_data_status(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3863_SSL_get_error")
+@CCall("knifunptr_openssl3868_SSL_get_error")
 external fun SSL_get_error(s: CValuesRef<SSL>?, ret_code: Int): Int
 
-@CCall("knifunptr_openssl3864_SSL_get_version")
+@CCall("knifunptr_openssl3869_SSL_get_version")
 external fun SSL_get_version(s: CValuesRef<SSL>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3865_SSL_CTX_set_ssl_version")
+@CCall("knifunptr_openssl3870_SSL_CTX_set_ssl_version")
 external fun SSL_CTX_set_ssl_version(ctx: CValuesRef<SSL_CTX>?, meth: CValuesRef<SSL_METHOD>?): Int
 
-@CCall("knifunptr_openssl3866_TLS_method")
+@CCall("knifunptr_openssl3871_TLS_method")
 external fun TLS_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3867_TLS_server_method")
+@CCall("knifunptr_openssl3872_TLS_server_method")
 external fun TLS_server_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3868_TLS_client_method")
+@CCall("knifunptr_openssl3873_TLS_client_method")
 external fun TLS_client_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3869_TLSv1_method")
+@CCall("knifunptr_openssl3874_TLSv1_method")
 external fun TLSv1_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3870_TLSv1_server_method")
+@CCall("knifunptr_openssl3875_TLSv1_server_method")
 external fun TLSv1_server_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3871_TLSv1_client_method")
+@CCall("knifunptr_openssl3876_TLSv1_client_method")
 external fun TLSv1_client_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3872_TLSv1_1_method")
+@CCall("knifunptr_openssl3877_TLSv1_1_method")
 external fun TLSv1_1_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3873_TLSv1_1_server_method")
+@CCall("knifunptr_openssl3878_TLSv1_1_server_method")
 external fun TLSv1_1_server_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3874_TLSv1_1_client_method")
+@CCall("knifunptr_openssl3879_TLSv1_1_client_method")
 external fun TLSv1_1_client_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3875_TLSv1_2_method")
+@CCall("knifunptr_openssl3880_TLSv1_2_method")
 external fun TLSv1_2_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3876_TLSv1_2_server_method")
+@CCall("knifunptr_openssl3881_TLSv1_2_server_method")
 external fun TLSv1_2_server_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3877_TLSv1_2_client_method")
+@CCall("knifunptr_openssl3882_TLSv1_2_client_method")
 external fun TLSv1_2_client_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3878_DTLSv1_method")
+@CCall("knifunptr_openssl3883_DTLSv1_method")
 external fun DTLSv1_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3879_DTLSv1_server_method")
+@CCall("knifunptr_openssl3884_DTLSv1_server_method")
 external fun DTLSv1_server_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3880_DTLSv1_client_method")
+@CCall("knifunptr_openssl3885_DTLSv1_client_method")
 external fun DTLSv1_client_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3881_DTLSv1_2_method")
+@CCall("knifunptr_openssl3886_DTLSv1_2_method")
 external fun DTLSv1_2_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3882_DTLSv1_2_server_method")
+@CCall("knifunptr_openssl3887_DTLSv1_2_server_method")
 external fun DTLSv1_2_server_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3883_DTLSv1_2_client_method")
+@CCall("knifunptr_openssl3888_DTLSv1_2_client_method")
 external fun DTLSv1_2_client_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3884_DTLS_method")
+@CCall("knifunptr_openssl3889_DTLS_method")
 external fun DTLS_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3885_DTLS_server_method")
+@CCall("knifunptr_openssl3890_DTLS_server_method")
 external fun DTLS_server_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3886_DTLS_client_method")
+@CCall("knifunptr_openssl3891_DTLS_client_method")
 external fun DTLS_client_method(): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3887_DTLS_get_data_mtu")
+@CCall("knifunptr_openssl3892_DTLS_get_data_mtu")
 external fun DTLS_get_data_mtu(s: CValuesRef<SSL>?): size_t
 
-@CCall("knifunptr_openssl3888_SSL_get_ciphers")
+@CCall("knifunptr_openssl3893_SSL_get_ciphers")
 external fun SSL_get_ciphers(s: CValuesRef<SSL>?): CPointer<stack_st_SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3889_SSL_CTX_get_ciphers")
+@CCall("knifunptr_openssl3894_SSL_CTX_get_ciphers")
 external fun SSL_CTX_get_ciphers(ctx: CValuesRef<SSL_CTX>?): CPointer<stack_st_SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3890_SSL_get_client_ciphers")
+@CCall("knifunptr_openssl3895_SSL_get_client_ciphers")
 external fun SSL_get_client_ciphers(s: CValuesRef<SSL>?): CPointer<stack_st_SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3891_SSL_get1_supported_ciphers")
+@CCall("knifunptr_openssl3896_SSL_get1_supported_ciphers")
 external fun SSL_get1_supported_ciphers(s: CValuesRef<SSL>?): CPointer<stack_st_SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3892_SSL_do_handshake")
+@CCall("knifunptr_openssl3897_SSL_do_handshake")
 external fun SSL_do_handshake(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3893_SSL_key_update")
+@CCall("knifunptr_openssl3898_SSL_key_update")
 external fun SSL_key_update(s: CValuesRef<SSL>?, updatetype: Int): Int
 
-@CCall("knifunptr_openssl3894_SSL_get_key_update_type")
+@CCall("knifunptr_openssl3899_SSL_get_key_update_type")
 external fun SSL_get_key_update_type(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3895_SSL_renegotiate")
+@CCall("knifunptr_openssl3900_SSL_renegotiate")
 external fun SSL_renegotiate(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3896_SSL_renegotiate_abbreviated")
+@CCall("knifunptr_openssl3901_SSL_renegotiate_abbreviated")
 external fun SSL_renegotiate_abbreviated(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3897_SSL_renegotiate_pending")
+@CCall("knifunptr_openssl3902_SSL_renegotiate_pending")
 external fun SSL_renegotiate_pending(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3898_SSL_shutdown")
+@CCall("knifunptr_openssl3903_SSL_shutdown")
 external fun SSL_shutdown(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3899_SSL_verify_client_post_handshake")
+@CCall("knifunptr_openssl3904_SSL_verify_client_post_handshake")
 external fun SSL_verify_client_post_handshake(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3900_SSL_CTX_set_post_handshake_auth")
+@CCall("knifunptr_openssl3905_SSL_CTX_set_post_handshake_auth")
 external fun SSL_CTX_set_post_handshake_auth(ctx: CValuesRef<SSL_CTX>?, `val`: Int): Unit
 
-@CCall("knifunptr_openssl3901_SSL_set_post_handshake_auth")
+@CCall("knifunptr_openssl3906_SSL_set_post_handshake_auth")
 external fun SSL_set_post_handshake_auth(s: CValuesRef<SSL>?, `val`: Int): Unit
 
-@CCall("knifunptr_openssl3902_SSL_CTX_get_ssl_method")
+@CCall("knifunptr_openssl3907_SSL_CTX_get_ssl_method")
 external fun SSL_CTX_get_ssl_method(ctx: CValuesRef<SSL_CTX>?): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3903_SSL_get_ssl_method")
+@CCall("knifunptr_openssl3908_SSL_get_ssl_method")
 external fun SSL_get_ssl_method(s: CValuesRef<SSL>?): CPointer<SSL_METHOD>?
 
-@CCall("knifunptr_openssl3904_SSL_set_ssl_method")
+@CCall("knifunptr_openssl3909_SSL_set_ssl_method")
 external fun SSL_set_ssl_method(s: CValuesRef<SSL>?, method: CValuesRef<SSL_METHOD>?): Int
 
-@CCall("knifunptr_openssl3905_SSL_alert_type_string_long")
+@CCall("knifunptr_openssl3910_SSL_alert_type_string_long")
 external fun SSL_alert_type_string_long(value: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3906_SSL_alert_type_string")
+@CCall("knifunptr_openssl3911_SSL_alert_type_string")
 external fun SSL_alert_type_string(value: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3907_SSL_alert_desc_string_long")
+@CCall("knifunptr_openssl3912_SSL_alert_desc_string_long")
 external fun SSL_alert_desc_string_long(value: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3908_SSL_alert_desc_string")
+@CCall("knifunptr_openssl3913_SSL_alert_desc_string")
 external fun SSL_alert_desc_string(value: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3909_SSL_set0_CA_list")
+@CCall("knifunptr_openssl3914_SSL_set0_CA_list")
 external fun SSL_set0_CA_list(s: CValuesRef<SSL>?, name_list: CValuesRef<stack_st_X509_NAME>?): Unit
 
-@CCall("knifunptr_openssl3910_SSL_CTX_set0_CA_list")
+@CCall("knifunptr_openssl3915_SSL_CTX_set0_CA_list")
 external fun SSL_CTX_set0_CA_list(ctx: CValuesRef<SSL_CTX>?, name_list: CValuesRef<stack_st_X509_NAME>?): Unit
 
-@CCall("knifunptr_openssl3911_SSL_get0_CA_list")
+@CCall("knifunptr_openssl3916_SSL_get0_CA_list")
 external fun SSL_get0_CA_list(s: CValuesRef<SSL>?): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl3912_SSL_CTX_get0_CA_list")
+@CCall("knifunptr_openssl3917_SSL_CTX_get0_CA_list")
 external fun SSL_CTX_get0_CA_list(ctx: CValuesRef<SSL_CTX>?): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl3913_SSL_add1_to_CA_list")
+@CCall("knifunptr_openssl3918_SSL_add1_to_CA_list")
 external fun SSL_add1_to_CA_list(ssl: CValuesRef<SSL>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3914_SSL_CTX_add1_to_CA_list")
+@CCall("knifunptr_openssl3919_SSL_CTX_add1_to_CA_list")
 external fun SSL_CTX_add1_to_CA_list(ctx: CValuesRef<SSL_CTX>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3915_SSL_get0_peer_CA_list")
+@CCall("knifunptr_openssl3920_SSL_get0_peer_CA_list")
 external fun SSL_get0_peer_CA_list(s: CValuesRef<SSL>?): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl3916_SSL_set_client_CA_list")
+@CCall("knifunptr_openssl3921_SSL_set_client_CA_list")
 external fun SSL_set_client_CA_list(s: CValuesRef<SSL>?, name_list: CValuesRef<stack_st_X509_NAME>?): Unit
 
-@CCall("knifunptr_openssl3917_SSL_CTX_set_client_CA_list")
+@CCall("knifunptr_openssl3922_SSL_CTX_set_client_CA_list")
 external fun SSL_CTX_set_client_CA_list(ctx: CValuesRef<SSL_CTX>?, name_list: CValuesRef<stack_st_X509_NAME>?): Unit
 
-@CCall("knifunptr_openssl3918_SSL_get_client_CA_list")
+@CCall("knifunptr_openssl3923_SSL_get_client_CA_list")
 external fun SSL_get_client_CA_list(s: CValuesRef<SSL>?): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl3919_SSL_CTX_get_client_CA_list")
+@CCall("knifunptr_openssl3924_SSL_CTX_get_client_CA_list")
 external fun SSL_CTX_get_client_CA_list(s: CValuesRef<SSL_CTX>?): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl3920_SSL_add_client_CA")
+@CCall("knifunptr_openssl3925_SSL_add_client_CA")
 external fun SSL_add_client_CA(ssl: CValuesRef<SSL>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3921_SSL_CTX_add_client_CA")
+@CCall("knifunptr_openssl3926_SSL_CTX_add_client_CA")
 external fun SSL_CTX_add_client_CA(ctx: CValuesRef<SSL_CTX>?, x: CValuesRef<X509>?): Int
 
-@CCall("knifunptr_openssl3922_SSL_set_connect_state")
+@CCall("knifunptr_openssl3927_SSL_set_connect_state")
 external fun SSL_set_connect_state(s: CValuesRef<SSL>?): Unit
 
-@CCall("knifunptr_openssl3923_SSL_set_accept_state")
+@CCall("knifunptr_openssl3928_SSL_set_accept_state")
 external fun SSL_set_accept_state(s: CValuesRef<SSL>?): Unit
 
-@CCall("knifunptr_openssl3924_SSL_get_default_timeout")
+@CCall("knifunptr_openssl3929_SSL_get_default_timeout")
 external fun SSL_get_default_timeout(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3925_SSL_CIPHER_description")
+@CCall("knifunptr_openssl3930_SSL_CIPHER_description")
 external fun SSL_CIPHER_description(
     arg0: CValuesRef<SSL_CIPHER>?,
     buf: CValuesRef<ByteVar>?,
     size: Int
 ): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3926_SSL_dup_CA_list")
+@CCall("knifunptr_openssl3931_SSL_dup_CA_list")
 external fun SSL_dup_CA_list(sk: CValuesRef<stack_st_X509_NAME>?): CPointer<stack_st_X509_NAME>?
 
-@CCall("knifunptr_openssl3927_SSL_dup")
+@CCall("knifunptr_openssl3932_SSL_dup")
 external fun SSL_dup(ssl: CValuesRef<SSL>?): CPointer<SSL>?
 
-@CCall("knifunptr_openssl3928_SSL_get_certificate")
+@CCall("knifunptr_openssl3933_SSL_get_certificate")
 external fun SSL_get_certificate(ssl: CValuesRef<SSL>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl3929_SSL_get_privatekey")
+@CCall("knifunptr_openssl3934_SSL_get_privatekey")
 external fun SSL_get_privatekey(ssl: CValuesRef<SSL>?): CPointer<evp_pkey_st>?
 
-@CCall("knifunptr_openssl3930_SSL_CTX_get0_certificate")
+@CCall("knifunptr_openssl3935_SSL_CTX_get0_certificate")
 external fun SSL_CTX_get0_certificate(ctx: CValuesRef<SSL_CTX>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl3931_SSL_CTX_get0_privatekey")
+@CCall("knifunptr_openssl3936_SSL_CTX_get0_privatekey")
 external fun SSL_CTX_get0_privatekey(ctx: CValuesRef<SSL_CTX>?): CPointer<EVP_PKEY>?
 
-@CCall("knifunptr_openssl3932_SSL_CTX_set_quiet_shutdown")
+@CCall("knifunptr_openssl3937_SSL_CTX_set_quiet_shutdown")
 external fun SSL_CTX_set_quiet_shutdown(ctx: CValuesRef<SSL_CTX>?, mode: Int): Unit
 
-@CCall("knifunptr_openssl3933_SSL_CTX_get_quiet_shutdown")
+@CCall("knifunptr_openssl3938_SSL_CTX_get_quiet_shutdown")
 external fun SSL_CTX_get_quiet_shutdown(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3934_SSL_set_quiet_shutdown")
+@CCall("knifunptr_openssl3939_SSL_set_quiet_shutdown")
 external fun SSL_set_quiet_shutdown(ssl: CValuesRef<SSL>?, mode: Int): Unit
 
-@CCall("knifunptr_openssl3935_SSL_get_quiet_shutdown")
+@CCall("knifunptr_openssl3940_SSL_get_quiet_shutdown")
 external fun SSL_get_quiet_shutdown(ssl: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3936_SSL_set_shutdown")
+@CCall("knifunptr_openssl3941_SSL_set_shutdown")
 external fun SSL_set_shutdown(ssl: CValuesRef<SSL>?, mode: Int): Unit
 
-@CCall("knifunptr_openssl3937_SSL_get_shutdown")
+@CCall("knifunptr_openssl3942_SSL_get_shutdown")
 external fun SSL_get_shutdown(ssl: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3938_SSL_version")
+@CCall("knifunptr_openssl3943_SSL_version")
 external fun SSL_version(ssl: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3939_SSL_client_version")
+@CCall("knifunptr_openssl3944_SSL_client_version")
 external fun SSL_client_version(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3940_SSL_CTX_set_default_verify_paths")
+@CCall("knifunptr_openssl3945_SSL_CTX_set_default_verify_paths")
 external fun SSL_CTX_set_default_verify_paths(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3941_SSL_CTX_set_default_verify_dir")
+@CCall("knifunptr_openssl3946_SSL_CTX_set_default_verify_dir")
 external fun SSL_CTX_set_default_verify_dir(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3942_SSL_CTX_set_default_verify_file")
+@CCall("knifunptr_openssl3947_SSL_CTX_set_default_verify_file")
 external fun SSL_CTX_set_default_verify_file(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl3943_SSL_CTX_load_verify_locations")
+@CCall("knifunptr_openssl3948_SSL_CTX_load_verify_locations")
 external fun SSL_CTX_load_verify_locations(ctx: CValuesRef<SSL_CTX>?, @CCall.CString CAfile: String?, @CCall.CString CApath: String?): Int
 
-@CCall("knifunptr_openssl3944_SSL_get_session")
+@CCall("knifunptr_openssl3949_SSL_get_session")
 external fun SSL_get_session(ssl: CValuesRef<SSL>?): CPointer<SSL_SESSION>?
 
-@CCall("knifunptr_openssl3945_SSL_get1_session")
+@CCall("knifunptr_openssl3950_SSL_get1_session")
 external fun SSL_get1_session(ssl: CValuesRef<SSL>?): CPointer<SSL_SESSION>?
 
-@CCall("knifunptr_openssl3946_SSL_get_SSL_CTX")
+@CCall("knifunptr_openssl3951_SSL_get_SSL_CTX")
 external fun SSL_get_SSL_CTX(ssl: CValuesRef<SSL>?): CPointer<SSL_CTX>?
 
-@CCall("knifunptr_openssl3947_SSL_set_SSL_CTX")
+@CCall("knifunptr_openssl3952_SSL_set_SSL_CTX")
 external fun SSL_set_SSL_CTX(ssl: CValuesRef<SSL>?, ctx: CValuesRef<SSL_CTX>?): CPointer<SSL_CTX>?
 
-@CCall("knifunptr_openssl3948_SSL_set_info_callback")
+@CCall("knifunptr_openssl3953_SSL_set_info_callback")
 external fun SSL_set_info_callback(
     ssl: CValuesRef<SSL>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, Int, Int) -> Unit>>?
 ): Unit
 
-@CCall("knifunptr_openssl3949_SSL_get_info_callback")
+@CCall("knifunptr_openssl3954_SSL_get_info_callback")
 external fun SSL_get_info_callback(ssl: CValuesRef<SSL>?): CPointer<CFunction<(CPointer<SSL>?, Int, Int) -> Unit>>?
 
-@CCall("knifunptr_openssl3950_SSL_get_state")
+@CCall("knifunptr_openssl3955_SSL_get_state")
 external fun SSL_get_state(ssl: CValuesRef<SSL>?): OSSL_HANDSHAKE_STATE
 
-@CCall("knifunptr_openssl3951_SSL_set_verify_result")
+@CCall("knifunptr_openssl3956_SSL_set_verify_result")
 external fun SSL_set_verify_result(ssl: CValuesRef<SSL>?, v: Int): Unit
 
-@CCall("knifunptr_openssl3952_SSL_get_verify_result")
+@CCall("knifunptr_openssl3957_SSL_get_verify_result")
 external fun SSL_get_verify_result(ssl: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl3953_SSL_get0_verified_chain")
+@CCall("knifunptr_openssl3958_SSL_get0_verified_chain")
 external fun SSL_get0_verified_chain(s: CValuesRef<SSL>?): CPointer<stack_st_X509>?
 
-@CCall("knifunptr_openssl3954_SSL_get_client_random")
+@CCall("knifunptr_openssl3959_SSL_get_client_random")
 external fun SSL_get_client_random(ssl: CValuesRef<SSL>?, out: CValuesRef<UByteVar>?, outlen: size_t): size_t
 
-@CCall("knifunptr_openssl3955_SSL_get_server_random")
+@CCall("knifunptr_openssl3960_SSL_get_server_random")
 external fun SSL_get_server_random(ssl: CValuesRef<SSL>?, out: CValuesRef<UByteVar>?, outlen: size_t): size_t
 
-@CCall("knifunptr_openssl3956_SSL_SESSION_get_master_key")
+@CCall("knifunptr_openssl3961_SSL_SESSION_get_master_key")
 external fun SSL_SESSION_get_master_key(
     sess: CValuesRef<SSL_SESSION>?,
     out: CValuesRef<UByteVar>?,
     outlen: size_t
 ): size_t
 
-@CCall("knifunptr_openssl3957_SSL_SESSION_set1_master_key")
+@CCall("knifunptr_openssl3962_SSL_SESSION_set1_master_key")
 external fun SSL_SESSION_set1_master_key(sess: CValuesRef<SSL_SESSION>?, `in`: CValuesRef<UByteVar>?, len: size_t): Int
 
-@CCall("knifunptr_openssl3958_SSL_SESSION_get_max_fragment_length")
+@CCall("knifunptr_openssl3963_SSL_SESSION_get_max_fragment_length")
 external fun SSL_SESSION_get_max_fragment_length(sess: CValuesRef<SSL_SESSION>?): uint8_t
 
-@CCall("knifunptr_openssl3959_SSL_set_ex_data")
+@CCall("knifunptr_openssl3964_SSL_set_ex_data")
 external fun SSL_set_ex_data(ssl: CValuesRef<SSL>?, idx: Int, data: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl3960_SSL_get_ex_data")
+@CCall("knifunptr_openssl3965_SSL_get_ex_data")
 external fun SSL_get_ex_data(ssl: CValuesRef<SSL>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl3961_SSL_SESSION_set_ex_data")
+@CCall("knifunptr_openssl3966_SSL_SESSION_set_ex_data")
 external fun SSL_SESSION_set_ex_data(ss: CValuesRef<SSL_SESSION>?, idx: Int, data: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl3962_SSL_SESSION_get_ex_data")
+@CCall("knifunptr_openssl3967_SSL_SESSION_get_ex_data")
 external fun SSL_SESSION_get_ex_data(ss: CValuesRef<SSL_SESSION>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl3963_SSL_CTX_set_ex_data")
+@CCall("knifunptr_openssl3968_SSL_CTX_set_ex_data")
 external fun SSL_CTX_set_ex_data(ssl: CValuesRef<SSL_CTX>?, idx: Int, data: CValuesRef<*>?): Int
 
-@CCall("knifunptr_openssl3964_SSL_CTX_get_ex_data")
+@CCall("knifunptr_openssl3969_SSL_CTX_get_ex_data")
 external fun SSL_CTX_get_ex_data(ssl: CValuesRef<SSL_CTX>?, idx: Int): COpaquePointer?
 
-@CCall("knifunptr_openssl3965_SSL_get_ex_data_X509_STORE_CTX_idx")
+@CCall("knifunptr_openssl3970_SSL_get_ex_data_X509_STORE_CTX_idx")
 external fun SSL_get_ex_data_X509_STORE_CTX_idx(): Int
 
-@CCall("knifunptr_openssl3966_SSL_CTX_set_default_read_buffer_len")
+@CCall("knifunptr_openssl3971_SSL_CTX_set_default_read_buffer_len")
 external fun SSL_CTX_set_default_read_buffer_len(ctx: CValuesRef<SSL_CTX>?, len: size_t): Unit
 
-@CCall("knifunptr_openssl3967_SSL_set_default_read_buffer_len")
+@CCall("knifunptr_openssl3972_SSL_set_default_read_buffer_len")
 external fun SSL_set_default_read_buffer_len(s: CValuesRef<SSL>?, len: size_t): Unit
 
-@CCall("knifunptr_openssl3968_SSL_CTX_set_tmp_dh_callback")
+@CCall("knifunptr_openssl3973_SSL_CTX_set_tmp_dh_callback")
 external fun SSL_CTX_set_tmp_dh_callback(
     ctx: CValuesRef<SSL_CTX>?,
     dh: CPointer<CFunction<(CPointer<SSL>?, Int, Int) -> CPointer<DH>?>>?
 ): Unit
 
-@CCall("knifunptr_openssl3969_SSL_set_tmp_dh_callback")
+@CCall("knifunptr_openssl3974_SSL_set_tmp_dh_callback")
 external fun SSL_set_tmp_dh_callback(
     ssl: CValuesRef<SSL>?,
     dh: CPointer<CFunction<(CPointer<SSL>?, Int, Int) -> CPointer<DH>?>>?
 ): Unit
 
-@CCall("knifunptr_openssl3970_SSL_get_current_compression")
+@CCall("knifunptr_openssl3975_SSL_get_current_compression")
 external fun SSL_get_current_compression(s: CValuesRef<SSL>?): CPointer<COMP_METHOD>?
 
-@CCall("knifunptr_openssl3971_SSL_get_current_expansion")
+@CCall("knifunptr_openssl3976_SSL_get_current_expansion")
 external fun SSL_get_current_expansion(s: CValuesRef<SSL>?): CPointer<COMP_METHOD>?
 
-@CCall("knifunptr_openssl3972_SSL_COMP_get_name")
+@CCall("knifunptr_openssl3977_SSL_COMP_get_name")
 external fun SSL_COMP_get_name(comp: CValuesRef<COMP_METHOD>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3973_SSL_COMP_get0_name")
+@CCall("knifunptr_openssl3978_SSL_COMP_get0_name")
 external fun SSL_COMP_get0_name(comp: CValuesRef<SSL_COMP>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl3974_SSL_COMP_get_id")
+@CCall("knifunptr_openssl3979_SSL_COMP_get_id")
 external fun SSL_COMP_get_id(comp: CValuesRef<SSL_COMP>?): Int
 
-@CCall("knifunptr_openssl3975_SSL_COMP_get_compression_methods")
+@CCall("knifunptr_openssl3980_SSL_COMP_get_compression_methods")
 external fun SSL_COMP_get_compression_methods(): CPointer<stack_st_SSL_COMP>?
 
-@CCall("knifunptr_openssl3976_SSL_COMP_set0_compression_methods")
+@CCall("knifunptr_openssl3981_SSL_COMP_set0_compression_methods")
 external fun SSL_COMP_set0_compression_methods(meths: CValuesRef<stack_st_SSL_COMP>?): CPointer<stack_st_SSL_COMP>?
 
-@CCall("knifunptr_openssl3977_SSL_COMP_add_compression_method")
+@CCall("knifunptr_openssl3982_SSL_COMP_add_compression_method")
 external fun SSL_COMP_add_compression_method(id: Int, cm: CValuesRef<COMP_METHOD>?): Int
 
-@CCall("knifunptr_openssl3978_SSL_CIPHER_find")
+@CCall("knifunptr_openssl3983_SSL_CIPHER_find")
 external fun SSL_CIPHER_find(ssl: CValuesRef<SSL>?, ptr: CValuesRef<UByteVar>?): CPointer<SSL_CIPHER>?
 
-@CCall("knifunptr_openssl3979_SSL_CIPHER_get_cipher_nid")
+@CCall("knifunptr_openssl3984_SSL_CIPHER_get_cipher_nid")
 external fun SSL_CIPHER_get_cipher_nid(c: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3980_SSL_CIPHER_get_digest_nid")
+@CCall("knifunptr_openssl3985_SSL_CIPHER_get_digest_nid")
 external fun SSL_CIPHER_get_digest_nid(c: CValuesRef<SSL_CIPHER>?): Int
 
-@CCall("knifunptr_openssl3981_SSL_bytes_to_cipher_list")
+@CCall("knifunptr_openssl3986_SSL_bytes_to_cipher_list")
 external fun SSL_bytes_to_cipher_list(
     s: CValuesRef<SSL>?,
     bytes: CValuesRef<UByteVar>?,
@@ -18371,225 +18490,225 @@ external fun SSL_bytes_to_cipher_list(
     scsvs: CValuesRef<CPointerVar<stack_st_SSL_CIPHER>>?
 ): Int
 
-@CCall("knifunptr_openssl3982_SSL_set_session_ticket_ext")
+@CCall("knifunptr_openssl3987_SSL_set_session_ticket_ext")
 external fun SSL_set_session_ticket_ext(s: CValuesRef<SSL>?, ext_data: CValuesRef<*>?, ext_len: Int): Int
 
-@CCall("knifunptr_openssl3983_SSL_set_session_ticket_ext_cb")
+@CCall("knifunptr_openssl3988_SSL_set_session_ticket_ext_cb")
 external fun SSL_set_session_ticket_ext_cb(
     s: CValuesRef<SSL>?,
     cb: tls_session_ticket_ext_cb_fn?,
     arg: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3984_SSL_set_session_secret_cb")
+@CCall("knifunptr_openssl3989_SSL_set_session_secret_cb")
 external fun SSL_set_session_secret_cb(
     s: CValuesRef<SSL>?,
     session_secret_cb: tls_session_secret_cb_fn?,
     arg: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl3985_SSL_CTX_set_not_resumable_session_callback")
+@CCall("knifunptr_openssl3990_SSL_CTX_set_not_resumable_session_callback")
 external fun SSL_CTX_set_not_resumable_session_callback(
     ctx: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, Int) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl3986_SSL_set_not_resumable_session_callback")
+@CCall("knifunptr_openssl3991_SSL_set_not_resumable_session_callback")
 external fun SSL_set_not_resumable_session_callback(
     ssl: CValuesRef<SSL>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, Int) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl3987_SSL_CTX_set_record_padding_callback")
+@CCall("knifunptr_openssl3992_SSL_CTX_set_record_padding_callback")
 external fun SSL_CTX_set_record_padding_callback(
     ctx: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, Int, size_t, COpaquePointer?) -> size_t>>?
 ): Unit
 
-@CCall("knifunptr_openssl3988_SSL_CTX_set_record_padding_callback_arg")
+@CCall("knifunptr_openssl3993_SSL_CTX_set_record_padding_callback_arg")
 external fun SSL_CTX_set_record_padding_callback_arg(ctx: CValuesRef<SSL_CTX>?, arg: CValuesRef<*>?): Unit
 
-@CCall("knifunptr_openssl3989_SSL_CTX_get_record_padding_callback_arg")
+@CCall("knifunptr_openssl3994_SSL_CTX_get_record_padding_callback_arg")
 external fun SSL_CTX_get_record_padding_callback_arg(ctx: CValuesRef<SSL_CTX>?): COpaquePointer?
 
-@CCall("knifunptr_openssl3990_SSL_CTX_set_block_padding")
+@CCall("knifunptr_openssl3995_SSL_CTX_set_block_padding")
 external fun SSL_CTX_set_block_padding(ctx: CValuesRef<SSL_CTX>?, block_size: size_t): Int
 
-@CCall("knifunptr_openssl3991_SSL_set_record_padding_callback")
+@CCall("knifunptr_openssl3996_SSL_set_record_padding_callback")
 external fun SSL_set_record_padding_callback(
     ssl: CValuesRef<SSL>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, Int, size_t, COpaquePointer?) -> size_t>>?
 ): Unit
 
-@CCall("knifunptr_openssl3992_SSL_set_record_padding_callback_arg")
+@CCall("knifunptr_openssl3997_SSL_set_record_padding_callback_arg")
 external fun SSL_set_record_padding_callback_arg(ssl: CValuesRef<SSL>?, arg: CValuesRef<*>?): Unit
 
-@CCall("knifunptr_openssl3993_SSL_get_record_padding_callback_arg")
+@CCall("knifunptr_openssl3998_SSL_get_record_padding_callback_arg")
 external fun SSL_get_record_padding_callback_arg(ssl: CValuesRef<SSL>?): COpaquePointer?
 
-@CCall("knifunptr_openssl3994_SSL_set_block_padding")
+@CCall("knifunptr_openssl3999_SSL_set_block_padding")
 external fun SSL_set_block_padding(ssl: CValuesRef<SSL>?, block_size: size_t): Int
 
-@CCall("knifunptr_openssl3995_SSL_set_num_tickets")
+@CCall("knifunptr_openssl4000_SSL_set_num_tickets")
 external fun SSL_set_num_tickets(s: CValuesRef<SSL>?, num_tickets: size_t): Int
 
-@CCall("knifunptr_openssl3996_SSL_get_num_tickets")
+@CCall("knifunptr_openssl4001_SSL_get_num_tickets")
 external fun SSL_get_num_tickets(s: CValuesRef<SSL>?): size_t
 
-@CCall("knifunptr_openssl3997_SSL_CTX_set_num_tickets")
+@CCall("knifunptr_openssl4002_SSL_CTX_set_num_tickets")
 external fun SSL_CTX_set_num_tickets(ctx: CValuesRef<SSL_CTX>?, num_tickets: size_t): Int
 
-@CCall("knifunptr_openssl3998_SSL_CTX_get_num_tickets")
+@CCall("knifunptr_openssl4003_SSL_CTX_get_num_tickets")
 external fun SSL_CTX_get_num_tickets(ctx: CValuesRef<SSL_CTX>?): size_t
 
-@CCall("knifunptr_openssl3999_SSL_session_reused")
+@CCall("knifunptr_openssl4004_SSL_session_reused")
 external fun SSL_session_reused(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl4000_SSL_is_server")
+@CCall("knifunptr_openssl4005_SSL_is_server")
 external fun SSL_is_server(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl4001_SSL_CONF_CTX_new")
+@CCall("knifunptr_openssl4006_SSL_CONF_CTX_new")
 external fun SSL_CONF_CTX_new(): CPointer<SSL_CONF_CTX>?
 
-@CCall("knifunptr_openssl4002_SSL_CONF_CTX_finish")
+@CCall("knifunptr_openssl4007_SSL_CONF_CTX_finish")
 external fun SSL_CONF_CTX_finish(cctx: CValuesRef<SSL_CONF_CTX>?): Int
 
-@CCall("knifunptr_openssl4003_SSL_CONF_CTX_free")
+@CCall("knifunptr_openssl4008_SSL_CONF_CTX_free")
 external fun SSL_CONF_CTX_free(cctx: CValuesRef<SSL_CONF_CTX>?): Unit
 
-@CCall("knifunptr_openssl4004_SSL_CONF_CTX_set_flags")
+@CCall("knifunptr_openssl4009_SSL_CONF_CTX_set_flags")
 external fun SSL_CONF_CTX_set_flags(cctx: CValuesRef<SSL_CONF_CTX>?, flags: UInt): UInt
 
-@CCall("knifunptr_openssl4005_SSL_CONF_CTX_clear_flags")
+@CCall("knifunptr_openssl4010_SSL_CONF_CTX_clear_flags")
 external fun SSL_CONF_CTX_clear_flags(cctx: CValuesRef<SSL_CONF_CTX>?, flags: UInt): UInt
 
-@CCall("knifunptr_openssl4006_SSL_CONF_CTX_set1_prefix")
+@CCall("knifunptr_openssl4011_SSL_CONF_CTX_set1_prefix")
 external fun SSL_CONF_CTX_set1_prefix(cctx: CValuesRef<SSL_CONF_CTX>?, @CCall.CString pre: String?): Int
 
-@CCall("knifunptr_openssl4007_SSL_CONF_CTX_set_ssl")
+@CCall("knifunptr_openssl4012_SSL_CONF_CTX_set_ssl")
 external fun SSL_CONF_CTX_set_ssl(cctx: CValuesRef<SSL_CONF_CTX>?, ssl: CValuesRef<SSL>?): Unit
 
-@CCall("knifunptr_openssl4008_SSL_CONF_CTX_set_ssl_ctx")
+@CCall("knifunptr_openssl4013_SSL_CONF_CTX_set_ssl_ctx")
 external fun SSL_CONF_CTX_set_ssl_ctx(cctx: CValuesRef<SSL_CONF_CTX>?, ctx: CValuesRef<SSL_CTX>?): Unit
 
-@CCall("knifunptr_openssl4009_SSL_CONF_cmd")
+@CCall("knifunptr_openssl4014_SSL_CONF_cmd")
 external fun SSL_CONF_cmd(cctx: CValuesRef<SSL_CONF_CTX>?, @CCall.CString cmd: String?, @CCall.CString value: String?): Int
 
-@CCall("knifunptr_openssl4010_SSL_CONF_cmd_argv")
+@CCall("knifunptr_openssl4015_SSL_CONF_cmd_argv")
 external fun SSL_CONF_cmd_argv(
     cctx: CValuesRef<SSL_CONF_CTX>?,
     pargc: CValuesRef<IntVar>?,
     pargv: CValuesRef<CPointerVar<CPointerVar<ByteVar>>>?
 ): Int
 
-@CCall("knifunptr_openssl4011_SSL_CONF_cmd_value_type")
+@CCall("knifunptr_openssl4016_SSL_CONF_cmd_value_type")
 external fun SSL_CONF_cmd_value_type(cctx: CValuesRef<SSL_CONF_CTX>?, @CCall.CString cmd: String?): Int
 
-@CCall("knifunptr_openssl4012_SSL_add_ssl_module")
+@CCall("knifunptr_openssl4017_SSL_add_ssl_module")
 external fun SSL_add_ssl_module(): Unit
 
-@CCall("knifunptr_openssl4013_SSL_config")
+@CCall("knifunptr_openssl4018_SSL_config")
 external fun SSL_config(s: CValuesRef<SSL>?, @CCall.CString name: String?): Int
 
-@CCall("knifunptr_openssl4014_SSL_CTX_config")
+@CCall("knifunptr_openssl4019_SSL_CTX_config")
 external fun SSL_CTX_config(ctx: CValuesRef<SSL_CTX>?, @CCall.CString name: String?): Int
 
-@CCall("knifunptr_openssl4015_DTLSv1_listen")
+@CCall("knifunptr_openssl4020_DTLSv1_listen")
 external fun DTLSv1_listen(s: CValuesRef<SSL>?, client: CValuesRef<BIO_ADDR>?): Int
 
-@CCall("knifunptr_openssl4016_SSL_set_ct_validation_callback")
+@CCall("knifunptr_openssl4021_SSL_set_ct_validation_callback")
 external fun SSL_set_ct_validation_callback(
     s: CValuesRef<SSL>?,
     callback: ssl_ct_validation_cb?,
     arg: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl4017_SSL_CTX_set_ct_validation_callback")
+@CCall("knifunptr_openssl4022_SSL_CTX_set_ct_validation_callback")
 external fun SSL_CTX_set_ct_validation_callback(
     ctx: CValuesRef<SSL_CTX>?,
     callback: ssl_ct_validation_cb?,
     arg: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl4018_SSL_enable_ct")
+@CCall("knifunptr_openssl4023_SSL_enable_ct")
 external fun SSL_enable_ct(s: CValuesRef<SSL>?, validation_mode: Int): Int
 
-@CCall("knifunptr_openssl4019_SSL_CTX_enable_ct")
+@CCall("knifunptr_openssl4024_SSL_CTX_enable_ct")
 external fun SSL_CTX_enable_ct(ctx: CValuesRef<SSL_CTX>?, validation_mode: Int): Int
 
-@CCall("knifunptr_openssl4020_SSL_ct_is_enabled")
+@CCall("knifunptr_openssl4025_SSL_ct_is_enabled")
 external fun SSL_ct_is_enabled(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl4021_SSL_CTX_ct_is_enabled")
+@CCall("knifunptr_openssl4026_SSL_CTX_ct_is_enabled")
 external fun SSL_CTX_ct_is_enabled(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl4022_SSL_get0_peer_scts")
+@CCall("knifunptr_openssl4027_SSL_get0_peer_scts")
 external fun SSL_get0_peer_scts(s: CValuesRef<SSL>?): CPointer<stack_st_SCT>?
 
-@CCall("knifunptr_openssl4023_SSL_CTX_set_default_ctlog_list_file")
+@CCall("knifunptr_openssl4028_SSL_CTX_set_default_ctlog_list_file")
 external fun SSL_CTX_set_default_ctlog_list_file(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl4024_SSL_CTX_set_ctlog_list_file")
+@CCall("knifunptr_openssl4029_SSL_CTX_set_ctlog_list_file")
 external fun SSL_CTX_set_ctlog_list_file(ctx: CValuesRef<SSL_CTX>?, @CCall.CString path: String?): Int
 
-@CCall("knifunptr_openssl4025_SSL_CTX_set0_ctlog_store")
+@CCall("knifunptr_openssl4030_SSL_CTX_set0_ctlog_store")
 external fun SSL_CTX_set0_ctlog_store(ctx: CValuesRef<SSL_CTX>?, logs: CValuesRef<CTLOG_STORE>?): Unit
 
-@CCall("knifunptr_openssl4026_SSL_CTX_get0_ctlog_store")
+@CCall("knifunptr_openssl4031_SSL_CTX_get0_ctlog_store")
 external fun SSL_CTX_get0_ctlog_store(ctx: CValuesRef<SSL_CTX>?): CPointer<CTLOG_STORE>?
 
-@CCall("knifunptr_openssl4027_SSL_set_security_level")
+@CCall("knifunptr_openssl4032_SSL_set_security_level")
 external fun SSL_set_security_level(s: CValuesRef<SSL>?, level: Int): Unit
 
-@CCall("knifunptr_openssl4028_SSL_get_security_level")
+@CCall("knifunptr_openssl4033_SSL_get_security_level")
 external fun SSL_get_security_level(s: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl4029_SSL_set_security_callback")
+@CCall("knifunptr_openssl4034_SSL_set_security_callback")
 external fun SSL_set_security_callback(
     s: CValuesRef<SSL>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, CPointer<SSL_CTX>?, Int, Int, Int, COpaquePointer?, COpaquePointer?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl4030_SSL_get_security_callback")
+@CCall("knifunptr_openssl4035_SSL_get_security_callback")
 external fun SSL_get_security_callback(s: CValuesRef<SSL>?): CPointer<CFunction<(CPointer<SSL>?, CPointer<SSL_CTX>?, Int, Int, Int, COpaquePointer?, COpaquePointer?) -> Int>>?
 
-@CCall("knifunptr_openssl4031_SSL_set0_security_ex_data")
+@CCall("knifunptr_openssl4036_SSL_set0_security_ex_data")
 external fun SSL_set0_security_ex_data(s: CValuesRef<SSL>?, ex: CValuesRef<*>?): Unit
 
-@CCall("knifunptr_openssl4032_SSL_get0_security_ex_data")
+@CCall("knifunptr_openssl4037_SSL_get0_security_ex_data")
 external fun SSL_get0_security_ex_data(s: CValuesRef<SSL>?): COpaquePointer?
 
-@CCall("knifunptr_openssl4033_SSL_CTX_set_security_level")
+@CCall("knifunptr_openssl4038_SSL_CTX_set_security_level")
 external fun SSL_CTX_set_security_level(ctx: CValuesRef<SSL_CTX>?, level: Int): Unit
 
-@CCall("knifunptr_openssl4034_SSL_CTX_get_security_level")
+@CCall("knifunptr_openssl4039_SSL_CTX_get_security_level")
 external fun SSL_CTX_get_security_level(ctx: CValuesRef<SSL_CTX>?): Int
 
-@CCall("knifunptr_openssl4035_SSL_CTX_set_security_callback")
+@CCall("knifunptr_openssl4040_SSL_CTX_set_security_callback")
 external fun SSL_CTX_set_security_callback(
     ctx: CValuesRef<SSL_CTX>?,
     cb: CPointer<CFunction<(CPointer<SSL>?, CPointer<SSL_CTX>?, Int, Int, Int, COpaquePointer?, COpaquePointer?) -> Int>>?
 ): Unit
 
-@CCall("knifunptr_openssl4036_SSL_CTX_get_security_callback")
+@CCall("knifunptr_openssl4041_SSL_CTX_get_security_callback")
 external fun SSL_CTX_get_security_callback(ctx: CValuesRef<SSL_CTX>?): CPointer<CFunction<(CPointer<SSL>?, CPointer<SSL_CTX>?, Int, Int, Int, COpaquePointer?, COpaquePointer?) -> Int>>?
 
-@CCall("knifunptr_openssl4037_SSL_CTX_set0_security_ex_data")
+@CCall("knifunptr_openssl4042_SSL_CTX_set0_security_ex_data")
 external fun SSL_CTX_set0_security_ex_data(ctx: CValuesRef<SSL_CTX>?, ex: CValuesRef<*>?): Unit
 
-@CCall("knifunptr_openssl4038_SSL_CTX_get0_security_ex_data")
+@CCall("knifunptr_openssl4043_SSL_CTX_get0_security_ex_data")
 external fun SSL_CTX_get0_security_ex_data(ctx: CValuesRef<SSL_CTX>?): COpaquePointer?
 
-@CCall("knifunptr_openssl4039_OPENSSL_init_ssl")
+@CCall("knifunptr_openssl4044_OPENSSL_init_ssl")
 external fun OPENSSL_init_ssl(opts: uint64_t, settings: CValuesRef<OPENSSL_INIT_SETTINGS>?): Int
 
-@CCall("knifunptr_openssl4040_SSL_free_buffers")
+@CCall("knifunptr_openssl4045_SSL_free_buffers")
 external fun SSL_free_buffers(ssl: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl4041_SSL_alloc_buffers")
+@CCall("knifunptr_openssl4046_SSL_alloc_buffers")
 external fun SSL_alloc_buffers(ssl: CValuesRef<SSL>?): Int
 
-@CCall("knifunptr_openssl4042_SSL_CTX_set_session_ticket_cb")
+@CCall("knifunptr_openssl4047_SSL_CTX_set_session_ticket_cb")
 external fun SSL_CTX_set_session_ticket_cb(
     ctx: CValuesRef<SSL_CTX>?,
     gen_cb: SSL_CTX_generate_session_ticket_fn?,
@@ -18597,103 +18716,103 @@ external fun SSL_CTX_set_session_ticket_cb(
     arg: CValuesRef<*>?
 ): Int
 
-@CCall("knifunptr_openssl4043_SSL_SESSION_set1_ticket_appdata")
+@CCall("knifunptr_openssl4048_SSL_SESSION_set1_ticket_appdata")
 external fun SSL_SESSION_set1_ticket_appdata(ss: CValuesRef<SSL_SESSION>?, data: CValuesRef<*>?, len: size_t): Int
 
-@CCall("knifunptr_openssl4044_SSL_SESSION_get0_ticket_appdata")
+@CCall("knifunptr_openssl4049_SSL_SESSION_get0_ticket_appdata")
 external fun SSL_SESSION_get0_ticket_appdata(
     ss: CValuesRef<SSL_SESSION>?,
     data: CValuesRef<COpaquePointerVar>?,
     len: CValuesRef<size_tVar>?
 ): Int
 
-@CCall("knifunptr_openssl4045_DTLS_set_timer_cb")
+@CCall("knifunptr_openssl4050_DTLS_set_timer_cb")
 external fun DTLS_set_timer_cb(s: CValuesRef<SSL>?, cb: DTLS_timer_cb?): Unit
 
-@CCall("knifunptr_openssl4046_SSL_CTX_set_allow_early_data_cb")
+@CCall("knifunptr_openssl4051_SSL_CTX_set_allow_early_data_cb")
 external fun SSL_CTX_set_allow_early_data_cb(
     ctx: CValuesRef<SSL_CTX>?,
     cb: SSL_allow_early_data_cb_fn?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl4047_SSL_set_allow_early_data_cb")
+@CCall("knifunptr_openssl4052_SSL_set_allow_early_data_cb")
 external fun SSL_set_allow_early_data_cb(
     s: CValuesRef<SSL>?,
     cb: SSL_allow_early_data_cb_fn?,
     arg: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl4048_lh_ERR_STRING_DATA_new")
+@CCall("knifunptr_openssl4053_lh_ERR_STRING_DATA_new")
 external fun lh_ERR_STRING_DATA_new(
     hfn: CPointer<CFunction<(CPointer<ERR_STRING_DATA>?) -> UInt>>?,
     cfn: CPointer<CFunction<(CPointer<ERR_STRING_DATA>?, CPointer<ERR_STRING_DATA>?) -> Int>>?
 ): CPointer<lhash_st_ERR_STRING_DATA>?
 
-@CCall("knifunptr_openssl4049_lh_ERR_STRING_DATA_free")
+@CCall("knifunptr_openssl4054_lh_ERR_STRING_DATA_free")
 external fun lh_ERR_STRING_DATA_free(lh: CValuesRef<lhash_st_ERR_STRING_DATA>?): Unit
 
-@CCall("knifunptr_openssl4050_lh_ERR_STRING_DATA_insert")
+@CCall("knifunptr_openssl4055_lh_ERR_STRING_DATA_insert")
 external fun lh_ERR_STRING_DATA_insert(
     lh: CValuesRef<lhash_st_ERR_STRING_DATA>?,
     d: CValuesRef<ERR_STRING_DATA>?
 ): CPointer<ERR_STRING_DATA>?
 
-@CCall("knifunptr_openssl4051_lh_ERR_STRING_DATA_delete")
+@CCall("knifunptr_openssl4056_lh_ERR_STRING_DATA_delete")
 external fun lh_ERR_STRING_DATA_delete(
     lh: CValuesRef<lhash_st_ERR_STRING_DATA>?,
     d: CValuesRef<ERR_STRING_DATA>?
 ): CPointer<ERR_STRING_DATA>?
 
-@CCall("knifunptr_openssl4052_lh_ERR_STRING_DATA_retrieve")
+@CCall("knifunptr_openssl4057_lh_ERR_STRING_DATA_retrieve")
 external fun lh_ERR_STRING_DATA_retrieve(
     lh: CValuesRef<lhash_st_ERR_STRING_DATA>?,
     d: CValuesRef<ERR_STRING_DATA>?
 ): CPointer<ERR_STRING_DATA>?
 
-@CCall("knifunptr_openssl4053_lh_ERR_STRING_DATA_error")
+@CCall("knifunptr_openssl4058_lh_ERR_STRING_DATA_error")
 external fun lh_ERR_STRING_DATA_error(lh: CValuesRef<lhash_st_ERR_STRING_DATA>?): Int
 
-@CCall("knifunptr_openssl4054_lh_ERR_STRING_DATA_num_items")
+@CCall("knifunptr_openssl4059_lh_ERR_STRING_DATA_num_items")
 external fun lh_ERR_STRING_DATA_num_items(lh: CValuesRef<lhash_st_ERR_STRING_DATA>?): UInt
 
-@CCall("knifunptr_openssl4055_lh_ERR_STRING_DATA_node_stats_bio")
+@CCall("knifunptr_openssl4060_lh_ERR_STRING_DATA_node_stats_bio")
 external fun lh_ERR_STRING_DATA_node_stats_bio(lh: CValuesRef<lhash_st_ERR_STRING_DATA>?, out: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl4056_lh_ERR_STRING_DATA_node_usage_stats_bio")
+@CCall("knifunptr_openssl4061_lh_ERR_STRING_DATA_node_usage_stats_bio")
 external fun lh_ERR_STRING_DATA_node_usage_stats_bio(
     lh: CValuesRef<lhash_st_ERR_STRING_DATA>?,
     out: CValuesRef<BIO>?
 ): Unit
 
-@CCall("knifunptr_openssl4057_lh_ERR_STRING_DATA_stats_bio")
+@CCall("knifunptr_openssl4062_lh_ERR_STRING_DATA_stats_bio")
 external fun lh_ERR_STRING_DATA_stats_bio(lh: CValuesRef<lhash_st_ERR_STRING_DATA>?, out: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl4058_lh_ERR_STRING_DATA_get_down_load")
+@CCall("knifunptr_openssl4063_lh_ERR_STRING_DATA_get_down_load")
 external fun lh_ERR_STRING_DATA_get_down_load(lh: CValuesRef<lhash_st_ERR_STRING_DATA>?): UInt
 
-@CCall("knifunptr_openssl4059_lh_ERR_STRING_DATA_set_down_load")
+@CCall("knifunptr_openssl4064_lh_ERR_STRING_DATA_set_down_load")
 external fun lh_ERR_STRING_DATA_set_down_load(lh: CValuesRef<lhash_st_ERR_STRING_DATA>?, dl: UInt): Unit
 
-@CCall("knifunptr_openssl4060_lh_ERR_STRING_DATA_doall")
+@CCall("knifunptr_openssl4065_lh_ERR_STRING_DATA_doall")
 external fun lh_ERR_STRING_DATA_doall(
     lh: CValuesRef<lhash_st_ERR_STRING_DATA>?,
     doall: CPointer<CFunction<(CPointer<ERR_STRING_DATA>?) -> Unit>>?
 ): Unit
 
-@CCall("knifunptr_openssl4061_ERR_put_error")
+@CCall("knifunptr_openssl4066_ERR_put_error")
 external fun ERR_put_error(lib: Int, func: Int, reason: Int, @CCall.CString file: String?, line: Int): Unit
 
-@CCall("knifunptr_openssl4062_ERR_set_error_data")
+@CCall("knifunptr_openssl4067_ERR_set_error_data")
 external fun ERR_set_error_data(data: CValuesRef<ByteVar>?, flags: Int): Unit
 
-@CCall("knifunptr_openssl4063_ERR_get_error")
+@CCall("knifunptr_openssl4068_ERR_get_error")
 external fun ERR_get_error(): UInt
 
-@CCall("knifunptr_openssl4064_ERR_get_error_line")
+@CCall("knifunptr_openssl4069_ERR_get_error_line")
 external fun ERR_get_error_line(file: CValuesRef<CPointerVar<ByteVar>>?, line: CValuesRef<IntVar>?): UInt
 
-@CCall("knifunptr_openssl4065_ERR_get_error_line_data")
+@CCall("knifunptr_openssl4070_ERR_get_error_line_data")
 external fun ERR_get_error_line_data(
     file: CValuesRef<CPointerVar<ByteVar>>?,
     line: CValuesRef<IntVar>?,
@@ -18701,13 +18820,13 @@ external fun ERR_get_error_line_data(
     flags: CValuesRef<IntVar>?
 ): UInt
 
-@CCall("knifunptr_openssl4066_ERR_peek_error")
+@CCall("knifunptr_openssl4071_ERR_peek_error")
 external fun ERR_peek_error(): UInt
 
-@CCall("knifunptr_openssl4067_ERR_peek_error_line")
+@CCall("knifunptr_openssl4072_ERR_peek_error_line")
 external fun ERR_peek_error_line(file: CValuesRef<CPointerVar<ByteVar>>?, line: CValuesRef<IntVar>?): UInt
 
-@CCall("knifunptr_openssl4068_ERR_peek_error_line_data")
+@CCall("knifunptr_openssl4073_ERR_peek_error_line_data")
 external fun ERR_peek_error_line_data(
     file: CValuesRef<CPointerVar<ByteVar>>?,
     line: CValuesRef<IntVar>?,
@@ -18715,13 +18834,13 @@ external fun ERR_peek_error_line_data(
     flags: CValuesRef<IntVar>?
 ): UInt
 
-@CCall("knifunptr_openssl4069_ERR_peek_last_error")
+@CCall("knifunptr_openssl4074_ERR_peek_last_error")
 external fun ERR_peek_last_error(): UInt
 
-@CCall("knifunptr_openssl4070_ERR_peek_last_error_line")
+@CCall("knifunptr_openssl4075_ERR_peek_last_error_line")
 external fun ERR_peek_last_error_line(file: CValuesRef<CPointerVar<ByteVar>>?, line: CValuesRef<IntVar>?): UInt
 
-@CCall("knifunptr_openssl4071_ERR_peek_last_error_line_data")
+@CCall("knifunptr_openssl4076_ERR_peek_last_error_line_data")
 external fun ERR_peek_last_error_line_data(
     file: CValuesRef<CPointerVar<ByteVar>>?,
     line: CValuesRef<IntVar>?,
@@ -18729,181 +18848,184 @@ external fun ERR_peek_last_error_line_data(
     flags: CValuesRef<IntVar>?
 ): UInt
 
-@CCall("knifunptr_openssl4072_ERR_clear_error")
+@CCall("knifunptr_openssl4077_ERR_clear_error")
 external fun ERR_clear_error(): Unit
 
-@CCall("knifunptr_openssl4073_ERR_error_string")
+@CCall("knifunptr_openssl4078_ERR_error_string")
 external fun ERR_error_string(e: UInt, buf: CValuesRef<ByteVar>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl4074_ERR_error_string_n")
+@CCall("knifunptr_openssl4079_ERR_error_string_n")
 external fun ERR_error_string_n(e: UInt, buf: CValuesRef<ByteVar>?, len: size_t): Unit
 
-@CCall("knifunptr_openssl4075_ERR_lib_error_string")
+@CCall("knifunptr_openssl4080_ERR_lib_error_string")
 external fun ERR_lib_error_string(e: UInt): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl4076_ERR_func_error_string")
+@CCall("knifunptr_openssl4081_ERR_func_error_string")
 external fun ERR_func_error_string(e: UInt): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl4077_ERR_reason_error_string")
+@CCall("knifunptr_openssl4082_ERR_reason_error_string")
 external fun ERR_reason_error_string(e: UInt): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl4078_ERR_print_errors_cb")
+@CCall("knifunptr_openssl4083_ERR_print_errors_cb")
 external fun ERR_print_errors_cb(
     cb: CPointer<CFunction<(CPointer<ByteVar>?, size_t, COpaquePointer?) -> Int>>?,
     u: CValuesRef<*>?
 ): Unit
 
-@CCall("knifunptr_openssl4079_ERR_print_errors_fp")
+@CCall("knifunptr_openssl4084_ERR_print_errors_fp")
 external fun ERR_print_errors_fp(fp: CValuesRef<FILE>?): Unit
 
-@CCall("knifunptr_openssl4080_ERR_print_errors")
+@CCall("knifunptr_openssl4085_ERR_print_errors")
 external fun ERR_print_errors(bp: CValuesRef<BIO>?): Unit
 
-@CCall("knifunptr_openssl4081_ERR_add_error_data")
+@CCall("knifunptr_openssl4086_ERR_add_error_data")
 external fun ERR_add_error_data(num: Int, vararg variadicArguments: Any?): Unit
 
-@CCall("knifunptr_openssl4083_ERR_load_strings")
+@Deprecated("Unable to import this declaration", level = DeprecationLevel.ERROR)
+fun ERR_add_error_vdata(num: Int, args: CValue<va_list>): Unit = throw UnsupportedOperationException()
+
+@CCall("knifunptr_openssl4088_ERR_load_strings")
 external fun ERR_load_strings(lib: Int, str: CValuesRef<ERR_STRING_DATA>?): Int
 
-@CCall("knifunptr_openssl4084_ERR_load_strings_const")
+@CCall("knifunptr_openssl4089_ERR_load_strings_const")
 external fun ERR_load_strings_const(str: CValuesRef<ERR_STRING_DATA>?): Int
 
-@CCall("knifunptr_openssl4085_ERR_unload_strings")
+@CCall("knifunptr_openssl4090_ERR_unload_strings")
 external fun ERR_unload_strings(lib: Int, str: CValuesRef<ERR_STRING_DATA>?): Int
 
-@CCall("knifunptr_openssl4086_ERR_load_ERR_strings")
+@CCall("knifunptr_openssl4091_ERR_load_ERR_strings")
 external fun ERR_load_ERR_strings(): Int
 
-@CCall("knifunptr_openssl4087_ERR_remove_thread_state")
+@CCall("knifunptr_openssl4092_ERR_remove_thread_state")
 external fun ERR_remove_thread_state(arg0: CValuesRef<*>?): Unit
 
-@CCall("knifunptr_openssl4088_ERR_remove_state")
+@CCall("knifunptr_openssl4093_ERR_remove_state")
 external fun ERR_remove_state(pid: UInt): Unit
 
-@CCall("knifunptr_openssl4089_ERR_get_state")
+@CCall("knifunptr_openssl4094_ERR_get_state")
 external fun ERR_get_state(): CPointer<ERR_STATE>?
 
-@CCall("knifunptr_openssl4090_ERR_get_next_error_library")
+@CCall("knifunptr_openssl4095_ERR_get_next_error_library")
 external fun ERR_get_next_error_library(): Int
 
-@CCall("knifunptr_openssl4091_ERR_set_mark")
+@CCall("knifunptr_openssl4096_ERR_set_mark")
 external fun ERR_set_mark(): Int
 
-@CCall("knifunptr_openssl4092_ERR_pop_to_mark")
+@CCall("knifunptr_openssl4097_ERR_pop_to_mark")
 external fun ERR_pop_to_mark(): Int
 
-@CCall("knifunptr_openssl4093_ERR_clear_last_mark")
+@CCall("knifunptr_openssl4098_ERR_clear_last_mark")
 external fun ERR_clear_last_mark(): Int
 
-@CCall("knifunptr_openssl4094_ERR_load_PKCS12_strings")
+@CCall("knifunptr_openssl4099_ERR_load_PKCS12_strings")
 external fun ERR_load_PKCS12_strings(): Int
 
-@CCall("knifunptr_openssl4095_sk_PKCS12_SAFEBAG_num")
+@CCall("knifunptr_openssl4100_sk_PKCS12_SAFEBAG_num")
 external fun sk_PKCS12_SAFEBAG_num(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?): Int
 
-@CCall("knifunptr_openssl4096_sk_PKCS12_SAFEBAG_value")
+@CCall("knifunptr_openssl4101_sk_PKCS12_SAFEBAG_value")
 external fun sk_PKCS12_SAFEBAG_value(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?, idx: Int): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4097_sk_PKCS12_SAFEBAG_new")
+@CCall("knifunptr_openssl4102_sk_PKCS12_SAFEBAG_new")
 external fun sk_PKCS12_SAFEBAG_new(compare: sk_PKCS12_SAFEBAG_compfunc?): CPointer<stack_st_PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4098_sk_PKCS12_SAFEBAG_new_null")
+@CCall("knifunptr_openssl4103_sk_PKCS12_SAFEBAG_new_null")
 external fun sk_PKCS12_SAFEBAG_new_null(): CPointer<stack_st_PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4099_sk_PKCS12_SAFEBAG_new_reserve")
+@CCall("knifunptr_openssl4104_sk_PKCS12_SAFEBAG_new_reserve")
 external fun sk_PKCS12_SAFEBAG_new_reserve(
     compare: sk_PKCS12_SAFEBAG_compfunc?,
     n: Int
 ): CPointer<stack_st_PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4100_sk_PKCS12_SAFEBAG_reserve")
+@CCall("knifunptr_openssl4105_sk_PKCS12_SAFEBAG_reserve")
 external fun sk_PKCS12_SAFEBAG_reserve(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?, n: Int): Int
 
-@CCall("knifunptr_openssl4101_sk_PKCS12_SAFEBAG_free")
+@CCall("knifunptr_openssl4106_sk_PKCS12_SAFEBAG_free")
 external fun sk_PKCS12_SAFEBAG_free(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?): Unit
 
-@CCall("knifunptr_openssl4102_sk_PKCS12_SAFEBAG_zero")
+@CCall("knifunptr_openssl4107_sk_PKCS12_SAFEBAG_zero")
 external fun sk_PKCS12_SAFEBAG_zero(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?): Unit
 
-@CCall("knifunptr_openssl4103_sk_PKCS12_SAFEBAG_delete")
+@CCall("knifunptr_openssl4108_sk_PKCS12_SAFEBAG_delete")
 external fun sk_PKCS12_SAFEBAG_delete(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?, i: Int): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4104_sk_PKCS12_SAFEBAG_delete_ptr")
+@CCall("knifunptr_openssl4109_sk_PKCS12_SAFEBAG_delete_ptr")
 external fun sk_PKCS12_SAFEBAG_delete_ptr(
     sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?,
     ptr: CValuesRef<PKCS12_SAFEBAG>?
 ): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4105_sk_PKCS12_SAFEBAG_push")
+@CCall("knifunptr_openssl4110_sk_PKCS12_SAFEBAG_push")
 external fun sk_PKCS12_SAFEBAG_push(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?, ptr: CValuesRef<PKCS12_SAFEBAG>?): Int
 
-@CCall("knifunptr_openssl4106_sk_PKCS12_SAFEBAG_unshift")
+@CCall("knifunptr_openssl4111_sk_PKCS12_SAFEBAG_unshift")
 external fun sk_PKCS12_SAFEBAG_unshift(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?, ptr: CValuesRef<PKCS12_SAFEBAG>?): Int
 
-@CCall("knifunptr_openssl4107_sk_PKCS12_SAFEBAG_pop")
+@CCall("knifunptr_openssl4112_sk_PKCS12_SAFEBAG_pop")
 external fun sk_PKCS12_SAFEBAG_pop(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4108_sk_PKCS12_SAFEBAG_shift")
+@CCall("knifunptr_openssl4113_sk_PKCS12_SAFEBAG_shift")
 external fun sk_PKCS12_SAFEBAG_shift(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4109_sk_PKCS12_SAFEBAG_pop_free")
+@CCall("knifunptr_openssl4114_sk_PKCS12_SAFEBAG_pop_free")
 external fun sk_PKCS12_SAFEBAG_pop_free(
     sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?,
     freefunc: sk_PKCS12_SAFEBAG_freefunc?
 ): Unit
 
-@CCall("knifunptr_openssl4110_sk_PKCS12_SAFEBAG_insert")
+@CCall("knifunptr_openssl4115_sk_PKCS12_SAFEBAG_insert")
 external fun sk_PKCS12_SAFEBAG_insert(
     sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?,
     ptr: CValuesRef<PKCS12_SAFEBAG>?,
     idx: Int
 ): Int
 
-@CCall("knifunptr_openssl4111_sk_PKCS12_SAFEBAG_set")
+@CCall("knifunptr_openssl4116_sk_PKCS12_SAFEBAG_set")
 external fun sk_PKCS12_SAFEBAG_set(
     sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?,
     idx: Int,
     ptr: CValuesRef<PKCS12_SAFEBAG>?
 ): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4112_sk_PKCS12_SAFEBAG_find")
+@CCall("knifunptr_openssl4117_sk_PKCS12_SAFEBAG_find")
 external fun sk_PKCS12_SAFEBAG_find(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?, ptr: CValuesRef<PKCS12_SAFEBAG>?): Int
 
-@CCall("knifunptr_openssl4113_sk_PKCS12_SAFEBAG_find_ex")
+@CCall("knifunptr_openssl4118_sk_PKCS12_SAFEBAG_find_ex")
 external fun sk_PKCS12_SAFEBAG_find_ex(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?, ptr: CValuesRef<PKCS12_SAFEBAG>?): Int
 
-@CCall("knifunptr_openssl4114_sk_PKCS12_SAFEBAG_sort")
+@CCall("knifunptr_openssl4119_sk_PKCS12_SAFEBAG_sort")
 external fun sk_PKCS12_SAFEBAG_sort(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?): Unit
 
-@CCall("knifunptr_openssl4115_sk_PKCS12_SAFEBAG_is_sorted")
+@CCall("knifunptr_openssl4120_sk_PKCS12_SAFEBAG_is_sorted")
 external fun sk_PKCS12_SAFEBAG_is_sorted(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?): Int
 
-@CCall("knifunptr_openssl4116_sk_PKCS12_SAFEBAG_dup")
+@CCall("knifunptr_openssl4121_sk_PKCS12_SAFEBAG_dup")
 external fun sk_PKCS12_SAFEBAG_dup(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?): CPointer<stack_st_PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4117_sk_PKCS12_SAFEBAG_deep_copy")
+@CCall("knifunptr_openssl4122_sk_PKCS12_SAFEBAG_deep_copy")
 external fun sk_PKCS12_SAFEBAG_deep_copy(
     sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?,
     copyfunc: sk_PKCS12_SAFEBAG_copyfunc?,
     freefunc: sk_PKCS12_SAFEBAG_freefunc?
 ): CPointer<stack_st_PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4118_sk_PKCS12_SAFEBAG_set_cmp_func")
+@CCall("knifunptr_openssl4123_sk_PKCS12_SAFEBAG_set_cmp_func")
 external fun sk_PKCS12_SAFEBAG_set_cmp_func(
     sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?,
     compare: sk_PKCS12_SAFEBAG_compfunc?
 ): sk_PKCS12_SAFEBAG_compfunc?
 
-@CCall("knifunptr_openssl4119_PKCS12_get_attr")
+@CCall("knifunptr_openssl4124_PKCS12_get_attr")
 external fun PKCS12_get_attr(bag: CValuesRef<PKCS12_SAFEBAG>?, attr_nid: Int): CPointer<ASN1_TYPE>?
 
-@CCall("knifunptr_openssl4120_PKCS8_get_attr")
+@CCall("knifunptr_openssl4125_PKCS8_get_attr")
 external fun PKCS8_get_attr(p8: CValuesRef<PKCS8_PRIV_KEY_INFO>?, attr_nid: Int): CPointer<ASN1_TYPE>?
 
-@CCall("knifunptr_openssl4121_PKCS12_mac_present")
+@CCall("knifunptr_openssl4126_PKCS12_mac_present")
 external fun PKCS12_mac_present(p12: CValuesRef<PKCS12>?): Int
 
-@CCall("knifunptr_openssl4122_PKCS12_get0_mac")
+@CCall("knifunptr_openssl4127_PKCS12_get0_mac")
 external fun PKCS12_get0_mac(
     pmac: CValuesRef<CPointerVar<ASN1_OCTET_STRING>>?,
     pmacalg: CValuesRef<CPointerVar<X509_ALGOR>>?,
@@ -18912,48 +19034,49 @@ external fun PKCS12_get0_mac(
     p12: CValuesRef<PKCS12>?
 ): Unit
 
-@CCall("knifunptr_openssl4123_PKCS12_SAFEBAG_get0_attr")
+@CCall("knifunptr_openssl4128_PKCS12_SAFEBAG_get0_attr")
 external fun PKCS12_SAFEBAG_get0_attr(bag: CValuesRef<PKCS12_SAFEBAG>?, attr_nid: Int): CPointer<ASN1_TYPE>?
 
-@CCall("knifunptr_openssl4124_PKCS12_SAFEBAG_get0_type")
+@CCall("knifunptr_openssl4129_PKCS12_SAFEBAG_get0_type")
 external fun PKCS12_SAFEBAG_get0_type(bag: CValuesRef<PKCS12_SAFEBAG>?): CPointer<ASN1_OBJECT>?
 
-@CCall("knifunptr_openssl4125_PKCS12_SAFEBAG_get_nid")
+@CCall("knifunptr_openssl4130_PKCS12_SAFEBAG_get_nid")
 external fun PKCS12_SAFEBAG_get_nid(bag: CValuesRef<PKCS12_SAFEBAG>?): Int
 
-@CCall("knifunptr_openssl4126_PKCS12_SAFEBAG_get_bag_nid")
+@CCall("knifunptr_openssl4131_PKCS12_SAFEBAG_get_bag_nid")
 external fun PKCS12_SAFEBAG_get_bag_nid(bag: CValuesRef<PKCS12_SAFEBAG>?): Int
 
-@CCall("knifunptr_openssl4127_PKCS12_SAFEBAG_get1_cert")
+@CCall("knifunptr_openssl4132_PKCS12_SAFEBAG_get1_cert")
 external fun PKCS12_SAFEBAG_get1_cert(bag: CValuesRef<PKCS12_SAFEBAG>?): CPointer<X509>?
 
-@CCall("knifunptr_openssl4128_PKCS12_SAFEBAG_get1_crl")
+@CCall("knifunptr_openssl4133_PKCS12_SAFEBAG_get1_crl")
 external fun PKCS12_SAFEBAG_get1_crl(bag: CValuesRef<PKCS12_SAFEBAG>?): CPointer<X509_CRL>?
 
-@CCall("knifunptr_openssl4129_PKCS12_SAFEBAG_get0_safes")
+@CCall("knifunptr_openssl4134_PKCS12_SAFEBAG_get0_safes")
 external fun PKCS12_SAFEBAG_get0_safes(bag: CValuesRef<PKCS12_SAFEBAG>?): CPointer<stack_st_PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4130_PKCS12_SAFEBAG_get0_p8inf")
+@CCall("knifunptr_openssl4135_PKCS12_SAFEBAG_get0_p8inf")
 external fun PKCS12_SAFEBAG_get0_p8inf(bag: CValuesRef<PKCS12_SAFEBAG>?): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl4131_PKCS12_SAFEBAG_get0_pkcs8")
+@CCall("knifunptr_openssl4136_PKCS12_SAFEBAG_get0_pkcs8")
 external fun PKCS12_SAFEBAG_get0_pkcs8(bag: CValuesRef<PKCS12_SAFEBAG>?): CPointer<X509_SIG>?
 
-@CCall("knifunptr_openssl4132_PKCS12_SAFEBAG_create_cert")
+@CCall("knifunptr_openssl4137_PKCS12_SAFEBAG_create_cert")
 external fun PKCS12_SAFEBAG_create_cert(x509: CValuesRef<X509>?): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4133_PKCS12_SAFEBAG_create_crl")
+@CCall("knifunptr_openssl4138_PKCS12_SAFEBAG_create_crl")
 external fun PKCS12_SAFEBAG_create_crl(crl: CValuesRef<X509_CRL>?): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4134_PKCS12_SAFEBAG_create0_p8inf")
+@CCall("knifunptr_openssl4139_PKCS12_SAFEBAG_create0_p8inf")
 external fun PKCS12_SAFEBAG_create0_p8inf(p8: CValuesRef<PKCS8_PRIV_KEY_INFO>?): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4135_PKCS12_SAFEBAG_create0_pkcs8")
+@CCall("knifunptr_openssl4140_PKCS12_SAFEBAG_create0_pkcs8")
 external fun PKCS12_SAFEBAG_create0_pkcs8(p8: CValuesRef<X509_SIG>?): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4136_PKCS12_SAFEBAG_create_pkcs8_encrypt")
+@CCall("knifunptr_openssl4141_PKCS12_SAFEBAG_create_pkcs8_encrypt")
 external fun PKCS12_SAFEBAG_create_pkcs8_encrypt(
-    pbe_nid: Int, @CCall.CString pass: String?,
+    pbe_nid: Int,
+    @CCall.CString pass: String?,
     passlen: Int,
     salt: CValuesRef<UByteVar>?,
     saltlen: Int,
@@ -18961,7 +19084,7 @@ external fun PKCS12_SAFEBAG_create_pkcs8_encrypt(
     p8inf: CValuesRef<PKCS8_PRIV_KEY_INFO>?
 ): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4137_PKCS12_item_pack_safebag")
+@CCall("knifunptr_openssl4142_PKCS12_item_pack_safebag")
 external fun PKCS12_item_pack_safebag(
     obj: CValuesRef<*>?,
     it: CValuesRef<ASN1_ITEM>?,
@@ -18969,22 +19092,25 @@ external fun PKCS12_item_pack_safebag(
     nid2: Int
 ): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4138_PKCS8_decrypt")
+@CCall("knifunptr_openssl4143_PKCS8_decrypt")
 external fun PKCS8_decrypt(
-    p8: CValuesRef<X509_SIG>?, @CCall.CString pass: String?,
+    p8: CValuesRef<X509_SIG>?,
+    @CCall.CString pass: String?,
     passlen: Int
 ): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl4139_PKCS12_decrypt_skey")
+@CCall("knifunptr_openssl4144_PKCS12_decrypt_skey")
 external fun PKCS12_decrypt_skey(
-    bag: CValuesRef<PKCS12_SAFEBAG>?, @CCall.CString pass: String?,
+    bag: CValuesRef<PKCS12_SAFEBAG>?,
+    @CCall.CString pass: String?,
     passlen: Int
 ): CPointer<PKCS8_PRIV_KEY_INFO>?
 
-@CCall("knifunptr_openssl4140_PKCS8_encrypt")
+@CCall("knifunptr_openssl4145_PKCS8_encrypt")
 external fun PKCS8_encrypt(
     pbe_nid: Int,
-    cipher: CValuesRef<EVP_CIPHER>?, @CCall.CString pass: String?,
+    cipher: CValuesRef<EVP_CIPHER>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     salt: CValuesRef<UByteVar>?,
     saltlen: Int,
@@ -18992,22 +19118,24 @@ external fun PKCS8_encrypt(
     p8: CValuesRef<PKCS8_PRIV_KEY_INFO>?
 ): CPointer<X509_SIG>?
 
-@CCall("knifunptr_openssl4141_PKCS8_set0_pbe")
+@CCall("knifunptr_openssl4146_PKCS8_set0_pbe")
 external fun PKCS8_set0_pbe(
-    @CCall.CString pass: String?, passlen: Int,
+    @CCall.CString pass: String?,
+    passlen: Int,
     p8inf: CValuesRef<PKCS8_PRIV_KEY_INFO>?,
     pbe: CValuesRef<X509_ALGOR>?
 ): CPointer<X509_SIG>?
 
-@CCall("knifunptr_openssl4142_PKCS12_pack_p7data")
+@CCall("knifunptr_openssl4147_PKCS12_pack_p7data")
 external fun PKCS12_pack_p7data(sk: CValuesRef<stack_st_PKCS12_SAFEBAG>?): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl4143_PKCS12_unpack_p7data")
+@CCall("knifunptr_openssl4148_PKCS12_unpack_p7data")
 external fun PKCS12_unpack_p7data(p7: CValuesRef<PKCS7>?): CPointer<stack_st_PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4144_PKCS12_pack_p7encdata")
+@CCall("knifunptr_openssl4149_PKCS12_pack_p7encdata")
 external fun PKCS12_pack_p7encdata(
-    pbe_nid: Int, @CCall.CString pass: String?,
+    pbe_nid: Int,
+    @CCall.CString pass: String?,
     passlen: Int,
     salt: CValuesRef<UByteVar>?,
     saltlen: Int,
@@ -19015,58 +19143,62 @@ external fun PKCS12_pack_p7encdata(
     bags: CValuesRef<stack_st_PKCS12_SAFEBAG>?
 ): CPointer<PKCS7>?
 
-@CCall("knifunptr_openssl4145_PKCS12_unpack_p7encdata")
+@CCall("knifunptr_openssl4150_PKCS12_unpack_p7encdata")
 external fun PKCS12_unpack_p7encdata(
-    p7: CValuesRef<PKCS7>?, @CCall.CString pass: String?,
+    p7: CValuesRef<PKCS7>?,
+    @CCall.CString pass: String?,
     passlen: Int
 ): CPointer<stack_st_PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4146_PKCS12_pack_authsafes")
+@CCall("knifunptr_openssl4151_PKCS12_pack_authsafes")
 external fun PKCS12_pack_authsafes(p12: CValuesRef<PKCS12>?, safes: CValuesRef<stack_st_PKCS7>?): Int
 
-@CCall("knifunptr_openssl4147_PKCS12_unpack_authsafes")
+@CCall("knifunptr_openssl4152_PKCS12_unpack_authsafes")
 external fun PKCS12_unpack_authsafes(p12: CValuesRef<PKCS12>?): CPointer<stack_st_PKCS7>?
 
-@CCall("knifunptr_openssl4148_PKCS12_add_localkeyid")
+@CCall("knifunptr_openssl4153_PKCS12_add_localkeyid")
 external fun PKCS12_add_localkeyid(bag: CValuesRef<PKCS12_SAFEBAG>?, name: CValuesRef<UByteVar>?, namelen: Int): Int
 
-@CCall("knifunptr_openssl4149_PKCS12_add_friendlyname_asc")
+@CCall("knifunptr_openssl4154_PKCS12_add_friendlyname_asc")
 external fun PKCS12_add_friendlyname_asc(
-    bag: CValuesRef<PKCS12_SAFEBAG>?, @CCall.CString name: String?,
+    bag: CValuesRef<PKCS12_SAFEBAG>?,
+    @CCall.CString name: String?,
     namelen: Int
 ): Int
 
-@CCall("knifunptr_openssl4150_PKCS12_add_friendlyname_utf8")
+@CCall("knifunptr_openssl4155_PKCS12_add_friendlyname_utf8")
 external fun PKCS12_add_friendlyname_utf8(
-    bag: CValuesRef<PKCS12_SAFEBAG>?, @CCall.CString name: String?,
+    bag: CValuesRef<PKCS12_SAFEBAG>?,
+    @CCall.CString name: String?,
     namelen: Int
 ): Int
 
-@CCall("knifunptr_openssl4151_PKCS12_add_CSPName_asc")
+@CCall("knifunptr_openssl4156_PKCS12_add_CSPName_asc")
 external fun PKCS12_add_CSPName_asc(bag: CValuesRef<PKCS12_SAFEBAG>?, @CCall.CString name: String?, namelen: Int): Int
 
-@CCall("knifunptr_openssl4152_PKCS12_add_friendlyname_uni")
+@CCall("knifunptr_openssl4157_PKCS12_add_friendlyname_uni")
 external fun PKCS12_add_friendlyname_uni(
     bag: CValuesRef<PKCS12_SAFEBAG>?,
     name: CValuesRef<UByteVar>?,
     namelen: Int
 ): Int
 
-@CCall("knifunptr_openssl4153_PKCS8_add_keyusage")
+@CCall("knifunptr_openssl4158_PKCS8_add_keyusage")
 external fun PKCS8_add_keyusage(p8: CValuesRef<PKCS8_PRIV_KEY_INFO>?, usage: Int): Int
 
-@CCall("knifunptr_openssl4154_PKCS12_get_attr_gen")
+@CCall("knifunptr_openssl4159_PKCS12_get_attr_gen")
 external fun PKCS12_get_attr_gen(attrs: CValuesRef<stack_st_X509_ATTRIBUTE>?, attr_nid: Int): CPointer<ASN1_TYPE>?
 
-@CCall("knifunptr_openssl4155_PKCS12_get_friendlyname")
+@CCall("knifunptr_openssl4160_PKCS12_get_friendlyname")
 external fun PKCS12_get_friendlyname(bag: CValuesRef<PKCS12_SAFEBAG>?): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl4156_PKCS12_SAFEBAG_get0_attrs")
+@CCall("knifunptr_openssl4161_PKCS12_SAFEBAG_get0_attrs")
 external fun PKCS12_SAFEBAG_get0_attrs(bag: CValuesRef<PKCS12_SAFEBAG>?): CPointer<stack_st_X509_ATTRIBUTE>?
 
-@CCall("knifunptr_openssl4157_PKCS12_pbe_crypt")
+@CCall("knifunptr_openssl4162_PKCS12_pbe_crypt")
 external fun PKCS12_pbe_crypt(
-    algor: CValuesRef<X509_ALGOR>?, @CCall.CString pass: String?,
+    algor: CValuesRef<X509_ALGOR>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     `in`: CValuesRef<UByteVar>?,
     inlen: Int,
@@ -19075,30 +19207,33 @@ external fun PKCS12_pbe_crypt(
     en_de: Int
 ): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl4158_PKCS12_item_decrypt_d2i")
+@CCall("knifunptr_openssl4163_PKCS12_item_decrypt_d2i")
 external fun PKCS12_item_decrypt_d2i(
     algor: CValuesRef<X509_ALGOR>?,
-    it: CValuesRef<ASN1_ITEM>?, @CCall.CString pass: String?,
+    it: CValuesRef<ASN1_ITEM>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     oct: CValuesRef<ASN1_OCTET_STRING>?,
     zbuf: Int
 ): COpaquePointer?
 
-@CCall("knifunptr_openssl4159_PKCS12_item_i2d_encrypt")
+@CCall("knifunptr_openssl4164_PKCS12_item_i2d_encrypt")
 external fun PKCS12_item_i2d_encrypt(
     algor: CValuesRef<X509_ALGOR>?,
-    it: CValuesRef<ASN1_ITEM>?, @CCall.CString pass: String?,
+    it: CValuesRef<ASN1_ITEM>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     obj: CValuesRef<*>?,
     zbuf: Int
 ): CPointer<ASN1_OCTET_STRING>?
 
-@CCall("knifunptr_openssl4160_PKCS12_init")
+@CCall("knifunptr_openssl4165_PKCS12_init")
 external fun PKCS12_init(mode: Int): CPointer<PKCS12>?
 
-@CCall("knifunptr_openssl4161_PKCS12_key_gen_asc")
+@CCall("knifunptr_openssl4166_PKCS12_key_gen_asc")
 external fun PKCS12_key_gen_asc(
-    @CCall.CString pass: String?, passlen: Int,
+    @CCall.CString pass: String?,
+    passlen: Int,
     salt: CValuesRef<UByteVar>?,
     saltlen: Int,
     id: Int,
@@ -19108,7 +19243,7 @@ external fun PKCS12_key_gen_asc(
     md_type: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl4162_PKCS12_key_gen_uni")
+@CCall("knifunptr_openssl4167_PKCS12_key_gen_uni")
 external fun PKCS12_key_gen_uni(
     pass: CValuesRef<UByteVar>?,
     passlen: Int,
@@ -19121,9 +19256,10 @@ external fun PKCS12_key_gen_uni(
     md_type: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl4163_PKCS12_key_gen_utf8")
+@CCall("knifunptr_openssl4168_PKCS12_key_gen_utf8")
 external fun PKCS12_key_gen_utf8(
-    @CCall.CString pass: String?, passlen: Int,
+    @CCall.CString pass: String?,
+    passlen: Int,
     salt: CValuesRef<UByteVar>?,
     saltlen: Int,
     id: Int,
@@ -19133,9 +19269,10 @@ external fun PKCS12_key_gen_utf8(
     md_type: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl4164_PKCS12_PBE_keyivgen")
+@CCall("knifunptr_openssl4169_PKCS12_PBE_keyivgen")
 external fun PKCS12_PBE_keyivgen(
-    ctx: CValuesRef<EVP_CIPHER_CTX>?, @CCall.CString pass: String?,
+    ctx: CValuesRef<EVP_CIPHER_CTX>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     param: CValuesRef<ASN1_TYPE>?,
     cipher: CValuesRef<EVP_CIPHER>?,
@@ -19143,20 +19280,22 @@ external fun PKCS12_PBE_keyivgen(
     en_de: Int
 ): Int
 
-@CCall("knifunptr_openssl4165_PKCS12_gen_mac")
+@CCall("knifunptr_openssl4170_PKCS12_gen_mac")
 external fun PKCS12_gen_mac(
-    p12: CValuesRef<PKCS12>?, @CCall.CString pass: String?,
+    p12: CValuesRef<PKCS12>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     mac: CValuesRef<UByteVar>?,
     maclen: CValuesRef<UIntVar>?
 ): Int
 
-@CCall("knifunptr_openssl4166_PKCS12_verify_mac")
+@CCall("knifunptr_openssl4171_PKCS12_verify_mac")
 external fun PKCS12_verify_mac(p12: CValuesRef<PKCS12>?, @CCall.CString pass: String?, passlen: Int): Int
 
-@CCall("knifunptr_openssl4167_PKCS12_set_mac")
+@CCall("knifunptr_openssl4172_PKCS12_set_mac")
 external fun PKCS12_set_mac(
-    p12: CValuesRef<PKCS12>?, @CCall.CString pass: String?,
+    p12: CValuesRef<PKCS12>?,
+    @CCall.CString pass: String?,
     passlen: Int,
     salt: CValuesRef<UByteVar>?,
     saltlen: Int,
@@ -19164,7 +19303,7 @@ external fun PKCS12_set_mac(
     md_type: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl4168_PKCS12_setup_mac")
+@CCall("knifunptr_openssl4173_PKCS12_setup_mac")
 external fun PKCS12_setup_mac(
     p12: CValuesRef<PKCS12>?,
     iter: Int,
@@ -19173,104 +19312,109 @@ external fun PKCS12_setup_mac(
     md_type: CValuesRef<EVP_MD>?
 ): Int
 
-@CCall("knifunptr_openssl4169_OPENSSL_asc2uni")
+@CCall("knifunptr_openssl4174_OPENSSL_asc2uni")
 external fun OPENSSL_asc2uni(
-    @CCall.CString asc: String?, asclen: Int,
+    @CCall.CString asc: String?,
+    asclen: Int,
     uni: CValuesRef<CPointerVar<UByteVar>>?,
     unilen: CValuesRef<IntVar>?
 ): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl4170_OPENSSL_uni2asc")
+@CCall("knifunptr_openssl4175_OPENSSL_uni2asc")
 external fun OPENSSL_uni2asc(uni: CValuesRef<UByteVar>?, unilen: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl4171_OPENSSL_utf82uni")
+@CCall("knifunptr_openssl4176_OPENSSL_utf82uni")
 external fun OPENSSL_utf82uni(
-    @CCall.CString asc: String?, asclen: Int,
+    @CCall.CString asc: String?,
+    asclen: Int,
     uni: CValuesRef<CPointerVar<UByteVar>>?,
     unilen: CValuesRef<IntVar>?
 ): CPointer<UByteVar>?
 
-@CCall("knifunptr_openssl4172_OPENSSL_uni2utf8")
+@CCall("knifunptr_openssl4177_OPENSSL_uni2utf8")
 external fun OPENSSL_uni2utf8(uni: CValuesRef<UByteVar>?, unilen: Int): CPointer<ByteVar>?
 
-@CCall("knifunptr_openssl4173_PKCS12_new")
+@CCall("knifunptr_openssl4178_PKCS12_new")
 external fun PKCS12_new(): CPointer<PKCS12>?
 
-@CCall("knifunptr_openssl4174_PKCS12_free")
+@CCall("knifunptr_openssl4179_PKCS12_free")
 external fun PKCS12_free(a: CValuesRef<PKCS12>?): Unit
 
-@CCall("knifunptr_openssl4175_d2i_PKCS12")
+@CCall("knifunptr_openssl4180_d2i_PKCS12")
 external fun d2i_PKCS12(
     a: CValuesRef<CPointerVar<PKCS12>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS12>?
 
-@CCall("knifunptr_openssl4176_i2d_PKCS12")
+@CCall("knifunptr_openssl4181_i2d_PKCS12")
 external fun i2d_PKCS12(a: CValuesRef<PKCS12>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl4177_PKCS12_MAC_DATA_new")
+@CCall("knifunptr_openssl4182_PKCS12_MAC_DATA_new")
 external fun PKCS12_MAC_DATA_new(): CPointer<PKCS12_MAC_DATA>?
 
-@CCall("knifunptr_openssl4178_PKCS12_MAC_DATA_free")
+@CCall("knifunptr_openssl4183_PKCS12_MAC_DATA_free")
 external fun PKCS12_MAC_DATA_free(a: CValuesRef<PKCS12_MAC_DATA>?): Unit
 
-@CCall("knifunptr_openssl4179_d2i_PKCS12_MAC_DATA")
+@CCall("knifunptr_openssl4184_d2i_PKCS12_MAC_DATA")
 external fun d2i_PKCS12_MAC_DATA(
     a: CValuesRef<CPointerVar<PKCS12_MAC_DATA>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS12_MAC_DATA>?
 
-@CCall("knifunptr_openssl4180_i2d_PKCS12_MAC_DATA")
+@CCall("knifunptr_openssl4185_i2d_PKCS12_MAC_DATA")
 external fun i2d_PKCS12_MAC_DATA(a: CValuesRef<PKCS12_MAC_DATA>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl4181_PKCS12_SAFEBAG_new")
+@CCall("knifunptr_openssl4186_PKCS12_SAFEBAG_new")
 external fun PKCS12_SAFEBAG_new(): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4182_PKCS12_SAFEBAG_free")
+@CCall("knifunptr_openssl4187_PKCS12_SAFEBAG_free")
 external fun PKCS12_SAFEBAG_free(a: CValuesRef<PKCS12_SAFEBAG>?): Unit
 
-@CCall("knifunptr_openssl4183_d2i_PKCS12_SAFEBAG")
+@CCall("knifunptr_openssl4188_d2i_PKCS12_SAFEBAG")
 external fun d2i_PKCS12_SAFEBAG(
     a: CValuesRef<CPointerVar<PKCS12_SAFEBAG>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4184_i2d_PKCS12_SAFEBAG")
+@CCall("knifunptr_openssl4189_i2d_PKCS12_SAFEBAG")
 external fun i2d_PKCS12_SAFEBAG(a: CValuesRef<PKCS12_SAFEBAG>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl4185_PKCS12_BAGS_new")
+@CCall("knifunptr_openssl4190_PKCS12_BAGS_new")
 external fun PKCS12_BAGS_new(): CPointer<PKCS12_BAGS>?
 
-@CCall("knifunptr_openssl4186_PKCS12_BAGS_free")
+@CCall("knifunptr_openssl4191_PKCS12_BAGS_free")
 external fun PKCS12_BAGS_free(a: CValuesRef<PKCS12_BAGS>?): Unit
 
-@CCall("knifunptr_openssl4187_d2i_PKCS12_BAGS")
+@CCall("knifunptr_openssl4192_d2i_PKCS12_BAGS")
 external fun d2i_PKCS12_BAGS(
     a: CValuesRef<CPointerVar<PKCS12_BAGS>>?,
     `in`: CValuesRef<CPointerVar<UByteVar>>?,
     len: Int
 ): CPointer<PKCS12_BAGS>?
 
-@CCall("knifunptr_openssl4188_i2d_PKCS12_BAGS")
+@CCall("knifunptr_openssl4193_i2d_PKCS12_BAGS")
 external fun i2d_PKCS12_BAGS(a: CValuesRef<PKCS12_BAGS>?, out: CValuesRef<CPointerVar<UByteVar>>?): Int
 
-@CCall("knifunptr_openssl4189_PKCS12_PBE_add")
+@CCall("knifunptr_openssl4194_PKCS12_PBE_add")
 external fun PKCS12_PBE_add(): Unit
 
-@CCall("knifunptr_openssl4190_PKCS12_parse")
+@CCall("knifunptr_openssl4195_PKCS12_parse")
 external fun PKCS12_parse(
-    p12: CValuesRef<PKCS12>?, @CCall.CString pass: String?,
+    p12: CValuesRef<PKCS12>?,
+    @CCall.CString pass: String?,
     pkey: CValuesRef<CPointerVar<EVP_PKEY>>?,
     cert: CValuesRef<CPointerVar<X509>>?,
     ca: CValuesRef<CPointerVar<stack_st_X509>>?
 ): Int
 
-@CCall("knifunptr_openssl4191_PKCS12_create")
+@CCall("knifunptr_openssl4196_PKCS12_create")
 external fun PKCS12_create(
-    @CCall.CString pass: String?, @CCall.CString name: String?, pkey: CValuesRef<EVP_PKEY>?,
+    @CCall.CString pass: String?,
+    @CCall.CString name: String?,
+    pkey: CValuesRef<EVP_PKEY>?,
     cert: CValuesRef<X509>?,
     ca: CValuesRef<stack_st_X509>?,
     nid_key: Int,
@@ -19280,45 +19424,47 @@ external fun PKCS12_create(
     keytype: Int
 ): CPointer<PKCS12>?
 
-@CCall("knifunptr_openssl4192_PKCS12_add_cert")
+@CCall("knifunptr_openssl4197_PKCS12_add_cert")
 external fun PKCS12_add_cert(
     pbags: CValuesRef<CPointerVar<stack_st_PKCS12_SAFEBAG>>?,
     cert: CValuesRef<X509>?
 ): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4193_PKCS12_add_key")
+@CCall("knifunptr_openssl4198_PKCS12_add_key")
 external fun PKCS12_add_key(
     pbags: CValuesRef<CPointerVar<stack_st_PKCS12_SAFEBAG>>?,
     key: CValuesRef<EVP_PKEY>?,
     key_usage: Int,
     iter: Int,
-    key_nid: Int, @CCall.CString pass: String?
+    key_nid: Int,
+    @CCall.CString pass: String?
 ): CPointer<PKCS12_SAFEBAG>?
 
-@CCall("knifunptr_openssl4194_PKCS12_add_safe")
+@CCall("knifunptr_openssl4199_PKCS12_add_safe")
 external fun PKCS12_add_safe(
     psafes: CValuesRef<CPointerVar<stack_st_PKCS7>>?,
     bags: CValuesRef<stack_st_PKCS12_SAFEBAG>?,
     safe_nid: Int,
-    iter: Int, @CCall.CString pass: String?
+    iter: Int,
+    @CCall.CString pass: String?
 ): Int
 
-@CCall("knifunptr_openssl4195_PKCS12_add_safes")
+@CCall("knifunptr_openssl4200_PKCS12_add_safes")
 external fun PKCS12_add_safes(safes: CValuesRef<stack_st_PKCS7>?, p7_nid: Int): CPointer<PKCS12>?
 
-@CCall("knifunptr_openssl4196_i2d_PKCS12_bio")
+@CCall("knifunptr_openssl4201_i2d_PKCS12_bio")
 external fun i2d_PKCS12_bio(bp: CValuesRef<BIO>?, p12: CValuesRef<PKCS12>?): Int
 
-@CCall("knifunptr_openssl4197_i2d_PKCS12_fp")
+@CCall("knifunptr_openssl4202_i2d_PKCS12_fp")
 external fun i2d_PKCS12_fp(fp: CValuesRef<FILE>?, p12: CValuesRef<PKCS12>?): Int
 
-@CCall("knifunptr_openssl4198_d2i_PKCS12_bio")
+@CCall("knifunptr_openssl4203_d2i_PKCS12_bio")
 external fun d2i_PKCS12_bio(bp: CValuesRef<BIO>?, p12: CValuesRef<CPointerVar<PKCS12>>?): CPointer<PKCS12>?
 
-@CCall("knifunptr_openssl4199_d2i_PKCS12_fp")
+@CCall("knifunptr_openssl4204_d2i_PKCS12_fp")
 external fun d2i_PKCS12_fp(fp: CValuesRef<FILE>?, p12: CValuesRef<CPointerVar<PKCS12>>?): CPointer<PKCS12>?
 
-@CCall("knifunptr_openssl4200_PKCS12_newpass")
+@CCall("knifunptr_openssl4205_PKCS12_newpass")
 external fun PKCS12_newpass(p12: CValuesRef<PKCS12>?, @CCall.CString oldpass: String?, @CCall.CString newpass: String?): Int
 
 val ASN1_SEQUENCE_ANY_it: ASN1_ITEM
@@ -19549,15 +19695,15 @@ val PKCS12_SAFEBAGS_it: ASN1_ITEM
 val PKCS12_AUTHSAFES_it: ASN1_ITEM
     get() = interpretPointed<ASN1_ITEM>(kniBridge75())
 
-const val OPENSSL_VERSION_NUMBER: Int = 269488207
+const val OPENSSL_VERSION_NUMBER: Int = 269488255
 
-val OPENSSL_VERSION_TEXT: String get() = "OpenSSL 1.1.1d  10 Sep 2019"
+val OPENSSL_VERSION_TEXT: String get() = "OpenSSL 1.1.1g  21 Apr 2020"
 
 val SHLIB_VERSION_HISTORY: String get() = ""
 
 val SHLIB_VERSION_NUMBER: String get() = "1.1"
 
-val OPENSSL_FILE: String get() = "\u002Ftmp\u002Ftmp7228423607860859467.c"
+val OPENSSL_FILE: String get() = "\u002Ftmp\u002Ftmp9175109304443753401.c"
 
 const val OPENSSL_LINE: Int = 110
 
@@ -19619,7 +19765,7 @@ const val CRYPTO_R_ILLEGAL_HEX_DIGIT: Int = 102
 
 const val CRYPTO_R_ODD_NUMBER_OF_DIGITS: Int = 103
 
-const val SSLEAY_VERSION_NUMBER: Int = 269488207
+const val SSLEAY_VERSION_NUMBER: Int = 269488255
 
 const val SSLEAY_VERSION: Int = 0
 
@@ -20089,6 +20235,8 @@ const val BIO_FLAGS_MEM_RDONLY: Int = 512
 
 const val BIO_FLAGS_NONCLEAR_RST: Int = 1024
 
+const val BIO_FLAGS_IN_EOF: Int = 2048
+
 const val BIO_RR_SSL_X509_LOOKUP: Int = 1
 
 const val BIO_RR_CONNECT: Int = 2
@@ -20512,6 +20660,8 @@ const val EVP_R_INPUT_NOT_INITIALIZED: Int = 111
 const val EVP_R_INVALID_DIGEST: Int = 152
 
 const val EVP_R_INVALID_FIPS_MODE: Int = 168
+
+const val EVP_R_INVALID_IV_LENGTH: Int = 194
 
 const val EVP_R_INVALID_KEY: Int = 163
 
@@ -21965,13 +22115,13 @@ const val NID_ms_efs: Int = 138
 
 val SN_ms_smartcard_login: String get() = "msSmartcardLogin"
 
-val LN_ms_smartcard_login: String get() = "Microsoft Smartcardlogin"
+val LN_ms_smartcard_login: String get() = "Microsoft Smartcard Login"
 
 const val NID_ms_smartcard_login: Int = 648
 
 val SN_ms_upn: String get() = "msUPN"
 
-val LN_ms_upn: String get() = "Microsoft Universal Principal Name"
+val LN_ms_upn: String get() = "Microsoft User Principal Name"
 
 const val NID_ms_upn: Int = 649
 
@@ -30069,6 +30219,8 @@ const val SSL_F_OSSL_STATEM_SERVER_POST_PROCESS_MESSAGE: Int = 601
 
 const val SSL_F_OSSL_STATEM_SERVER_POST_WORK: Int = 602
 
+const val SSL_F_OSSL_STATEM_SERVER_PRE_WORK: Int = 640
+
 const val SSL_F_OSSL_STATEM_SERVER_PROCESS_MESSAGE: Int = 603
 
 const val SSL_F_OSSL_STATEM_SERVER_READ_TRANSITION: Int = 418
@@ -34674,333 +34826,301 @@ const val PKCS12_ERROR: Int = 0
 const val PKCS12_OK: Int = 1
 
 val sk_num: CPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Int>>(kniBridge76())
+    @CCall("knifunptr_openssl4206_sk_num_getter") external get
 
 val sk_value: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, Int) -> COpaquePointer?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, Int) -> COpaquePointer?>>(kniBridge77())
+    @CCall("knifunptr_openssl4207_sk_value_getter") external get
 
 val sk_set: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, Int, COpaquePointer?) -> COpaquePointer?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, Int, COpaquePointer?) -> COpaquePointer?>>(
-        kniBridge78()
-    )
+    @CCall("knifunptr_openssl4208_sk_set_getter") external get
 
 val sk_new: CPointer<CFunction<(OPENSSL_sk_compfunc?) -> CPointer<OPENSSL_STACK>?>>?
-    get() = interpretCPointer<CFunction<(OPENSSL_sk_compfunc?) -> CPointer<OPENSSL_STACK>?>>(kniBridge79())
+    @CCall("knifunptr_openssl4209_sk_new_getter") external get
 
 val sk_new_null: CPointer<CFunction<() -> CPointer<OPENSSL_STACK>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<OPENSSL_STACK>?>>(kniBridge80())
+    @CCall("knifunptr_openssl4210_sk_new_null_getter") external get
 
 val sk_free: CPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Unit>>(kniBridge81())
+    @CCall("knifunptr_openssl4211_sk_free_getter") external get
 
 val sk_pop_free: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, CPointer<CFunction<(COpaquePointer?) -> Unit>>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, CPointer<CFunction<(COpaquePointer?) -> Unit>>?) -> Unit>>(
-        kniBridge82()
-    )
+    @CCall("knifunptr_openssl4212_sk_pop_free_getter") external get
 
 val sk_deep_copy: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, OPENSSL_sk_copyfunc?, OPENSSL_sk_freefunc?) -> CPointer<OPENSSL_STACK>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, OPENSSL_sk_copyfunc?, OPENSSL_sk_freefunc?) -> CPointer<OPENSSL_STACK>?>>(
-        kniBridge83()
-    )
+    @CCall("knifunptr_openssl4213_sk_deep_copy_getter") external get
 
 val sk_insert: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?, Int) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?, Int) -> Int>>(kniBridge84())
+    @CCall("knifunptr_openssl4214_sk_insert_getter") external get
 
 val sk_delete: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, Int) -> COpaquePointer?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, Int) -> COpaquePointer?>>(kniBridge85())
+    @CCall("knifunptr_openssl4215_sk_delete_getter") external get
 
 val sk_delete_ptr: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> COpaquePointer?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> COpaquePointer?>>(kniBridge86())
+    @CCall("knifunptr_openssl4216_sk_delete_ptr_getter") external get
 
 val sk_find: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> Int>>(kniBridge87())
+    @CCall("knifunptr_openssl4217_sk_find_getter") external get
 
 val sk_find_ex: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> Int>>(kniBridge88())
+    @CCall("knifunptr_openssl4218_sk_find_ex_getter") external get
 
 val sk_push: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> Int>>(kniBridge89())
+    @CCall("knifunptr_openssl4219_sk_push_getter") external get
 
 val sk_unshift: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, COpaquePointer?) -> Int>>(kniBridge90())
+    @CCall("knifunptr_openssl4220_sk_unshift_getter") external get
 
 val sk_shift: CPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> COpaquePointer?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> COpaquePointer?>>(kniBridge91())
+    @CCall("knifunptr_openssl4221_sk_shift_getter") external get
 
 val sk_pop: CPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> COpaquePointer?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> COpaquePointer?>>(kniBridge92())
+    @CCall("knifunptr_openssl4222_sk_pop_getter") external get
 
 val sk_zero: CPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Unit>>(kniBridge93())
+    @CCall("knifunptr_openssl4223_sk_zero_getter") external get
 
 val sk_set_cmp_func: CPointer<CFunction<(CPointer<OPENSSL_STACK>?, OPENSSL_sk_compfunc?) -> OPENSSL_sk_compfunc?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?, OPENSSL_sk_compfunc?) -> OPENSSL_sk_compfunc?>>(
-        kniBridge94()
-    )
+    @CCall("knifunptr_openssl4224_sk_set_cmp_func_getter") external get
 
 val sk_dup: CPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> CPointer<OPENSSL_STACK>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> CPointer<OPENSSL_STACK>?>>(kniBridge95())
+    @CCall("knifunptr_openssl4225_sk_dup_getter") external get
 
 val sk_sort: CPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Unit>>(kniBridge96())
+    @CCall("knifunptr_openssl4226_sk_sort_getter") external get
 
 val sk_is_sorted: CPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_STACK>?) -> Int>>(kniBridge97())
+    @CCall("knifunptr_openssl4227_sk_is_sorted_getter") external get
 
 val SSLeay: CPointer<CFunction<() -> UInt>>?
-    get() = interpretCPointer<CFunction<() -> UInt>>(kniBridge98())
+    @CCall("knifunptr_openssl4228_SSLeay_getter") external get
 
 val SSLeay_version: CPointer<CFunction<(Int) -> CPointer<ByteVar>?>>?
-    get() = interpretCPointer<CFunction<(Int) -> CPointer<ByteVar>?>>(kniBridge99())
+    @CCall("knifunptr_openssl4229_SSLeay_version_getter") external get
 
 val get_rfc2409_prime_768: CPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>(kniBridge100())
+    @CCall("knifunptr_openssl4230_get_rfc2409_prime_768_getter") external get
 
 val get_rfc2409_prime_1024: CPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>(kniBridge101())
+    @CCall("knifunptr_openssl4231_get_rfc2409_prime_1024_getter") external get
 
 val get_rfc3526_prime_1536: CPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>(kniBridge102())
+    @CCall("knifunptr_openssl4232_get_rfc3526_prime_1536_getter") external get
 
 val get_rfc3526_prime_2048: CPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>(kniBridge103())
+    @CCall("knifunptr_openssl4233_get_rfc3526_prime_2048_getter") external get
 
 val get_rfc3526_prime_3072: CPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>(kniBridge104())
+    @CCall("knifunptr_openssl4234_get_rfc3526_prime_3072_getter") external get
 
 val get_rfc3526_prime_4096: CPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>(kniBridge105())
+    @CCall("knifunptr_openssl4235_get_rfc3526_prime_4096_getter") external get
 
 val get_rfc3526_prime_6144: CPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>(kniBridge106())
+    @CCall("knifunptr_openssl4236_get_rfc3526_prime_6144_getter") external get
 
 val get_rfc3526_prime_8192: CPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<BIGNUM>?) -> CPointer<BIGNUM>?>>(kniBridge107())
+    @CCall("knifunptr_openssl4237_get_rfc3526_prime_8192_getter") external get
 
 val EVP_des_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge108())
+    @CCall("knifunptr_openssl4238_EVP_des_cfb_getter") external get
 
 val EVP_des_ede_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge109())
+    @CCall("knifunptr_openssl4239_EVP_des_ede_cfb_getter") external get
 
 val EVP_des_ede3_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge110())
+    @CCall("knifunptr_openssl4240_EVP_des_ede3_cfb_getter") external get
 
 val EVP_rc2_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge111())
+    @CCall("knifunptr_openssl4241_EVP_rc2_cfb_getter") external get
 
 val EVP_bf_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge112())
+    @CCall("knifunptr_openssl4242_EVP_bf_cfb_getter") external get
 
 val EVP_cast5_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge113())
+    @CCall("knifunptr_openssl4243_EVP_cast5_cfb_getter") external get
 
 val EVP_aes_128_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge114())
+    @CCall("knifunptr_openssl4244_EVP_aes_128_cfb_getter") external get
 
 val EVP_aes_192_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge115())
+    @CCall("knifunptr_openssl4245_EVP_aes_192_cfb_getter") external get
 
 val EVP_aes_256_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge116())
+    @CCall("knifunptr_openssl4246_EVP_aes_256_cfb_getter") external get
 
 val EVP_aria_128_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge117())
+    @CCall("knifunptr_openssl4247_EVP_aria_128_cfb_getter") external get
 
 val EVP_aria_192_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge118())
+    @CCall("knifunptr_openssl4248_EVP_aria_192_cfb_getter") external get
 
 val EVP_aria_256_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge119())
+    @CCall("knifunptr_openssl4249_EVP_aria_256_cfb_getter") external get
 
 val EVP_camellia_128_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge120())
+    @CCall("knifunptr_openssl4250_EVP_camellia_128_cfb_getter") external get
 
 val EVP_camellia_192_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge121())
+    @CCall("knifunptr_openssl4251_EVP_camellia_192_cfb_getter") external get
 
 val EVP_camellia_256_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge122())
+    @CCall("knifunptr_openssl4252_EVP_camellia_256_cfb_getter") external get
 
 val EVP_seed_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge123())
+    @CCall("knifunptr_openssl4253_EVP_seed_cfb_getter") external get
 
 val EVP_sm4_cfb: CPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<EVP_CIPHER>?>>(kniBridge124())
+    @CCall("knifunptr_openssl4254_EVP_sm4_cfb_getter") external get
 
 val lh_error: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?) -> Int>>(kniBridge125())
+    @CCall("knifunptr_openssl4255_lh_error_getter") external get
 
 val lh_new: CPointer<CFunction<(OPENSSL_LH_HASHFUNC?, OPENSSL_LH_COMPFUNC?) -> CPointer<OPENSSL_LHASH>?>>?
-    get() = interpretCPointer<CFunction<(OPENSSL_LH_HASHFUNC?, OPENSSL_LH_COMPFUNC?) -> CPointer<OPENSSL_LHASH>?>>(
-        kniBridge126()
-    )
+    @CCall("knifunptr_openssl4256_lh_new_getter") external get
 
 val lh_free: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?) -> Unit>>(kniBridge127())
+    @CCall("knifunptr_openssl4257_lh_free_getter") external get
 
 val lh_insert: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, COpaquePointer?) -> COpaquePointer?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, COpaquePointer?) -> COpaquePointer?>>(kniBridge128())
+    @CCall("knifunptr_openssl4258_lh_insert_getter") external get
 
 val lh_delete: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, COpaquePointer?) -> COpaquePointer?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, COpaquePointer?) -> COpaquePointer?>>(kniBridge129())
+    @CCall("knifunptr_openssl4259_lh_delete_getter") external get
 
 val lh_retrieve: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, COpaquePointer?) -> COpaquePointer?>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, COpaquePointer?) -> COpaquePointer?>>(kniBridge130())
+    @CCall("knifunptr_openssl4260_lh_retrieve_getter") external get
 
 val lh_doall: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, OPENSSL_LH_DOALL_FUNC?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, OPENSSL_LH_DOALL_FUNC?) -> Unit>>(kniBridge131())
+    @CCall("knifunptr_openssl4261_lh_doall_getter") external get
 
 val lh_doall_arg: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, OPENSSL_LH_DOALL_FUNCARG?, COpaquePointer?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, OPENSSL_LH_DOALL_FUNCARG?, COpaquePointer?) -> Unit>>(
-        kniBridge132()
-    )
+    @CCall("knifunptr_openssl4262_lh_doall_arg_getter") external get
 
 val lh_strhash: CPointer<CFunction<(CPointer<ByteVar>?) -> UInt>>?
-    get() = interpretCPointer<CFunction<(CPointer<ByteVar>?) -> UInt>>(kniBridge133())
+    @CCall("knifunptr_openssl4263_lh_strhash_getter") external get
 
 val lh_num_items: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?) -> UInt>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?) -> UInt>>(kniBridge134())
+    @CCall("knifunptr_openssl4264_lh_num_items_getter") external get
 
 val lh_stats: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<FILE>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<FILE>?) -> Unit>>(kniBridge135())
+    @CCall("knifunptr_openssl4265_lh_stats_getter") external get
 
 val lh_node_stats: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<FILE>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<FILE>?) -> Unit>>(kniBridge136())
+    @CCall("knifunptr_openssl4266_lh_node_stats_getter") external get
 
 val lh_node_usage_stats: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<FILE>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<FILE>?) -> Unit>>(kniBridge137())
+    @CCall("knifunptr_openssl4267_lh_node_usage_stats_getter") external get
 
 val lh_stats_bio: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<BIO>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<BIO>?) -> Unit>>(kniBridge138())
+    @CCall("knifunptr_openssl4268_lh_stats_bio_getter") external get
 
 val lh_node_stats_bio: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<BIO>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<BIO>?) -> Unit>>(kniBridge139())
+    @CCall("knifunptr_openssl4269_lh_node_stats_bio_getter") external get
 
 val lh_node_usage_stats_bio: CPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<BIO>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<OPENSSL_LHASH>?, CPointer<BIO>?) -> Unit>>(kniBridge140())
+    @CCall("knifunptr_openssl4270_lh_node_usage_stats_bio_getter") external get
 
 val X509_STORE_CTX_get_chain: CPointer<CFunction<(CPointer<X509_STORE_CTX>?) -> CPointer<stack_st_X509>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_STORE_CTX>?) -> CPointer<stack_st_X509>?>>(kniBridge141())
+    @CCall("knifunptr_openssl4271_X509_STORE_CTX_get_chain_getter") external get
 
 val X509_STORE_CTX_set_chain: CPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<stack_st_X509>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<stack_st_X509>?) -> Unit>>(kniBridge142())
+    @CCall("knifunptr_openssl4272_X509_STORE_CTX_set_chain_getter") external get
 
 val X509_STORE_CTX_trusted_stack: CPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<stack_st_X509>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<stack_st_X509>?) -> Unit>>(kniBridge143())
+    @CCall("knifunptr_openssl4273_X509_STORE_CTX_trusted_stack_getter") external get
 
 val X509_STORE_get_by_subject: CPointer<CFunction<(CPointer<X509_STORE_CTX>?, X509_LOOKUP_TYPE, CPointer<X509_NAME>?, CPointer<X509_OBJECT>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_STORE_CTX>?, X509_LOOKUP_TYPE, CPointer<X509_NAME>?, CPointer<X509_OBJECT>?) -> Int>>(
-        kniBridge144()
-    )
+    @CCall("knifunptr_openssl4274_X509_STORE_get_by_subject_getter") external get
 
 val X509_STORE_get1_certs: CPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<X509_NAME>?) -> CPointer<stack_st_X509>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<X509_NAME>?) -> CPointer<stack_st_X509>?>>(
-        kniBridge145()
-    )
+    @CCall("knifunptr_openssl4275_X509_STORE_get1_certs_getter") external get
 
 val X509_STORE_get1_crls: CPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<X509_NAME>?) -> CPointer<stack_st_X509_CRL>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<X509_NAME>?) -> CPointer<stack_st_X509_CRL>?>>(
-        kniBridge146()
-    )
+    @CCall("knifunptr_openssl4276_X509_STORE_get1_crls_getter") external get
 
 val X509_STORE_get1_cert: CPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<X509_NAME>?) -> CPointer<stack_st_X509>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<X509_NAME>?) -> CPointer<stack_st_X509>?>>(
-        kniBridge147()
-    )
+    @CCall("knifunptr_openssl4277_X509_STORE_get1_cert_getter") external get
 
 val X509_STORE_get1_crl: CPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<X509_NAME>?) -> CPointer<stack_st_X509_CRL>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_STORE_CTX>?, CPointer<X509_NAME>?) -> CPointer<stack_st_X509_CRL>?>>(
-        kniBridge148()
-    )
+    @CCall("knifunptr_openssl4278_X509_STORE_get1_crl_getter") external get
 
 val X509_get_notBefore: CPointer<CFunction<(CPointer<X509>?) -> CPointer<ASN1_TIME>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509>?) -> CPointer<ASN1_TIME>?>>(kniBridge149())
+    @CCall("knifunptr_openssl4279_X509_get_notBefore_getter") external get
 
 val X509_get_notAfter: CPointer<CFunction<(CPointer<X509>?) -> CPointer<ASN1_TIME>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509>?) -> CPointer<ASN1_TIME>?>>(kniBridge150())
+    @CCall("knifunptr_openssl4280_X509_get_notAfter_getter") external get
 
 val X509_set_notBefore: CPointer<CFunction<(CPointer<X509>?, CPointer<ASN1_TIME>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509>?, CPointer<ASN1_TIME>?) -> Int>>(kniBridge151())
+    @CCall("knifunptr_openssl4281_X509_set_notBefore_getter") external get
 
 val X509_set_notAfter: CPointer<CFunction<(CPointer<X509>?, CPointer<ASN1_TIME>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509>?, CPointer<ASN1_TIME>?) -> Int>>(kniBridge152())
+    @CCall("knifunptr_openssl4282_X509_set_notAfter_getter") external get
 
 val X509_CRL_set_lastUpdate: CPointer<CFunction<(CPointer<X509_CRL>?, CPointer<ASN1_TIME>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_CRL>?, CPointer<ASN1_TIME>?) -> Int>>(kniBridge153())
+    @CCall("knifunptr_openssl4283_X509_CRL_set_lastUpdate_getter") external get
 
 val X509_CRL_set_nextUpdate: CPointer<CFunction<(CPointer<X509_CRL>?, CPointer<ASN1_TIME>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_CRL>?, CPointer<ASN1_TIME>?) -> Int>>(kniBridge154())
+    @CCall("knifunptr_openssl4284_X509_CRL_set_nextUpdate_getter") external get
 
 val SSL_CTX_set_npn_advertised_cb: CPointer<CFunction<(CPointer<SSL_CTX>?, SSL_CTX_npn_advertised_cb_func?, COpaquePointer?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<SSL_CTX>?, SSL_CTX_npn_advertised_cb_func?, COpaquePointer?) -> Unit>>(
-        kniBridge155()
-    )
+    @CCall("knifunptr_openssl4285_SSL_CTX_set_npn_advertised_cb_getter") external get
 
 val SSL_CTX_set_npn_select_cb: CPointer<CFunction<(CPointer<SSL_CTX>?, SSL_CTX_npn_select_cb_func?, COpaquePointer?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<SSL_CTX>?, SSL_CTX_npn_select_cb_func?, COpaquePointer?) -> Unit>>(
-        kniBridge156()
-    )
+    @CCall("knifunptr_openssl4286_SSL_CTX_set_npn_select_cb_getter") external get
 
 val SSL_get0_npn_negotiated: CPointer<CFunction<(CPointer<SSL>?, CPointer<CPointerVar<UByteVar>>?, CPointer<UIntVar>?) -> Unit>>?
-    get() = interpretCPointer<CFunction<(CPointer<SSL>?, CPointer<CPointerVar<UByteVar>>?, CPointer<UIntVar>?) -> Unit>>(
-        kniBridge157()
-    )
+    @CCall("knifunptr_openssl4287_SSL_get0_npn_negotiated_getter") external get
 
 val SSLv23_method: CPointer<CFunction<() -> CPointer<SSL_METHOD>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<SSL_METHOD>?>>(kniBridge158())
+    @CCall("knifunptr_openssl4288_SSLv23_method_getter") external get
 
 val SSLv23_server_method: CPointer<CFunction<() -> CPointer<SSL_METHOD>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<SSL_METHOD>?>>(kniBridge159())
+    @CCall("knifunptr_openssl4289_SSLv23_server_method_getter") external get
 
 val SSLv23_client_method: CPointer<CFunction<() -> CPointer<SSL_METHOD>?>>?
-    get() = interpretCPointer<CFunction<() -> CPointer<SSL_METHOD>?>>(kniBridge160())
+    @CCall("knifunptr_openssl4290_SSLv23_client_method_getter") external get
 
 val SSL_get0_session: CPointer<CFunction<(CPointer<SSL>?) -> CPointer<SSL_SESSION>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<SSL>?) -> CPointer<SSL_SESSION>?>>(kniBridge161())
+    @CCall("knifunptr_openssl4291_SSL_get0_session_getter") external get
 
 val PKCS12_key_gen: CPointer<CFunction<(CPointer<ByteVar>?, Int, CPointer<UByteVar>?, Int, Int, Int, Int, CPointer<UByteVar>?, CPointer<EVP_MD>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<ByteVar>?, Int, CPointer<UByteVar>?, Int, Int, Int, Int, CPointer<UByteVar>?, CPointer<EVP_MD>?) -> Int>>(
-        kniBridge162()
-    )
+    @CCall("knifunptr_openssl4292_PKCS12_key_gen_getter") external get
 
 val PKCS12_add_friendlyname: CPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?, CPointer<ByteVar>?, Int) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?, CPointer<ByteVar>?, Int) -> Int>>(kniBridge163())
+    @CCall("knifunptr_openssl4293_PKCS12_add_friendlyname_getter") external get
 
 val M_PKCS12_bag_type: CPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>(kniBridge164())
+    @CCall("knifunptr_openssl4294_M_PKCS12_bag_type_getter") external get
 
 val M_PKCS12_cert_bag_type: CPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>(kniBridge165())
+    @CCall("knifunptr_openssl4295_M_PKCS12_cert_bag_type_getter") external get
 
 val M_PKCS12_crl_bag_type: CPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>(kniBridge166())
+    @CCall("knifunptr_openssl4296_M_PKCS12_crl_bag_type_getter") external get
 
 val PKCS12_certbag2x509: CPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> CPointer<X509>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> CPointer<X509>?>>(kniBridge167())
+    @CCall("knifunptr_openssl4297_PKCS12_certbag2x509_getter") external get
 
 val PKCS12_certbag2scrl: CPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> CPointer<X509_CRL>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> CPointer<X509_CRL>?>>(kniBridge168())
+    @CCall("knifunptr_openssl4298_PKCS12_certbag2scrl_getter") external get
 
 val PKCS12_bag_type: CPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>(kniBridge169())
+    @CCall("knifunptr_openssl4299_PKCS12_bag_type_getter") external get
 
 val PKCS12_cert_bag_type: CPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>?
-    get() = interpretCPointer<CFunction<(CPointer<PKCS12_SAFEBAG>?) -> Int>>(kniBridge170())
+    @CCall("knifunptr_openssl4300_PKCS12_cert_bag_type_getter") external get
 
 val PKCS12_x5092certbag: CPointer<CFunction<(CPointer<X509>?) -> CPointer<PKCS12_SAFEBAG>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509>?) -> CPointer<PKCS12_SAFEBAG>?>>(kniBridge171())
+    @CCall("knifunptr_openssl4301_PKCS12_x5092certbag_getter") external get
 
 val PKCS12_x509crl2certbag: CPointer<CFunction<(CPointer<X509_CRL>?) -> CPointer<PKCS12_SAFEBAG>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<X509_CRL>?) -> CPointer<PKCS12_SAFEBAG>?>>(kniBridge172())
+    @CCall("knifunptr_openssl4302_PKCS12_x509crl2certbag_getter") external get
 
 val PKCS12_MAKE_KEYBAG: CPointer<CFunction<(CPointer<PKCS8_PRIV_KEY_INFO>?) -> CPointer<PKCS12_SAFEBAG>?>>?
-    get() = interpretCPointer<CFunction<(CPointer<PKCS8_PRIV_KEY_INFO>?) -> CPointer<PKCS12_SAFEBAG>?>>(kniBridge173())
+    @CCall("knifunptr_openssl4303_PKCS12_MAKE_KEYBAG_getter") external get
 
 val PKCS12_MAKE_SHKEYBAG: CPointer<CFunction<(Int, CPointer<ByteVar>?, Int, CPointer<UByteVar>?, Int, Int, CPointer<PKCS8_PRIV_KEY_INFO>?) -> CPointer<PKCS12_SAFEBAG>?>>?
-    get() = interpretCPointer<CFunction<(Int, CPointer<ByteVar>?, Int, CPointer<UByteVar>?, Int, Int, CPointer<PKCS8_PRIV_KEY_INFO>?) -> CPointer<PKCS12_SAFEBAG>?>>(
-        kniBridge174()
-    )
+    @CCall("knifunptr_openssl4304_PKCS12_MAKE_SHKEYBAG_getter") external get
 
 typealias OPENSSL_STACK = stack_st
 
@@ -35160,6 +35280,14 @@ typealias RSA = rsa_st
 
 typealias RSA_METHOD = rsa_meth_st
 
+typealias ASN1_VALUE = ASN1_VALUE_st
+
+typealias ASN1_TYPE = asn1_type_st
+
+typealias X509_ALGOR = X509_algor_st
+
+typealias RSA_PSS_PARAMS = rsa_pss_params_st
+
 typealias EC_KEY = ec_key_st
 
 typealias EC_KEY_METHOD = ec_key_method_st
@@ -35171,12 +35299,6 @@ typealias RAND_DRBG = rand_drbg_st
 typealias SSL_DANE = ssl_dane_st
 
 typealias X509 = x509_st
-
-typealias ASN1_VALUE = ASN1_VALUE_st
-
-typealias ASN1_TYPE = asn1_type_st
-
-typealias X509_ALGOR = X509_algor_st
 
 typealias X509_CRL = X509_crl_st
 
@@ -35455,8 +35577,6 @@ typealias ECPKPARAMETERS = ecpk_parameters_st
 typealias ECPARAMETERS = ec_parameters_st
 
 typealias ECDSA_SIG = ECDSA_SIG_st
-
-typealias RSA_PSS_PARAMS = rsa_pss_params_st
 
 typealias RSA_OAEP_PARAMS = rsa_oaep_params_st
 
@@ -36056,532 +36176,160 @@ typealias sct_version_tVar = IntVarOf<sct_version_t>
 
 typealias sct_version_t = Int
 
-// enum (anonymous at /tmp/linuxArm32Hfp/openssl-1.1.1d/include/openssl/ssl.h:2211:1):
+// enum (anonymous at /tmp/linuxArm32Hfp/openssl-1.1.1g/include/openssl/ssl.h:2211:1):
 
 val SSL_CT_VALIDATION_PERMISSIVE: UInt get() = 0u
 
 val SSL_CT_VALIDATION_STRICT: UInt get() = 1u
 @SymbolName("openssl_kniBridge0")
 private external fun kniBridge0(): NativePtr
-
 @SymbolName("openssl_kniBridge1")
 private external fun kniBridge1(): NativePtr
-
 @SymbolName("openssl_kniBridge2")
 private external fun kniBridge2(): NativePtr
-
 @SymbolName("openssl_kniBridge3")
 private external fun kniBridge3(): NativePtr
-
 @SymbolName("openssl_kniBridge4")
 private external fun kniBridge4(): NativePtr
-
 @SymbolName("openssl_kniBridge5")
 private external fun kniBridge5(): NativePtr
-
 @SymbolName("openssl_kniBridge6")
 private external fun kniBridge6(): NativePtr
-
 @SymbolName("openssl_kniBridge7")
 private external fun kniBridge7(): NativePtr
-
 @SymbolName("openssl_kniBridge8")
 private external fun kniBridge8(): NativePtr
-
 @SymbolName("openssl_kniBridge9")
 private external fun kniBridge9(): NativePtr
-
 @SymbolName("openssl_kniBridge10")
 private external fun kniBridge10(): NativePtr
-
 @SymbolName("openssl_kniBridge11")
 private external fun kniBridge11(): NativePtr
-
 @SymbolName("openssl_kniBridge12")
 private external fun kniBridge12(): NativePtr
-
 @SymbolName("openssl_kniBridge13")
 private external fun kniBridge13(): NativePtr
-
 @SymbolName("openssl_kniBridge14")
 private external fun kniBridge14(): NativePtr
-
 @SymbolName("openssl_kniBridge15")
 private external fun kniBridge15(): NativePtr
-
 @SymbolName("openssl_kniBridge16")
 private external fun kniBridge16(): NativePtr
-
 @SymbolName("openssl_kniBridge17")
 private external fun kniBridge17(): NativePtr
-
 @SymbolName("openssl_kniBridge18")
 private external fun kniBridge18(): NativePtr
-
 @SymbolName("openssl_kniBridge19")
 private external fun kniBridge19(): NativePtr
-
 @SymbolName("openssl_kniBridge20")
 private external fun kniBridge20(): NativePtr
-
 @SymbolName("openssl_kniBridge21")
 private external fun kniBridge21(): NativePtr
-
 @SymbolName("openssl_kniBridge22")
 private external fun kniBridge22(): NativePtr
-
 @SymbolName("openssl_kniBridge23")
 private external fun kniBridge23(): NativePtr
-
 @SymbolName("openssl_kniBridge24")
 private external fun kniBridge24(): NativePtr
-
 @SymbolName("openssl_kniBridge25")
 private external fun kniBridge25(): NativePtr
-
 @SymbolName("openssl_kniBridge26")
 private external fun kniBridge26(): NativePtr
-
 @SymbolName("openssl_kniBridge27")
 private external fun kniBridge27(): NativePtr
-
 @SymbolName("openssl_kniBridge28")
 private external fun kniBridge28(): NativePtr
-
 @SymbolName("openssl_kniBridge29")
 private external fun kniBridge29(): NativePtr
-
 @SymbolName("openssl_kniBridge30")
 private external fun kniBridge30(): NativePtr
-
 @SymbolName("openssl_kniBridge31")
 private external fun kniBridge31(): NativePtr
-
 @SymbolName("openssl_kniBridge32")
 private external fun kniBridge32(): NativePtr
-
 @SymbolName("openssl_kniBridge33")
 private external fun kniBridge33(): NativePtr
-
 @SymbolName("openssl_kniBridge34")
 private external fun kniBridge34(): NativePtr
-
 @SymbolName("openssl_kniBridge35")
 private external fun kniBridge35(): NativePtr
-
 @SymbolName("openssl_kniBridge36")
 private external fun kniBridge36(): NativePtr
-
 @SymbolName("openssl_kniBridge37")
 private external fun kniBridge37(): NativePtr
-
 @SymbolName("openssl_kniBridge38")
 private external fun kniBridge38(): NativePtr
-
 @SymbolName("openssl_kniBridge39")
 private external fun kniBridge39(): NativePtr
-
 @SymbolName("openssl_kniBridge40")
 private external fun kniBridge40(): NativePtr
-
 @SymbolName("openssl_kniBridge41")
 private external fun kniBridge41(): NativePtr
-
 @SymbolName("openssl_kniBridge42")
 private external fun kniBridge42(): NativePtr
-
 @SymbolName("openssl_kniBridge43")
 private external fun kniBridge43(): NativePtr
-
 @SymbolName("openssl_kniBridge44")
 private external fun kniBridge44(): NativePtr
-
 @SymbolName("openssl_kniBridge45")
 private external fun kniBridge45(): NativePtr
-
 @SymbolName("openssl_kniBridge46")
 private external fun kniBridge46(): NativePtr
-
 @SymbolName("openssl_kniBridge47")
 private external fun kniBridge47(): NativePtr
-
 @SymbolName("openssl_kniBridge48")
 private external fun kniBridge48(): NativePtr
-
 @SymbolName("openssl_kniBridge49")
 private external fun kniBridge49(): NativePtr
-
 @SymbolName("openssl_kniBridge50")
 private external fun kniBridge50(): NativePtr
-
 @SymbolName("openssl_kniBridge51")
 private external fun kniBridge51(): NativePtr
-
 @SymbolName("openssl_kniBridge52")
 private external fun kniBridge52(): NativePtr
-
 @SymbolName("openssl_kniBridge53")
 private external fun kniBridge53(): NativePtr
-
 @SymbolName("openssl_kniBridge54")
 private external fun kniBridge54(): NativePtr
-
 @SymbolName("openssl_kniBridge55")
 private external fun kniBridge55(): NativePtr
-
 @SymbolName("openssl_kniBridge56")
 private external fun kniBridge56(): NativePtr
-
 @SymbolName("openssl_kniBridge57")
 private external fun kniBridge57(): NativePtr
-
 @SymbolName("openssl_kniBridge58")
 private external fun kniBridge58(): NativePtr
-
 @SymbolName("openssl_kniBridge59")
 private external fun kniBridge59(): NativePtr
-
 @SymbolName("openssl_kniBridge60")
 private external fun kniBridge60(): NativePtr
-
 @SymbolName("openssl_kniBridge61")
 private external fun kniBridge61(): NativePtr
-
 @SymbolName("openssl_kniBridge62")
 private external fun kniBridge62(): NativePtr
-
 @SymbolName("openssl_kniBridge63")
 private external fun kniBridge63(): NativePtr
-
 @SymbolName("openssl_kniBridge64")
 private external fun kniBridge64(): NativePtr
-
 @SymbolName("openssl_kniBridge65")
 private external fun kniBridge65(): NativePtr
-
 @SymbolName("openssl_kniBridge66")
 private external fun kniBridge66(): NativePtr
-
 @SymbolName("openssl_kniBridge67")
 private external fun kniBridge67(): NativePtr
-
 @SymbolName("openssl_kniBridge68")
 private external fun kniBridge68(): NativePtr
-
 @SymbolName("openssl_kniBridge69")
 private external fun kniBridge69(): NativePtr
-
 @SymbolName("openssl_kniBridge70")
 private external fun kniBridge70(): NativePtr
-
 @SymbolName("openssl_kniBridge71")
 private external fun kniBridge71(): NativePtr
-
 @SymbolName("openssl_kniBridge72")
 private external fun kniBridge72(): NativePtr
-
 @SymbolName("openssl_kniBridge73")
 private external fun kniBridge73(): NativePtr
-
 @SymbolName("openssl_kniBridge74")
 private external fun kniBridge74(): NativePtr
-
 @SymbolName("openssl_kniBridge75")
 private external fun kniBridge75(): NativePtr
-
-@SymbolName("openssl_kniBridge76")
-private external fun kniBridge76(): NativePtr
-
-@SymbolName("openssl_kniBridge77")
-private external fun kniBridge77(): NativePtr
-
-@SymbolName("openssl_kniBridge78")
-private external fun kniBridge78(): NativePtr
-
-@SymbolName("openssl_kniBridge79")
-private external fun kniBridge79(): NativePtr
-
-@SymbolName("openssl_kniBridge80")
-private external fun kniBridge80(): NativePtr
-
-@SymbolName("openssl_kniBridge81")
-private external fun kniBridge81(): NativePtr
-
-@SymbolName("openssl_kniBridge82")
-private external fun kniBridge82(): NativePtr
-
-@SymbolName("openssl_kniBridge83")
-private external fun kniBridge83(): NativePtr
-
-@SymbolName("openssl_kniBridge84")
-private external fun kniBridge84(): NativePtr
-
-@SymbolName("openssl_kniBridge85")
-private external fun kniBridge85(): NativePtr
-
-@SymbolName("openssl_kniBridge86")
-private external fun kniBridge86(): NativePtr
-
-@SymbolName("openssl_kniBridge87")
-private external fun kniBridge87(): NativePtr
-
-@SymbolName("openssl_kniBridge88")
-private external fun kniBridge88(): NativePtr
-
-@SymbolName("openssl_kniBridge89")
-private external fun kniBridge89(): NativePtr
-
-@SymbolName("openssl_kniBridge90")
-private external fun kniBridge90(): NativePtr
-
-@SymbolName("openssl_kniBridge91")
-private external fun kniBridge91(): NativePtr
-
-@SymbolName("openssl_kniBridge92")
-private external fun kniBridge92(): NativePtr
-
-@SymbolName("openssl_kniBridge93")
-private external fun kniBridge93(): NativePtr
-
-@SymbolName("openssl_kniBridge94")
-private external fun kniBridge94(): NativePtr
-
-@SymbolName("openssl_kniBridge95")
-private external fun kniBridge95(): NativePtr
-
-@SymbolName("openssl_kniBridge96")
-private external fun kniBridge96(): NativePtr
-
-@SymbolName("openssl_kniBridge97")
-private external fun kniBridge97(): NativePtr
-
-@SymbolName("openssl_kniBridge98")
-private external fun kniBridge98(): NativePtr
-
-@SymbolName("openssl_kniBridge99")
-private external fun kniBridge99(): NativePtr
-
-@SymbolName("openssl_kniBridge100")
-private external fun kniBridge100(): NativePtr
-
-@SymbolName("openssl_kniBridge101")
-private external fun kniBridge101(): NativePtr
-
-@SymbolName("openssl_kniBridge102")
-private external fun kniBridge102(): NativePtr
-
-@SymbolName("openssl_kniBridge103")
-private external fun kniBridge103(): NativePtr
-
-@SymbolName("openssl_kniBridge104")
-private external fun kniBridge104(): NativePtr
-
-@SymbolName("openssl_kniBridge105")
-private external fun kniBridge105(): NativePtr
-
-@SymbolName("openssl_kniBridge106")
-private external fun kniBridge106(): NativePtr
-
-@SymbolName("openssl_kniBridge107")
-private external fun kniBridge107(): NativePtr
-
-@SymbolName("openssl_kniBridge108")
-private external fun kniBridge108(): NativePtr
-
-@SymbolName("openssl_kniBridge109")
-private external fun kniBridge109(): NativePtr
-
-@SymbolName("openssl_kniBridge110")
-private external fun kniBridge110(): NativePtr
-
-@SymbolName("openssl_kniBridge111")
-private external fun kniBridge111(): NativePtr
-
-@SymbolName("openssl_kniBridge112")
-private external fun kniBridge112(): NativePtr
-
-@SymbolName("openssl_kniBridge113")
-private external fun kniBridge113(): NativePtr
-
-@SymbolName("openssl_kniBridge114")
-private external fun kniBridge114(): NativePtr
-
-@SymbolName("openssl_kniBridge115")
-private external fun kniBridge115(): NativePtr
-
-@SymbolName("openssl_kniBridge116")
-private external fun kniBridge116(): NativePtr
-
-@SymbolName("openssl_kniBridge117")
-private external fun kniBridge117(): NativePtr
-
-@SymbolName("openssl_kniBridge118")
-private external fun kniBridge118(): NativePtr
-
-@SymbolName("openssl_kniBridge119")
-private external fun kniBridge119(): NativePtr
-
-@SymbolName("openssl_kniBridge120")
-private external fun kniBridge120(): NativePtr
-
-@SymbolName("openssl_kniBridge121")
-private external fun kniBridge121(): NativePtr
-
-@SymbolName("openssl_kniBridge122")
-private external fun kniBridge122(): NativePtr
-
-@SymbolName("openssl_kniBridge123")
-private external fun kniBridge123(): NativePtr
-
-@SymbolName("openssl_kniBridge124")
-private external fun kniBridge124(): NativePtr
-
-@SymbolName("openssl_kniBridge125")
-private external fun kniBridge125(): NativePtr
-
-@SymbolName("openssl_kniBridge126")
-private external fun kniBridge126(): NativePtr
-
-@SymbolName("openssl_kniBridge127")
-private external fun kniBridge127(): NativePtr
-
-@SymbolName("openssl_kniBridge128")
-private external fun kniBridge128(): NativePtr
-
-@SymbolName("openssl_kniBridge129")
-private external fun kniBridge129(): NativePtr
-
-@SymbolName("openssl_kniBridge130")
-private external fun kniBridge130(): NativePtr
-
-@SymbolName("openssl_kniBridge131")
-private external fun kniBridge131(): NativePtr
-
-@SymbolName("openssl_kniBridge132")
-private external fun kniBridge132(): NativePtr
-
-@SymbolName("openssl_kniBridge133")
-private external fun kniBridge133(): NativePtr
-
-@SymbolName("openssl_kniBridge134")
-private external fun kniBridge134(): NativePtr
-
-@SymbolName("openssl_kniBridge135")
-private external fun kniBridge135(): NativePtr
-
-@SymbolName("openssl_kniBridge136")
-private external fun kniBridge136(): NativePtr
-
-@SymbolName("openssl_kniBridge137")
-private external fun kniBridge137(): NativePtr
-
-@SymbolName("openssl_kniBridge138")
-private external fun kniBridge138(): NativePtr
-
-@SymbolName("openssl_kniBridge139")
-private external fun kniBridge139(): NativePtr
-
-@SymbolName("openssl_kniBridge140")
-private external fun kniBridge140(): NativePtr
-
-@SymbolName("openssl_kniBridge141")
-private external fun kniBridge141(): NativePtr
-
-@SymbolName("openssl_kniBridge142")
-private external fun kniBridge142(): NativePtr
-
-@SymbolName("openssl_kniBridge143")
-private external fun kniBridge143(): NativePtr
-
-@SymbolName("openssl_kniBridge144")
-private external fun kniBridge144(): NativePtr
-
-@SymbolName("openssl_kniBridge145")
-private external fun kniBridge145(): NativePtr
-
-@SymbolName("openssl_kniBridge146")
-private external fun kniBridge146(): NativePtr
-
-@SymbolName("openssl_kniBridge147")
-private external fun kniBridge147(): NativePtr
-
-@SymbolName("openssl_kniBridge148")
-private external fun kniBridge148(): NativePtr
-
-@SymbolName("openssl_kniBridge149")
-private external fun kniBridge149(): NativePtr
-
-@SymbolName("openssl_kniBridge150")
-private external fun kniBridge150(): NativePtr
-
-@SymbolName("openssl_kniBridge151")
-private external fun kniBridge151(): NativePtr
-
-@SymbolName("openssl_kniBridge152")
-private external fun kniBridge152(): NativePtr
-
-@SymbolName("openssl_kniBridge153")
-private external fun kniBridge153(): NativePtr
-
-@SymbolName("openssl_kniBridge154")
-private external fun kniBridge154(): NativePtr
-
-@SymbolName("openssl_kniBridge155")
-private external fun kniBridge155(): NativePtr
-
-@SymbolName("openssl_kniBridge156")
-private external fun kniBridge156(): NativePtr
-
-@SymbolName("openssl_kniBridge157")
-private external fun kniBridge157(): NativePtr
-
-@SymbolName("openssl_kniBridge158")
-private external fun kniBridge158(): NativePtr
-
-@SymbolName("openssl_kniBridge159")
-private external fun kniBridge159(): NativePtr
-
-@SymbolName("openssl_kniBridge160")
-private external fun kniBridge160(): NativePtr
-
-@SymbolName("openssl_kniBridge161")
-private external fun kniBridge161(): NativePtr
-
-@SymbolName("openssl_kniBridge162")
-private external fun kniBridge162(): NativePtr
-
-@SymbolName("openssl_kniBridge163")
-private external fun kniBridge163(): NativePtr
-
-@SymbolName("openssl_kniBridge164")
-private external fun kniBridge164(): NativePtr
-
-@SymbolName("openssl_kniBridge165")
-private external fun kniBridge165(): NativePtr
-
-@SymbolName("openssl_kniBridge166")
-private external fun kniBridge166(): NativePtr
-
-@SymbolName("openssl_kniBridge167")
-private external fun kniBridge167(): NativePtr
-
-@SymbolName("openssl_kniBridge168")
-private external fun kniBridge168(): NativePtr
-
-@SymbolName("openssl_kniBridge169")
-private external fun kniBridge169(): NativePtr
-
-@SymbolName("openssl_kniBridge170")
-private external fun kniBridge170(): NativePtr
-
-@SymbolName("openssl_kniBridge171")
-private external fun kniBridge171(): NativePtr
-
-@SymbolName("openssl_kniBridge172")
-private external fun kniBridge172(): NativePtr
-
-@SymbolName("openssl_kniBridge173")
-private external fun kniBridge173(): NativePtr
-
-@SymbolName("openssl_kniBridge174")
-private external fun kniBridge174(): NativePtr

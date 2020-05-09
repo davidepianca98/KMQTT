@@ -9,12 +9,12 @@
 :heavy_check_mark: = Supported
 :heavy_plus_sign: = Experimental
 
-| Platform    | MQTT 3.1.1               | MQTT 5.0           | Clustering        | TCP                | TLS                | UDP               | Websocket |
-| :---:       | :---:                    |  :---:             | :---:             | :---:              | :---:              | :---:             | :---:     |
-| JVM         | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | TODO      |
-| Windows X64 | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | TODO      |
-| Linux X64   | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | TODO      |
-| Linux ARM32 | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | TODO      |
+| Platform    | MQTT 3.1.1               | MQTT 5.0           | Clustering        | TCP                | TLS                | UDP               | Websocket                |
+| :---:       | :---:                    |  :---:             | :---:             | :---:              | :---:              | :---:             | :---:                    |
+| JVM         | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
+| Windows X64 | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
+| Linux X64   | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
+| Linux ARM32 | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
 
 ## Getting Started
 
