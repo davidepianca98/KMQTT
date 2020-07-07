@@ -2,6 +2,7 @@ package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
 import mqtt.packets.MQTTControlPacketType
+import mqtt.packets.MQTTDeserializer
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 

@@ -1,6 +1,8 @@
 package mqtt.packets.mqttv5
 
-abstract class MQTT5Packet(private val properties: MQTTProperties) : MQTTSerializer {
+import mqtt.packets.MQTTPacket
+
+abstract class MQTT5Packet(private val properties: MQTTProperties) : MQTTSerializer, MQTTPacket {
 
     open fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         // CONNACK, PUBACK, PUBREC, PUBREL, PUBCOMP, SUBACK, UNSUBACK, DISCONNECT, AUTH

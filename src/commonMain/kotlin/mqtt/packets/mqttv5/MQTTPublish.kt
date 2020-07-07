@@ -4,6 +4,7 @@ import currentTimeMillis
 import mqtt.MQTTException
 import mqtt.containsWildcard
 import mqtt.packets.MQTTControlPacketType
+import mqtt.packets.MQTTDeserializer
 import mqtt.packets.Qos
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream

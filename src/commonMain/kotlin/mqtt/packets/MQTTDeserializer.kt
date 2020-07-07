@@ -1,14 +1,17 @@
-package mqtt.packets.mqttv5
+package mqtt.packets
 
 import mqtt.MQTTException
 import mqtt.containsWildcard
+import mqtt.packets.mqttv5.MQTTProperties
+import mqtt.packets.mqttv5.Property
+import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.decodeVariableByteInteger
 import validateUTF8String
 
 interface MQTTDeserializer {
 
-    fun fromByteArray(flags: Int, data: UByteArray): MQTT5Packet
+    fun fromByteArray(flags: Int, data: UByteArray): MQTTPacket
 
     fun checkFlags(flags: Int) {
         if (flags.flagsBit(0) != 0 ||

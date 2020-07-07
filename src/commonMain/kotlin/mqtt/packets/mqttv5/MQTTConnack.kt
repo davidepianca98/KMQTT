@@ -1,7 +1,9 @@
 package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
+import mqtt.packets.ConnectAcknowledgeFlags
 import mqtt.packets.MQTTControlPacketType
+import mqtt.packets.MQTTDeserializer
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
@@ -10,8 +12,6 @@ class MQTTConnack(
     val connectReasonCode: ReasonCode,
     val properties: MQTTProperties = MQTTProperties()
 ) : MQTT5Packet(properties) {
-
-    data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
 
     companion object : MQTTDeserializer {
 

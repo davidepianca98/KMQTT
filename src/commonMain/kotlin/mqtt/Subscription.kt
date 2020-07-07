@@ -1,10 +1,10 @@
 package mqtt
 
-import mqtt.packets.mqttv5.MQTTSubscribe
+import mqtt.packets.mqttv5.SubscriptionOptions
 
 class Subscription(
     val topicFilter: String,
-    val options: MQTTSubscribe.Companion.SubscriptionOptions = MQTTSubscribe.Companion.SubscriptionOptions(),
+    val options: SubscriptionOptions = SubscriptionOptions(),
     val subscriptionIdentifier: UInt? = null
 ) {
     val matchTopicFilter = topicFilter.getSharedTopicFilter() ?: topicFilter
