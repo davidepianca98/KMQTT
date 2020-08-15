@@ -1,5 +1,6 @@
 package mqtt.packets.mqttv5
 
+import mqtt.packets.ConnectFlags
 import mqtt.packets.Qos
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,7 +12,7 @@ class TestMQTTConnect {
     private val packet = MQTTConnect(
         "MQTT",
         5,
-        MQTTConnect.Companion.ConnectFlags(
+        ConnectFlags(
             false,
             false,
             false,

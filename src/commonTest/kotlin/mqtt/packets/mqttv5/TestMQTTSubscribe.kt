@@ -35,7 +35,7 @@ class TestMQTTSubscribe {
         listOf(
             Subscription(
                 "test/topic/+",
-                MQTTSubscribe.Companion.SubscriptionOptions(Qos.AT_MOST_ONCE, false, false, 0u)
+                SubscriptionOptions(Qos.AT_MOST_ONCE, false, false, 0u)
             )
         )
     )

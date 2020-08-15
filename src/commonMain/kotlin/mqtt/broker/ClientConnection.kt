@@ -3,6 +3,7 @@ package mqtt.broker
 import currentTimeMillis
 import generateRandomClientId
 import mqtt.*
+import mqtt.packets.ConnectAcknowledgeFlags
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.*
 import socket.SocketInterface
@@ -118,7 +119,7 @@ class ClientConnection(
     fun disconnect(reasonCode: ReasonCode, serverReference: String? = null) {
         if (!connectCompleted) {
             val connack = MQTTConnack(
-                MQTTConnack.ConnectAcknowledgeFlags(false),
+                ConnectAcknowledgeFlags(false),
                 reasonCode,
                 MQTTProperties().apply { this.serverReference = serverReference })
             writePacket(connack)
@@ -392,7 +393,7 @@ class ClientConnection(
         }
 
         val connack = MQTTConnack(
-            MQTTConnack.ConnectAcknowledgeFlags(sessionPresent),
+            ConnectAcknowledgeFlags(sessionPresent),
             ReasonCode.SUCCESS,
             connackProperties
         )
