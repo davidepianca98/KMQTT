@@ -1,10 +1,10 @@
 package mqtt.broker.cluster
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.protobuf.ProtoId
+import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
 data class DiscoveryPacket(
-    @ProtoId(1)
+    @ProtoNumber(1)
     val name: String = ""
 )

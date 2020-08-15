@@ -153,18 +153,6 @@ import kotlinx.cinterop.*
 import kotlinx.cinterop.internal.CCall
 import kotlinx.cinterop.internal.CStruct
 import platform.posix.*
-import kotlin.Any
-import kotlin.Deprecated
-import kotlin.DeprecationLevel
-import kotlin.Int
-import kotlin.String
-import kotlin.Suppress
-import kotlin.UByte
-import kotlin.UInt
-import kotlin.ULong
-import kotlin.UShort
-import kotlin.Unit
-import kotlin.UnsupportedOperationException
 
 // NOTE THIS FILE IS AUTO-GENERATED
 
@@ -3210,10 +3198,6 @@ external fun BIO_copy_next_retry(b: CValuesRef<BIO>?): Unit
 @CCall("knifunptr_openssl364_BIO_printf")
 external fun BIO_printf(bio: CValuesRef<BIO>?, @CCall.CString format: String?, vararg variadicArguments: Any?): Int
 
-@Deprecated("Unable to import this declaration", level = DeprecationLevel.ERROR)
-fun BIO_vprintf(bio: CValuesRef<BIO>?, @CCall.CString format: String?, args: CValue<va_list>): Int =
-    throw UnsupportedOperationException()
-
 @CCall("knifunptr_openssl366_BIO_snprintf")
 external fun BIO_snprintf(
     buf: CValuesRef<ByteVar>?,
@@ -3221,10 +3205,6 @@ external fun BIO_snprintf(
     @CCall.CString format: String?,
     vararg variadicArguments: Any?
 ): Int
-
-@Deprecated("Unable to import this declaration", level = DeprecationLevel.ERROR)
-fun BIO_vsnprintf(buf: CValuesRef<ByteVar>?, n: size_t, @CCall.CString format: String?, args: CValue<va_list>): Int =
-    throw UnsupportedOperationException()
 
 @CCall("knifunptr_openssl368_BIO_meth_new")
 external fun BIO_meth_new(type: Int, @CCall.CString name: String?): CPointer<BIO_METHOD>?
@@ -18880,9 +18860,6 @@ external fun ERR_print_errors(bp: CValuesRef<BIO>?): Unit
 
 @CCall("knifunptr_openssl4086_ERR_add_error_data")
 external fun ERR_add_error_data(num: Int, vararg variadicArguments: Any?): Unit
-
-@Deprecated("Unable to import this declaration", level = DeprecationLevel.ERROR)
-fun ERR_add_error_vdata(num: Int, args: CValue<va_list>): Unit = throw UnsupportedOperationException()
 
 @CCall("knifunptr_openssl4088_ERR_load_strings")
 external fun ERR_load_strings(lib: Int, str: CValuesRef<ERR_STRING_DATA>?): Int

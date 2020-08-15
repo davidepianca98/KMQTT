@@ -10,7 +10,7 @@ class ClusterDiscoveryConnection(private val socket: UDPSocket, private val brok
 
     override fun dataReceived() {
         socket.read()?.let { data ->
-            val packet = ProtoBuf.load(DiscoveryPacket.serializer(), data.data.toByteArray())
+            val packet = ProtoBuf.decodeFromByteArray(DiscoveryPacket.serializer(), data.data.toByteArray())
             if (packet.name != broker.cluster!!.name) {
                 broker.addClusterConnection(data.sourceAddress)
             }
@@ -18,7 +18,8 @@ class ClusterDiscoveryConnection(private val socket: UDPSocket, private val brok
     }
 
     fun sendDiscovery(port: Int) {
-        val packet = ProtoBuf.dump(DiscoveryPacket.serializer(), DiscoveryPacket(broker.cluster!!.name)).toUByteArray()
+        val packet = ProtoBuf.encodeToByteArray(DiscoveryPacket.serializer(), DiscoveryPacket(broker.cluster!!.name))
+            .toUByteArray()
         socket.send(packet, "255.255.255.255", port)
     }
 }

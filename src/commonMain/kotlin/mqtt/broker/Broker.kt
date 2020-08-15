@@ -128,7 +128,8 @@ class Broker(
             matchedSubscriptions.filter { it.value.isShared() }.groupBy { it.value.shareName }.forEach {
                 val shareName = it.key
                 if (shareName != null) {
-                    val subscriptionEntry = it.value.minBy { subscription -> subscription.value.timestampShareSent }!!
+                    val subscriptionEntry =
+                        it.value.minByOrNull { subscription -> subscription.value.timestampShareSent }!!
                     val clientId = subscriptionEntry.key
                     val subscription = subscriptionEntry.value
                     val session = sessions[clientId]

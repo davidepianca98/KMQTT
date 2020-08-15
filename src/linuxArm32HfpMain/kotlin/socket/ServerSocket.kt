@@ -105,7 +105,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                 clients[discoverySocket] = clusterConnection
                 clusterConnection.sendDiscovery(broker.cluster.discoveryPort)
             }
-            maxFd = listOf(mqttSocket, mqttUdpSocket, clusteringSocket, discoverySocket).max()!!
+            maxFd = listOf(mqttSocket, mqttUdpSocket, clusteringSocket, discoverySocket).maxOrNull()!!
         }
     }
 

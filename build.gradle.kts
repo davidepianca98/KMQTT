@@ -1,8 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("multiplatform") version "1.3.72"
-    kotlin("plugin.serialization") version "1.3.72"
+    kotlin("multiplatform") version "1.4.0"
+    kotlin("plugin.serialization") version "1.4.0"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
@@ -15,6 +15,7 @@ val serializationVersion: String by project
 repositories {
     mavenCentral()
     jcenter()
+    maven(url = "https://kotlin.bintray.com/kotlinx")
 }
 
 kotlin {
@@ -54,15 +55,15 @@ kotlin {
     sourceSets {
         all {
             languageSettings.apply {
-                useExperimentalAnnotation("kotlin.ExperimentalStdlibApi")
+                useExperimentalAnnotation("kotlinx.serialization.ExperimentalSerializationApi")
                 useExperimentalAnnotation("kotlin.ExperimentalUnsignedTypes")
             }
         }
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-common:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serializationVersion")
             }
         }
         commonTest {
@@ -74,21 +75,17 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serializationVersion")
             }
         }
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation("com.hivemq:hivemq-mqtt-client:1.1.3")
+                implementation("com.hivemq:hivemq-mqtt-client:1.2.1")
             }
         }
         val mingwMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-mingwx64:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-mingwx64:$serializationVersion")
             }
         }
         val mingwTest by getting {
@@ -97,8 +94,6 @@ kotlin {
         val linuxX64Main by getting {
             dependencies {
                 implementation(files("src/nativeInterop/openssl-linux-x64.klib"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-linuxx64:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-linuxx64:$serializationVersion")
             }
         }
         val linuxX64Test by getting {
@@ -107,8 +102,6 @@ kotlin {
         val linuxArm32HfpMain by getting {
             dependencies {
                 implementation(files("src/nativeInterop/openssl-linux-arm32-hfp.klib"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-linuxarm32hfp:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf-linuxarm32hfp:$serializationVersion")
             }
         }
         val linuxArm32HfpTest by getting {
