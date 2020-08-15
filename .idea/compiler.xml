@@ -4,6 +4,8 @@
     <bytecodeTargetLevel target="11">
       <module name="io.kmqtt.KMQTT.jvmMain" target="1.8" />
       <module name="io.kmqtt.KMQTT.jvmTest" target="1.6" />
+      <module name="KMQTT.jvmMain~1" target="1.8" />
+      <module name="KMQTT.jvmTest~1" target="1.8" />
       <module name="KMQTT.main" target="11" />
       <module name="KMQTT.test" target="11" />
     </bytecodeTargetLevel>
