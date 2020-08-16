@@ -6,9 +6,25 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class TestMQTTConnect {
+class MQTTConnectTest {
 
-    private val array = ubyteArrayOf(0x10u, 0x0Du, 0x00u, 0x04u, 0x4Du, 0x51u, 0x54u, 0x54u, 0x05u, 0x02u, 0x00u, 0x3Cu, 0x00u, 0x00u, 0x00u)
+    private val array = ubyteArrayOf(
+        0x10u,
+        0x0Du,
+        0x00u,
+        0x04u,
+        0x4Du,
+        0x51u,
+        0x54u,
+        0x54u,
+        0x05u,
+        0x02u,
+        0x00u,
+        0x3Cu,
+        0x00u,
+        0x00u,
+        0x00u
+    )
     private val packet = MQTTConnect(
         "MQTT",
         5,

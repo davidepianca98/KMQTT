@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class TestMQTTPublish {
+class MQTTPublishTest {
 
     private val array = ubyteArrayOf(
         0x34u,

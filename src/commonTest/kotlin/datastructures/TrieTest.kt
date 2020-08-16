@@ -1,10 +1,10 @@
-package mqtt
+package datastructures
 
-import datastructures.Trie
+import mqtt.Subscription
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TestTrie {
+class TrieTest {
 
     @Test
     fun testMatchesWildcardHash() {

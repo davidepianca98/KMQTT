@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class TestMQTTUnsubscribe {
+class MQTTUnsubscribeTest {
 
     private val array = ubyteArrayOf(
         0xA2u,

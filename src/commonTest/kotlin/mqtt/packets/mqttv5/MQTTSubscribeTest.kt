@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class TestMQTTSubscribe {
+class MQTTSubscribeTest {
 
     private val array = ubyteArrayOf(
         0x82u,

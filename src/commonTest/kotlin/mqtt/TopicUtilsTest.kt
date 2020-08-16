@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class TestTopicUtils {
+class TopicUtilsTest {
 
     @Test
     fun testContainsWildcard() {

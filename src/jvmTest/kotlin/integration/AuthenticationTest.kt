@@ -1,10 +1,11 @@
 package integration
 
 import com.hivemq.client.mqtt.datatypes.MqttUtf8String
-import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient
+import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
 import com.hivemq.client.mqtt.mqtt5.Mqtt5ClientConfig
 import com.hivemq.client.mqtt.mqtt5.auth.Mqtt5EnhancedAuthMechanism
+import com.hivemq.client.mqtt.mqtt5.exceptions.Mqtt5ConnAckException
 import com.hivemq.client.mqtt.mqtt5.message.auth.Mqtt5Auth
 import com.hivemq.client.mqtt.mqtt5.message.auth.Mqtt5AuthBuilder
 import com.hivemq.client.mqtt.mqtt5.message.auth.Mqtt5EnhancedAuthBuilder
@@ -18,31 +19,20 @@ import mqtt.broker.EnhancedAuthenticationProvider
 import org.junit.Test
 import java.util.concurrent.CompletableFuture
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class TestAuthentication {
+class AuthenticationTest {
 
     private fun testAuthentication(
-        client: Mqtt5AsyncClient,
+        client: Mqtt5BlockingClient,
         broker: Broker,
-        connackReceived: (connack: Mqtt5ConnAck?) -> Unit
+        expectedReasonCode: Mqtt5ConnAckReasonCode
     ) {
-        var completed = false
-
-        val brokerThread = BrokerThread(broker)
-        brokerThread.start()
-
-        client.connect().whenComplete { t, _ ->
-            connackReceived(t)
-            completed = true
+        brokerTest(broker) {
+            val connack = client.connect()
+            assertEquals(expectedReasonCode, connack.reasonCode)
             client.disconnect()
-            brokerThread.stopBroker()
         }
-
-        brokerThread.join(10000)
-        if (!completed)
-            throw Exception("Timeout")
     }
 
     @Test
@@ -60,14 +50,12 @@ class TestAuthentication {
             .username("user")
             .password("pass".toByteArray())
             .applySimpleAuth()
-            .buildAsync()
+            .buildBlocking()
 
-        testAuthentication(client, broker) {
-            assertEquals(it?.reasonCode, Mqtt5ConnAckReasonCode.SUCCESS)
-        }
+        testAuthentication(client, broker, Mqtt5ConnAckReasonCode.SUCCESS)
     }
 
-    @Test
+    @Test(expected = Mqtt5ConnAckException::class)
     fun testSimpleAuthenticationFailure() {
         val broker = Broker(authentication = object : Authentication {
             override fun authenticate(username: String?, password: UByteArray?): Boolean {
@@ -82,11 +70,9 @@ class TestAuthentication {
             .username("user2")
             .password("pass".toByteArray())
             .applySimpleAuth()
-            .buildAsync()
+            .buildBlocking()
 
-        testAuthentication(client, broker) {
-            assertNull(it)
-        }
+        testAuthentication(client, broker, Mqtt5ConnAckReasonCode.NOT_AUTHORIZED)
     }
 
     class TestEnAuth(private val callback: (success: Boolean) -> Unit) : Mqtt5EnhancedAuthMechanism {
@@ -161,10 +147,8 @@ class TestAuthentication {
             .enhancedAuth(TestEnAuth {
                 assertTrue { it }
             })
-            .buildAsync()
+            .buildBlocking()
 
-        testAuthentication(client, broker) {
-            assertEquals(it?.reasonCode, Mqtt5ConnAckReasonCode.SUCCESS)
-        }
+        testAuthentication(client, broker, Mqtt5ConnAckReasonCode.SUCCESS)
     }
 }

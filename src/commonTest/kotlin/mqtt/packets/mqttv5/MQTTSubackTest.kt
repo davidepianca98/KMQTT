@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class TestMQTTSuback {
+class MQTTSubackTest {
 
     private val array = ubyteArrayOf(0x90u, 0x05u, 0x00u, 0x41u, 0x00u, 0x00u, 0x02u)
     private val packet = MQTTSuback(65u, listOf(ReasonCode.SUCCESS, ReasonCode.GRANTED_QOS2))

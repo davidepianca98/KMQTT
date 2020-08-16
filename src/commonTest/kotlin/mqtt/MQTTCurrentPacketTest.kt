@@ -4,7 +4,7 @@ import mqtt.packets.mqttv5.MQTTPublish
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TestMQTTCurrentPacket {
+class MQTTCurrentPacketTest {
 
     @Test
     fun testCurrentPacketSinglePublish() {

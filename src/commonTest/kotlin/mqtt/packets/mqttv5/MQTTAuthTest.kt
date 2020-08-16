@@ -4,9 +4,30 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class TestMQTTAuth {
+class MQTTAuthTest {
 
-    private val array = ubyteArrayOf(0xF0u, 0x12u, 0x18u, 0x10u, 0x15u, 0x00u, 0x06u, 0x4Du, 0x45u, 0x54u, 0x48u, 0x4Fu, 0x44u, 0x16u, 0x00u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u)
+    private val array = ubyteArrayOf(
+        0xF0u,
+        0x12u,
+        0x18u,
+        0x10u,
+        0x15u,
+        0x00u,
+        0x06u,
+        0x4Du,
+        0x45u,
+        0x54u,
+        0x48u,
+        0x4Fu,
+        0x44u,
+        0x16u,
+        0x00u,
+        0x04u,
+        0x01u,
+        0x02u,
+        0x03u,
+        0x04u
+    )
     private val packet = MQTTAuth(
         ReasonCode.CONTINUE_AUTHENTICATION,
         MQTTProperties().apply {
