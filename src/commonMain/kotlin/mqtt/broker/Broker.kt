@@ -6,10 +6,11 @@ import mqtt.MQTTException
 import mqtt.Subscription
 import mqtt.broker.cluster.ClusterConnection
 import mqtt.broker.cluster.ClusterSettings
+import mqtt.broker.interfaces.*
 import mqtt.matchesWildcard
 import mqtt.packets.Qos
-import mqtt.packets.mqttv5.MQTTProperties
-import mqtt.packets.mqttv5.MQTTPublish
+import mqtt.packets.mqttv5.MQTT5Properties
+import mqtt.packets.mqttv5.MQTT5Publish
 import mqtt.packets.mqttv5.ReasonCode
 import removeIf
 import socket.ServerSocketLoop
@@ -61,7 +62,7 @@ class Broker(
 
     internal fun sendWill(session: Session?) {
         val will = session?.will ?: return
-        val properties = MQTTProperties()
+        val properties = MQTT5Properties()
         properties.payloadFormatIndicator = will.payloadFormatIndicator
         properties.messageExpiryInterval = will.messageExpiryInterval
         properties.contentType = will.contentType
@@ -79,7 +80,7 @@ class Broker(
         topicName: String,
         qos: Qos,
         dup: Boolean,
-        properties: MQTTProperties,
+        properties: MQTT5Properties,
         payload: UByteArray?,
         session: Session,
         subscription: Subscription,
@@ -112,7 +113,7 @@ class Broker(
         topicName: String,
         qos: Qos,
         dup: Boolean,
-        properties: MQTTProperties,
+        properties: MQTT5Properties,
         payload: UByteArray?
     ) {
         if (!retainedAvailable && retain)
@@ -183,7 +184,7 @@ class Broker(
         retain: Boolean,
         topicName: String,
         qos: Qos,
-        properties: MQTTProperties,
+        properties: MQTT5Properties,
         payload: UByteArray?
     ): Boolean {
         if (maximumQos != null && qos > maximumQos) {
@@ -193,7 +194,7 @@ class Broker(
             if (!retainedAvailable) {
                 return false
             }
-            val packet = MQTTPublish(
+            val packet = MQTT5Publish(
                 retain,
                 qos,
                 false,
@@ -212,13 +213,13 @@ class Broker(
         retain: Boolean,
         topicName: String,
         qos: Qos,
-        properties: MQTTProperties,
+        properties: MQTT5Properties,
         payload: UByteArray?
     ): Boolean {
         return publish("", retain, topicName, qos, properties, payload)
     }
 
-    internal fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
+    internal fun setRetained(topicName: String, message: MQTT5Publish, clientId: String) {
         if (retainedAvailable) {
             if (message.payload?.isNotEmpty() == true) {
                 retainedList[topicName] = Pair(message, clientId)
@@ -244,7 +245,7 @@ class Broker(
         }
     }
 
-    internal fun getRetained(topicFilter: String): List<Pair<MQTTPublish, String>> {
+    internal fun getRetained(topicFilter: String): List<Pair<MQTT5Publish, String>> {
         removeExpiredRetainedMessages()
         return retainedList.filter { it.key.matchesWildcard(topicFilter) }.map { it.value }
     }

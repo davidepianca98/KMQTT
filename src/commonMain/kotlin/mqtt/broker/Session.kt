@@ -6,8 +6,8 @@ import mqtt.packets.Qos
 import mqtt.packets.mqttv5.*
 
 class Session(
-    packet: MQTTConnect,
-    var clientConnection: ClientConnection?,
+    packet: MQTT5Connect,
+    var clientConnection: ClientConnection5?,
     private val persist: (clientId: String, session: Session) -> Unit
 ) {
 
@@ -19,12 +19,14 @@ class Session(
     private var packetIdentifier = 1u
 
     // QoS 1 and QoS 2 messages which have been sent to the Client, but have not been completely acknowledged
-    private val pendingAcknowledgeMessages = mutableMapOf<UInt, MQTTPublish>()
-    private val pendingAcknowledgePubrel = mutableMapOf<UInt, MQTTPubrel>()
+    private val pendingAcknowledgeMessages = mutableMapOf<UInt, MQTT5Publish>()
+    private val pendingAcknowledgePubrel = mutableMapOf<UInt, MQTT5Pubrel>()
+
     // QoS 1 and QoS 2 messages pending transmission to the Client
-    private val pendingSendMessages = mutableMapOf<UInt, MQTTPublish>()
+    private val pendingSendMessages = mutableMapOf<UInt, MQTT5Publish>()
+
     // QoS 2 messages which have been received from the Client that have not been completely acknowledged
-    val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
+    val qos2ListReceived = mutableMapOf<UInt, MQTT5Publish>()
 
     init {
         persist()
@@ -43,7 +45,7 @@ class Session(
         persist()
     }
 
-    fun addPendingAcknowledgePubrel(packet: MQTTPubrel) {
+    fun addPendingAcknowledgePubrel(packet: MQTT5Pubrel) {
         pendingAcknowledgePubrel[packet.packetId] = packet
         persist()
     }
@@ -76,14 +78,14 @@ class Session(
         topicName: String,
         qos: Qos,
         dup: Boolean,
-        properties: MQTTProperties,
+        properties: MQTT5Properties,
         payload: UByteArray?
     ) {
         val packetId = if (qos >= Qos.AT_MOST_ONCE) generatePacketId() else null
 
         val packetTopicName = clientConnection?.getPublishTopicAlias(topicName, properties) ?: topicName
 
-        val packet = MQTTPublish(
+        val packet = MQTT5Publish(
             retain,
             qos,
             dup,

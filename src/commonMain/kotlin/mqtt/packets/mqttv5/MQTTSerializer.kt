@@ -59,7 +59,7 @@ interface MQTTSerializer {
         writeUTF8String(value.second)
     }
 
-    fun MQTTProperties.serializeProperties(validProperties: List<Property>): UByteArray {
+    fun MQTT5Properties.serializeProperties(validProperties: List<Property>): UByteArray {
         val out = ByteArrayOutputStream()
         payloadFormatIndicator?.let {
             if (Property.PAYLOAD_FORMAT_INDICATOR in validProperties) {

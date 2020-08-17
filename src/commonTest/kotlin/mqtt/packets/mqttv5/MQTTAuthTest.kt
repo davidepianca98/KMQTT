@@ -28,9 +28,9 @@ class MQTTAuthTest {
         0x03u,
         0x04u
     )
-    private val packet = MQTTAuth(
+    private val packet = MQTT5Auth(
         ReasonCode.CONTINUE_AUTHENTICATION,
-        MQTTProperties().apply {
+        MQTT5Properties().apply {
             authenticationMethod = "METHOD"
             authenticationData = ubyteArrayOf(0x01u, 0x02u, 0x03u, 0x04u)
         }
@@ -43,7 +43,7 @@ class MQTTAuthTest {
 
     @Test
     fun testFromByteArray() {
-        val result = MQTTAuth.fromByteArray(0, array.copyOfRange(2, array.size))
+        val result = MQTT5Auth.fromByteArray(0, array.copyOfRange(2, array.size))
         assertEquals(packet.authenticateReasonCode, result.authenticateReasonCode)
         assertEquals(packet.properties.authenticationMethod, result.properties.authenticationMethod)
         assertTrue(packet.properties.authenticationData!!.contentEquals(result.properties.authenticationData!!))

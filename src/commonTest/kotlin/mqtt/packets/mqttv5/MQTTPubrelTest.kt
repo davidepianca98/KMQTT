@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 class MQTTPubrelTest {
 
     private val array = ubyteArrayOf(0x62u, 0x04u, 0x00u, 0x41u, 0x00u, 0x00u)
-    private val packet = MQTTPubrel(65u)
+    private val packet = MQTT5Pubrel(65u)
 
     @Test
     fun testToByteArray() {
@@ -16,7 +16,7 @@ class MQTTPubrelTest {
 
     @Test
     fun testFromByteArray() {
-        val result = MQTTPubrel.fromByteArray(2, array.copyOfRange(2, array.size))
+        val result = MQTT5Pubrel.fromByteArray(2, array.copyOfRange(2, array.size))
         assertEquals(packet.packetId, result.packetId)
     }
 }

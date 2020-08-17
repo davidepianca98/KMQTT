@@ -30,7 +30,7 @@ class MQTTPublishTest {
         0x03u,
         0x04u
     )
-    private val packet = MQTTPublish(
+    private val packet = MQTT5Publish(
         false,
         Qos.EXACTLY_ONCE,
         false,
@@ -46,7 +46,7 @@ class MQTTPublishTest {
 
     @Test
     fun testFromByteArray() {
-        val result = MQTTPublish.fromByteArray(4, array.copyOfRange(2, array.size))
+        val result = MQTT5Publish.fromByteArray(4, array.copyOfRange(2, array.size))
         assertEquals(packet.packetId, result.packetId)
         assertEquals(packet.qos, result.qos)
         assertEquals(packet.topicName, result.topicName)

@@ -1,7 +1,7 @@
 package mqtt
 
-import mqtt.packets.mqttv5.MQTTConnect
 import mqtt.packets.Qos
+import mqtt.packets.mqttv5.MQTT5Connect
 import mqtt.packets.mqttv5.ReasonCode
 import validatePayloadFormat
 
@@ -19,7 +19,7 @@ class Will(
     val userProperty: List<Pair<String, String>>
 ) {
     companion object {
-        fun buildWill(packet: MQTTConnect): Will? {
+        fun buildWill(packet: MQTT5Connect): Will? {
             return if (packet.connectFlags.willFlag) {
                 val formatIndicator = packet.willProperties!!.payloadFormatIndicator ?: 0u
                 if (packet.willPayload?.validatePayloadFormat(formatIndicator) == false)

@@ -6,7 +6,7 @@ import kotlin.test.assertTrue
 class MQTTPingreqTest {
 
     private val array = ubyteArrayOf(0xC0u, 0x00u)
-    private val packet = MQTTPingreq()
+    private val packet = MQTT5Pingreq()
 
     @Test
     fun testToByteArray() {
@@ -15,6 +15,6 @@ class MQTTPingreqTest {
 
     @Test
     fun testFromByteArray() {
-        MQTTPingreq.fromByteArray(0, array.copyOfRange(2, array.size))
+        MQTT5Pingreq.fromByteArray(0, array.copyOfRange(2, array.size))
     }
 }

@@ -1,3 +1,5 @@
 package mqtt.packets
 
-interface MQTTPacket
+import mqtt.packets.mqttv5.MQTTSerializer
+
+interface MQTTPacket : MQTTSerializer

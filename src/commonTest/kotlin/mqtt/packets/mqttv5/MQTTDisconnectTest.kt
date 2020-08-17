@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 class MQTTDisconnectTest {
 
     private val array = ubyteArrayOf(0xE0u, 0x02u, 0x00u, 0x00u)
-    private val packet = MQTTDisconnect(ReasonCode.SUCCESS)
+    private val packet = MQTT5Disconnect(ReasonCode.SUCCESS)
 
     @Test
     fun testToByteArray() {
@@ -16,7 +16,7 @@ class MQTTDisconnectTest {
 
     @Test
     fun testFromByteArray() {
-        val result = MQTTDisconnect.fromByteArray(0, array.copyOfRange(2, array.size))
+        val result = MQTT5Disconnect.fromByteArray(0, array.copyOfRange(2, array.size))
         assertEquals(packet.reasonCode, result.reasonCode)
     }
 }

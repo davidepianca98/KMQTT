@@ -2,6 +2,7 @@ package mqtt.broker.udp
 
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
+import mqtt.broker.ClientConnection5
 import socket.SocketInterface
 import socket.udp.UDPEventHandler
 import socket.udp.UDPSocket
@@ -17,7 +18,7 @@ class UDPConnectionsMap(private val socket: UDPSocket, private val broker: Broke
             if (udpSessions.containsKey(currentKey)) {
                 udpSessions[currentKey]?.dataReceived(data.data)
             } else {
-                udpSessions[currentKey] = ClientConnection(this@UDPConnectionsMap, broker)
+                udpSessions[currentKey] = ClientConnection5(this@UDPConnectionsMap, broker)
             }
         }
     }

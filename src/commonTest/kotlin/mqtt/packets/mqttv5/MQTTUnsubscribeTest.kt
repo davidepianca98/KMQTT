@@ -39,7 +39,7 @@ class MQTTUnsubscribeTest {
         0x69u,
         0x63u
     )
-    private val packet = MQTTUnsubscribe(65u, listOf("test/topic/+", "/testtopic"))
+    private val packet = MQTT5Unsubscribe(65u, listOf("test/topic/+", "/testtopic"))
 
     @Test
     fun testToByteArray() {
@@ -48,7 +48,7 @@ class MQTTUnsubscribeTest {
 
     @Test
     fun testFromByteArray() {
-        val result = MQTTUnsubscribe.fromByteArray(2, array.copyOfRange(2, array.size))
+        val result = MQTT5Unsubscribe.fromByteArray(2, array.copyOfRange(2, array.size))
         assertEquals(packet.packetIdentifier, result.packetIdentifier)
         assertEquals(packet.topicFilters[0], result.topicFilters[0])
         assertEquals(packet.topicFilters[1], result.topicFilters[1])

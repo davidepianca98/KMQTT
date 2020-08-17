@@ -30,7 +30,7 @@ class MQTTSubscribeTest {
         0x2Bu,
         0x00u
     )
-    private val packet = MQTTSubscribe(
+    private val packet = MQTT5Subscribe(
         65u,
         listOf(
             Subscription(
@@ -47,7 +47,7 @@ class MQTTSubscribeTest {
 
     @Test
     fun testFromByteArray() {
-        val result = MQTTSubscribe.fromByteArray(2, array.copyOfRange(2, array.size))
+        val result = MQTT5Subscribe.fromByteArray(2, array.copyOfRange(2, array.size))
         assertEquals(packet.packetIdentifier, result.packetIdentifier)
         assertEquals(packet.subscriptions[0].topicFilter, result.subscriptions[0].topicFilter)
         assertEquals(packet.subscriptions[0].options.qos, result.subscriptions[0].options.qos)

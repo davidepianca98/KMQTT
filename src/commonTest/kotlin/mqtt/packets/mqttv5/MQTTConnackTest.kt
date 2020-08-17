@@ -52,10 +52,10 @@ class MQTTConnackTest {
         0x80u,
         0x00u
     )
-    private val packet = MQTTConnack(
+    private val packet = MQTT5Connack(
         ConnectAcknowledgeFlags(false),
         ReasonCode.SUCCESS,
-        MQTTProperties().apply {
+        MQTT5Properties().apply {
             assignedClientIdentifier = "xtqqworjjnhfskwxeatomyfrcmnjef"
             maximumPacketSize = 32768u
         }
@@ -68,7 +68,7 @@ class MQTTConnackTest {
 
     @Test
     fun testFromByteArray() {
-        val result = MQTTConnack.fromByteArray(0, array.copyOfRange(2, array.size))
+        val result = MQTT5Connack.fromByteArray(0, array.copyOfRange(2, array.size))
         assertEquals(packet.connectAcknowledgeFlags.sessionPresentFlag, result.connectAcknowledgeFlags.sessionPresentFlag)
         assertEquals(packet.connectReasonCode, result.connectReasonCode)
     }

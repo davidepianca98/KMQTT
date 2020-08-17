@@ -2,7 +2,7 @@ package socket
 
 import kotlinx.cinterop.*
 import mqtt.broker.Broker
-import mqtt.broker.ClientConnection
+import mqtt.broker.ClientConnection5
 import mqtt.broker.cluster.ClusterConnection
 import mqtt.broker.cluster.ClusterDiscoveryConnection
 import mqtt.broker.udp.UDPConnectionsMap
@@ -164,7 +164,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                         shutdown(socket.key, SHUT_WR)
                         close(socket.key)
                         val socketAttachment = socket.value
-                        if (socketAttachment is ClientConnection) {
+                        if (socketAttachment is ClientConnection5) {
                             socketAttachment.closedWithException()
                         }
                     }
@@ -189,7 +189,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
     }
 
     open fun accept(socket: Int) {
-        clients[socket] = ClientConnection(Socket(socket, writeRequest, buffer), broker)
+        clients[socket] = ClientConnection5(Socket(socket, writeRequest, buffer), broker)
     }
 
     override fun addClusterConnection(address: String): ClusterConnection? {

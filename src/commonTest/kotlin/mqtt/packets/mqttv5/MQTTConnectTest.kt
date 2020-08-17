@@ -25,7 +25,7 @@ class MQTTConnectTest {
         0x00u,
         0x00u
     )
-    private val packet = MQTTConnect(
+    private val packet = MQTT5Connect(
         "MQTT",
         5,
         ConnectFlags(
@@ -47,7 +47,7 @@ class MQTTConnectTest {
 
     @Test
     fun testFromByteArray() {
-        val result = MQTTConnect.fromByteArray(0, array.copyOfRange(2, array.size))
+        val result = MQTT5Connect.fromByteArray(0, array.copyOfRange(2, array.size))
         assertEquals(packet.protocolName, result.protocolName)
         assertEquals(packet.protocolVersion, result.protocolVersion)
         assertEquals(packet.keepAlive, result.keepAlive)

@@ -2,7 +2,7 @@ package mqtt.packets
 
 import mqtt.MQTTException
 import mqtt.containsWildcard
-import mqtt.packets.mqttv5.MQTTProperties
+import mqtt.packets.mqttv5.MQTT5Properties
 import mqtt.packets.mqttv5.Property
 import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
@@ -56,11 +56,11 @@ interface MQTTDeserializer {
         return Pair(readUTF8String(), readUTF8String())
     }
 
-    fun ByteArrayInputStream.deserializeProperties(validProperties: List<Property>): MQTTProperties {
+    fun ByteArrayInputStream.deserializeProperties(validProperties: List<Property>): MQTT5Properties {
         val propertyLength = decodeVariableByteInteger()
         val initialTotalRemainingLength = available()
 
-        val properties = MQTTProperties()
+        val properties = MQTT5Properties()
         while (initialTotalRemainingLength - available() < propertyLength.toInt()) {
             val propertyIdByte = decodeVariableByteInteger()
             val propertyId = Property.valueOf(propertyIdByte)
