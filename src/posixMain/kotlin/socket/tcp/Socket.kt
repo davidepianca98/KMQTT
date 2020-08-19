@@ -1,9 +1,15 @@
 package socket.tcp
 
+import close
+import getEagain
+import getErrno
+import getEwouldblock
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.convert
 import kotlinx.cinterop.usePinned
-import platform.posix.*
+import recv
+import send
+import shutdown
 import socket.SocketInterface
 
 actual open class Socket(
@@ -16,10 +22,10 @@ actual open class Socket(
 
     actual override fun send(data: UByteArray) {
         data.toByteArray().usePinned { pinned ->
-            val length = send(socket, pinned.addressOf(0), data.size.toULong(), 0)
+            val length = send(socket, pinned.addressOf(0), data.size, 0)
             if (length < 0) {
-                val error = errno
-                if (error == EAGAIN || error == EWOULDBLOCK) {
+                val error = getErrno()
+                if (error == getEagain() || error == getEwouldblock()) {
                     pendingSendData.add(data)
                     writeRequest.add(socket)
                 } else {
@@ -27,7 +33,7 @@ actual open class Socket(
                     throw IOException("Error in send $error")
                 }
             } else if (length < data.size) {
-                pendingSendData.add(data.copyOfRange(length.toInt(), data.size))
+                pendingSendData.add(data.copyOfRange(length, data.size))
                 writeRequest.add(socket)
             }
             pinned
@@ -47,17 +53,18 @@ actual open class Socket(
         buffer.usePinned { pinned ->
             val length = recv(socket.convert(), pinned.addressOf(0), buffer.size.convert(), 0)
             when {
-                length == 0L -> {
+                length == 0 -> {
                     close()
                     throw SocketClosedException()
                 }
                 length > 0 -> {
-                    return pinned.get().toUByteArray().copyOfRange(0, length.toInt())
+                    return pinned.get().toUByteArray().copyOfRange(0, length)
                 }
                 else -> {
-                    if (errno != EAGAIN && errno != EWOULDBLOCK) {
+                    val error = getErrno()
+                    if (error != getEagain() && error != getEwouldblock()) {
                         close()
-                        throw IOException("Error in recv: $errno")
+                        throw IOException("Error in recv: $error")
                     } else {
                         return null
                     }
@@ -67,7 +74,7 @@ actual open class Socket(
     }
 
     actual override fun close() {
-        shutdown(socket, SHUT_WR)
+        shutdown(socket)
         close(socket)
     }
 

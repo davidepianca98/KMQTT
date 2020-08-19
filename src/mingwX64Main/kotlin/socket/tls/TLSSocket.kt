@@ -15,7 +15,7 @@ actual class TLSSocket(
     private val engine: OpenSSLEngine,
     writeRequest: MutableList<SOCKET>,
     buffer: ByteArray
-) : Socket(socket, writeRequest, buffer) {
+) : Socket(socket.toInt(), writeRequest.map { it.toInt() }.toMutableList(), buffer) {
 
     private val buf = ByteArray(4096)
     private val encryptedBuf = ByteArray(4096)

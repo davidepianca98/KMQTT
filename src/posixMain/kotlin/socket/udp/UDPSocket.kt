@@ -1,10 +1,23 @@
 package socket.udp
 
+import close
+import getEagain
+import getErrno
+import getEwouldblock
+import getPortFromSockaddrIn
+import inet_ntop
+import inet_pton
 import kotlinx.cinterop.*
-import platform.linux.inet_ntop
-import platform.posix.*
+import memset
+import platform.posix.AF_INET
+import platform.posix.sockaddr
+import platform.posix.sockaddr_in
+import recvfrom
+import sendto
+import sockaddrIn
 import socket.tcp.IOException
 import socket.tcp.SocketClosedException
+import socklen_tVar
 
 actual class UDPSocket(private val socket: Int) {
 
@@ -12,11 +25,8 @@ actual class UDPSocket(private val socket: Int) {
 
     actual fun send(data: UByteArray, address: String, port: Int) {
         memScoped {
-            val serverAddress = alloc<sockaddr_in>()
-            memset(serverAddress.ptr, 0, sockaddr_in.size.convert())
-            serverAddress.sin_family = AF_INET.convert()
-            serverAddress.sin_addr.s_addr = INADDR_ANY
-            serverAddress.sin_port = posix_htons(port.convert()).convert()
+            val serverAddress = sockaddrIn(AF_INET.convert(), port.convert())
+            inet_pton(AF_INET, address, serverAddress.sin_addr.ptr)
 
             data.toByteArray().usePinned { pinned ->
                 if (sendto(
@@ -28,7 +38,7 @@ actual class UDPSocket(private val socket: Int) {
                         sockaddr_in.size.convert()
                     ) == -1L
                 ) {
-                    throw IOException("Failed sendto error: $errno")
+                    throw IOException("Failed sendto error: ${getErrno()}")
                 }
             }
         }
@@ -61,13 +71,14 @@ actual class UDPSocket(private val socket: Int) {
                         return UDPReadData(
                             pinned.get().toUByteArray().copyOfRange(0, length.toInt()),
                             address.toKString(),
-                            peerAddress.sin_port.toInt()
+                            getPortFromSockaddrIn(peerAddress).toInt()
                         )
                     }
                     else -> {
-                        if (errno != EAGAIN && errno != EWOULDBLOCK) {
+                        val error = getErrno()
+                        if (error != getEagain() && error != getEwouldblock()) {
                             close(socket)
-                            throw IOException("Recv error: $errno")
+                            throw IOException("Recvfrom error: $error")
                         } else {
                             return null
                         }

@@ -29,7 +29,7 @@ kotlin {
             jvmTarget = "1.8"
         }
     }
-    mingwX64("mingw") {
+    mingwX64("mingwX64") {
         compilations.getByName("main") {
             val openssl by cinterops.creating {
                 packageName("openssl")
@@ -84,28 +84,23 @@ kotlin {
                 implementation("com.hivemq:hivemq-mqtt-client:1.2.1")
             }
         }
-        val mingwMain by getting {
-            dependencies {
-            }
+        val posixMain by creating {
+            dependsOn(commonMain.get())
         }
-        val mingwTest by getting {
-
+        val mingwX64Main by getting {
+            dependsOn(posixMain)
         }
         val linuxX64Main by getting {
+            dependsOn(posixMain)
             dependencies {
                 implementation(files("src/nativeInterop/openssl-linux-x64.klib"))
             }
         }
-        val linuxX64Test by getting {
-
-        }
         val linuxArm32HfpMain by getting {
+            dependsOn(posixMain)
             dependencies {
                 implementation(files("src/nativeInterop/openssl-linux-arm32-hfp.klib"))
             }
-        }
-        val linuxArm32HfpTest by getting {
-
         }
     }
 }

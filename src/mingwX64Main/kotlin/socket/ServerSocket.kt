@@ -1,5 +1,7 @@
 package socket
 
+import getErrno
+import getEwouldblock
 import kotlinx.cinterop.*
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
@@ -81,6 +83,11 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
             WSACleanup()
             throw IOException("Failed ioctlsocket")
         }
+
+        if (setsockopt(socket, SOL_SOCKET, SO_BROADCAST, on.ptr.toString(), 4) == SOCKET_ERROR) {
+            WSACleanup()
+            throw IOException("Failed setsockopt")
+        }
     }
 
     init {
@@ -102,7 +109,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                     throw IOException("Invalid socket")
                 }
                 prepareDatagramSocket(mqttUdpSocket, broker.port)
-                clients[mqttUdpSocket] = UDPConnectionsMap(UDPSocket(mqttUdpSocket), broker)
+                clients[mqttUdpSocket] = UDPConnectionsMap(UDPSocket(mqttUdpSocket.convert()), broker)
             }
 
             if (broker.cluster != null) {
@@ -117,7 +124,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                     throw IOException("Invalid socket")
                 }
                 prepareDatagramSocket(discoverySocket, broker.cluster.discoveryPort)
-                val clusterConnection = ClusterDiscoveryConnection(UDPSocket(discoverySocket), broker)
+                val clusterConnection = ClusterDiscoveryConnection(UDPSocket(discoverySocket.convert()), broker)
                 clients[discoverySocket] = clusterConnection
                 clusterConnection.sendDiscovery(broker.cluster.discoveryPort)
             }
@@ -143,7 +150,8 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
             posix_FD_ZERO(writefds.ptr)
             posix_FD_ZERO(errorfds.ptr)
             posix_FD_SET(mqttSocket.convert(), readfds.ptr)
-            posix_FD_SET(clusteringSocket.convert(), readfds.ptr)
+            if (clusteringSocket != INVALID_SOCKET)
+                posix_FD_SET(clusteringSocket.convert(), readfds.ptr)
             clients.forEach {
                 posix_FD_SET(it.key.convert(), readfds.ptr)
                 posix_FD_SET(it.key.convert(), errorfds.ptr)
@@ -161,8 +169,10 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
             if (posix_FD_ISSET(mqttSocket.convert(), readfds.ptr) == 1) {
                 tcpServerSocketAccept(mqttSocket)
             }
-            if (posix_FD_ISSET(clusteringSocket.convert(), readfds.ptr) == 1) {
-                tcpServerSocketAccept(clusteringSocket)
+            if (clusteringSocket != INVALID_SOCKET) {
+                if (posix_FD_ISSET(clusteringSocket.convert(), readfds.ptr) == 1) {
+                    tcpServerSocketAccept(clusteringSocket)
+                }
             }
             clients.forEach { socket ->
                 when {
@@ -192,7 +202,10 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
     private fun tcpServerSocketAccept(serverSocket: SOCKET) {
         val newSocket = accept(serverSocket, null, null)
         if (newSocket == INVALID_SOCKET) {
-            throw IOException("Invalid socket")
+            val error = getErrno()
+            if (error == getEwouldblock())
+                return
+            throw IOException("Invalid socket, errno: $error")
         }
         memScoped {
             val on = alloc<uint32_tVar>()
@@ -206,7 +219,8 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
     }
 
     open fun accept(socket: SOCKET) {
-        clients[socket] = ClientConnection5(Socket(socket, writeRequest, buffer), broker)
+        clients[socket] =
+            ClientConnection5(Socket(socket.toInt(), writeRequest.map { it.toInt() }.toMutableList(), buffer), broker)
     }
 
     override fun addClusterConnection(address: String): ClusterConnection? {
@@ -230,7 +244,8 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                     throw IOException("Failed ioctlsocket")
                 }
 
-                val clusterConnection = ClusterConnection(Socket(socket, writeRequest, buffer))
+                val clusterConnection =
+                    ClusterConnection(Socket(socket.toInt(), writeRequest.map { it.toInt() }.toMutableList(), buffer))
                 broker.addClusterConnection(address, clusterConnection)
                 clients[socket] = clusterConnection
 

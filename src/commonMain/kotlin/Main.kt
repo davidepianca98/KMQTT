@@ -1,5 +1,4 @@
 import mqtt.broker.Broker
-import mqtt.broker.cluster.ClusterSettings
 import socket.tls.TLSSettings
 
 fun main(args: Array<String>) {
@@ -28,8 +27,7 @@ fun main(args: Array<String>) {
         port = port,
         host = host,
         backlog = backlog,
-        tlsSettings = tlsSettings,
-        cluster = ClusterSettings()
+        tlsSettings = tlsSettings
     )
 
     setShutdownHook {
