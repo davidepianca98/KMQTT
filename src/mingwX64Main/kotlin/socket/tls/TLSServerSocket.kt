@@ -3,7 +3,7 @@ package socket.tls
 import cnames.structs.stack_st_X509
 import kotlinx.cinterop.*
 import mqtt.broker.Broker
-import mqtt.broker.ClientConnection5
+import mqtt.broker.ClientConnection
 import openssl.*
 import platform.posix.closesocket
 import platform.posix.fclose
@@ -77,7 +77,7 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
 
         val engine = TLSSocket.OpenSSLEngine(clientContext, readBio, writeBio)
 
-        clients[socket] = ClientConnection5(TLSSocket(socket, engine, writeRequest, buffer), broker)
+        clients[socket] = ClientConnection(TLSSocket(socket, engine, writeRequest, buffer), broker)
     }
 
     override fun close() {

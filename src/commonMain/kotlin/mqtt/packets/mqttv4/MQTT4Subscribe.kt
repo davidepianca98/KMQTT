@@ -5,15 +5,16 @@ import mqtt.Subscription
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
 import mqtt.packets.Qos
+import mqtt.packets.mqtt.MQTTSubscribe
 import mqtt.packets.mqttv5.ReasonCode
 import mqtt.packets.mqttv5.SubscriptionOptions
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT4Subscribe(
-    val packetIdentifier: UInt,
-    val subscriptions: List<Subscription>
-) : MQTT4Packet {
+    packetIdentifier: UInt,
+    subscriptions: List<Subscription>
+) : MQTTSubscribe(packetIdentifier, subscriptions) {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

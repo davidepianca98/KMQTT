@@ -3,13 +3,14 @@ package mqtt.packets.mqttv4
 import mqtt.MQTTException
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTPubrel
 import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT4Pubrel(
-    val packetId: UInt
-) : MQTT4Packet {
+    packetId: UInt
+) : MQTTPubrel(packetId) {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

@@ -6,21 +6,26 @@ import mqtt.containsWildcard
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
 import mqtt.packets.Qos
+import mqtt.packets.mqtt.MQTTPublish
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 import validatePayloadFormat
 
 
 class MQTT5Publish(
-    val retain: Boolean,
-    val qos: Qos = Qos.AT_MOST_ONCE,
-    val dup: Boolean = false,
-    val topicName: String,
-    val packetId: UInt?,
+    retain: Boolean,
+    qos: Qos = Qos.AT_MOST_ONCE,
+    dup: Boolean = false,
+    topicName: String,
+    packetId: UInt?,
     val properties: MQTT5Properties = MQTT5Properties(),
-    val payload: UByteArray? = null,
-    val timestamp: Long = currentTimeMillis()
-) : MQTT5Packet(properties) {
+    payload: UByteArray? = null,
+    timestamp: Long = currentTimeMillis()
+) : MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp) {
+
+    override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
+        return size() <= maximumPacketSize
+    }
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
@@ -45,7 +50,7 @@ class MQTT5Publish(
         return true
     }
 
-    fun setDuplicate(): MQTT5Publish {
+    override fun setDuplicate(): MQTT5Publish {
         return MQTT5Publish(
             retain,
             qos,
@@ -58,20 +63,16 @@ class MQTT5Publish(
         )
     }
 
-    fun messageExpiryIntervalExpired(): Boolean {
+    override fun messageExpiryIntervalExpired(): Boolean {
         val expiry = properties.messageExpiryInterval?.toLong() ?: ((Long.MAX_VALUE / 1000) - timestamp)
         return ((expiry * 1000) + timestamp) < currentTimeMillis()
     }
 
-    fun updateMessageExpiryInterval() {
+    override fun updateMessageExpiryInterval() {
         properties.messageExpiryInterval?.let {
             properties.messageExpiryInterval =
                 it - ((currentTimeMillis() - timestamp) / 1000).toUInt()
         }
-    }
-
-    override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
-        return size() <= maximumPacketSize
     }
 
     companion object : MQTTDeserializer {

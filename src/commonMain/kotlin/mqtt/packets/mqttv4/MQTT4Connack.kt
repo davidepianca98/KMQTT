@@ -4,14 +4,15 @@ import mqtt.MQTTException
 import mqtt.packets.ConnectAcknowledgeFlags
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTConnack
 import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT4Connack(
-    val connectAcknowledgeFlags: ConnectAcknowledgeFlags,
+    connectAcknowledgeFlags: ConnectAcknowledgeFlags,
     val connectReturnCode: ConnectReturnCode
-) : MQTT4Packet {
+) : MQTTConnack(connectAcknowledgeFlags) {
 
     companion object : MQTTDeserializer {
 

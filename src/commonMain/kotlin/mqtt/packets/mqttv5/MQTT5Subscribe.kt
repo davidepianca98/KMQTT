@@ -6,14 +6,15 @@ import mqtt.isSharedTopicFilter
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
 import mqtt.packets.Qos
+import mqtt.packets.mqtt.MQTTSubscribe
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT5Subscribe(
-    val packetIdentifier: UInt,
-    val subscriptions: List<Subscription>,
+    packetIdentifier: UInt,
+    subscriptions: List<Subscription>,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTT5Packet(properties) {
+) : MQTTSubscribe(packetIdentifier, subscriptions) {
 
     companion object : MQTTDeserializer {
 

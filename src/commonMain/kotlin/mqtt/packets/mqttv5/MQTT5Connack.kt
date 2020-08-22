@@ -4,14 +4,15 @@ import mqtt.MQTTException
 import mqtt.packets.ConnectAcknowledgeFlags
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTConnack
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT5Connack(
-    val connectAcknowledgeFlags: ConnectAcknowledgeFlags,
+    connectAcknowledgeFlags: ConnectAcknowledgeFlags,
     val connectReasonCode: ReasonCode,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTT5Packet(properties) {
+) : MQTTConnack(connectAcknowledgeFlags) {
 
     companion object : MQTTDeserializer {
 
@@ -81,6 +82,16 @@ class MQTT5Connack(
                 properties
             )
         }
+    }
+
+    override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
+        if (size() > maximumPacketSize) {
+            properties.reasonString = null
+        }
+        if (size() > maximumPacketSize) {
+            properties.userProperty.clear()
+        }
+        return size() <= maximumPacketSize
     }
 
     override fun toByteArray(): UByteArray {

@@ -3,13 +3,23 @@ package mqtt.packets.mqttv5
 import mqtt.MQTTException
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTDisconnect
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT5Disconnect(
     val reasonCode: ReasonCode,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTT5Packet(properties), MQTTSerializer {
+) : MQTTDisconnect() {
+    override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
+        if (size() > maximumPacketSize) {
+            properties.reasonString = null
+        }
+        if (size() > maximumPacketSize) {
+            properties.userProperty.clear()
+        }
+        return size() <= maximumPacketSize
+    }
 
     override fun toByteArray(): UByteArray {
         if (reasonCode !in validReasonCodes)

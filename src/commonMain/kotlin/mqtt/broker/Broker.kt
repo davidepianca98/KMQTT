@@ -9,6 +9,7 @@ import mqtt.broker.cluster.ClusterSettings
 import mqtt.broker.interfaces.*
 import mqtt.matchesWildcard
 import mqtt.packets.Qos
+import mqtt.packets.mqtt.MQTTPublish
 import mqtt.packets.mqttv5.MQTT5Properties
 import mqtt.packets.mqttv5.MQTT5Publish
 import mqtt.packets.mqttv5.ReasonCode
@@ -80,7 +81,7 @@ class Broker(
         topicName: String,
         qos: Qos,
         dup: Boolean,
-        properties: MQTT5Properties,
+        properties: MQTT5Properties?,
         payload: UByteArray?,
         session: Session,
         subscription: Subscription,
@@ -90,10 +91,10 @@ class Broker(
             return
         }
 
-        properties.subscriptionIdentifier.clear()
+        properties?.subscriptionIdentifier?.clear()
         matchingSubscriptions.forEach { sub ->
             sub.subscriptionIdentifier?.let {
-                properties.subscriptionIdentifier.add(it)
+                properties?.subscriptionIdentifier?.add(it)
             }
         }
 
@@ -113,7 +114,7 @@ class Broker(
         topicName: String,
         qos: Qos,
         dup: Boolean,
-        properties: MQTT5Properties,
+        properties: MQTT5Properties?,
         payload: UByteArray?
     ) {
         if (!retainedAvailable && retain)
@@ -219,7 +220,7 @@ class Broker(
         return publish("", retain, topicName, qos, properties, payload)
     }
 
-    internal fun setRetained(topicName: String, message: MQTT5Publish, clientId: String) {
+    internal fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
         if (retainedAvailable) {
             if (message.payload?.isNotEmpty() == true) {
                 retainedList[topicName] = Pair(message, clientId)
@@ -238,14 +239,14 @@ class Broker(
         while (iterator.hasNext()) {
             val retained = iterator.next()
             val message = retained.value.first
-            if (message.messageExpiryIntervalExpired()) {
+            if (message is MQTT5Publish && message.messageExpiryIntervalExpired()) {
                 persistence?.removeRetained(retained.key)
                 iterator.remove()
             }
         }
     }
 
-    internal fun getRetained(topicFilter: String): List<Pair<MQTT5Publish, String>> {
+    internal fun getRetained(topicFilter: String): List<Pair<MQTTPublish, String>> {
         removeExpiredRetainedMessages()
         return retainedList.filter { it.key.matchesWildcard(topicFilter) }.map { it.value }
     }

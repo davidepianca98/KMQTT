@@ -3,14 +3,15 @@ package mqtt.packets.mqttv5
 import mqtt.MQTTException
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTUnsubscribe
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT5Unsubscribe(
-    val packetIdentifier: UInt,
-    val topicFilters: List<String>,
+    packetIdentifier: UInt,
+    topicFilters: List<String>,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTT5Packet(properties) {
+) : MQTTUnsubscribe(packetIdentifier, topicFilters) {
 
     companion object : MQTTDeserializer {
 

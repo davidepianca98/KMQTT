@@ -3,14 +3,15 @@ package mqtt.packets.mqttv4
 import mqtt.MQTTException
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTUnsubscribe
 import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT4Unsubscribe(
-    val packetIdentifier: UInt,
-    val topicFilters: List<String>
-) : MQTT4Packet {
+    packetIdentifier: UInt,
+    topicFilters: List<String>
+) : MQTTUnsubscribe(packetIdentifier, topicFilters) {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

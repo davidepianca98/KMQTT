@@ -2,7 +2,7 @@ package mqtt.broker.interfaces
 
 import mqtt.Subscription
 import mqtt.broker.Session
-import mqtt.packets.mqttv5.MQTT5Publish
+import mqtt.packets.mqtt.MQTTPublish
 
 interface Persistence {
 
@@ -53,16 +53,16 @@ interface Persistence {
 
     /**
      * Get all the retained messages from persistent storage
-     * @return map of topicName to pair of [MQTT5Publish] message and clientId
+     * @return map of topicName to pair of [MQTTPublish] message and clientId
      */
-    fun getAllRetainedMessages(): Map<String, Pair<MQTT5Publish, String>> // TODO allow generic publish
+    fun getAllRetainedMessages(): Map<String, Pair<MQTTPublish, String>>
 
     /**
      * Save a retained message to persistent storage
      * @param message the message to be saved
      * @param clientId ID of the client
      */
-    fun persistRetained(message: MQTT5Publish, clientId: String)
+    fun persistRetained(message: MQTTPublish, clientId: String)
 
     /**
      * Delete the retained message associated with the specified topic name

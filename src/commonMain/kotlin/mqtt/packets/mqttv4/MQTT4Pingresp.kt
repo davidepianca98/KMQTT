@@ -2,10 +2,11 @@ package mqtt.packets.mqttv4
 
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTPingresp
 import mqtt.packets.mqttv5.MQTT5Pingresp
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Pingresp : MQTT4Packet {
+class MQTT4Pingresp : MQTTPingresp() {
 
     override fun toByteArray(): UByteArray {
         return ByteArrayOutputStream().wrapWithFixedHeader(MQTTControlPacketType.PINGRESP, 0)

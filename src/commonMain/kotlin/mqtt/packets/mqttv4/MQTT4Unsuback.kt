@@ -2,12 +2,13 @@ package mqtt.packets.mqttv4
 
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTUnsuback
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT4Unsuback(
-    val packetIdentifier: UInt
-) : MQTT4Packet {
+    packetIdentifier: UInt
+) : MQTTUnsuback(packetIdentifier) {
 
     companion object : MQTTDeserializer {
 

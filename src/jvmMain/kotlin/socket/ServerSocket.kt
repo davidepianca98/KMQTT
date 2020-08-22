@@ -1,7 +1,7 @@
 package socket
 
 import mqtt.broker.Broker
-import mqtt.broker.ClientConnection5
+import mqtt.broker.ClientConnection
 import mqtt.broker.cluster.ClusterConnection
 import mqtt.broker.cluster.ClusterDiscoveryConnection
 import mqtt.broker.udp.UDPConnectionsMap
@@ -55,7 +55,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
 
     private fun generateDataObject(channel: SocketChannel, socket: Socket): Any? {
         return when (channel.socket().localPort) {
-            broker.port -> ClientConnection5(socket, broker)
+            broker.port -> ClientConnection(socket, broker)
             broker.cluster?.tcpPort -> {
                 val clusterConnection = ClusterConnection(socket)
                 val remoteAddress = (channel.socket().remoteSocketAddress as InetSocketAddress).address.hostAddress

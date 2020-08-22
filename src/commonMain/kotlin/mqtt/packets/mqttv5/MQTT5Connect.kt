@@ -4,22 +4,33 @@ import mqtt.MQTTException
 import mqtt.packets.ConnectFlags
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTConnect
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT5Connect(
-    val protocolName: String,
-    val protocolVersion: Int,
-    val connectFlags: ConnectFlags,
-    val keepAlive: Int,
-    val clientID: String = "",
+    protocolName: String,
+    protocolVersion: Int,
+    connectFlags: ConnectFlags,
+    keepAlive: Int,
+    clientID: String = "",
     val properties: MQTT5Properties = MQTT5Properties(),
     val willProperties: MQTT5Properties? = null,
-    val willTopic: String? = null,
-    val willPayload: UByteArray? = null,
-    val userName: String? = null,
-    val password: UByteArray? = null
-) : MQTT5Packet(properties) {
+    willTopic: String? = null,
+    willPayload: UByteArray? = null,
+    userName: String? = null,
+    password: UByteArray? = null
+) : MQTTConnect(
+    protocolName,
+    protocolVersion,
+    connectFlags,
+    keepAlive,
+    clientID,
+    willTopic,
+    willPayload,
+    userName,
+    password
+) {
 
     companion object : MQTTDeserializer {
         private val validProperties = listOf(

@@ -1,5 +1,3 @@
-import mqtt.broker.Broker
-import mqtt.broker.cluster.ClusterSettings
 import java.nio.ByteBuffer
 
 actual fun currentTimeMillis(): Long {
@@ -11,8 +9,4 @@ fun ByteBuffer.toUByteArray(): UByteArray {
     val array = ByteArray(length)
     get(array, 0, length)
     return array.toUByteArray()
-}
-
-fun main() {
-    Broker(cluster = ClusterSettings()).listen()
 }

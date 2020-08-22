@@ -3,14 +3,15 @@ package mqtt.packets.mqttv5
 import mqtt.MQTTException
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTUnsuback
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT5Unsuback(
-    val packetIdentifier: UInt,
+    packetIdentifier: UInt,
     val reasonCodes: List<ReasonCode>,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTT5Packet(properties) {
+) : MQTTUnsuback(packetIdentifier) {
 
     companion object : MQTTDeserializer {
 
@@ -48,6 +49,16 @@ class MQTT5Unsuback(
 
             return MQTT5Unsuback(packetIdentifier, reasonCodes, properties)
         }
+    }
+
+    override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
+        if (size() > maximumPacketSize) {
+            properties.reasonString = null
+        }
+        if (size() > maximumPacketSize) {
+            properties.userProperty.clear()
+        }
+        return size() <= maximumPacketSize
     }
 
     override fun toByteArray(): UByteArray {

@@ -1,6 +1,7 @@
 package mqtt
 
 import mqtt.packets.Qos
+import mqtt.packets.mqtt.MQTTConnect
 import mqtt.packets.mqttv5.MQTT5Connect
 import mqtt.packets.mqttv5.ReasonCode
 import validatePayloadFormat
@@ -19,9 +20,10 @@ class Will(
     val userProperty: List<Pair<String, String>>
 ) {
     companion object {
-        fun buildWill(packet: MQTT5Connect): Will? {
+        fun buildWill(packet: MQTTConnect): Will? {
             return if (packet.connectFlags.willFlag) {
-                val formatIndicator = packet.willProperties!!.payloadFormatIndicator ?: 0u
+                val properties = if (packet is MQTT5Connect) packet.willProperties!! else null
+                val formatIndicator = properties?.payloadFormatIndicator ?: 0u
                 if (packet.willPayload?.validatePayloadFormat(formatIndicator) == false)
                     throw MQTTException(ReasonCode.PAYLOAD_FORMAT_INVALID)
                 Will(
@@ -29,13 +31,13 @@ class Will(
                     packet.connectFlags.willQos,
                     packet.willTopic!!,
                     packet.willPayload!!,
-                    packet.willProperties.willDelayInterval ?: 0u,
+                    properties?.willDelayInterval ?: 0u,
                     formatIndicator,
-                    packet.willProperties.messageExpiryInterval,
-                    packet.willProperties.contentType,
-                    packet.willProperties.responseTopic,
-                    packet.willProperties.correlationData,
-                    packet.willProperties.userProperty
+                    properties?.messageExpiryInterval,
+                    properties?.contentType,
+                    properties?.responseTopic,
+                    properties?.correlationData,
+                    properties?.userProperty ?: listOf()
                 )
             } else
                 null

@@ -6,19 +6,20 @@ import mqtt.containsWildcard
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
 import mqtt.packets.Qos
+import mqtt.packets.mqtt.MQTTPublish
 import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 class MQTT4Publish(
-    val retain: Boolean,
-    val qos: Qos = Qos.AT_MOST_ONCE,
-    val dup: Boolean = false,
-    val topicName: String,
-    val packetId: UInt?,
-    val payload: UByteArray? = null,
-    val timestamp: Long = currentTimeMillis()
-) : MQTT4Packet {
+    retain: Boolean,
+    qos: Qos = Qos.AT_MOST_ONCE,
+    dup: Boolean = false,
+    topicName: String,
+    packetId: UInt?,
+    payload: UByteArray? = null,
+    timestamp: Long = currentTimeMillis()
+) : MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp) {
 
     companion object : MQTTDeserializer {
 
@@ -56,6 +57,18 @@ class MQTT4Publish(
         override fun checkFlags(flags: Int) {
 
         }
+    }
+
+    override fun setDuplicate(): MQTTPublish {
+        return MQTT4Publish(
+            retain,
+            qos,
+            true,
+            topicName,
+            packetId,
+            payload,
+            timestamp
+        )
     }
 
     override fun toByteArray(): UByteArray {

@@ -11,7 +11,8 @@ import socket.streams.decodeVariableByteInteger
 class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
 
     private val currentReceivedData = DynamicByteBuffer()
-    private var mqttVersion: Int? = null
+    internal var mqttVersion: Int? = null
+        private set
 
     fun addData(data: UByteArray): List<MQTTPacket> {
         val packets = mutableListOf<MQTTPacket>()
@@ -69,7 +70,7 @@ class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
             ) else MQTT5Connack.fromByteArray(
                 flags,
                 data
-            ) // TODO use MQTTConnack interface that decides correct version
+            )
             MQTTControlPacketType.PUBLISH -> if (mqttVersion == 4) MQTT4Publish.fromByteArray(
                 flags,
                 data

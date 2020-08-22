@@ -2,9 +2,10 @@ package mqtt.packets.mqttv4
 
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
+import mqtt.packets.mqtt.MQTTDisconnect
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Disconnect : MQTT4Packet {
+class MQTT4Disconnect : MQTTDisconnect() {
 
     override fun toByteArray(): UByteArray {
         return ByteArrayOutputStream().wrapWithFixedHeader(MQTTControlPacketType.DISCONNECT, 0)

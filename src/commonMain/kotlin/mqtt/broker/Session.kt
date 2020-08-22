@@ -2,16 +2,24 @@ package mqtt.broker
 
 import currentTimeMillis
 import mqtt.Will
+import mqtt.packets.MQTTPacket
 import mqtt.packets.Qos
-import mqtt.packets.mqttv5.*
+import mqtt.packets.mqtt.MQTTConnect
+import mqtt.packets.mqtt.MQTTPublish
+import mqtt.packets.mqtt.MQTTPubrel
+import mqtt.packets.mqttv4.MQTT4Publish
+import mqtt.packets.mqttv5.MQTT5Connect
+import mqtt.packets.mqttv5.MQTT5Properties
+import mqtt.packets.mqttv5.MQTT5Publish
 
 class Session(
-    packet: MQTT5Connect,
-    var clientConnection: ClientConnection5?,
+    packet: MQTTConnect,
+    var clientConnection: ClientConnection?,
     private val persist: (clientId: String, session: Session) -> Unit
 ) {
 
     private var connected = false // true only after sending CONNACK
+    internal var mqttVersion = 4
     var sessionDisconnectedTimestamp: Long? = null
 
     var clientId = packet.clientID
@@ -19,14 +27,14 @@ class Session(
     private var packetIdentifier = 1u
 
     // QoS 1 and QoS 2 messages which have been sent to the Client, but have not been completely acknowledged
-    private val pendingAcknowledgeMessages = mutableMapOf<UInt, MQTT5Publish>()
-    private val pendingAcknowledgePubrel = mutableMapOf<UInt, MQTT5Pubrel>()
+    private val pendingAcknowledgeMessages = mutableMapOf<UInt, MQTTPublish>()
+    private val pendingAcknowledgePubrel = mutableMapOf<UInt, MQTTPubrel>()
 
     // QoS 1 and QoS 2 messages pending transmission to the Client
-    private val pendingSendMessages = mutableMapOf<UInt, MQTT5Publish>()
+    private val pendingSendMessages = mutableMapOf<UInt, MQTTPublish>()
 
     // QoS 2 messages which have been received from the Client that have not been completely acknowledged
-    val qos2ListReceived = mutableMapOf<UInt, MQTT5Publish>()
+    val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
 
     init {
         persist()
@@ -45,7 +53,7 @@ class Session(
         persist()
     }
 
-    fun addPendingAcknowledgePubrel(packet: MQTT5Pubrel) {
+    fun addPendingAcknowledgePubrel(packet: MQTTPubrel) {
         pendingAcknowledgePubrel[packet.packetId] = packet
         persist()
     }
@@ -55,7 +63,7 @@ class Session(
         persist()
     }
 
-    fun resendPending(sendPacket: (packet: MQTT5Packet) -> Unit) {
+    fun resendPending(sendPacket: (packet: MQTTPacket) -> Unit) {
         pendingAcknowledgeMessages.forEach {
             if (!it.value.messageExpiryIntervalExpired()) {
                 it.value.updateMessageExpiryInterval()
@@ -78,22 +86,34 @@ class Session(
         topicName: String,
         qos: Qos,
         dup: Boolean,
-        properties: MQTT5Properties,
+        properties: MQTT5Properties?,
         payload: UByteArray?
     ) {
         val packetId = if (qos >= Qos.AT_MOST_ONCE) generatePacketId() else null
 
-        val packetTopicName = clientConnection?.getPublishTopicAlias(topicName, properties) ?: topicName
+        val packetTopicName =
+            clientConnection?.getPublishTopicAlias(topicName, properties ?: MQTT5Properties()) ?: topicName
 
-        val packet = MQTT5Publish(
-            retain,
-            qos,
-            dup,
-            packetTopicName,
-            packetId,
-            properties,
-            payload
-        )
+        val packet = if (mqttVersion == 5) {
+            MQTT5Publish(
+                retain,
+                qos,
+                dup,
+                packetTopicName,
+                packetId,
+                properties ?: MQTT5Properties(),
+                payload
+            )
+        } else {
+            MQTT4Publish(
+                retain,
+                qos,
+                dup,
+                packetTopicName,
+                packetId,
+                payload
+            )
+        }
 
         if (packet.messageExpiryIntervalExpired())
             return
@@ -131,7 +151,8 @@ class Session(
 
     var will = Will.buildWill(packet)
 
-    var sessionExpiryInterval = packet.properties.sessionExpiryInterval ?: 0u
+    var sessionExpiryInterval =
+        if (packet is MQTT5Connect) packet.properties.sessionExpiryInterval ?: 0u else 0xFFFFFFFFu
 
     fun generatePacketId(): UInt {
         do {
