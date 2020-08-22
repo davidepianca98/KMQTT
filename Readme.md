@@ -2,7 +2,7 @@
 
 [![Release](https://jitpack.io/v/davidepianca98/KMQTT.svg)](https://jitpack.io/#davidepianca98/KMQTT)
 
-**KMQTT** is a Kotlin Multiplatform MQTT 5.0 Broker, with the objective of targeting the most possible build targets.
+**KMQTT** is a Kotlin Multiplatform MQTT 3.1.1/5.0 Broker, with the objective of targeting the most possible build targets.
 
 ## Features
 :heavy_multiplication_x: = TODO
@@ -11,10 +11,10 @@
 
 | Platform    | MQTT 3.1.1               | MQTT 5.0           | Clustering        | TCP                | TLS                | UDP               | Websocket                |
 | :---:       | :---:                    |  :---:             | :---:             | :---:              | :---:              | :---:             | :---:                    |
-| JVM         | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
-| Windows X64 | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
-| Linux X64   | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
-| Linux ARM32 | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
+| JVM         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
+| Windows X64 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
+| Linux X64   | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
+| Linux ARM32 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
 
 ## Getting Started
 
@@ -103,7 +103,7 @@ fun main() {
 ```kotlin
 fun main() {
     val broker = Broker(packetInterceptor = object : PacketInterceptor {
-        override fun packetReceived(packet: MQTT5Packet) {
+        override fun packetReceived(packet: MQTTPacket) {
             when(packet) {
                 is MQTTConnect -> println(packet.protocolName)
                 is MQTTPublish -> println(packet.topicName)
