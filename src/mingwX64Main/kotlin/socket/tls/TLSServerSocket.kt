@@ -5,7 +5,6 @@ import kotlinx.cinterop.*
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection5
 import openssl.*
-import platform.posix.SOCKET
 import platform.posix.closesocket
 import platform.posix.fclose
 import platform.posix.fopen
@@ -52,22 +51,22 @@ actual class TLSServerSocket actual constructor(private val broker: Broker) : Se
         }
     }
 
-    override fun accept(socket: SOCKET) {
+    override fun accept(socket: Int) {
         val readBio = BIO_new(BIO_s_mem())
         if (readBio == null) {
-            closesocket(socket)
+            closesocket(socket.toULong())
             return
         }
         val writeBio = BIO_new(BIO_s_mem())
         if (writeBio == null) {
-            closesocket(socket)
+            closesocket(socket.toULong())
             BIO_free(readBio)
             return
         }
 
         val clientContext = SSL_new(sslContext)
         if (clientContext == null) {
-            closesocket(socket)
+            closesocket(socket.toULong())
             BIO_free(readBio)
             BIO_free(writeBio)
             return

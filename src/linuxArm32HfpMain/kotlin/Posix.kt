@@ -68,6 +68,43 @@ actual fun MemScope.getPortFromSockaddrIn(sockaddr: sockaddr_in): UShort {
     return sockaddr.sin_port
 }
 
+actual fun setsockopt(__fd: Int, __level: Int, __optname: Int, __optval: CValuesRef<*>?, __optlen: UInt): Int {
+    return platform.posix.setsockopt(__fd.convert(), __level, __optname, __optval, __optlen.convert())
+}
+
+actual fun bind(__fd: Int, __addr: CValuesRef<sockaddr>?, __len: UInt): Int {
+    return platform.posix.bind(__fd, __addr, __len)
+}
+
+actual fun set_non_blocking(__fd: Int): Int {
+    return fcntl(__fd, F_SETFL, O_NONBLOCK)
+}
+
+actual fun socket(__domain: Int, __type: Int, __protocol: Int): Int {
+    return platform.posix.socket(__domain, __type, __protocol)
+}
+
+actual fun accept(__fd: Int, __addr: CValuesRef<sockaddr>?, __addr_len: CValuesRef<UIntVarOf<UInt>>?): Int {
+    return platform.posix.accept(__fd, __addr, __addr_len)
+}
+
+actual fun listen(__fd: Int, __n: Int): Int {
+    return platform.posix.listen(__fd, __n)
+}
+
+actual fun MemScope.select(
+    __nfds: Int,
+    __readfds: CValuesRef<fd_set>?,
+    __writefds: CValuesRef<fd_set>?,
+    __exceptfds: CValuesRef<fd_set>?,
+    timeout: Long
+): Int {
+    val timeoutStruct = alloc<timeval>()
+    timeoutStruct.tv_sec = 0
+    timeoutStruct.tv_usec = timeout.toInt() * 1000
+    return select(__nfds, __readfds, __writefds, __exceptfds, timeoutStruct.ptr)
+}
+
 actual fun currentTimeMillis(): Long {
     memScoped {
         val tv = alloc<timeval>()
@@ -75,6 +112,10 @@ actual fun currentTimeMillis(): Long {
         return (tv.tv_sec.toLong() * 1000) + (tv.tv_usec / 1000)
     }
 }
+
+actual fun socketsInit() {}
+
+actual fun socketsCleanup() {}
 
 actual fun getErrno(): Int = errno
 actual fun getEagain(): Int = EAGAIN

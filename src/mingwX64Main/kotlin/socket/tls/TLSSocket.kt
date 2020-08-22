@@ -4,18 +4,17 @@ import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import openssl.*
-import platform.posix.SOCKET
 import socket.streams.ByteArrayOutputStream
 import socket.tcp.IOException
 import socket.tcp.Socket
 import socket.tcp.SocketClosedException
 
 actual class TLSSocket(
-    socket: SOCKET,
+    socket: Int,
     private val engine: OpenSSLEngine,
-    writeRequest: MutableList<SOCKET>,
+    writeRequest: MutableList<Int>,
     buffer: ByteArray
-) : Socket(socket.toInt(), writeRequest.map { it.toInt() }.toMutableList(), buffer) {
+) : Socket(socket, writeRequest, buffer) {
 
     private val buf = ByteArray(4096)
     private val encryptedBuf = ByteArray(4096)

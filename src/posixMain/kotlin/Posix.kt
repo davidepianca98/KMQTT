@@ -56,6 +56,40 @@ expect fun MemScope.sockaddrIn(sin_family: UShort, sin_port: UShort): sockaddr_i
 
 expect fun MemScope.getPortFromSockaddrIn(sockaddr: sockaddr_in): UShort
 
+expect fun setsockopt(
+    __fd: Int,
+    __level: Int,
+    __optname: Int,
+    __optval: kotlinx.cinterop.CValuesRef<*>?,
+    __optlen: UInt
+): Int
+
+expect fun bind(__fd: Int, __addr: kotlinx.cinterop.CValuesRef<platform.posix.sockaddr>?, __len: UInt): Int
+
+expect fun set_non_blocking(__fd: Int): Int
+
+expect fun socket(__domain: Int, __type: Int, __protocol: Int): Int
+
+expect fun accept(
+    __fd: Int,
+    __addr: kotlinx.cinterop.CValuesRef<platform.posix.sockaddr>?,
+    __addr_len: kotlinx.cinterop.CValuesRef<kotlinx.cinterop.UIntVarOf<UInt>>?
+): Int
+
+expect fun listen(__fd: Int, __n: Int): Int
+
+expect fun MemScope.select(
+    __nfds: Int,
+    __readfds: kotlinx.cinterop.CValuesRef<platform.posix.fd_set>?,
+    __writefds: kotlinx.cinterop.CValuesRef<platform.posix.fd_set>?,
+    __exceptfds: kotlinx.cinterop.CValuesRef<platform.posix.fd_set>?,
+    timeout: Long
+): Int
+
+expect fun socketsInit()
+
+expect fun socketsCleanup()
+
 expect fun getErrno(): Int
 expect fun getEagain(): Int
 expect fun getEwouldblock(): Int

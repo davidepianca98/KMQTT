@@ -1,8 +1,9 @@
 import kotlinx.cinterop.*
-import platform.posix.posix_htons
-import platform.posix.sockaddr
-import platform.posix.sockaddr_in
+import platform.posix.*
 import platform.windows.*
+import platform.windows.WSAEWOULDBLOCK
+import platform.windows.WSAGetLastError
+import socket.tcp.IOException
 
 actual fun send(socket: Int, buf: CValuesRef<ByteVar>?, len: Int, flags: Int): Int {
     return platform.posix.send(socket.convert(), buf, len, flags)
@@ -85,6 +86,64 @@ actual fun currentTimeMillis(): Long {
         return ((millisFrom1601 - 116444736000000000u) / 10000u).toLong()
     }
 }
+
+actual fun setsockopt(__fd: Int, __level: Int, __optname: Int, __optval: CValuesRef<*>?, __optlen: UInt): Int {
+    return platform.posix.setsockopt(__fd.convert(), __level, __optname, __optval.toString(), __optlen.convert())
+}
+
+actual fun bind(__fd: Int, __addr: CValuesRef<sockaddr>?, __len: UInt): Int {
+    return platform.posix.bind(__fd.convert(), __addr, __len.toInt())
+}
+
+actual fun set_non_blocking(__fd: Int): Int {
+    memScoped {
+        val on = alloc<uint32_tVar>()
+        on.value = 1u
+        return platform.posix.ioctlsocket(__fd.toULong(), platform.posix.FIONBIO.toInt(), on.ptr.reinterpret())
+    }
+}
+
+actual fun socket(__domain: Int, __type: Int, __protocol: Int): Int {
+    return platform.posix.socket(__domain, __type, __protocol).toInt()
+}
+
+actual fun accept(
+    __fd: Int,
+    __addr: CValuesRef<sockaddr>?,
+    __addr_len: CValuesRef<UIntVarOf<UInt>>?
+): Int {
+    return platform.posix.accept(__fd.convert(), __addr, __addr_len as CValuesRef<IntVarOf<Int>>?).toInt()
+}
+
+actual fun listen(__fd: Int, __n: Int): Int {
+    return platform.posix.listen(__fd.convert(), __n)
+}
+
+actual fun MemScope.select(
+    __nfds: Int,
+    __readfds: CValuesRef<fd_set>?,
+    __writefds: CValuesRef<fd_set>?,
+    __exceptfds: CValuesRef<fd_set>?,
+    timeout: Long
+): Int {
+    val timeoutStruct = alloc<timeval>()
+    timeoutStruct.tv_sec = 0
+    timeoutStruct.tv_usec = (timeout * 1000).toInt()
+    return platform.windows.select(__nfds, __readfds, __writefds, __exceptfds, timeoutStruct.ptr)
+}
+
+actual fun socketsInit() {
+    memScoped {
+        val wsaData = alloc<WSADATA>()
+        if (platform.posix.WSAStartup(0x0202u, wsaData.ptr) != 0)
+            throw IOException("Failed WSAStartup")
+    }
+}
+
+actual fun socketsCleanup() {
+    platform.posix.WSACleanup()
+}
+
 
 actual fun getErrno(): Int = WSAGetLastError()
 actual fun getEagain(): Int = WSAEWOULDBLOCK
