@@ -204,6 +204,9 @@ class ClientConnection(
     private fun incrementSendQuota() {
         if (++sendQuota >= maxSendQuota)
             sendQuota = maxSendQuota
+        session?.sendPending {
+            writePacket(it)
+        }
     }
 
     internal fun decrementSendQuota() {
@@ -469,9 +472,10 @@ class ClientConnection(
                 throw MQTTException(ReasonCode.RECEIVE_MAXIMUM_EXCEEDED)
         }
 
-        if (packet.retain) {
+        val dontSend = if (packet.retain) {
             broker.setRetained(packet.topicName, packet, session!!.clientId)
-        }
+            packet.payload == null || packet.payload.isEmpty()
+        } else false
 
         when (packet.qos) {
             Qos.AT_LEAST_ONCE -> {
@@ -503,15 +507,17 @@ class ClientConnection(
             }
         }
 
-        broker.publish(
-            session!!.clientId,
-            packet.retain,
-            topic,
-            packet.qos,
-            false,
-            if (packet is MQTT5Publish) packet.properties else null,
-            packet.payload
-        )
+        if (!dontSend) {
+            broker.publish(
+                session!!.clientId,
+                packet.retain,
+                topic,
+                packet.qos,
+                false,
+                if (packet is MQTT5Publish) packet.properties else null,
+                packet.payload
+            )
+        }
     }
 
     private fun getTopicOrAlias(packet: MQTTPublish): String {
@@ -585,6 +591,9 @@ class ClientConnection(
                 MQTT4Pubcomp(packet.packetId)
             }
             writePacket(pubcomp)
+            if (it.retain && (it.payload == null || it.payload.isEmpty())) {
+                return
+            }
             broker.publish(
                 session!!.clientId,
                 it.retain,
@@ -713,7 +722,9 @@ class ClientConnection(
         // Send SUBACK
         writePacket(suback)
         // Send retained messages
-        retainedMessagesList.forEach { writePacket(it) }
+        retainedMessagesList.forEach {
+            session?.publish(it)
+        }
     }
 
     private fun handleUnsubscribe(packet: MQTTUnsubscribe) {

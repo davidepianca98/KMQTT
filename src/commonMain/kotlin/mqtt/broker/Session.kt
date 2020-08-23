@@ -63,7 +63,20 @@ class Session(
         persist()
     }
 
-    fun resendPending(sendPacket: (packet: MQTTPacket) -> Unit) {
+    internal fun sendPending(sendPacket: (packet: MQTTPacket) -> Unit) {
+        val iterator = pendingSendMessages.iterator()
+        while (iterator.hasNext()) {
+            val packet = iterator.next().value
+            if (!packet.messageExpiryIntervalExpired()) {
+                packet.updateMessageExpiryInterval()
+                sendPacket(packet)
+                pendingAcknowledgeMessages[packet.packetId!!] = packet
+                iterator.remove()
+            }
+        }
+    }
+
+    internal fun resendPending(sendPacket: (packet: MQTTPacket) -> Unit) {
         pendingAcknowledgeMessages.forEach {
             if (!it.value.messageExpiryIntervalExpired()) {
                 it.value.updateMessageExpiryInterval()
@@ -73,10 +86,29 @@ class Session(
         pendingAcknowledgePubrel.forEach {
             sendPacket(it.value)
         }
-        pendingSendMessages.forEach {
-            if (!it.value.messageExpiryIntervalExpired()) {
-                it.value.updateMessageExpiryInterval()
-                sendPacket(it.value)
+        sendPending(sendPacket)
+    }
+
+    internal fun publish(packet: MQTTPublish) {
+        if (packet.messageExpiryIntervalExpired())
+            return
+        // Update the expiry interval if present
+        packet.updateMessageExpiryInterval()
+
+        if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
+            pendingSendMessages[packet.packetId!!] = packet
+            persist()
+            if (isConnected() && clientConnection?.sendQuota ?: 1u > 0u) {
+                clientConnection!!.writePacket(packet)
+                clientConnection!!.decrementSendQuota()
+                pendingSendMessages.remove(packet.packetId)
+                persist()
+                pendingAcknowledgeMessages[packet.packetId] = packet
+                persist()
+            }
+        } else {
+            if (isConnected()) {
+                clientConnection!!.writePacket(packet)
             }
         }
     }
@@ -115,30 +147,7 @@ class Session(
             )
         }
 
-        if (packet.messageExpiryIntervalExpired())
-            return
-        // Update the expiry interval if present
-        packet.updateMessageExpiryInterval()
-
-        if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
-            if (clientConnection?.sendQuota ?: 1u <= 0u)
-                return
-
-            pendingSendMessages[packet.packetId!!] = packet
-            persist()
-            if (isConnected()) {
-                clientConnection!!.writePacket(packet)
-                clientConnection!!.decrementSendQuota()
-                pendingSendMessages.remove(packet.packetId)
-                persist()
-                pendingAcknowledgeMessages[packet.packetId] = packet
-                persist()
-            }
-        } else {
-            if (isConnected()) {
-                clientConnection!!.writePacket(packet)
-            }
-        }
+        publish(packet)
     }
 
     // TODO shared subscription note:

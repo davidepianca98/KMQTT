@@ -239,7 +239,7 @@ class Broker(
         while (iterator.hasNext()) {
             val retained = iterator.next()
             val message = retained.value.first
-            if (message is MQTT5Publish && message.messageExpiryIntervalExpired()) {
+            if (message.messageExpiryIntervalExpired()) {
                 persistence?.removeRetained(retained.key)
                 iterator.remove()
             }
