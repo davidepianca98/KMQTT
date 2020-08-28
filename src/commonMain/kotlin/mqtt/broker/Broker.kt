@@ -4,8 +4,7 @@ import currentTimeMillis
 import datastructures.Trie
 import mqtt.MQTTException
 import mqtt.Subscription
-import mqtt.broker.cluster.ClusterConnection
-import mqtt.broker.cluster.ClusterSettings
+import mqtt.broker.cluster.*
 import mqtt.broker.interfaces.*
 import mqtt.matchesWildcard
 import mqtt.packets.Qos
@@ -19,7 +18,7 @@ import socket.tls.TLSSettings
 
 class Broker(
     val port: Int = 1883,
-    val host: String = "127.0.0.1",
+    val host: String = "0.0.0.0",
     val backlog: Int = 100000,
     val tlsSettings: TLSSettings? = null,
     val authentication: Authentication? = null,
@@ -45,7 +44,7 @@ class Broker(
     // TODO support WebSocket, section 6
 
     private val server = ServerSocketLoop(this)
-    internal val sessions = persistence?.getAllSessions()?.toMutableMap() ?: mutableMapOf()
+    private val sessions = (persistence?.getAllSessions() as Map<String, ISession>?)?.toMutableMap() ?: mutableMapOf()
     internal val subscriptions = Trie(persistence?.getAllSubscriptions())
     private val retainedList = persistence?.getAllRetainedMessages()?.toMutableMap() ?: mutableMapOf()
 
@@ -83,7 +82,7 @@ class Broker(
         dup: Boolean,
         properties: MQTT5Properties?,
         payload: UByteArray?,
-        session: Session,
+        session: ISession,
         subscription: Subscription,
         matchingSubscriptions: List<Subscription>
     ) {
@@ -115,7 +114,8 @@ class Broker(
         qos: Qos,
         dup: Boolean,
         properties: MQTT5Properties?,
-        payload: UByteArray?
+        payload: UByteArray?,
+        remote: Boolean = false
     ) {
         if (!retainedAvailable && retain)
             throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
@@ -162,20 +162,22 @@ class Broker(
             val subscription = subscriptionEntry.value
 
             val session = sessions[clientId]
-            if (clientId !in doneNormal && session != null) {
-                publishNormal(
-                    publisherClientId,
-                    retain,
-                    topicName,
-                    qos,
-                    dup,
-                    properties,
-                    payload,
-                    session,
-                    subscription,
-                    matchedSubscriptions.filter { it.key == clientId && !it.value.isShared() }.map { it.value }
-                )
-                doneNormal += clientId
+            if (!remote || session !is RemoteSession) {
+                if (clientId !in doneNormal && session != null) {
+                    publishNormal(
+                        publisherClientId,
+                        retain,
+                        topicName,
+                        qos,
+                        dup,
+                        properties,
+                        payload,
+                        session,
+                        subscription,
+                        matchedSubscriptions.filter { it.key == clientId && !it.value.isShared() }.map { it.value }
+                    )
+                    doneNormal += clientId
+                }
             }
         }
     }
@@ -220,13 +222,66 @@ class Broker(
         return publish("", retain, topicName, qos, properties, payload)
     }
 
-    internal fun setRetained(topicName: String, message: MQTTPublish, clientId: String) {
+    internal fun publishFromRemote(packet: MQTTPublish) {
+        publish(
+            "",
+            packet.retain,
+            packet.topicName,
+            packet.qos,
+            packet.dup,
+            if (packet is MQTT5Publish) packet.properties else null,
+            packet.payload,
+            true
+        )
+    }
+
+    internal fun addSession(clientId: String, session: ISession) {
+        sessions[clientId] = session
+        if (session is Session) {
+            clusterConnections.addSession(session)
+        }
+    }
+
+    internal fun getSession(clientId: String?): ISession? {
+        return sessions[clientId]
+    }
+
+    internal fun propagateSession(session: Session) {
+        clusterConnections.updateSession(session)
+    }
+
+    internal fun addSubscription(clientId: String, subscription: Subscription, remote: Boolean = false): Boolean {
+        val replaced = subscriptions.insert(subscription, clientId)
+        persistence?.persistSubscription(clientId, subscription)
+        if (!remote)
+            clusterConnections.addSubscription(clientId, subscription)
+        return replaced
+    }
+
+    internal fun removeSubscription(clientId: String, topicFilter: String, remote: Boolean = false): Boolean {
+        return if (subscriptions.delete(topicFilter, clientId)) {
+            persistence?.removeSubscription(clientId, topicFilter)
+            if (!remote)
+                clusterConnections.removeSubscription(clientId, topicFilter)
+            true
+        } else {
+            false
+        }
+    }
+
+    internal fun setRetained(topicName: String, message: MQTTPublish, clientId: String, remote: Boolean = false) {
         if (retainedAvailable) {
             if (message.payload?.isNotEmpty() == true) {
-                retainedList[topicName] = Pair(message, clientId)
+                val retained = Pair(message, clientId)
+                retainedList[topicName] = retained
+                if (!remote)
+                    clusterConnections.setRetained(retained)
                 persistence?.persistRetained(message, clientId)
             } else {
                 retainedList.remove(topicName)
+                if (!remote) {
+                    clusterConnections.setRetained(Pair(message, clientId))
+                }
                 persistence?.removeRetained(topicName)
             }
         } else {
@@ -251,35 +306,30 @@ class Broker(
         return retainedList.filter { it.key.matchesWildcard(topicFilter) }.map { it.value }
     }
 
-    private fun Session.isExpired(): Boolean {
-        val timestamp = getExpiryTime()
-        val currentTime = currentTimeMillis()
-        return timestamp != null && timestamp <= currentTime
-    }
-
     internal fun cleanUpOperations() {
         val iterator = sessions.iterator()
         while (iterator.hasNext()) {
-            val session = iterator.next()
-            if (session.value.isConnected()) { // Check the keep alive timer is being respected
-                session.value.clientConnection!!.checkKeepAliveExpired()
+            val iSession = iterator.next()
+            val session = iSession.value
+            if (session.connected) { // Check the keep alive timer is being respected
+                session.checkKeepAliveExpired()
             } else {
-                if (session.value.isExpired()) {
-                    session.value.will?.let {
-                        sendWill(session.value)
+                if (session.isExpired()) {
+                    session.will?.let {
+                        sendWill(session as Session)
                     }
-                    persistence?.removeSession(session.key)
-                    subscriptions.delete(session.key)
-                    persistence?.removeSubscriptions(session.key)
+                    persistence?.removeSession(iSession.key)
+                    subscriptions.delete(iSession.key)
+                    persistence?.removeSubscriptions(iSession.key)
                     iterator.remove()
                 } else {
-                    session.value.will?.let {
+                    session.will?.let {
                         val currentTime = currentTimeMillis()
                         val expirationTime =
-                            session.value.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L)
+                            session.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L)
                         // Check if the will delay interval has expired, if yes send the will
                         if (expirationTime <= currentTime || it.willDelayInterval == 0u)
-                            sendWill(session.value)
+                            sendWill(session as Session)
                     }
                 }
             }
@@ -297,8 +347,8 @@ class Broker(
         } else {
             ReasonCode.SERVER_SHUTTING_DOWN
         }
-        sessions.filter { it.value.isConnected() }.forEach {
-            it.value.clientConnection?.disconnect(reasonCode, serverReference)
+        sessions.filter { it.value.connected && it.value is Session }.forEach {
+            (it.value as Session).clientConnection?.disconnect(reasonCode, serverReference)
         }
         server.stop()
     }
@@ -306,7 +356,7 @@ class Broker(
     internal fun addClusterConnection(address: String) {
         if (clusterConnections[address] == null) {
             server.addClusterConnection(address)?.let {
-                clusterConnections[address] = it
+                addClusterConnection(address, it)
             }
         }
     }

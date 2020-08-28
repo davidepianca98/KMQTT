@@ -1,12 +1,17 @@
 version: '3.5'
 
 services:
-  broker1:
+  broker:
     image: kmqtt:latest
+    networks:
+      - main
     ports:
       - '1883:1883'
+      - '8000:8000'
+    deploy:
+      mode: replicated
+      replicas: 2
 
-  broker2:
-    image: kmqtt:latest
-    ports:
-      - '1884:1883'
+networks:
+  main:
+    driver: overlay

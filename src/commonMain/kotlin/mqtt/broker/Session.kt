@@ -4,25 +4,42 @@ import currentTimeMillis
 import mqtt.Will
 import mqtt.packets.MQTTPacket
 import mqtt.packets.Qos
-import mqtt.packets.mqtt.MQTTConnect
 import mqtt.packets.mqtt.MQTTPublish
 import mqtt.packets.mqtt.MQTTPubrel
 import mqtt.packets.mqttv4.MQTT4Publish
-import mqtt.packets.mqttv5.MQTT5Connect
 import mqtt.packets.mqttv5.MQTT5Properties
 import mqtt.packets.mqttv5.MQTT5Publish
+import mqtt.packets.mqttv5.ReasonCode
 
 class Session(
-    packet: MQTTConnect,
     var clientConnection: ClientConnection?,
-    private val persist: (clientId: String, session: Session) -> Unit
-) {
+    override val clientId: String,
+    override var sessionExpiryInterval: UInt,
+    override var will: Will?,
+    private val persist: (clientId: String, session: Session) -> Unit,
+    private val propagateUpdate: (session: Session) -> Unit
+) : ISession {
 
-    private var connected = false // true only after sending CONNACK
-    internal var mqttVersion = 4
-    var sessionDisconnectedTimestamp: Long? = null
-
-    var clientId = packet.clientID
+    override var connected = false // true only after sending CONNACK
+        set(value) {
+            if (value) {
+                field = value
+                sessionDisconnectedTimestamp = null
+                persist()
+            } else {
+                if (connected) {
+                    field = value
+                    clientConnection = null
+                    if (sessionDisconnectedTimestamp == null) {
+                        sessionDisconnectedTimestamp = currentTimeMillis()
+                    }
+                }
+                persist()
+            }
+            propagateUpdate(this)
+        }
+    override var mqttVersion = 4
+    override var sessionDisconnectedTimestamp: Long? = null
 
     private var packetIdentifier = 1u
 
@@ -98,7 +115,7 @@ class Session(
         if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
             pendingSendMessages[packet.packetId!!] = packet
             persist()
-            if (isConnected() && clientConnection?.sendQuota ?: 1u > 0u) {
+            if (connected && clientConnection?.sendQuota ?: 1u > 0u) {
                 clientConnection!!.writePacket(packet)
                 clientConnection!!.decrementSendQuota()
                 pendingSendMessages.remove(packet.packetId)
@@ -107,13 +124,13 @@ class Session(
                 persist()
             }
         } else {
-            if (isConnected()) {
+            if (connected) {
                 clientConnection!!.writePacket(packet)
             }
         }
     }
 
-    fun publish(
+    override fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,
@@ -158,11 +175,6 @@ class Session(
     //  same Shared Subscription. It MAY attempt to send the message to another Client as soon as it loses its
     //  connection to the first Client.
 
-    var will = Will.buildWill(packet)
-
-    var sessionExpiryInterval =
-        if (packet is MQTT5Connect) packet.properties.sessionExpiryInterval ?: 0u else 0xFFFFFFFFu
-
     fun generatePacketId(): UInt {
         do {
             packetIdentifier++
@@ -182,29 +194,11 @@ class Session(
         return false
     }
 
-    fun connected() {
-        connected = true
-        sessionDisconnectedTimestamp = null
-        persist()
+    override fun disconnectClientSessionTakenOver() { // TODO probably transform in remotesession if the method is called from clusterconnection
+        clientConnection?.disconnect(ReasonCode.SESSION_TAKEN_OVER)
     }
 
-    fun disconnected() {
-        if (connected) {
-            connected = false
-            clientConnection = null
-            if (sessionDisconnectedTimestamp == null) {
-                sessionDisconnectedTimestamp = currentTimeMillis()
-            }
-        }
-        persist()
+    override fun checkKeepAliveExpired() {
+        clientConnection?.checkKeepAliveExpired()
     }
-
-    fun getExpiryTime(): Long? {
-        return if (sessionExpiryInterval == 0xFFFFFFFFu || connected) // If connected it doesn't expire
-            null
-        else
-            sessionDisconnectedTimestamp?.plus((sessionExpiryInterval.toLong() * 1000))
-    }
-
-    fun isConnected() = connected
 }

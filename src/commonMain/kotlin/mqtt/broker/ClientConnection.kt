@@ -3,6 +3,7 @@ package mqtt.broker
 import currentTimeMillis
 import generateRandomClientId
 import mqtt.*
+import mqtt.broker.cluster.RemoteSession
 import mqtt.broker.interfaces.EnhancedAuthenticationProvider
 import mqtt.packets.ConnectAcknowledgeFlags
 import mqtt.packets.MQTTPacket
@@ -53,7 +54,7 @@ class ClientConnection(
             if (connectHandled) {
                 if (keepAlive > 0) {
                     disconnect(ReasonCode.KEEP_ALIVE_TIMEOUT)
-                    session?.disconnected()
+                    session?.connected = false
                 }
             } else {
                 disconnect(ReasonCode.MAXIMUM_CONNECT_TIME)
@@ -116,7 +117,7 @@ class ClientConnection(
 
     private fun close() {
         client.close()
-        broker.sessions[clientId]?.disconnected()
+        (broker.getSession(clientId) as Session?)?.connected = false
     }
 
     fun disconnect(reasonCode: ReasonCode, serverReference: String? = null) {
@@ -138,7 +139,7 @@ class ClientConnection(
                         ReasonCode.SERVER_MOVED
                     )
                 ) {
-                    broker.sessions[clientId]?.will = null
+                    (broker.getSession(clientId) as Session?)?.will = null
                 }
             }
         }
@@ -197,7 +198,7 @@ class ClientConnection(
         var id: String
         do {
             id = generateRandomClientId()
-        } while (broker.sessions[id] != null)
+        } while (broker.getSession(id) != null)
         return id
     }
 
@@ -291,30 +292,51 @@ class ClientConnection(
         }
     }
 
+    internal fun persistSession(clientId: String, session: Session) {
+        broker.persistence?.persistSession(clientId, session)
+    }
+
+    private fun newSession(packet: MQTTConnect): Session {
+        return Session(
+            this,
+            packet.clientID,
+            if (packet is MQTT5Connect) packet.properties.sessionExpiryInterval ?: 0u else 0xFFFFFFFFu,
+            Will.buildWill(packet),
+            this::persistSession,
+            broker::propagateSession
+        )
+    }
+
     private fun initSessionAndSendConnack(packet: MQTTConnect, authenticationData: UByteArray?) {
         var sessionPresent = false
         val clientId = this.clientId ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
 
-        var session = broker.sessions[clientId]
+        var session = broker.getSession(clientId)
         if (session != null) {
-            if (session.isConnected()) {
+            if (session.connected) {
                 // Send disconnect to the old connection and close it
-                session.clientConnection?.disconnect(ReasonCode.SESSION_TAKEN_OVER)
+                session.disconnectClientSessionTakenOver()
+
+                if (session is RemoteSession) {
+                    session = session.toLocalSession(this, broker)
+                }
 
                 // Send old will if present
-                if (session.will?.willDelayInterval == 0u || packet.connectFlags.cleanStart) {
+                if ((session as Session).will?.willDelayInterval == 0u || packet.connectFlags.cleanStart) {
                     broker.sendWill(session)
+                }
+            } else {
+                if (session is RemoteSession) {
+                    session = session.toLocalSession(this, broker)
                 }
             }
             if (packet.connectFlags.cleanStart) {
-                session = Session(packet, this) { id, sess ->
-                    broker.persistence?.persistSession(id, sess)
-                }
-                broker.sessions[clientId] = session
+                session = newSession(packet)
+                broker.addSession(clientId, session)
                 this.session = session
             } else {
                 // Update the session with the new parameters
-                session.clientConnection = this
+                (session as Session).clientConnection = this
                 session.will = Will.buildWill(packet)
                 session.sessionExpiryInterval =
                     if (packet is MQTT5Connect) packet.properties.sessionExpiryInterval ?: 0u else 0xFFFFFFFFu
@@ -322,10 +344,8 @@ class ClientConnection(
                 this.session = session
             }
         } else {
-            session = Session(packet, this) { id, sess ->
-                broker.persistence?.persistSession(id, sess)
-            }
-            broker.sessions[clientId] = session
+            session = newSession(packet)
+            broker.addSession(clientId, session)
             this.session = session
         }
 
@@ -423,7 +443,7 @@ class ClientConnection(
 
         writePacket(connack)
         connectCompleted = true
-        session.connected()
+        session.connected = true
 
         session.resendPending {
             writePacket(it)
@@ -691,9 +711,8 @@ class ClientConnection(
             if (!broker.wildcardSubscriptionAvailable && subscription.matchTopicFilter.containsWildcard())
                 return@map ReasonCode.WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED
 
-            val replaced = broker.subscriptions.insert(subscription, clientId!!)
+            val replaced = broker.addSubscription(clientId!!, subscription)
             retainedMessagesList += prepareRetainedMessages(subscription, replaced)
-            broker.persistence?.persistSubscription(clientId!!, subscription)
 
             when (subscription.options.qos) {
                 Qos.AT_MOST_ONCE -> ReasonCode.SUCCESS
@@ -731,8 +750,7 @@ class ClientConnection(
         val reasonCodes = packet.topicFilters.map { topicFilter ->
             if (session!!.isPacketIdInUse(packet.packetIdentifier))
                 return@map ReasonCode.PACKET_IDENTIFIER_IN_USE
-            if (broker.subscriptions.delete(topicFilter, clientId!!)) {
-                broker.persistence?.removeSubscription(clientId!!, topicFilter)
+            if (broker.removeSubscription(clientId!!, topicFilter)) {
                 return@map ReasonCode.SUCCESS
             } else
                 return@map ReasonCode.NO_SUBSCRIPTION_EXISTED

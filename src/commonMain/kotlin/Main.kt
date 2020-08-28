@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
         i++
     }
 
-    val host = argumentsMap["host"] ?: "127.0.0.1"
+    val host = argumentsMap["host"] ?: "0.0.0.0"
     val port = argumentsMap["port"]?.toInt() ?: 1883
     val backlog = argumentsMap["maxConn"]?.toInt() ?: 128
     val tlsSettings = argumentsMap["keyStore"]?.let {

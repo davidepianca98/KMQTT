@@ -120,15 +120,20 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                 }
                 prepareStreamSocket(clusteringSocket, broker.cluster!!.tcpPort)
 
-                discoverySocket = socket(AF_INET, SOCK_DGRAM, 0)
-                if (discoverySocket == -1) {
-                    socketsCleanup()
-                    throw IOException("Invalid socket: error $errno")
+                if (!broker.cluster!!.dnsDiscovery) {
+                    discoverySocket = socket(AF_INET, SOCK_DGRAM, 0)
+                    if (discoverySocket == -1) {
+                        socketsCleanup()
+                        throw IOException("Invalid socket: error $errno")
+                    }
+                    prepareDatagramSocket(discoverySocket, broker.cluster!!.discoveryPort)
+                    val clusterConnection = ClusterDiscoveryConnection(UDPSocket(discoverySocket), broker)
+                    clients[discoverySocket] = clusterConnection
+                    clusterConnection.sendDiscovery(broker.cluster!!.discoveryPort)
+                } else {
+                    // TODO dns lookup
+                    // broker.addClusterConnection(address)
                 }
-                prepareDatagramSocket(discoverySocket, broker.cluster!!.discoveryPort)
-                val clusterConnection = ClusterDiscoveryConnection(UDPSocket(discoverySocket), broker)
-                clients[discoverySocket] = clusterConnection
-                clusterConnection.sendDiscovery(broker.cluster!!.discoveryPort)
             }
             maxFd = listOf(mqttSocket, mqttUdpSocket, clusteringSocket, discoverySocket).maxOrNull()!!
         }
@@ -240,7 +245,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                     throw IOException("Failed ioctlsocket")
                 }
 
-                val clusterConnection = ClusterConnection(Socket(socket, writeRequest, buffer))
+                val clusterConnection = ClusterConnection(Socket(socket, writeRequest, buffer), broker)
                 broker.addClusterConnection(address, clusterConnection)
                 clients[socket] = clusterConnection
 

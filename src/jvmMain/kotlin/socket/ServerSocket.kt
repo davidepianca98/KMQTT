@@ -5,8 +5,12 @@ import mqtt.broker.ClientConnection
 import mqtt.broker.cluster.ClusterConnection
 import mqtt.broker.cluster.ClusterDiscoveryConnection
 import mqtt.broker.udp.UDPConnectionsMap
+import org.xbill.DNS.ARecord
+import org.xbill.DNS.Lookup
+import org.xbill.DNS.Type
 import socket.tcp.Socket
 import socket.udp.UDPSocket
+import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.*
@@ -37,15 +41,28 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
 
         if (broker.cluster != null) {
             clusteringSocket.configureBlocking(false)
-            clusteringSocket.bind(InetSocketAddress(broker.host, broker.cluster.tcpPort))
+            clusteringSocket.bind(InetSocketAddress(broker.host, broker.cluster!!.tcpPort))
             clusteringSocket.register(selector, SelectionKey.OP_ACCEPT)
 
-            discoverySocket.configureBlocking(false)
-            discoverySocket.bind(InetSocketAddress(broker.host, broker.cluster.discoveryPort))
-            val datagramKey = discoverySocket.register(selector, SelectionKey.OP_READ)
-            val clusterConnection = ClusterDiscoveryConnection(UDPSocket(datagramKey), broker)
-            datagramKey.attach(clusterConnection)
-            clusterConnection.sendDiscovery(broker.cluster.discoveryPort)
+            if (!broker.cluster!!.dnsDiscovery) {
+                discoverySocket.configureBlocking(false)
+                discoverySocket.bind(InetSocketAddress(broker.host, broker.cluster!!.discoveryPort))
+                val datagramKey = discoverySocket.register(selector, SelectionKey.OP_READ)
+                val clusterConnection = ClusterDiscoveryConnection(UDPSocket(datagramKey), broker)
+                datagramKey.attach(clusterConnection)
+                clusterConnection.sendDiscovery(broker.cluster!!.discoveryPort)
+            } else {
+                val localAddress = InetAddress.getLocalHost().hostAddress
+                Lookup("tasks." + broker.cluster!!.dnsName, Type.A).run()?.forEach {
+                    val aRecord = it as ARecord
+                    val address = aRecord.address.hostAddress
+                    if (localAddress != address) {
+                        addClusterConnection(address)?.let { clusterConnection ->
+                            broker.addClusterConnection(address, clusterConnection)
+                        }
+                    }
+                } ?: println("Empty DNS")
+            }
         }
     }
 
@@ -57,7 +74,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
         return when (channel.socket().localPort) {
             broker.port -> ClientConnection(socket, broker)
             broker.cluster?.tcpPort -> {
-                val clusterConnection = ClusterConnection(socket)
+                val clusterConnection = ClusterConnection(socket, broker)
                 val remoteAddress = (channel.socket().remoteSocketAddress as InetSocketAddress).address.hostAddress
                 broker.addClusterConnection(remoteAddress, clusterConnection)
                 clusterConnection
@@ -112,9 +129,9 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
         }
     }
 
-    override fun addClusterConnection(address: String): ClusterConnection? {
+    final override fun addClusterConnection(address: String): ClusterConnection? {
         if (broker.cluster != null) {
-            val channel = SocketChannel.open(InetSocketAddress(address, broker.cluster.tcpPort))
+            val channel = SocketChannel.open(InetSocketAddress(address, broker.cluster!!.tcpPort))
             channel.configureBlocking(false)
             val socketKey = channel.register(selector, SelectionKey.OP_READ)
             val connection = generateDataObject(channel, createSocket(socketKey)) as ClusterConnection?

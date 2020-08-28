@@ -75,6 +75,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
+                implementation("dnsjava:dnsjava:3.2.2")
             }
         }
         val jvmTest by getting {
