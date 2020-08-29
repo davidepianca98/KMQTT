@@ -29,7 +29,7 @@ kotlin {
             jvmTarget = "1.8"
         }
     }
-    mingwX64("mingwX64") {
+    mingwX64 {
         compilations.getByName("main") {
             val openssl by cinterops.creating {
                 packageName("openssl")
