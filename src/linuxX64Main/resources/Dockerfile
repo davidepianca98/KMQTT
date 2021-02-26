@@ -24,17 +24,17 @@ RUN set -x \
 ###############################################################################
 
 ### Some env variables
-### I don't know how to get the latest version of OpenSSL, like openssl-latest.tar.gz
-### So I have to put the version here
-ENV OPENSSL_VERSION="1.1.1g"
+ENV OPENSSL_VERSION="1.1.1j"
+ENV KOTLIN_VERSION2="1.4.31"
+ENV KOTLIN_VERSION="1.4.31"
 
 RUN set -x \
- && wget --no-check-certificate -O /tmp/kotlin-native-linux-1.4.tar.gz "https://github.com/JetBrains/kotlin/releases/download/v1.4.0/kotlin-native-linux-1.4.tar.gz" \
+ && wget --no-check-certificate -O /tmp/kotlin-native-linux-${KOTLIN_VERSION}.tar.gz "https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION2}/kotlin-native-linux-${KOTLIN_VERSION}.tar.gz" \
  && cd /tmp \
- && tar -xzvf kotlin-native-linux-1.4.tar.gz
+ && tar -xzvf kotlin-native-linux-${KOTLIN_VERSION}.tar.gz
 
 RUN set -x \
- && /tmp/kotlin-native-linux-1.4/bin/cinterop -def openssl.def; exit 0
+ && /tmp/kotlin-native-linux-${KOTLIN_VERSION}/bin/cinterop -def openssl.def; exit 0
 
 RUN set -x \
  ### BUILD OpenSSL
@@ -68,16 +68,16 @@ RUN set -x \
  && cd /tmp \
  && mkdir klib_linux_x64 \
  && cd /tmp/klib_linux_x64 \
- && ../kotlin-native-linux-1.4/bin/cinterop -def ../openssl.def -target "linux_x64" -o openssl
+ && ../kotlin-native-linux-${KOTLIN_VERSION}/bin/cinterop -def ../openssl.def -target "linux_x64" -o openssl
 
 #RUN set -x \
 # && cd /tmp \
 # && mkdir klib_mingw_x64 \
 # && cd /tmp/klib_mingw_x64 \
-# && ../kotlin-native-linux-1.4/bin/cinterop -def ../openssl.def -target "mingw_x64" -o openssl
+# && ../kotlin-native-linux-${KOTLIN_VERSION}/bin/cinterop -def ../openssl.def -target "mingw_x64" -o openssl
 
 RUN set -x \
  && cd /tmp \
  && mkdir klib_linux_arm32_hfp \
  && cd /tmp/klib_linux_arm32_hfp \
- && ../kotlin-native-linux-1.4/bin/cinterop -def ../openssl.def -target "linux_arm32_hfp" -o openssl
+ && ../kotlin-native-linux-${KOTLIN_VERSION}/bin/cinterop -def ../openssl.def -target "linux_arm32_hfp" -o openssl

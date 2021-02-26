@@ -117,11 +117,13 @@ class Broker(
         payload: UByteArray?,
         remote: Boolean = false
     ) {
-        if (!retainedAvailable && retain)
+        if (!retainedAvailable && retain) {
             throw MQTTException(ReasonCode.RETAIN_NOT_SUPPORTED)
+        }
         maximumQos?.let {
-            if (qos > it)
+            if (qos > it) {
                 throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
+            }
         }
 
         val matchedSubscriptions = subscriptions.match(topicName)
@@ -253,16 +255,18 @@ class Broker(
     internal fun addSubscription(clientId: String, subscription: Subscription, remote: Boolean = false): Boolean {
         val replaced = subscriptions.insert(subscription, clientId)
         persistence?.persistSubscription(clientId, subscription)
-        if (!remote)
+        if (!remote) {
             clusterConnections.addSubscription(clientId, subscription)
+        }
         return replaced
     }
 
     internal fun removeSubscription(clientId: String, topicFilter: String, remote: Boolean = false): Boolean {
         return if (subscriptions.delete(topicFilter, clientId)) {
             persistence?.removeSubscription(clientId, topicFilter)
-            if (!remote)
+            if (!remote) {
                 clusterConnections.removeSubscription(clientId, topicFilter)
+            }
             true
         } else {
             false
@@ -274,8 +278,9 @@ class Broker(
             if (message.payload?.isNotEmpty() == true) {
                 val retained = Pair(message, clientId)
                 retainedList[topicName] = retained
-                if (!remote)
+                if (!remote) {
                     clusterConnections.setRetained(retained)
+                }
                 persistence?.persistRetained(message, clientId)
             } else {
                 retainedList.remove(topicName)
@@ -328,14 +333,20 @@ class Broker(
                         val expirationTime =
                             session.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L)
                         // Check if the will delay interval has expired, if yes send the will
-                        if (expirationTime <= currentTime || it.willDelayInterval == 0u)
+                        if (expirationTime <= currentTime || it.willDelayInterval == 0u) {
                             sendWill(session as Session)
+                        }
                     }
                 }
             }
         }
     }
 
+    /**
+     * Stops the broker thread
+     * @param serverReference new server address available for client connection
+     * @param temporarilyMoved true if the current server is going to be restarted soon
+     */
     fun stop(serverReference: String? = null, temporarilyMoved: Boolean = false) {
         // TODO close cluster connections and send use another server from that list
         val reasonCode = if (serverReference != null) {

@@ -68,7 +68,7 @@ actual fun inet_pton(__af: Int, __cp: String?, __buf: CValuesRef<*>?): Int {
 
 actual fun MemScope.sockaddrIn(sin_family: UShort, sin_port: UShort): sockaddr_in {
     val sockaddr = alloc<sockaddr_in>()
-    platform.posix.memset(sockaddr.ptr, 0, sockaddr_in.size.convert())
+    platform.posix.memset(sockaddr.ptr, 0, sizeOf<sockaddr_in>().convert())
     sockaddr.sin_family = sin_family.convert()
     sockaddr.sin_port = posix_htons(sin_port.convert()).convert()
     return sockaddr

@@ -1,14 +1,14 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("multiplatform") version "1.4.0"
-    kotlin("plugin.serialization") version "1.4.0"
+    kotlin("multiplatform") version "1.4.31"
+    kotlin("plugin.serialization") version "1.4.31"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 group = "com.github.davidepianca98"
-version = "0.2.3"
+version = "0.2.4"
 
 val serializationVersion: String by project
 
@@ -30,15 +30,8 @@ kotlin {
         }
     }
     mingwX64 {
-        compilations.getByName("main") {
-            val openssl by cinterops.creating {
-                packageName("openssl")
-            }
-        }
         binaries {
-            executable {
-                linkerOpts = mutableListOf("-Lsrc/nativeInterop/cinterop/opensslLibs/mingwX64", "-lssl", "-lcrypto")
-            }
+            executable()
         }
     }
     linuxX64 {
@@ -75,7 +68,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                implementation("dnsjava:dnsjava:3.2.2")
+                implementation("dnsjava:dnsjava:3.3.1")
             }
         }
         val jvmTest by getting {
@@ -90,6 +83,9 @@ kotlin {
         }
         val mingwX64Main by getting {
             dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-mingw-x64.klib"))
+            }
         }
         val linuxX64Main by getting {
             dependsOn(posixMain)

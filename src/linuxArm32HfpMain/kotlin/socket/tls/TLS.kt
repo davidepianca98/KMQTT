@@ -97,7 +97,7 @@ actual class TLSServerContext actual constructor(private val broker: Broker) {
             val additionalCerts = alloc<CPointerVar<stack_st_X509>>()
             if (PKCS12_parse(
                     p12Cert,
-                    broker.tlsSettings!!.keyStorePassword,
+                    broker.tlsSettings.keyStorePassword,
                     privateKey.ptr,
                     x509Cert.ptr,
                     additionalCerts.ptr

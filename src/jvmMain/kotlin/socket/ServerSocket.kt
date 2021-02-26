@@ -41,19 +41,19 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
 
         if (broker.cluster != null) {
             clusteringSocket.configureBlocking(false)
-            clusteringSocket.bind(InetSocketAddress(broker.host, broker.cluster!!.tcpPort))
+            clusteringSocket.bind(InetSocketAddress(broker.host, broker.cluster.tcpPort))
             clusteringSocket.register(selector, SelectionKey.OP_ACCEPT)
 
-            if (!broker.cluster!!.dnsDiscovery) {
+            if (!broker.cluster.dnsDiscovery) {
                 discoverySocket.configureBlocking(false)
-                discoverySocket.bind(InetSocketAddress(broker.host, broker.cluster!!.discoveryPort))
+                discoverySocket.bind(InetSocketAddress(broker.host, broker.cluster.discoveryPort))
                 val datagramKey = discoverySocket.register(selector, SelectionKey.OP_READ)
                 val clusterConnection = ClusterDiscoveryConnection(UDPSocket(datagramKey), broker)
                 datagramKey.attach(clusterConnection)
-                clusterConnection.sendDiscovery(broker.cluster!!.discoveryPort)
+                clusterConnection.sendDiscovery(broker.cluster.discoveryPort)
             } else {
                 val localAddress = InetAddress.getLocalHost().hostAddress
-                Lookup("tasks." + broker.cluster!!.dnsName, Type.A).run()?.forEach {
+                Lookup("tasks." + broker.cluster.dnsName, Type.A).run()?.forEach {
                     val aRecord = it as ARecord
                     val address = aRecord.address.hostAddress
                     if (localAddress != address) {
@@ -131,7 +131,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
 
     final override fun addClusterConnection(address: String): ClusterConnection? {
         if (broker.cluster != null) {
-            val channel = SocketChannel.open(InetSocketAddress(address, broker.cluster!!.tcpPort))
+            val channel = SocketChannel.open(InetSocketAddress(address, broker.cluster.tcpPort))
             channel.configureBlocking(false)
             val socketKey = channel.register(selector, SelectionKey.OP_READ)
             val connection = generateDataObject(channel, createSocket(socketKey)) as ClusterConnection?

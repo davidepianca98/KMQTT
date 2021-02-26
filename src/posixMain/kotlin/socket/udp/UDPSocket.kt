@@ -35,7 +35,7 @@ actual class UDPSocket(private val socket: Int) {
                         data.size.toULong(),
                         0,
                         serverAddress.reinterpret<sockaddr>().ptr,
-                        sockaddr_in.size.convert()
+                        sizeOf<sockaddr_in>().convert()
                     ) == -1L
                 ) {
                     throw IOException("Failed sendto error: ${getErrno()}")
@@ -48,7 +48,7 @@ actual class UDPSocket(private val socket: Int) {
         memScoped {
             buffer.usePinned { pinned ->
                 val peerAddress = alloc<sockaddr_in>()
-                memset(peerAddress.ptr, 0, sockaddr_in.size.convert())
+                memset(peerAddress.ptr, 0, sizeOf<sockaddr_in>().convert())
                 val addressLen = alloc<socklen_tVar>()
                 val length = recvfrom(
                     socket,

@@ -91,6 +91,7 @@ fabric.properties
 
 # End of https://www.gitignore.io/api/intellij
 
-
+.idea/artifacts
+.idea/detekt.xml
 .gradle/
 build/

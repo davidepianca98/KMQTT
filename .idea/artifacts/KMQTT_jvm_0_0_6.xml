@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="KMQTT-jvm-0.0.6">
-    <output-path>C:\Users\39340\IdeaProjects\KMQTT\build\libs</output-path>
-    <root id="archive" name="KMQTT-jvm-0.0.6.jar">
-      <element id="module-output" name="com.github.davidepianca98.KMQTT.jvmMain" />
-    </root>
-  </artifact>
-</component>
