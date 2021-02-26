@@ -118,18 +118,18 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                     socketsCleanup()
                     throw IOException("Invalid socket: error $errno")
                 }
-                prepareStreamSocket(clusteringSocket, broker.cluster.tcpPort)
+                prepareStreamSocket(clusteringSocket, broker.cluster!!.tcpPort)
 
-                if (!broker.cluster.dnsDiscovery) {
+                if (!broker.cluster!!.dnsDiscovery) {
                     discoverySocket = socket(AF_INET, SOCK_DGRAM, 0)
                     if (discoverySocket == -1) {
                         socketsCleanup()
                         throw IOException("Invalid socket: error $errno")
                     }
-                    prepareDatagramSocket(discoverySocket, broker.cluster.discoveryPort)
+                    prepareDatagramSocket(discoverySocket, broker.cluster!!.discoveryPort)
                     val clusterConnection = ClusterDiscoveryConnection(UDPSocket(discoverySocket), broker)
                     clients[discoverySocket] = clusterConnection
-                    clusterConnection.sendDiscovery(broker.cluster.discoveryPort)
+                    clusterConnection.sendDiscovery(broker.cluster!!.discoveryPort)
                 } else {
                     // TODO dns lookup
                     // broker.addClusterConnection(address)
@@ -238,7 +238,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                     throw IOException("Invalid socket: error $errno")
                 }
 
-                val serverAddress = sockaddrIn(AF_INET.convert(), broker.cluster.tcpPort.convert())
+                val serverAddress = sockaddrIn(AF_INET.convert(), broker.cluster!!.tcpPort.convert())
                 inet_pton(AF_INET, address, serverAddress.sin_addr.ptr)
 
                 if (set_non_blocking(socket) == -1) {
