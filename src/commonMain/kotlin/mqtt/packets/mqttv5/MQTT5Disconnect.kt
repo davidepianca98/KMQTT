@@ -83,8 +83,12 @@ class MQTT5Disconnect(
                     ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
                 if (reasonCode !in validReasonCodes)
                     throw MQTTException(ReasonCode.PROTOCOL_ERROR)
-                val properties = inStream.deserializeProperties(validProperties)
-                MQTT5Disconnect(reasonCode, properties)
+                if (inStream.available() == 0) {
+                    MQTT5Disconnect(reasonCode)
+                } else {
+                    val properties = inStream.deserializeProperties(validProperties)
+                    MQTT5Disconnect(reasonCode, properties)
+                }
             }
         }
     }

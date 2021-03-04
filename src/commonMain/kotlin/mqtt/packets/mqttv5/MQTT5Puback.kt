@@ -66,8 +66,12 @@ class MQTT5Puback(
                     )
                 if (reasonCode !in validReasonCodes)
                     throw MQTTException(ReasonCode.PROTOCOL_ERROR)
-                val properties = inStream.deserializeProperties(validProperties)
-                MQTT5Puback(packetId, reasonCode, properties)
+                if (inStream.available() == 0) {
+                    MQTT5Puback(packetId, reasonCode)
+                } else {
+                    val properties = inStream.deserializeProperties(validProperties)
+                    MQTT5Puback(packetId, reasonCode, properties)
+                }
             }
         }
     }

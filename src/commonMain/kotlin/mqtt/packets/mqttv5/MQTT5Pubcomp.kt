@@ -59,8 +59,12 @@ class MQTT5Pubcomp(
                     )
                 if (reasonCode !in validReasonCodes)
                     throw MQTTException(ReasonCode.PROTOCOL_ERROR)
-                val properties = inStream.deserializeProperties(validProperties)
-                MQTT5Pubcomp(packetId, reasonCode, properties)
+                if (inStream.available() == 0) {
+                    MQTT5Pubcomp(packetId, reasonCode)
+                } else {
+                    val properties = inStream.deserializeProperties(validProperties)
+                    MQTT5Pubcomp(packetId, reasonCode, properties)
+                }
             }
         }
     }

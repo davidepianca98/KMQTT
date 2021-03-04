@@ -6,7 +6,7 @@ class ByteArrayInputStream(private val array: UByteArray) : InputStream {
 
     override fun read(): UByte {
         return if (position < array.size)
-            array[position++].toUByte()
+            array[position++]
         else
             throw EOFException()
     }
