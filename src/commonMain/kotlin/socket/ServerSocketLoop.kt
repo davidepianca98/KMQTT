@@ -16,7 +16,7 @@ open class ServerSocketLoop(private val broker: Broker) {
         while (serverSocket.isRunning()) {
             serverSocket.select(250) { attachment, state ->
                 when (attachment) {
-                    is TCPEventHandler -> return@select handleEvent(attachment, state)
+                    is TCPEventHandler -> return@select handleTcpEvent(attachment, state)
                     is UDPEventHandler -> return@select handleUdpEvent(attachment, state)
                     else -> return@select true
                 }
@@ -25,7 +25,7 @@ open class ServerSocketLoop(private val broker: Broker) {
         }
     }
 
-    private fun handleEvent(tcpEventHandler: TCPEventHandler, state: SocketState): Boolean {
+    private fun handleTcpEvent(tcpEventHandler: TCPEventHandler, state: SocketState): Boolean {
         try {
             when (state) {
                 SocketState.READ -> {

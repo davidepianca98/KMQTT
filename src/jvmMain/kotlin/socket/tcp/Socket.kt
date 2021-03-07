@@ -6,7 +6,6 @@ import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.SocketChannel
 
-@ExperimentalUnsignedTypes
 actual open class Socket(
     private val key: SelectionKey,
     private val sendBuffer: ByteBuffer,

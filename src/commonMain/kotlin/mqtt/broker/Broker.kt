@@ -45,7 +45,7 @@ class Broker(
 
     private val server = ServerSocketLoop(this)
     private val sessions = (persistence?.getAllSessions() as Map<String, ISession>?)?.toMutableMap() ?: mutableMapOf()
-    internal val subscriptions = Trie(persistence?.getAllSubscriptions())
+    private val subscriptions = Trie(persistence?.getAllSubscriptions())
     private val retainedList = persistence?.getAllRetainedMessages()?.toMutableMap() ?: mutableMapOf()
 
     private val clusterConnections = mutableMapOf<String, ClusterConnection>()
