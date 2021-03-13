@@ -41,9 +41,11 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    implementation 'com.github.davidepianca98:KMQTT:0.2.5'
+    implementation 'com.github.davidepianca98.KMQTT:KMQTT-jvm:0.2.5'
 }
 ```
+
+Replace jvm with linuxx64 or linuxarm32hfp based on the target. mingwx64 target is not yet available through JitPack.
 
 ##### Kotlin Multiplatform plugin
 On the Kotlin Multiplatform plugin you only need to require the dependency on the common source set and the platform specific parts will automatically be required
