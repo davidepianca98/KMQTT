@@ -114,7 +114,7 @@ actual class TLSSocket(
                     }
                 }
                 SSLEngineResult.HandshakeStatus.NEED_UNWRAP -> return false
-                else -> throw Exception("Unknown Hanshake Status")
+                else -> throw Exception("Unknown Handshake Status")
             }
         }
         return true
@@ -123,7 +123,7 @@ actual class TLSSocket(
     private fun putOrEnlarge() {
         try {
             if (cacheBufferReadMode) {
-                cacheReceiveBuffer = cacheReceiveBuffer.compact() // Change to write mode preserving unread data
+                cacheReceiveBuffer.compact() // Change to write mode preserving unread data
                 cacheBufferReadMode = false
             }
             cacheReceiveBuffer.put(receiveBuffer)
@@ -138,7 +138,9 @@ actual class TLSSocket(
 
     override fun read(): UByteArray? {
         try {
-            super.readToBuffer()
+            if (super.readToBuffer() == 0) {
+                return null
+            }
 
             putOrEnlarge()
 

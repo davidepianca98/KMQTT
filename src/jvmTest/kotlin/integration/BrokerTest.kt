@@ -6,8 +6,15 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish
 import mqtt.broker.Broker
+import org.eclipse.paho.mqttv5.client.MqttClient
+import org.junit.Assert.assertEquals
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
-import kotlin.test.assertEquals
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.X509TrustManager
+
 
 fun Broker.buildClient(id: String): Mqtt5BlockingClient {
     return Mqtt5Client.builder()
@@ -15,6 +22,31 @@ fun Broker.buildClient(id: String): Mqtt5BlockingClient {
         .serverPort(port)
         .identifier(id)
         .buildBlocking()
+}
+
+class BlindTrustManager : X509TrustManager {
+
+    override fun checkClientTrusted(chain: Array<X509Certificate?>?, authType: String?) {
+        println(authType)
+        println(chain!![0]?.issuerDN)
+    }
+
+    override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?) {
+    }
+
+    override fun getAcceptedIssuers(): Array<X509Certificate> {
+        return arrayOf()
+    }
+}
+
+fun sslSocketFactory(): SSLSocketFactory {
+    val sslContext = SSLContext.getInstance("TLS")
+    sslContext.init(null, arrayOf<X509TrustManager>(BlindTrustManager()), SecureRandom())
+    return sslContext.socketFactory
+}
+
+fun Broker.buildTLSClient(id: String): MqttClient {
+    return MqttClient("ssl://$host:$port", id)
 }
 
 fun brokerTest(broker: Broker, test: (broker: Broker) -> Unit) {
