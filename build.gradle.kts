@@ -1,8 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("multiplatform") version "1.4.31"
-    kotlin("plugin.serialization") version "1.4.31"
+    kotlin("multiplatform") version "1.4.32"
+    kotlin("plugin.serialization") version "1.4.32"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
@@ -76,6 +76,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
                 implementation("com.hivemq:hivemq-mqtt-client:1.2.1")
+                implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
             }
         }
         val posixMain by creating {
