@@ -2,4 +2,4 @@
 
 ## Reporting a Vulnerability
 
-Please send all vulnerability reports to [___replace with email___].
+Please send all vulnerability reports to davidepianca98@gmail.com.
