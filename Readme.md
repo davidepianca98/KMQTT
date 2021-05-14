@@ -41,7 +41,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    implementation 'com.github.davidepianca98.KMQTT:KMQTT-jvm:0.2.7'
+    implementation 'com.github.davidepianca98.KMQTT:kmqtt-jvm:0.2.7'
 }
 ```
 
@@ -92,7 +92,7 @@ fun main() {
 ```kotlin
 fun main() {
     val broker = Broker(authentication = object : Authentication {
-        override fun authenticate(username: String?, password: UByteArray?): Boolean {
+        override fun authenticate(clientId: String, username: String?, password: UByteArray?): Boolean {
             // TODO Implement your authentication method    
             return username == "user" && password?.toByteArray()?.decodeToString() == "pass"
         }
@@ -101,11 +101,33 @@ fun main() {
 }
 ```
 
+#### Authorization code example
+
+```kotlin
+fun main() {
+    val broker = Broker(authorization = object : Authorization {
+        override fun authorize(
+            clientId: String,
+            username: String?,
+            password: UByteArray?, // != null only if savePassword set to true in the broker constructor
+            topicName: String,
+            isSubscription: Boolean,
+            payload: UByteArray?
+        ): Boolean {
+            // TODO Implement your authorization method    
+            return topicName == "$clientId/topic"
+        }
+    })
+    broker.listen()
+}
+```
+
 #### Message interceptor code example
+
 ```kotlin
 fun main() {
     val broker = Broker(packetInterceptor = object : PacketInterceptor {
-        override fun packetReceived(packet: MQTTPacket) {
+        override fun packetReceived(clientId: String, username: String?, packet: MQTTPacket) {
             when(packet) {
                 is MQTTConnect -> println(packet.protocolName)
                 is MQTTPublish -> println(packet.topicName)
@@ -130,3 +152,12 @@ fun main() {
     broker.listen()
 }
 ```
+
+#### Other advanced functionality
+
+MQTT5 Enhanced Authentication: set the `enhancedAuthenticationProviders` Broker constructor parameter, implementing the
+provider interface `EnhancedAuthenticationProvider`.
+
+Session persistence: set the `persistence` Broker constructor parameter, implementing `Persistence` interface.
+
+Bytes metrics: set the `bytesMetrics` Broker constructor parameter, implementing `BytesMetrics` interface.  

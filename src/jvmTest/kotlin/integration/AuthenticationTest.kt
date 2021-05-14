@@ -38,7 +38,7 @@ class AuthenticationTest {
     @Test
     fun testSimpleAuthentication() {
         val broker = Broker(authentication = object : Authentication {
-            override fun authenticate(username: String?, password: UByteArray?): Boolean {
+            override fun authenticate(clientId: String, username: String?, password: UByteArray?): Boolean {
                 return username == "user" && password?.toByteArray()?.decodeToString() == "pass"
             }
         })
@@ -58,7 +58,7 @@ class AuthenticationTest {
     @Test(expected = Mqtt5ConnAckException::class)
     fun testSimpleAuthenticationFailure() {
         val broker = Broker(authentication = object : Authentication {
-            override fun authenticate(username: String?, password: UByteArray?): Boolean {
+            override fun authenticate(clientId: String, username: String?, password: UByteArray?): Boolean {
                 return username == "user" && password?.toByteArray()?.decodeToString() == "pass"
             }
         })

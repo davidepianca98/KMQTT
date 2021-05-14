@@ -24,6 +24,7 @@ class Broker(
     val authentication: Authentication? = null,
     val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
     val authorization: Authorization? = null,
+    val savePassword: Boolean = false,
     val maximumSessionExpiryInterval: UInt = 0xFFFFFFFFu,
     val receiveMaximum: UShort? = 1024u,
     val maximumQos: Qos? = null,

@@ -26,6 +26,8 @@ class ClientConnection(
     }
 
     private var clientId: String? = null
+    private var username: String? = null
+    private var password: UByteArray? = null
     private var session: Session? = null
 
     // Client connection state
@@ -169,7 +171,7 @@ class ClientConnection(
                 else -> throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             }
         }
-        broker.packetInterceptor?.packetReceived(packet)
+        broker.packetInterceptor?.packetReceived(clientId!!, username, packet)
     }
 
     /**
@@ -218,7 +220,7 @@ class ClientConnection(
     private fun handleAuthentication(packet: MQTTConnect) {
         if (broker.authentication != null) {
             if (packet.userName != null || packet.password != null) {
-                if (!broker.authentication.authenticate(packet.userName, packet.password)) {
+                if (!broker.authentication.authenticate(clientId!!, packet.userName, packet.password)) {
                     throw MQTTException(ReasonCode.NOT_AUTHORIZED)
                 }
             } else {
@@ -272,16 +274,20 @@ class ClientConnection(
 
     private fun handleConnect(packet: MQTTConnect) {
         connectPacket = packet
-        handleAuthentication(packet)
 
-        val clientId = if (packet.clientID.isEmpty()) {
+        val clientId = packet.clientID.ifEmpty {
             if (packet is MQTT4Connect && !packet.connectFlags.cleanStart) {
                 writePacket(MQTT4Connack(ConnectAcknowledgeFlags(false), ConnectReturnCode.IDENTIFIER_REJECTED))
                 return
             }
             generateClientId()
-        } else packet.clientID
+        }
         this.clientId = clientId
+        this.username = packet.userName
+        if (broker.savePassword) {
+            this.password = packet.password
+        }
+        handleAuthentication(packet)
 
         if (packet is MQTT5Connect && packet.properties.authenticationMethod != null) {
             packet.properties.authenticationMethod?.let { authenticationMethod ->
@@ -463,8 +469,15 @@ class ClientConnection(
         packetsReceivedBeforeConnack.clear()
     }
 
-    private fun checkAuthorization(topicName: String, isSubscription: Boolean): Boolean {
-        return broker.authorization?.authorize(clientId!!, topicName, isSubscription) != false
+    private fun checkAuthorization(topicName: String, isSubscription: Boolean, payload: UByteArray?): Boolean {
+        return broker.authorization?.authorize(
+            clientId!!,
+            username,
+            password,
+            topicName,
+            isSubscription,
+            payload
+        ) != false
     }
 
     private fun handlePublish(packet: MQTTPublish) {
@@ -476,7 +489,7 @@ class ClientConnection(
         // Handle topic alias
         val topic = getTopicOrAlias(packet)
 
-        if (!checkAuthorization(topic, false))
+        if (!checkAuthorization(topic, false, packet.payload))
             throw MQTTException(ReasonCode.NOT_AUTHORIZED)
 
         if (packet.qos > broker.maximumQos ?: Qos.EXACTLY_ONCE) {
@@ -687,7 +700,7 @@ class ClientConnection(
 
         val retainedMessagesList = mutableListOf<MQTTPublish>()
         val reasonCodes = packet.subscriptions.map { subscription ->
-            if (!checkAuthorization(subscription.topicFilter, true))
+            if (!checkAuthorization(subscription.topicFilter, true, null))
                 return@map ReasonCode.NOT_AUTHORIZED
 
             if (!subscription.matchTopicFilter.isValidTopic())
