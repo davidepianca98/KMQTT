@@ -2,7 +2,7 @@ import kotlinx.cinterop.*
 import platform.posix.*
 
 actual fun send(socket: Int, buf: CValuesRef<ByteVar>?, len: Int, flags: Int): Int {
-    return platform.posix.send(socket.convert(), buf, len.convert(), flags).convert()
+    return platform.posix.send(socket.convert(), buf, len.convert(), flags or MSG_NOSIGNAL).convert()
 }
 
 actual fun recv(socket: Int, buf: CValuesRef<ByteVar>?, len: Int, flags: Int): Int {
