@@ -1,8 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("multiplatform") version "1.4.32"
-    kotlin("plugin.serialization") version "1.4.32"
+    kotlin("multiplatform") version "1.5.0"
+    kotlin("plugin.serialization") version "1.5.0"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
