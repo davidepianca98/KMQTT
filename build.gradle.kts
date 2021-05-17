@@ -20,13 +20,14 @@ repositories {
 
 kotlin {
     jvm {
-        compilations["main"].kotlinOptions {
-            // Setup the Kotlin compiler options for the 'main' compilation:
-            jvmTarget = "1.8"
+        compilations.all {
+            kotlinOptions.jvmTarget = "1.8"
         }
-        compilations["test"].kotlinOptions {
-            // Setup the Kotlin compiler options for the 'test' compilation:
-            jvmTarget = "1.8"
+    }
+    js {
+        useCommonJs()
+        nodejs {
+            binaries.executable()
         }
     }
     mingwX64 {
@@ -52,14 +53,14 @@ kotlin {
                 useExperimentalAnnotation("kotlin.ExperimentalUnsignedTypes")
             }
         }
-        commonMain {
+        val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serializationVersion")
             }
         }
-        commonTest {
+        val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
@@ -67,7 +68,6 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
                 implementation("dnsjava:dnsjava:3.3.1")
             }
         }
@@ -79,8 +79,19 @@ kotlin {
                 implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
             }
         }
+        val jsMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.5.0")
+            }
+        }
+        val jsTest by getting {
+            dependencies {
+                implementation(kotlin("test-js"))
+            }
+        }
         val posixMain by creating {
-            dependsOn(commonMain.get())
+            dependsOn(commonMain)
         }
         val mingwX64Main by getting {
             dependsOn(posixMain)

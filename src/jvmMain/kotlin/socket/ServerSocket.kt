@@ -16,7 +16,10 @@ import java.nio.ByteBuffer
 import java.nio.channels.*
 
 
-actual open class ServerSocket actual constructor(private val broker: Broker) : ServerSocketInterface {
+actual open class ServerSocket actual constructor(
+    private val broker: Broker,
+    private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+) : ServerSocketInterface {
 
     private val mqttSocket = ServerSocketChannel.open()
     private val mqttUdpSocket = DatagramChannel.open()
@@ -104,10 +107,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
 
     actual fun isRunning(): Boolean = selector.isOpen
 
-    actual fun select(
-        timeout: Long,
-        block: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
-    ) {
+    actual fun select(timeout: Long) {
         if (isRunning()) {
             val count = selector.select(timeout)
             if (count > 0) {
@@ -120,9 +120,9 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
                         if (key.isValid && key.isAcceptable)
                             accept(key)
                         if (key.isValid && key.isWritable)
-                            block(attachment, ServerSocketLoop.SocketState.WRITE)
+                            selectCallback(attachment, ServerSocketLoop.SocketState.WRITE)
                         if (key.isValid && key.isReadable)
-                            block(attachment, ServerSocketLoop.SocketState.READ)
+                            selectCallback(attachment, ServerSocketLoop.SocketState.READ)
                     }
                 }
             }

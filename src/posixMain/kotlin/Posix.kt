@@ -1,5 +1,10 @@
 import kotlinx.cinterop.MemScope
 import platform.posix.sockaddr_in
+import kotlin.system.getTimeMillis
+
+actual fun currentTimeMillis(): Long {
+    return getTimeMillis()
+}
 
 expect fun send(
     socket: Int,

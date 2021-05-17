@@ -105,14 +105,6 @@ actual fun MemScope.select(
     return select(__nfds, __readfds, __writefds, __exceptfds, timeoutStruct.ptr)
 }
 
-actual fun currentTimeMillis(): Long {
-    memScoped {
-        val tv = alloc<timeval>()
-        gettimeofday(tv.ptr, null)
-        return (tv.tv_sec.toLong() * 1000) + (tv.tv_usec / 1000)
-    }
-}
-
 actual fun socketsInit() {}
 
 actual fun socketsCleanup() {}

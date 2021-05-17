@@ -8,20 +8,26 @@ import socket.tcp.TCPEventHandler
 import socket.tls.TLSServerSocket
 import socket.udp.UDPEventHandler
 
-open class ServerSocketLoop(private val broker: Broker) {
+class ServerSocketLoop(private val broker: Broker) {
 
-    private val serverSocket = if (broker.tlsSettings == null) ServerSocket(broker) else TLSServerSocket(broker)
+    private val serverSocket =
+        if (broker.tlsSettings == null) ServerSocket(broker, this::selectCallback) else TLSServerSocket(
+            broker,
+            this::selectCallback
+        )
 
     fun run() {
         while (serverSocket.isRunning()) {
-            serverSocket.select(250) { attachment, state ->
-                when (attachment) {
-                    is TCPEventHandler -> return@select handleTcpEvent(attachment, state)
-                    is UDPEventHandler -> return@select handleUdpEvent(attachment, state)
-                    else -> return@select true
-                }
-            }
+            serverSocket.select(250)
             broker.cleanUpOperations()
+        }
+    }
+
+    private fun selectCallback(attachment: Any?, state: SocketState): Boolean {
+        return when (attachment) {
+            is TCPEventHandler -> handleTcpEvent(attachment, state)
+            is UDPEventHandler -> handleUdpEvent(attachment, state)
+            else -> true
         }
     }
 

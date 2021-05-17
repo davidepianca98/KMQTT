@@ -5,16 +5,17 @@
 **KMQTT** is a Kotlin Multiplatform MQTT 3.1.1/5.0 Broker, with the objective of targeting the most possible build targets.
 
 ## Features
-:heavy_multiplication_x: = TODO
-:heavy_check_mark: = Supported
+:heavy_multiplication_x: = TODO  
+:heavy_check_mark: = Supported  
 :heavy_plus_sign: = Experimental
 
-| Platform    | MQTT 3.1.1               | MQTT 5.0           | Clustering        | TCP                | TLS                | UDP               | Websocket                |
-| :---:       | :---:                    |  :---:             | :---:             | :---:              | :---:              | :---:             | :---:                    |
-| JVM         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
-| Windows X64 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
-| Linux X64   | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
-| Linux ARM32 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign: | :heavy_check_mark: | :heavy_check_mark: | :heavy_plus_sign: | :heavy_multiplication_x: |
+| Platform    | MQTT 3.1.1               | MQTT 5.0           | Clustering               | TCP                | TLS                      | Websocket                |
+| :---:       | :---:                    |  :---:             | :---:                    | :---:              | :---:                    | :---:                    |
+| JVM         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign:        | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
+| Windows X64 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
+| Linux X64   | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
+| Linux ARM32 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
+| Node.js     | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_multiplication_x: |
 
 ## Getting Started
 

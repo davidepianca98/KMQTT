@@ -72,14 +72,6 @@ actual fun setsockopt(__fd: Int, __level: Int, __optname: Int, __optval: CValues
     return platform.posix.setsockopt(__fd.convert(), __level, __optname, __optval, __optlen.convert())
 }
 
-actual fun currentTimeMillis(): Long {
-    memScoped {
-        val tv = alloc<timeval>()
-        gettimeofday(tv.ptr, null)
-        return (tv.tv_sec * 1000) + (tv.tv_usec / 1000)
-    }
-}
-
 actual fun bind(__fd: Int, __addr: CValuesRef<sockaddr>?, __len: UInt): Int {
     return platform.posix.bind(__fd, __addr, __len)
 }

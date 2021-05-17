@@ -1,6 +1,8 @@
 import kotlinx.cinterop.*
 import platform.posix.*
-import platform.windows.*
+import platform.windows.LPCVOID
+import platform.windows.LPSTR
+import platform.windows.PVOID
 import platform.windows.WSAEWOULDBLOCK
 import platform.windows.WSAGetLastError
 import socket.tcp.IOException
@@ -76,15 +78,6 @@ actual fun MemScope.sockaddrIn(sin_family: UShort, sin_port: UShort): sockaddr_i
 
 actual fun MemScope.getPortFromSockaddrIn(sockaddr: sockaddr_in): UShort {
     return sockaddr.sin_port
-}
-
-actual fun currentTimeMillis(): Long {
-    memScoped {
-        val systemTime = alloc<FILETIME>()
-        GetSystemTimeAsFileTime(systemTime.ptr)
-        val millisFrom1601 = (systemTime.dwHighDateTime.toULong() shl 32) + systemTime.dwLowDateTime.toULong()
-        return ((millisFrom1601 - 116444736000000000u) / 10000u).toLong()
-    }
 }
 
 actual fun setsockopt(__fd: Int, __level: Int, __optname: Int, __optval: CValuesRef<*>?, __optlen: UInt): Int {

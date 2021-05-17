@@ -27,7 +27,10 @@ import socketsCleanup
 import socketsInit
 import accept as posixAccept
 
-actual open class ServerSocket actual constructor(private val broker: Broker) : ServerSocketInterface {
+actual open class ServerSocket actual constructor(
+    private val broker: Broker,
+    private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+) : ServerSocketInterface {
 
     private var running = true
     private var mqttSocket = -1
@@ -149,10 +152,7 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
 
     actual fun isRunning(): Boolean = running
 
-    actual fun select(
-        timeout: Long,
-        block: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
-    ) {
+    actual fun select(timeout: Long) {
         if (isRunning()) {
             posix_FD_ZERO(readfds.ptr)
             posix_FD_ZERO(writefds.ptr)
@@ -188,12 +188,12 @@ actual open class ServerSocket actual constructor(private val broker: Broker) : 
             clients.forEach { socket ->
                 when {
                     posix_FD_ISSET(socket.key.convert(), readfds.ptr) == 1 -> {
-                        if (!block(socket.value, ServerSocketLoop.SocketState.READ))
+                        if (!selectCallback(socket.value, ServerSocketLoop.SocketState.READ))
                             clients.remove(socket.key)
                     }
                     posix_FD_ISSET(socket.key.convert(), writefds.ptr) == 1 -> {
                         writeRequest.remove(socket.key)
-                        if (!block(socket.value, ServerSocketLoop.SocketState.WRITE))
+                        if (!selectCallback(socket.value, ServerSocketLoop.SocketState.WRITE))
                             clients.remove(socket.key)
                     }
                     posix_FD_ISSET(socket.key.convert(), errorfds.ptr) == 1 -> {

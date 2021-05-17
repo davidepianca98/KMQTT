@@ -2,6 +2,7 @@ package socket.tls
 
 import mqtt.broker.Broker
 import socket.ServerSocket
+import socket.ServerSocketLoop
 import socket.tcp.Socket
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -17,7 +18,10 @@ import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 
 
-actual class TLSServerSocket actual constructor(private val broker: Broker) : ServerSocket(broker) {
+actual class TLSServerSocket actual constructor(
+    private val broker: Broker,
+    private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+) : ServerSocket(broker, selectCallback) {
 
     private val sslContext = SSLContext.getInstance(broker.tlsSettings!!.version)
     private var sendAppBuffer: ByteBuffer
