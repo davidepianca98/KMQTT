@@ -128,8 +128,8 @@ fun main() {
 ```kotlin
 fun main() {
     val broker = Broker(packetInterceptor = object : PacketInterceptor {
-        override fun packetReceived(clientId: String, username: String?, packet: MQTTPacket) {
-            when(packet) {
+        override fun packetReceived(clientId: String, username: String?, password: UByteArray?, packet: MQTTPacket) {
+            when (packet) {
                 is MQTTConnect -> println(packet.protocolName)
                 is MQTTPublish -> println(packet.topicName)
             }

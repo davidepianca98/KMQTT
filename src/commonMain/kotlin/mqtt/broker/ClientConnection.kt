@@ -171,7 +171,7 @@ class ClientConnection(
                 else -> throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             }
         }
-        broker.packetInterceptor?.packetReceived(clientId!!, username, packet)
+        broker.packetInterceptor?.packetReceived(clientId!!, username, password, packet)
     }
 
     /**

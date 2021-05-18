@@ -45,6 +45,7 @@ kotlin {
             executable()
         }
     }
+    // TODO linuxArm64, mingwX86, wasm32
 
     sourceSets {
         all {
