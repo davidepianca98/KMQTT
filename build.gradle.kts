@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.davidepianca98"
-version = "0.2.8"
+version = "0.2.9"
 
 val serializationVersion: String by project
 
