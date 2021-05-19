@@ -35,7 +35,7 @@ actual open class ServerSocket actual constructor(
             clients.remove(socket.socketId())
         } as () -> Unit)
 
-        socket.on("close") { hadError: Boolean ->
+        socket.on("close") { _: Boolean ->
             clients.remove(socket.socketId())
         }
     }

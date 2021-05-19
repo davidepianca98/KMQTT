@@ -35,8 +35,10 @@ abstract class MQTTPublish(
             val mqttControlPacketType = (byte1.toInt() shr 4) and 0b1111
             val flags = byte1 and 0b1111u
 
+            @Suppress("UNUSED_VARIABLE")
             val type = MQTTControlPacketType.valueOf(mqttControlPacketType)
 
+            @Suppress("UNUSED_VARIABLE")
             val remainingLength = inStream.decodeVariableByteInteger().toInt()
 
             return if (mqttVersion == 5) {

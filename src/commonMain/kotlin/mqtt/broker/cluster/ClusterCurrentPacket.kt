@@ -28,6 +28,8 @@ class ClusterCurrentPacket {
         val type = currentReceivedData.read()
 
         val optionsLength = currentReceivedData.decodeVariableByteInteger()
+
+        @Suppress("UNUSED_VARIABLE")
         val optionsData = currentReceivedData.readBytes(optionsLength.toInt())
 
         val remainingLength = currentReceivedData.decodeVariableByteInteger().toInt()

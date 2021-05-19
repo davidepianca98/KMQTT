@@ -116,23 +116,24 @@ actual open class ServerSocket actual constructor(
             }
 
             if (broker.cluster != null) {
+                val cluster = broker.cluster!!
                 clusteringSocket = socket(AF_INET, SOCK_STREAM, 0)
                 if (clusteringSocket == -1) {
                     socketsCleanup()
                     throw IOException("Invalid socket: error $errno")
                 }
-                prepareStreamSocket(clusteringSocket, broker.cluster!!.tcpPort)
+                prepareStreamSocket(clusteringSocket, cluster.tcpPort)
 
-                if (!broker.cluster!!.dnsDiscovery) {
+                if (!cluster.dnsDiscovery) {
                     discoverySocket = socket(AF_INET, SOCK_DGRAM, 0)
                     if (discoverySocket == -1) {
                         socketsCleanup()
                         throw IOException("Invalid socket: error $errno")
                     }
-                    prepareDatagramSocket(discoverySocket, broker.cluster!!.discoveryPort)
+                    prepareDatagramSocket(discoverySocket, cluster.discoveryPort)
                     val clusterConnection = ClusterDiscoveryConnection(UDPSocket(discoverySocket), broker)
                     clients[discoverySocket] = clusterConnection
-                    clusterConnection.sendDiscovery(broker.cluster!!.discoveryPort)
+                    clusterConnection.sendDiscovery(cluster.discoveryPort)
                 } else {
                     // TODO dns lookup
                     // broker.addClusterConnection(address)
@@ -232,13 +233,14 @@ actual open class ServerSocket actual constructor(
 
     override fun addClusterConnection(address: String): ClusterConnection? {
         if (broker.cluster != null) {
+            val cluster = broker.cluster!!
             memScoped {
                 val socket = socket(AF_INET, SOCK_STREAM, 0)
                 if (socket == -1) {
                     throw IOException("Invalid socket: error $errno")
                 }
 
-                val serverAddress = sockaddrIn(AF_INET.convert(), broker.cluster!!.tcpPort.convert())
+                val serverAddress = sockaddrIn(AF_INET.convert(), cluster.tcpPort.convert())
                 inet_pton(AF_INET, address, serverAddress.sin_addr.ptr)
 
                 if (set_non_blocking(socket) == -1) {

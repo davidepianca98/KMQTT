@@ -65,9 +65,9 @@ class MQTT5Connack(
             checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
 
-            val connectAcknowledgeFlags = when (inStream.readByte()) {
-                0u -> ConnectAcknowledgeFlags(false)
-                1u -> ConnectAcknowledgeFlags(true)
+            val connectAcknowledgeFlags = when (inStream.readByte().toInt()) {
+                0 -> ConnectAcknowledgeFlags(false)
+                1 -> ConnectAcknowledgeFlags(true)
                 else -> throw MQTTException(ReasonCode.MALFORMED_PACKET)
             }
             val connectReasonCode =

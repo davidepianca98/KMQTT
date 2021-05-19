@@ -12,6 +12,7 @@ import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import socket.tls.TLSSettings
+import kotlin.test.assertTrue
 
 class TLSTest {
 
@@ -28,11 +29,11 @@ class TLSTest {
 
         client.setCallback(object : MqttCallback {
             override fun disconnected(disconnectResponse: MqttDisconnectResponse?) {
-                throw Exception("test failed")
+                assertTrue(false)
             }
 
             override fun mqttErrorOccurred(exception: MqttException?) {
-                throw Exception("test failed")
+                assertTrue(false)
             }
 
             override fun messageArrived(topicRec: String?, message: MqttMessage?) {
@@ -41,17 +42,11 @@ class TLSTest {
                 assertEquals(2, message?.qos)
             }
 
-            override fun deliveryComplete(token: IMqttToken?) {
-                throw Exception("test failed")
-            }
+            override fun deliveryComplete(token: IMqttToken?) {}
 
-            override fun connectComplete(reconnect: Boolean, serverURI: String?) {
-                throw Exception("test failed")
-            }
+            override fun connectComplete(reconnect: Boolean, serverURI: String?) {}
 
-            override fun authPacketArrived(reasonCode: Int, properties: MqttProperties?) {
-                throw Exception("test failed")
-            }
+            override fun authPacketArrived(reasonCode: Int, properties: MqttProperties?) {}
         })
         client.subscribe(topic, 2)
         client.publish(topic, payload, 1, false)
@@ -59,7 +54,7 @@ class TLSTest {
         client.disconnect()
     }
 
-    @Test
+    @Test(timeout = 5000)
     fun testPublish() {
 
         val sendPayload = "Test"
