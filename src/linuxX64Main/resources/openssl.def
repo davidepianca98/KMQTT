@@ -7,4 +7,6 @@ compilerOpts.linux_x64 = -I/tmp/linuxX64/openssl-1.1.1k/include
 libraryPaths.linux_x64 = /tmp/linuxX64/openssl-1.1.1k
 compilerOpts.linux_arm32_hfp = -I/tmp/linuxArm32Hfp/openssl-1.1.1k/include
 libraryPaths.linux_arm32_hfp = /tmp/linuxArm32Hfp/openssl-1.1.1k
+compilerOpts.linux_arm64 = -I/tmp/linuxArm64/openssl-1.1.1k/include
+libraryPaths.linux_arm64 = /tmp/linuxArm64/openssl-1.1.1k
 # For mingw_x64 check nativeInterop/openssl.def

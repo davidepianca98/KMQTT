@@ -30,6 +30,11 @@ kotlin {
             binaries.executable()
         }
     }
+    mingwX86 {
+        binaries {
+            executable()
+        }
+    }
     mingwX64 {
         binaries {
             executable()
@@ -45,7 +50,12 @@ kotlin {
             executable()
         }
     }
-    // TODO linuxArm64, mingwX86, wasm32
+    linuxArm64 {
+        binaries {
+            executable()
+        }
+    }
+    // TODO macosX64, wasm32
 
     sourceSets {
         all {
@@ -100,6 +110,12 @@ kotlin {
                 implementation(files("src/nativeInterop/openssl-mingw-x64.klib"))
             }
         }
+        val mingwX86Main by getting {
+            dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-mingw-x86.klib"))
+            }
+        }
         val linuxX64Main by getting {
             dependsOn(posixMain)
             dependencies {
@@ -110,6 +126,12 @@ kotlin {
             dependsOn(posixMain)
             dependencies {
                 implementation(files("src/nativeInterop/openssl-linux-arm32-hfp.klib"))
+            }
+        }
+        val linuxArm64Main by getting {
+            dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-linux-arm64.klib"))
             }
         }
     }

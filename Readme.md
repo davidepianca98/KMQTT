@@ -13,8 +13,10 @@
 | :---:       | :---:                    |  :---:             | :---:                    | :---:              | :---:                    | :---:                    |
 | JVM         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign:        | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
 | Windows X64 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
+| Windows X86 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
 | Linux X64   | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
 | Linux ARM32 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
+| Linux ARM64 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
 | Node.js     | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_multiplication_x: |
 
 ## Getting Started
