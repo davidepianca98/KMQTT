@@ -14,7 +14,7 @@ import socket.streams.ByteArrayOutputStream
 class MQTT4Subscribe(
     packetIdentifier: UInt,
     subscriptions: List<Subscription>
-) : MQTTSubscribe(packetIdentifier, subscriptions) {
+) : MQTTSubscribe(packetIdentifier, subscriptions), MQTT4Packet {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

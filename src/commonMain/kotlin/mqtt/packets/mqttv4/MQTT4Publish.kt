@@ -19,7 +19,7 @@ class MQTT4Publish(
     packetId: UInt?,
     payload: UByteArray? = null,
     timestamp: Long = currentTimeMillis()
-) : MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp) {
+) : MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp), MQTT4Packet {
 
     companion object : MQTTDeserializer {
 

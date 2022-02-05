@@ -11,7 +11,7 @@ import socket.streams.ByteArrayOutputStream
 class MQTT4Unsubscribe(
     packetIdentifier: UInt,
     topicFilters: List<String>
-) : MQTTUnsubscribe(packetIdentifier, topicFilters) {
+) : MQTTUnsubscribe(packetIdentifier, topicFilters), MQTT4Packet {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

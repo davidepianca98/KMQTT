@@ -115,7 +115,7 @@ class Session(
         if (packet.qos == Qos.AT_LEAST_ONCE || packet.qos == Qos.EXACTLY_ONCE) {
             pendingSendMessages[packet.packetId!!] = packet
             persist()
-            if (connected && clientConnection?.sendQuota ?: 1u > 0u) {
+            if (connected && (clientConnection?.sendQuota ?: 1u) > 0u) {
                 clientConnection!!.writePacket(packet)
                 clientConnection!!.decrementSendQuota()
                 pendingSendMessages.remove(packet.packetId)

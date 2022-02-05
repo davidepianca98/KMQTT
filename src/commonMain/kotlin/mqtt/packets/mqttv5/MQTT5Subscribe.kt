@@ -14,7 +14,7 @@ class MQTT5Subscribe(
     packetIdentifier: UInt,
     subscriptions: List<Subscription>,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTTSubscribe(packetIdentifier, subscriptions) {
+) : MQTTSubscribe(packetIdentifier, subscriptions), MQTT5Packet {
 
     companion object : MQTTDeserializer {
 

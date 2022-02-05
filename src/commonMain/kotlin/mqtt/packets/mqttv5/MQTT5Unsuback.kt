@@ -11,7 +11,7 @@ class MQTT5Unsuback(
     packetIdentifier: UInt,
     val reasonCodes: List<ReasonCode>,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTTUnsuback(packetIdentifier) {
+) : MQTTUnsuback(packetIdentifier), MQTT5Packet {
 
     companion object : MQTTDeserializer {
 

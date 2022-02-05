@@ -11,7 +11,7 @@ class MQTT5Pubrel(
     packetId: UInt,
     val reasonCode: ReasonCode = ReasonCode.SUCCESS,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTTPubrel(packetId) {
+) : MQTTPubrel(packetId), MQTT5Packet {
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         if (size() > maximumPacketSize) {
             properties.reasonString = null

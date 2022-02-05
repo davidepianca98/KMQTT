@@ -12,10 +12,13 @@ class ByteArrayInputStream(private val array: UByteArray) : InputStream {
     }
 
     override fun readBytes(length: Int): UByteArray {
-        val result = UByteArray(length)
-        for (i in 0 until length)
-            result[i] = read()
-        return result
+        try {
+            val result = array.copyOfRange(position, position + length)
+            position += length
+            return result
+        } catch (e: IndexOutOfBoundsException) {
+            throw EOFException()
+        }
     }
 
     fun readRemaining(): UByteArray {

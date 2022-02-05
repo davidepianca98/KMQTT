@@ -11,7 +11,7 @@ class MQTT5Unsubscribe(
     packetIdentifier: UInt,
     topicFilters: List<String>,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTTUnsubscribe(packetIdentifier, topicFilters) {
+) : MQTTUnsubscribe(packetIdentifier, topicFilters), MQTT5Packet {
 
     companion object : MQTTDeserializer {
 

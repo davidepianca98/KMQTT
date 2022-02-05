@@ -8,7 +8,7 @@ import socket.streams.ByteArrayOutputStream
 
 class MQTT4Pubrec(
     packetId: UInt
-) : MQTTPubrec(packetId) {
+) : MQTTPubrec(packetId), MQTT4Packet {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

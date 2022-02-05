@@ -11,7 +11,8 @@ class MQTT5Puback(
     packetId: UInt,
     val reasonCode: ReasonCode = ReasonCode.SUCCESS,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTTPuback(packetId) {
+) : MQTTPuback(packetId), MQTT5Packet {
+
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         if (size() > maximumPacketSize) {
             properties.reasonString = null
@@ -61,9 +62,7 @@ class MQTT5Puback(
                 MQTT5Puback(packetId)
             } else {
                 val reasonCode =
-                    ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(
-                        ReasonCode.MALFORMED_PACKET
-                    )
+                    ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(ReasonCode.MALFORMED_PACKET)
                 if (reasonCode !in validReasonCodes)
                     throw MQTTException(ReasonCode.PROTOCOL_ERROR)
                 if (inStream.available() == 0) {

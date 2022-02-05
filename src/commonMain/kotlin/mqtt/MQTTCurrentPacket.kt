@@ -33,7 +33,8 @@ class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
         val mqttControlPacketType = (byte1.toInt() shr 4) and 0b1111
         val flags = byte1 and 0b1111u
 
-        val type = MQTTControlPacketType.valueOf(mqttControlPacketType)!!
+        val type =
+            MQTTControlPacketType.valueOf(mqttControlPacketType) ?: throw MQTTException(ReasonCode.PROTOCOL_ERROR)
 
         val remainingLength = currentReceivedData.decodeVariableByteInteger().toInt()
 

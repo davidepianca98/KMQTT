@@ -11,7 +11,7 @@ import socket.streams.ByteArrayOutputStream
 class MQTT4Suback(
     packetIdentifier: UInt,
     val reasonCodes: List<SubackReturnCode>
-) : MQTTSuback(packetIdentifier) {
+) : MQTTSuback(packetIdentifier), MQTT4Packet {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

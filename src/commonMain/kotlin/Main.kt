@@ -46,6 +46,7 @@ fun main(args: Array<String>) {
         broker.stop()
     }
 
-    broker.listen()
     println("KMQTT Started")
+    broker.listen()
+    println("KMQTT Stopped")
 }

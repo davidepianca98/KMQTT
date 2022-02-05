@@ -6,7 +6,7 @@ import mqtt.packets.MQTTDeserializer
 import mqtt.packets.mqtt.MQTTPingreq
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Pingreq : MQTTPingreq() {
+class MQTT5Pingreq : MQTTPingreq(), MQTT5Packet {
 
     override fun toByteArray(): UByteArray {
         return ByteArrayOutputStream().wrapWithFixedHeader(MQTTControlPacketType.PINGREQ, 0)

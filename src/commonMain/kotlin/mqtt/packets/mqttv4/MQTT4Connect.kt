@@ -30,7 +30,7 @@ class MQTT4Connect(
     willPayload,
     userName,
     password
-) {
+), MQTT4Packet {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

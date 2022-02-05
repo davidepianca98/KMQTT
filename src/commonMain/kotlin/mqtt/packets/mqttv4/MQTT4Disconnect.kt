@@ -5,7 +5,7 @@ import mqtt.packets.MQTTDeserializer
 import mqtt.packets.mqtt.MQTTDisconnect
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Disconnect : MQTTDisconnect() {
+class MQTT4Disconnect : MQTTDisconnect(), MQTT4Packet {
 
     override fun toByteArray(): UByteArray {
         return ByteArrayOutputStream().wrapWithFixedHeader(MQTTControlPacketType.DISCONNECT, 0)

@@ -10,7 +10,7 @@ import socket.streams.ByteArrayOutputStream
 class MQTT5Auth(
     val authenticateReasonCode: ReasonCode,
     val properties: MQTT5Properties = MQTT5Properties()
-) : MQTTAuth() {
+) : MQTTAuth(), MQTT5Packet {
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         if (size() > maximumPacketSize) {
             properties.reasonString = null

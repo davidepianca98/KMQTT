@@ -1,3 +1,1 @@
 rootProject.name = 'kmqtt'
-
-enableFeaturePreview("GRADLE_METADATA")

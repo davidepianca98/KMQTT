@@ -1,8 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("multiplatform") version "1.5.0"
-    kotlin("plugin.serialization") version "1.5.0"
+    kotlin("multiplatform") version "1.6.10"
+    kotlin("plugin.serialization") version "1.6.10"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
@@ -15,7 +15,6 @@ val serializationVersion: String by project
 repositories {
     mavenCentral()
     jcenter()
-    maven(url = "https://kotlin.bintray.com/kotlinx")
 }
 
 kotlin {
@@ -55,13 +54,12 @@ kotlin {
             executable()
         }
     }
-    // TODO macosX64, wasm32
 
     sourceSets {
         all {
             languageSettings.apply {
-                useExperimentalAnnotation("kotlinx.serialization.ExperimentalSerializationApi")
-                useExperimentalAnnotation("kotlin.ExperimentalUnsignedTypes")
+                optIn("kotlinx.serialization.ExperimentalSerializationApi")
+                optIn("kotlin.ExperimentalUnsignedTypes")
             }
         }
         val commonMain by getting {
@@ -86,14 +84,14 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation("com.hivemq:hivemq-mqtt-client:1.2.1")
+                implementation("com.hivemq:hivemq-mqtt-client:1.3.0")
                 implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
             }
         }
         val jsMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.5.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.6.0")
             }
         }
         val jsTest by getting {

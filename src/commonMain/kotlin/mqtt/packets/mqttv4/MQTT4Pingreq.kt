@@ -5,7 +5,7 @@ import mqtt.packets.MQTTDeserializer
 import mqtt.packets.mqtt.MQTTPingreq
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Pingreq : MQTTPingreq() {
+class MQTT4Pingreq : MQTTPingreq(), MQTT4Packet {
 
     override fun toByteArray(): UByteArray {
         return ByteArrayOutputStream().wrapWithFixedHeader(MQTTControlPacketType.PINGREQ, 0)
@@ -14,7 +14,7 @@ class MQTT4Pingreq : MQTTPingreq() {
     companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Pingreq {
-            MQTT4Pingreq.checkFlags(flags)
+            checkFlags(flags)
             return MQTT4Pingreq()
         }
     }

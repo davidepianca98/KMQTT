@@ -30,7 +30,7 @@ class MQTT5Connect(
     willPayload,
     userName,
     password
-) {
+), MQTT5Packet {
 
     companion object : MQTTDeserializer {
         private val validProperties = listOf(

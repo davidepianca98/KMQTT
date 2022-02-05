@@ -33,8 +33,7 @@ class ClientConnection(
     // Client connection state
     private val topicAliasesClient = mutableMapOf<UInt, String>()
     private val topicAliasesServer = mutableMapOf<String, UInt>()
-    private var maxSendQuota: UInt =
-        DEFAULT_MAX_SEND_QUOTA // Client receive maximum
+    private var maxSendQuota: UInt = DEFAULT_MAX_SEND_QUOTA // Client receive maximum
     internal var sendQuota: UInt = DEFAULT_MAX_SEND_QUOTA
     private var maximumPacketSize: UInt? = null
     private var topicAliasMaximum = 0u
@@ -273,6 +272,10 @@ class ClientConnection(
     }
 
     private fun handleConnect(packet: MQTTConnect) {
+        if (connectHandled) {
+            return
+        }
+
         connectPacket = packet
 
         val clientId = packet.clientID.ifEmpty {
@@ -296,6 +299,7 @@ class ClientConnection(
         } else {
             initSessionAndSendConnack(packet, null)
         }
+        connectHandled = true
     }
 
     internal fun persistSession(clientId: String, session: Session) {
@@ -307,7 +311,7 @@ class ClientConnection(
             this,
             packet.clientID,
             if (packet is MQTT5Connect) packet.properties.sessionExpiryInterval ?: 0u else 0xFFFFFFFFu,
-            Will.buildWill(packet),
+            if (packet.connectFlags.willFlag) Will(packet) else null,
             this::persistSession,
             broker::propagateSession
         )
@@ -343,7 +347,7 @@ class ClientConnection(
             } else {
                 // Update the session with the new parameters
                 (session as Session).clientConnection = this
-                session.will = Will.buildWill(packet)
+                session.will = if (packet.connectFlags.willFlag) Will(packet) else null
                 session.sessionExpiryInterval =
                     if (packet is MQTT5Connect) packet.properties.sessionExpiryInterval ?: 0u else 0xFFFFFFFFu
                 sessionPresent = true

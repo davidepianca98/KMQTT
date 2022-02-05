@@ -8,12 +8,12 @@ import socket.streams.ByteArrayOutputStream
 
 class MQTT4Puback(
     packetId: UInt
-) : MQTTPuback(packetId) {
+) : MQTTPuback(packetId), MQTT4Packet {
 
     companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Puback {
-            mqtt.packets.mqttv5.MQTT5Puback.checkFlags(flags)
+            checkFlags(flags)
             val inStream = ByteArrayInputStream(data)
             val packetId = inStream.read2BytesInt()
             return MQTT4Puback(packetId)

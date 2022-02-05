@@ -6,7 +6,7 @@ import mqtt.packets.MQTTDeserializer
 import mqtt.packets.mqtt.MQTTPingresp
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Pingresp : MQTTPingresp() {
+class MQTT5Pingresp : MQTTPingresp(), MQTT5Packet {
 
     override fun toByteArray(): UByteArray {
         return ByteArrayOutputStream().wrapWithFixedHeader(MQTTControlPacketType.PINGRESP, 0)

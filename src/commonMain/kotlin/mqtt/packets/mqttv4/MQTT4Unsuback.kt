@@ -8,7 +8,7 @@ import socket.streams.ByteArrayOutputStream
 
 class MQTT4Unsuback(
     packetIdentifier: UInt
-) : MQTTUnsuback(packetIdentifier) {
+) : MQTTUnsuback(packetIdentifier), MQTT4Packet {
 
     companion object : MQTTDeserializer {
 
