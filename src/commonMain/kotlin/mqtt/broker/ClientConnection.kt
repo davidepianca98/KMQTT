@@ -56,6 +56,7 @@ class ClientConnection(
                 if (keepAlive > 0) {
                     disconnect(ReasonCode.KEEP_ALIVE_TIMEOUT)
                     session?.connected = false
+                    clientId?.let { broker.connectionCallbacks?.onDisconnect(it, true) }
                 }
             } else {
                 disconnect(ReasonCode.MAXIMUM_CONNECT_TIME)
@@ -119,6 +120,7 @@ class ClientConnection(
     private fun close() {
         client.close()
         (broker.getSession(clientId) as Session?)?.connected = false
+        clientId?.let { broker.connectionCallbacks?.onDisconnect(it, false) }
     }
 
     fun disconnect(reasonCode: ReasonCode, serverReference: String? = null) {

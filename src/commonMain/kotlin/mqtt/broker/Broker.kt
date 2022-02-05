@@ -24,6 +24,7 @@ class Broker(
     val authentication: Authentication? = null,
     val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
     val authorization: Authorization? = null,
+    val connectionCallbacks: ConnectionCallbacks? = null,
     val savePassword: Boolean = false,
     val maximumSessionExpiryInterval: UInt = 0xFFFFFFFFu,
     val receiveMaximum: UShort? = 1024u,
@@ -57,6 +58,9 @@ class Broker(
         }
     }
 
+    /**
+     * Starts the broker
+     */
     fun listen() {
         server.run()
     }
@@ -190,7 +194,7 @@ class Broker(
         retain: Boolean,
         topicName: String,
         qos: Qos,
-        properties: MQTT5Properties,
+        properties: MQTT5Properties?,
         payload: UByteArray?
     ): Boolean {
         if (maximumQos != null && qos > maximumQos) {
@@ -206,7 +210,7 @@ class Broker(
                 false,
                 topicName,
                 null,
-                properties,
+                properties ?: MQTT5Properties(),
                 payload
             )
             setRetained(topicName, packet, publisherClientId)
@@ -215,11 +219,20 @@ class Broker(
         return true
     }
 
+    /**
+     * Publish a message directly inside the broker, to be sent to subscribed clients
+     * @param retain enable retained flag for the message
+     * @param topicName topic name for the message
+     * @param qos QoS level for the message
+     * @param properties MQTT 5 properties, used only on MQTT 5 clients
+     * @param payload content of the message
+     * @return true if the publish operation was successful, false otherwise
+     */
     fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,
-        properties: MQTT5Properties,
+        properties: MQTT5Properties?,
         payload: UByteArray?
     ): Boolean {
         return publish("", retain, topicName, qos, properties, payload)
@@ -251,6 +264,15 @@ class Broker(
 
     internal fun propagateSession(session: Session) {
         clusterConnections.updateSession(session)
+    }
+
+    /**
+     * Checks if a specific client is currently connected to the Broker
+     * @param clientId clientId of the client to check
+     * @return true if the client is connected, false otherwise
+     */
+    fun isClientConnected(clientId: String): Boolean {
+        return sessions[clientId]?.connected ?: false
     }
 
     internal fun addSubscription(clientId: String, subscription: Subscription, remote: Boolean = false): Boolean {
