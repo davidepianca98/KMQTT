@@ -11,6 +11,7 @@ fun main(args: Array<String>) {
         println("    --max-connections n")
         println("    --key-store path")
         println("    --key-store-psw password")
+        println("    --wsp port")
         return
     }
     println("Starting KMQTT")
@@ -24,6 +25,7 @@ fun main(args: Array<String>) {
             "--max-connections" -> argumentsMap["maxConn"] = args[++i]
             "--key-store" -> argumentsMap["keyStore"] = args[++i]
             "--key-store-psw" -> argumentsMap["keyStorePassword"] = args[++i]
+            "--wsp" -> argumentsMap["wsPort"] = args[++i]
         }
         i++
     }
@@ -34,12 +36,14 @@ fun main(args: Array<String>) {
     val tlsSettings = argumentsMap["keyStore"]?.let {
         TLSSettings(keyStoreFilePath = it, keyStorePassword = argumentsMap["keyStorePassword"])
     }
+    val wsPort = argumentsMap["wsPort"]?.toInt()
 
     val broker = Broker(
         port = port,
         host = host,
         backlog = backlog,
-        tlsSettings = tlsSettings
+        tlsSettings = tlsSettings,
+        webSocketPort = wsPort
     )
 
     setShutdownHook {

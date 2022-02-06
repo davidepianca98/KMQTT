@@ -13,5 +13,5 @@ fun main() {
         ): Boolean {
             return topicName != "test/nosubscribe"
         }
-    }).listen()
+    }, webSocketPort = 80, maximumPacketSize = 128000000u).listen()
 }

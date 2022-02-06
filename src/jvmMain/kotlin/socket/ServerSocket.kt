@@ -9,6 +9,7 @@ import org.xbill.DNS.ARecord
 import org.xbill.DNS.Lookup
 import org.xbill.DNS.Type
 import socket.tcp.Socket
+import socket.tcp.WebSocket
 import socket.udp.UDPSocket
 import java.net.InetAddress
 import java.net.InetSocketAddress
@@ -25,6 +26,7 @@ actual open class ServerSocket actual constructor(
     private val mqttUdpSocket = DatagramChannel.open()
     private val clusteringSocket = ServerSocketChannel.open()
     private val discoverySocket = DatagramChannel.open()
+    private val mqttWebSocket = ServerSocketChannel.open()
     private val selector: Selector = Selector.open()
 
     protected var sendBuffer: ByteBuffer = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
@@ -40,6 +42,12 @@ actual open class ServerSocket actual constructor(
             mqttUdpSocket.bind(InetSocketAddress(broker.host, broker.port))
             val datagramKey = mqttUdpSocket.register(selector, SelectionKey.OP_READ)
             datagramKey.attach(UDPConnectionsMap(UDPSocket(datagramKey), broker))
+        }
+
+        if (broker.webSocketPort != null) {
+            mqttWebSocket.configureBlocking(false)
+            mqttWebSocket.bind(InetSocketAddress(broker.host, broker.webSocketPort), broker.backlog)
+            mqttWebSocket.register(selector, SelectionKey.OP_ACCEPT)
         }
 
         if (broker.cluster != null) {
@@ -73,9 +81,9 @@ actual open class ServerSocket actual constructor(
         return Socket(socketKey, sendBuffer, receiveBuffer)
     }
 
-    private fun generateDataObject(channel: SocketChannel, socket: Socket): Any? {
+    private fun generateDataObject(channel: SocketChannel, socket: SocketInterface): Any? {
         return when (channel.socket().localPort) {
-            broker.port -> ClientConnection(socket, broker)
+            broker.port, broker.webSocketPort -> ClientConnection(socket, broker)
             broker.cluster?.tcpPort -> {
                 val clusterConnection = ClusterConnection(socket, broker)
                 val remoteAddress = (channel.socket().remoteSocketAddress as InetSocketAddress).address.hostAddress
@@ -92,7 +100,12 @@ actual open class ServerSocket actual constructor(
             channel.configureBlocking(false)
 
             val socketKey = channel.register(selector, SelectionKey.OP_READ)
-            socketKey.attach(generateDataObject(channel, createSocket(socketKey)))
+            val newSocket = if (channel.socket().localPort == broker.webSocketPort) {
+                WebSocket(createSocket(socketKey))
+            } else {
+                createSocket(socketKey)
+            }
+            socketKey.attach(generateDataObject(channel, newSocket))
         } catch (e: java.io.IOException) {
             e.printStackTrace()
         }
@@ -101,6 +114,7 @@ actual open class ServerSocket actual constructor(
     actual fun close() {
         selector.close()
         mqttSocket.close()
+        mqttWebSocket.close()
         clusteringSocket.close()
         discoverySocket.close()
     }

@@ -41,9 +41,9 @@ class Broker(
     val bytesMetrics: BytesMetrics? = null,
     val persistence: Persistence? = null,
     val cluster: ClusterSettings? = null,
-    val enableUdp: Boolean = false
+    val enableUdp: Boolean = false,
+    val webSocketPort: Int? = null
 ) {
-    // TODO support WebSocket, section 6
 
     private val server = ServerSocketLoop(this)
     private val sessions = (persistence?.getAllSessions() as Map<String, ISession>?)?.toMutableMap() ?: mutableMapOf()

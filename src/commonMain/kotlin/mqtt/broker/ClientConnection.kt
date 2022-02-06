@@ -498,7 +498,7 @@ class ClientConnection(
         if (!checkAuthorization(topic, false, packet.payload))
             throw MQTTException(ReasonCode.NOT_AUTHORIZED)
 
-        if (packet.qos > broker.maximumQos ?: Qos.EXACTLY_ONCE) {
+        if (packet.qos > (broker.maximumQos ?: Qos.EXACTLY_ONCE)) {
             throw MQTTException(ReasonCode.QOS_NOT_SUPPORTED)
         }
 
@@ -563,7 +563,7 @@ class ClientConnection(
         var topic = packet.topicName
         if (packet is MQTT5Publish) {
             packet.properties.topicAlias?.let {
-                if (it == 0u || it > broker.maximumTopicAlias?.toUInt() ?: 0u)
+                if (it == 0u || it > (broker.maximumTopicAlias?.toUInt() ?: 0u))
                     throw MQTTException(ReasonCode.TOPIC_ALIAS_INVALID)
                 if (packet.topicName.isNotEmpty()) {
                     topicAliasesClient[it] = packet.topicName

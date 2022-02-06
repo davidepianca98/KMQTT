@@ -22,6 +22,7 @@ import sockaddrIn
 import socket
 import socket.tcp.IOException
 import socket.tcp.Socket
+import socket.tcp.WebSocket
 import socket.udp.UDPSocket
 import socketsCleanup
 import socketsInit
@@ -37,6 +38,7 @@ actual open class ServerSocket actual constructor(
     private var mqttUdpSocket = -1
     private var clusteringSocket = -1
     private var discoverySocket = -1
+    private var mqttWebSocket = -1
     private var maxFd = 0
 
     protected val clients = mutableMapOf<Int, Any?>()
@@ -115,6 +117,15 @@ actual open class ServerSocket actual constructor(
                 clients[mqttUdpSocket] = UDPConnectionsMap(UDPSocket(mqttUdpSocket), broker)
             }
 
+            if (broker.webSocketPort != null) {
+                mqttWebSocket = socket(AF_INET, SOCK_STREAM, 0)
+                if (mqttWebSocket == -1) {
+                    socketsCleanup()
+                    throw IOException("Invalid socket: error $errno")
+                }
+                prepareStreamSocket(mqttWebSocket, broker.webSocketPort!!)
+            }
+
             if (broker.cluster != null) {
                 val cluster = broker.cluster!!
                 clusteringSocket = socket(AF_INET, SOCK_STREAM, 0)
@@ -139,7 +150,7 @@ actual open class ServerSocket actual constructor(
                     // broker.addClusterConnection(address)
                 }
             }
-            maxFd = listOf(mqttSocket, mqttUdpSocket, clusteringSocket, discoverySocket).maxOrNull()!!
+            maxFd = listOf(mqttSocket, mqttUdpSocket, mqttWebSocket, clusteringSocket, discoverySocket).maxOrNull()!!
         }
     }
 
@@ -159,6 +170,8 @@ actual open class ServerSocket actual constructor(
             posix_FD_ZERO(writefds.ptr)
             posix_FD_ZERO(errorfds.ptr)
             posix_FD_SET(mqttSocket.convert(), readfds.ptr)
+            if (mqttWebSocket != -1)
+                posix_FD_SET(mqttWebSocket.convert(), readfds.ptr)
             if (clusteringSocket != -1)
                 posix_FD_SET(clusteringSocket.convert(), readfds.ptr)
             clients.forEach {
@@ -179,11 +192,16 @@ actual open class ServerSocket actual constructor(
             }
 
             if (posix_FD_ISSET(mqttSocket.convert(), readfds.ptr) == 1) {
-                tcpServerSocketAccept(mqttSocket)
+                tcpServerSocketAccept(mqttSocket, TCPSocketType.MQTT)
+            }
+            if (mqttWebSocket != -1) {
+                if (posix_FD_ISSET(mqttWebSocket.convert(), readfds.ptr) == 1) {
+                    tcpServerSocketAccept(mqttWebSocket, TCPSocketType.MQTTWS)
+                }
             }
             if (clusteringSocket != -1) {
                 if (posix_FD_ISSET(clusteringSocket.convert(), readfds.ptr) == 1) {
-                    tcpServerSocketAccept(clusteringSocket)
+                    tcpServerSocketAccept(clusteringSocket, TCPSocketType.CLUSTER)
                 }
             }
             clients.forEach { socket ->
@@ -211,7 +229,13 @@ actual open class ServerSocket actual constructor(
         }
     }
 
-    private fun tcpServerSocketAccept(serverSocket: Int) {
+    enum class TCPSocketType {
+        MQTT,
+        MQTTWS,
+        CLUSTER
+    }
+
+    private fun tcpServerSocketAccept(serverSocket: Int, type: TCPSocketType) {
         val newSocket = posixAccept(serverSocket, null, null)
         if (newSocket == -1) {
             val error = getErrno()
@@ -223,12 +247,24 @@ actual open class ServerSocket actual constructor(
             }
             if (maxFd < newSocket)
                 maxFd = newSocket
-            accept(newSocket)
+            accept(newSocket, type)
         }
     }
 
-    open fun accept(socket: Int) {
-        clients[socket] = ClientConnection(Socket(socket, writeRequest, buffer), broker)
+    open fun accept(socket: Int, type: TCPSocketType) {
+        val sock = Socket(socket, writeRequest, buffer)
+        clients[socket] = when (type) {
+            TCPSocketType.MQTT -> ClientConnection(sock, broker)
+            TCPSocketType.MQTTWS -> ClientConnection(WebSocket(sock), broker)
+            TCPSocketType.CLUSTER -> {
+                TODO("Cluster not yet complete in Native")
+                //val clusterConnection = ClusterConnection(sock, broker)
+                //val remoteAddress = (channel.socket().remoteSocketAddress as InetSocketAddress).address.hostAddress
+                //broker.addClusterConnection(remoteAddress, clusterConnection)
+                //clusterConnection
+            }
+        }
+
     }
 
     override fun addClusterConnection(address: String): ClusterConnection? {

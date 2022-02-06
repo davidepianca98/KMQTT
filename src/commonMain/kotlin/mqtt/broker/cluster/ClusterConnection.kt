@@ -5,10 +5,10 @@ import mqtt.broker.Broker
 import mqtt.broker.Session
 import mqtt.broker.cluster.packets.*
 import mqtt.packets.mqtt.MQTTPublish
-import socket.tcp.Socket
+import socket.SocketInterface
 import socket.tcp.TCPEventHandler
 
-class ClusterConnection(private val socket: Socket, private val broker: Broker) : TCPEventHandler {
+class ClusterConnection(private val socket: SocketInterface, private val broker: Broker) : TCPEventHandler {
 
     private val currentReceivedPacket = ClusterCurrentPacket()
 

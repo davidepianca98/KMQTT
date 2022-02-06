@@ -49,6 +49,10 @@ actual open class ServerSocket actual constructor(
             TODO("UDP in JS not yet implemented")
         }
 
+        if (broker.webSocketPort != null) {
+            TODO("WebSocket in JS not yet implemented")
+        }
+
         if (broker.cluster != null) {
             TODO("Cluster in JS not yet implemented")
         }
