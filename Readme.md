@@ -5,19 +5,19 @@
 **KMQTT** is a Kotlin Multiplatform MQTT 3.1.1/5.0 Broker, with the objective of targeting the most possible build targets.
 
 ## Features
-:heavy_multiplication_x: = TODO  
-:heavy_check_mark: = Supported  
+:x: = TODO  
+:white_check_mark: = Supported  
 :heavy_plus_sign: = Experimental
 
-| Platform    | MQTT 3.1.1               | MQTT 5.0           | Clustering               | TCP                | TLS                      | Websocket                |
-| :---:       | :---:                    |  :---:             | :---:                    | :---:              | :---:                    | :---:                    |
-| JVM         | :heavy_check_mark:       | :heavy_check_mark: | :heavy_plus_sign:        | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
-| Windows X64 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
-| Windows X86 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
-| Linux X64   | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
-| Linux ARM32 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
-| Linux ARM64 | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_multiplication_x: |
-| Node.js     | :heavy_check_mark:       | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_check_mark: | :heavy_multiplication_x: | :heavy_multiplication_x: |
+| Platform    | MQTT 3.1.1               | MQTT 5.0           | TCP                |        TLS         |     Websocket      |    Clustering     |
+| :---:       | :---:                    |  :---:             | :---:              |:------------------:|:------------------:|:-----------------:|
+| JVM         | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :heavy_plus_sign: |
+| Windows X64 | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Windows X86 | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Linux X64   | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Linux ARM32 | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Linux ARM64 | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Node.js     | :white_check_mark:       | :white_check_mark: | :white_check_mark: |        :x:         |        :x:         |        :x:        |
 
 ## Getting Started
 
@@ -25,13 +25,15 @@
 You can download the executables for your platform under the release tab
 
 #### Program Arguments
-| Argument          | Default Value | Description                                                                                                             |
-| :---:             | :---:         | :---:                                                                                                                   |
-| -h                | 127.0.0.1     | Interface address to bind the server to                                                                                 |
-| -p                | 1883          | Server port to listen to                                                                                                |
-| --max-connections | 128           | The maximum number of TCP connections to support                                                                        |
-| --key-store       | null          | The path to the PKCS12 keystore containing the private key and the certificate for TLS, if null TLS is disabled         |
-| --key-store-psw   | null          | The password of the PKCS12 keystore indicated in --key-store, if the keystore has no password set, don't set the option |
+
+|     Argument      | Default Value |                                                       Description                                                       |
+|:-----------------:|:-------------:|:-----------------------------------------------------------------------------------------------------------------------:|
+|        -h         |   127.0.0.1   |                                         Interface address to bind the server to                                         |
+|        -p         |     1883      |                                                Server port to listen to                                                 |
+| --max-connections |      128      |                                    The maximum number of TCP connections to support                                     |
+|    --key-store    |     null      |     The path to the PKCS12 keystore containing the private key and the certificate for TLS, if null TLS is disabled     |
+|  --key-store-psw  |     null      | The password of the PKCS12 keystore indicated in --key-store, if the keystore has no password set, don't set the option |
+|       --wsp       |     null      |                                             The WebSocket port to listen to                                             |
 
 ### Library
 
@@ -44,7 +46,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    implementation 'com.github.davidepianca98.KMQTT:kmqtt-jvm:0.2.9'
+    implementation 'com.github.davidepianca98.KMQTT:kmqtt-jvm:0.3.0'
 }
 ```
 
@@ -64,7 +66,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation 'com.github.davidepianca98:KMQTT:0.2.9'
+                implementation 'com.github.davidepianca98:KMQTT:0.3.0'
             }
         }
     }
