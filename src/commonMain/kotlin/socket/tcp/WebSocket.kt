@@ -1,10 +1,11 @@
 package socket.tcp
 
-import com.soywiz.krypto.sha1
+import sha1
 import socket.SocketInterface
 import socket.streams.ByteArrayOutputStream
 import socket.streams.DynamicByteBuffer
 import socket.streams.EOFException
+import toBase64
 
 
 class WebSocket(private val socket: Socket) : SocketInterface {
@@ -51,7 +52,7 @@ class WebSocket(private val socket: Socket) : SocketInterface {
             }
             val match = Regex("Sec-WebSocket-Key: (.*)")
             val key = match.find(string)?.groups?.get(1)?.value
-            val digest = (key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").encodeToByteArray().sha1().base64
+            val digest = (key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").encodeToByteArray().sha1().toBase64()
             val response = (
                     "HTTP/1.1 101 Switching Protocols\r\n"
                             + "Connection: Upgrade\r\n"

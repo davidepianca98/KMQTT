@@ -67,7 +67,6 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serializationVersion")
-                implementation("com.soywiz.korlibs.krypto:krypto:2.4.12")
             }
         }
         val commonTest by getting {

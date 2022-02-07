@@ -1,7 +1,10 @@
 package mqtt
 
+import sha1
+import toBase64
 import validateUTF8String
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -33,5 +36,17 @@ class CommonUtilsTest {
         assertFalse { ubyteArrayOf(0x10u, 0xFFu, 0xFFu).toByteArray().decodeToString().validateUTF8String() }
 
         assertTrue { ubyteArrayOf(0xEFu, 0xBBu, 0xBFu).toByteArray().decodeToString().validateUTF8String() }
+    }
+
+    @Test
+    fun testSHA1() {
+        val str1 = "The quick brown fox jumps over the lazy dog".encodeToByteArray().sha1()
+        assertEquals("L9ThxnotKPzthJ7hu3bnORuT6xI=", str1.toBase64())
+
+        val str2 = "The quick brown fox jumps over the lazy cog".encodeToByteArray().sha1()
+        assertEquals("3p8sf9JeGzr60+haC9F9mxANtLM=", str2.toBase64())
+
+        val str3 = "".encodeToByteArray().sha1()
+        assertEquals("2jmj7l5rSw0yVb/vlWAYkK/YBwk=", str3.toBase64())
     }
 }

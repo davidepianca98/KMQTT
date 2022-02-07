@@ -1,3 +1,4 @@
+import socket.streams.ByteArrayOutputStream
 import kotlin.random.Random
 
 expect fun currentTimeMillis(): Long
@@ -36,6 +37,10 @@ fun String.validateUTF8String(): Boolean {
 
 fun UByteArray.toHexString() = joinToString("") { it.toString(16).padStart(2, '0') }
 
+fun UIntArray.toHexString() = joinToString("") { it.toString(16).padStart(8, '0') }
+
+fun String.fromHexString(): ByteArray = chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+
 fun <K, V> MutableMap<K, V>.removeIf(predicate: (MutableMap.MutableEntry<K, V>) -> Boolean): Boolean {
     var removed = false
     val iterator = iterator()
@@ -51,8 +56,7 @@ fun <K, V> MutableMap<K, V>.removeIf(predicate: (MutableMap.MutableEntry<K, V>) 
 
 private infix fun UInt.leftRotate(bits: Int): UInt = ((this shl bits) or (this shr (32 - bits)))
 
-// TODO implement base64
-private fun ByteArray.sha1(): ByteArray { // TODO fix
+fun ByteArray.sha1(): ByteArray {
     val hash = UIntArray(5)
     hash[0] = 0x67452301u
     hash[1] = 0xEFCDAB89u
@@ -60,21 +64,28 @@ private fun ByteArray.sha1(): ByteArray { // TODO fix
     hash[3] = 0x10325476u
     hash[4] = 0xC3D2E1F0u
 
-    val ml = this.size * 8
+    val ml = (this.size * 8).toULong()
 
-    val chunks = UIntArray((((this.size + 8) shr 6) + 1) * 16)
+    // Prepare the data
+    val outStream = ByteArrayOutputStream()
 
-    for (i in 0 until this.size) {
-        chunks[i shr 2] = chunks[i shr 2] or (this[i].toUInt() shl (24 - (i % 4) * 8))
+    outStream.write(this.toUByteArray())
+    outStream.write(0x80u)
+
+    while ((outStream.size() + 8) % 64 != 0) {
+        outStream.write(0u)
     }
+    outStream.writeULong(ml)
 
-    chunks[this.size shr 2] = chunks[this.size shr 2] or (0x80u shl (24 - (this.size % 4) * 8))
-    chunks[chunks.size - 1] = ml.toUInt()
+    val data = outStream.toByteArray()
 
-    for (j in chunks.indices step 16) {
+    for (j in data.indices step 64) {
         val w = UIntArray(80)
         for (i in 0 until 16) {
-            w[i] = chunks[j + i]
+            w[i] = (data[j + i * 4].toUInt() shl 24) or
+                    (data[j + i * 4 + 1].toUInt() shl 16) or
+                    (data[j + i * 4 + 2].toUInt() shl 8) or
+                    data[j + i * 4 + 3].toUInt()
         }
         for (i in 16 until 80) {
             w[i] = (w[i - 3] xor w[i - 8] xor w[i - 14] xor w[i - 16]) leftRotate 1
@@ -122,5 +133,46 @@ private fun ByteArray.sha1(): ByteArray { // TODO fix
         hash[4] += e
     }
 
-    return hash.foldIndexed(ByteArray(hash.size)) { i, a, v -> a.apply { set(i, v.toByte()) } }
+    val hexString = hash.toHexString()
+
+    return hexString.fromHexString()
+}
+
+fun ByteArray.toBase64(): String {
+    val base64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+    var r = ""
+    var p = ""
+    var c = this.size % 3
+
+    val outStream = ByteArrayOutputStream()
+    outStream.write(this.toUByteArray())
+
+    if (c > 0) {
+        while (c < 3) {
+            p += "="
+            outStream.write(0u)
+            c++
+        }
+    }
+
+    val s = outStream.toByteArray()
+
+    c = 0
+    while (c < this.size) {
+        if (c > 0 && (c / 3 * 4) % 76 == 0) {
+            r += "\r\n"
+        }
+
+        val n = (s[c].toInt() shl 16) + (s[c + 1].toInt() shl 8) + s[c + 2].toInt()
+
+        val n1 = n shr 18 and 63
+        val n2 = n shr 12 and 63
+        val n3 = n shr 6 and 63
+        val n4 = n and 63
+
+        r += ("" + base64chars[n1] + base64chars[n2] + base64chars[n3] + base64chars[n4])
+        c += 3
+    }
+
+    return r.substring(0, r.length - p.length) + p
 }
