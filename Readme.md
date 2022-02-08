@@ -50,7 +50,7 @@ dependencies {
 }
 ```
 
-Replace jvm with linuxx64 or linuxarm32hfp based on the target. mingwx64 target is not yet available through JitPack.
+Replace jvm with js, linuxx64, linuxarm64, linuxarm32hfp, mingwx64, mingwx86 based on the desired target.
 
 ##### Kotlin Multiplatform plugin
 On the Kotlin Multiplatform plugin you only need to require the dependency on the common source set and the platform specific parts will automatically be required
