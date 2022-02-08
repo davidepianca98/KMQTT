@@ -5,9 +5,9 @@
 **KMQTT** is a Kotlin Multiplatform MQTT 3.1.1/5.0 Broker, with the objective of targeting the most possible build targets.
 
 ## Features
-:x: = TODO  
+:x: = To Do  
 :white_check_mark: = Supported  
-:heavy_plus_sign: = Experimental
+:heavy_plus_sign: = Work In Progress
 
 | Platform    | MQTT 3.1.1               | MQTT 5.0           | TCP                |        TLS         |     Websocket      |    Clustering     |
 | :---:       | :---:                    |  :---:             | :---:              |:------------------:|:------------------:|:-----------------:|
@@ -66,7 +66,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation 'com.github.davidepianca98:KMQTT:0.3.0'
+                implementation 'com.github.davidepianca98.KMQTT:kmqtt:0.3.0'
             }
         }
     }
