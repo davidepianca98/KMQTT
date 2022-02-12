@@ -7,9 +7,9 @@ import kotlinx.coroutines.launch
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
 import mqtt.broker.cluster.ClusterConnection
-import net.createServer
 import setTimeout
 import socket.tcp.Socket
+import socket.tcp.WebSocket
 import kotlin.js.Promise
 
 actual open class ServerSocket actual constructor(
@@ -17,12 +17,11 @@ actual open class ServerSocket actual constructor(
     private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
 ) : ServerSocketInterface {
 
-    private val clients = mutableMapOf<String, Any?>()
-    private val mqttSocket = createServer { socket: net.Socket ->
-        val localSocket = createSocket(socket)
-        clients[socket.socketId()] = ClientConnection(localSocket, broker)
-        localSocket.setAttachment(clients[socket.socketId()])
+    protected val clients = mutableMapOf<String, Any?>()
+    protected open lateinit var mqttSocket: net.Server
+    protected open lateinit var mqttWebSocket: net.Server
 
+    fun onConnect(socket: net.Socket) {
         socket.on("error") { error: Error ->
             println(error.message)
         }
@@ -43,6 +42,27 @@ actual open class ServerSocket actual constructor(
     private fun net.Socket.socketId(): String = "$remoteAddress:$remotePort"
 
     init {
+        initialize(broker)
+    }
+
+    open fun initialize(broker: Broker) {
+        mqttSocket = net.createServer { socket: net.Socket ->
+            val localSocket = createSocket(socket)
+            val connection = ClientConnection(localSocket, broker)
+            clients[socket.socketId()] = connection
+            localSocket.setAttachment(connection)
+
+            onConnect(socket)
+        }
+        mqttWebSocket = net.createServer { socket: net.Socket ->
+            val localSocket = createSocket(socket)
+            val connection = ClientConnection(WebSocket(localSocket), broker)
+            clients[socket.socketId()] = connection
+            localSocket.setAttachment(connection)
+
+            onConnect(socket)
+        }
+
         mqttSocket.listen(broker.port, broker.host)
 
         if (broker.enableUdp) {
@@ -50,7 +70,7 @@ actual open class ServerSocket actual constructor(
         }
 
         if (broker.webSocketPort != null) {
-            TODO("WebSocket in JS not yet implemented")
+            mqttWebSocket.listen(broker.webSocketPort, broker.host)
         }
 
         if (broker.cluster != null) {
@@ -64,9 +84,10 @@ actual open class ServerSocket actual constructor(
 
     actual fun close() {
         mqttSocket.close()
+        mqttWebSocket.close()
     }
 
-    actual fun isRunning(): Boolean = mqttSocket.listening
+    actual fun isRunning(): Boolean = mqttSocket.listening || mqttWebSocket.listening
 
     private fun sleep(ms: Long): Promise<Any> {
         return Promise { resolve, _ ->

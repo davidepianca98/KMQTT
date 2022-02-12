@@ -8,11 +8,4 @@ actual class TLSSocket(
     private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
 ) : Socket(socket, selectCallback) {
 
-    override fun send(data: UByteArray) {
-        TODO("TLS in JS not yet implemented")
-    }
-
-    override fun read(): UByteArray? {
-        TODO("TLS in JS not yet implemented")
-    }
 }

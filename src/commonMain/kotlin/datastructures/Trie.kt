@@ -26,17 +26,17 @@ class Trie(subscriptions: Map<String, Subscription>? = null) {
     ): Boolean {
         val character = topic.getOrNull(index)
         val childNode = node.children[character]
-        if (childNode != null) {
-            return insert(childNode, topic, index + 1, subscription, clientId)
+        return if (childNode != null) {
+            insert(childNode, topic, index + 1, subscription, clientId)
         } else {
             if (character == null) {
                 val replaced = node.subscriptions[clientId] != null
                 node.subscriptions[clientId] = subscription
-                return replaced
+                replaced
             } else {
                 val newNode = TrieNode(character)
                 node.children[character] = newNode
-                return insert(newNode, topic, index + 1, subscription, clientId)
+                insert(newNode, topic, index + 1, subscription, clientId)
             }
         }
     }

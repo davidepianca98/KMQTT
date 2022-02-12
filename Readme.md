@@ -9,15 +9,15 @@
 :white_check_mark: = Supported  
 :heavy_plus_sign: = Work In Progress
 
-| Platform    | MQTT 3.1.1               | MQTT 5.0           | TCP                |        TLS         |     Websocket      |    Clustering     |
-| :---:       | :---:                    |  :---:             | :---:              |:------------------:|:------------------:|:-----------------:|
-| JVM         | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :heavy_plus_sign: |
-| Windows X64 | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Windows X86 | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Linux X64   | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Linux ARM32 | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Linux ARM64 | :white_check_mark:       | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Node.js     | :white_check_mark:       | :white_check_mark: | :white_check_mark: |        :x:         |        :x:         |        :x:        |
+| Platform    |     MQTT 3.1.1     | MQTT 5.0           | TCP                |        TLS         |     Websocket      |    Clustering     |
+| :---:       |:------------------:|  :---:             | :---:              |:------------------:|:------------------:|:-----------------:|
+| JVM         | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :heavy_plus_sign: |
+| Windows X64 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Windows X86 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Linux X64   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Linux ARM32 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Linux ARM64 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+| Node.js     | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
 
 ## Getting Started
 
