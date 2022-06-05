@@ -43,14 +43,14 @@ class WebSocket(private val socket: Socket) : SocketInterface {
         val get = Regex("^GET")
 
         if (get.find(string) != null) {
-            val match1 = Regex("Sec-WebSocket-Protocol: (.*)")
+            val match1 = Regex("Sec-WebSocket-Protocol: (.*)", RegexOption.IGNORE_CASE)
             if (match1.find(string)?.groups?.get(1)?.value?.contains("mqtt") != true) {
                 val response = "HTTP/1.1 400 Bad Request\r\n\r\n".encodeToByteArray().toUByteArray()
                 socket.send(response)
                 socket.close()
                 throw IOException("mqtt not included in the subprotocols")
             }
-            val match = Regex("Sec-WebSocket-Key: (.*)")
+            val match = Regex("Sec-WebSocket-Key: (.*)", RegexOption.IGNORE_CASE)
             val key = match.find(string)?.groups?.get(1)?.value
             val digest = (key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").encodeToByteArray().sha1().toBase64()
             val response = (
