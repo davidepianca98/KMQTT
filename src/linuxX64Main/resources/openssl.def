@@ -3,10 +3,9 @@ headerFilter = openssl/*
 package = openssl
 # TODO should be libssl.a libcrypto.a but it doesn't compile in the correct order, check resources/Dockerfile for the merge commands
 staticLibraries = libopenssl.a
-compilerOpts.linux_x64 = -I/tmp/linuxX64/openssl-1.1.1k/include
-libraryPaths.linux_x64 = /tmp/linuxX64/openssl-1.1.1k
-compilerOpts.linux_arm32_hfp = -I/tmp/linuxArm32Hfp/openssl-1.1.1k/include
-libraryPaths.linux_arm32_hfp = /tmp/linuxArm32Hfp/openssl-1.1.1k
-compilerOpts.linux_arm64 = -I/tmp/linuxArm64/openssl-1.1.1k/include
-libraryPaths.linux_arm64 = /tmp/linuxArm64/openssl-1.1.1k
-# For mingw_x64 check nativeInterop/openssl.def
+compilerOpts.linux_x64 = -I/tmp/linuxX64/openssl-1.1.1t/include
+libraryPaths.linux_x64 = /tmp/linuxX64/openssl-1.1.1t
+compilerOpts.mingw_x64 = -I/tmp/mingwX64/openssl-1.1.1t/include
+libraryPaths.mingw_x64 = /tmp/mingwX64/openssl-1.1.1t
+compilerOpts.linux_arm64 = -I/tmp/linuxArm64/openssl-1.1.1t/include
+libraryPaths.linux_arm64 = /tmp/linuxArm64/openssl-1.1.1t

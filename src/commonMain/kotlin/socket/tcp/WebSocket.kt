@@ -108,7 +108,7 @@ class WebSocket(private val socket: Socket) : SocketInterface {
         try {
             while (true) {
                 val byte1 = currentReceivedData.read()
-                val fin = (byte1 and 0x80u) == 0x80.toUByte()
+                //val fin = (byte1 and 0x80u) == 0x80.toUByte()
 
                 val opcode = byte1 and 0x0Fu
 

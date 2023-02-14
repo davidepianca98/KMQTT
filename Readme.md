@@ -13,9 +13,7 @@
 | :---:       |:------------------:|  :---:             | :---:              |:------------------:|:------------------:|:-----------------:|
 | JVM         | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :heavy_plus_sign: |
 | Windows X64 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Windows X86 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
 | Linux X64   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Linux ARM32 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
 | Linux ARM64 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
 | Node.js     | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
 
@@ -50,7 +48,7 @@ dependencies {
 }
 ```
 
-Replace jvm with js, linuxx64, linuxarm64, linuxarm32hfp, mingwx64, mingwx86 based on the desired target.
+Replace jvm with js, linuxx64, linuxarm64, mingwx64 based on the desired target.
 
 ##### Kotlin Multiplatform plugin
 On the Kotlin Multiplatform plugin you only need to require the dependency on the common source set and the platform specific parts will automatically be required

@@ -1,9 +1,0 @@
-headers = openssl/ssl.h openssl/err.h openssl/bio.h openssl/pem.h openssl/pkcs12.h
-headerFilter = openssl/*
-package = openssl
-staticLibraries = libssl.lib libcrypto.lib
-compilerOpts.mingw_x64 = -I"C:\\Program Files\\OpenSSL-Win64\\include"
-libraryPaths.mingw_x64 = "C:\\Program Files\\OpenSSL-Win64\\lib"
-compilerOpts.mingw_x86 = -I"C:\\Program Files (x86)\\OpenSSL-Win32\\include"
-libraryPaths.mingw_x86 = "C:\\Program Files (x86)\\OpenSSL-Win32\\lib"
-# C:\Users\39340\.konan\kotlin-native-prebuilt-windows-1.5\bin\cinterop.bat -def .\openssl.def -target "mingw_x64" -o openssl

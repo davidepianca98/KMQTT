@@ -28,7 +28,7 @@ class BlindTrustManager : X509TrustManager {
 
     override fun checkClientTrusted(chain: Array<X509Certificate?>?, authType: String?) {
         println(authType)
-        println(chain!![0]?.issuerDN)
+        println(chain!![0]?.issuerX500Principal)
     }
 
     override fun checkServerTrusted(chain: Array<X509Certificate?>?, authType: String?) {

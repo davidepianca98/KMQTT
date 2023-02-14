@@ -1,10 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("multiplatform") version "1.6.21"
-    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("multiplatform") version "1.8.10"
+    kotlin("plugin.serialization") version "1.8.10"
     id("maven-publish")
-    id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "com.github.davidepianca98"
@@ -23,15 +23,10 @@ kotlin {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
-    js {
+    js(IR) {
         useCommonJs()
         nodejs {
             binaries.executable()
-        }
-    }
-    mingwX86 {
-        binaries {
-            executable()
         }
     }
     mingwX64 {
@@ -40,11 +35,6 @@ kotlin {
         }
     }
     linuxX64 {
-        binaries {
-            executable()
-        }
-    }
-    linuxArm32Hfp {
         binaries {
             executable()
         }
@@ -77,7 +67,7 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation("dnsjava:dnsjava:3.3.1")
+                implementation("dnsjava:dnsjava:3.5.2")
             }
         }
         val jvmTest by getting {
@@ -91,7 +81,7 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.6.4")
             }
         }
         val jsTest by getting {
@@ -108,22 +98,10 @@ kotlin {
                 implementation(files("src/nativeInterop/openssl-mingw-x64.klib"))
             }
         }
-        val mingwX86Main by getting {
-            dependsOn(posixMain)
-            dependencies {
-                implementation(files("src/nativeInterop/openssl-mingw-x86.klib"))
-            }
-        }
         val linuxX64Main by getting {
             dependsOn(posixMain)
             dependencies {
                 implementation(files("src/nativeInterop/openssl-linux-x64.klib"))
-            }
-        }
-        val linuxArm32HfpMain by getting {
-            dependsOn(posixMain)
-            dependencies {
-                implementation(files("src/nativeInterop/openssl-linux-arm32-hfp.klib"))
             }
         }
         val linuxArm64Main by getting {
@@ -140,7 +118,7 @@ task("shadowJar", ShadowJar::class) {
     from(kotlin.targets["jvm"].compilations["main"].output)
     val runtimeClasspath =
         (kotlin.targets["jvm"].compilations["main"] as org.jetbrains.kotlin.gradle.plugin.KotlinCompilationToRunnableFiles).runtimeDependencyFiles
-    configurations = mutableListOf(runtimeClasspath as Configuration)
+    configurations = listOf(runtimeClasspath as Configuration)
 }
 
 tasks {

@@ -93,6 +93,7 @@ actual class TLSSocket(
                             close()
                             throw IOException("OpenSSL error $status")
                         }
+                        TLSError.OK -> {}
                     }
 
                     if (acceptResult < 0) {
@@ -128,6 +129,7 @@ actual class TLSSocket(
                             close()
                             throw IOException("OpenSSL error $status")
                         }
+                        TLSError.OK -> {}
                     }
                 }
             }
