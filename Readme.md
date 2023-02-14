@@ -44,7 +44,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    implementation 'com.github.davidepianca98.KMQTT:kmqtt-jvm:0.3.2'
+    implementation 'com.github.davidepianca98.KMQTT:kmqtt-jvm:0.3.3'
 }
 ```
 
@@ -64,7 +64,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation 'com.github.davidepianca98.KMQTT:kmqtt:0.3.2'
+                implementation 'com.github.davidepianca98.KMQTT:kmqtt:0.3.3'
             }
         }
     }
