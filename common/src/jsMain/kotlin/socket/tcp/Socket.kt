@@ -1,14 +1,14 @@
 package socket.tcp
 
 import Buffer
-import socket.ServerSocketLoop
 import socket.SocketInterface
+import socket.SocketState
 import toBuffer
 import toUByteArray
 
 actual open class Socket(
     private val socket: net.Socket,
-    private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+    private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : SocketInterface {
 
     private val queue = ArrayDeque<UByteArray>()
@@ -17,7 +17,7 @@ actual open class Socket(
     init {
         socket.on("data") { data: Buffer ->
             queue.add(data.toUByteArray())
-            selectCallback(attachment, ServerSocketLoop.SocketState.READ)
+            selectCallback(attachment, SocketState.READ)
         }
         socket.on("drain", {
             socket.resume()
@@ -26,7 +26,7 @@ actual open class Socket(
 
     actual override fun send(data: UByteArray) {
         socket.write(data.toBuffer())
-        selectCallback(attachment, ServerSocketLoop.SocketState.WRITE)
+        selectCallback(attachment, SocketState.WRITE)
     }
 
     actual override fun read(): UByteArray? {

@@ -4,7 +4,7 @@ import mqtt.broker.Broker
 
 expect open class ServerSocket(
     broker: Broker,
-    selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+    selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocketInterface {
 
     fun isRunning(): Boolean

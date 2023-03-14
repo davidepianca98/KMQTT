@@ -73,9 +73,4 @@ class ServerSocketLoop(private val broker: Broker) {
     fun stop() {
         serverSocket.close()
     }
-
-    enum class SocketState {
-        READ,
-        WRITE
-    }
 }

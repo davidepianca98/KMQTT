@@ -14,7 +14,7 @@ import kotlin.js.Promise
 
 actual open class ServerSocket actual constructor(
     private val broker: Broker,
-    private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+    private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocketInterface {
 
     protected val clients = mutableMapOf<String, Any?>()

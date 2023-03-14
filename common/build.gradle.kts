@@ -42,7 +42,11 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
-        val jsMain by getting {}
+        val jsMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
+            }
+        }
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))

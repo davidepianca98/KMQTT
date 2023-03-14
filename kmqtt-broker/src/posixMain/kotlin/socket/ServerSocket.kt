@@ -29,7 +29,7 @@ import accept as posixAccept
 
 actual open class ServerSocket actual constructor(
     private val broker: Broker,
-    private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+    private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocketInterface {
 
     private var running = true
@@ -206,12 +206,12 @@ actual open class ServerSocket actual constructor(
             clients.forEach { socket ->
                 when {
                     posix_FD_ISSET(socket.key.convert(), readfds.ptr) == 1 -> {
-                        if (!selectCallback(socket.value, ServerSocketLoop.SocketState.READ))
+                        if (!selectCallback(socket.value, SocketState.READ))
                             clients.remove(socket.key)
                     }
                     posix_FD_ISSET(socket.key.convert(), writefds.ptr) == 1 -> {
                         writeRequest.remove(socket.key)
-                        if (!selectCallback(socket.value, ServerSocketLoop.SocketState.WRITE))
+                        if (!selectCallback(socket.value, SocketState.WRITE))
                             clients.remove(socket.key)
                     }
                     posix_FD_ISSET(socket.key.convert(), errorfds.ptr) == 1 -> {

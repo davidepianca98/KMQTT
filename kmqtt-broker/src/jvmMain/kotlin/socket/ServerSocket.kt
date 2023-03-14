@@ -19,7 +19,7 @@ import java.nio.channels.*
 
 actual open class ServerSocket actual constructor(
     private val broker: Broker,
-    private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+    private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocketInterface {
 
     private val mqttSocket = ServerSocketChannel.open()
@@ -134,9 +134,9 @@ actual open class ServerSocket actual constructor(
                         if (key.isValid && key.isAcceptable)
                             accept(key)
                         if (key.isValid && key.isWritable)
-                            selectCallback(attachment, ServerSocketLoop.SocketState.WRITE)
+                            selectCallback(attachment, SocketState.WRITE)
                         if (key.isValid && key.isReadable)
-                            selectCallback(attachment, ServerSocketLoop.SocketState.READ)
+                            selectCallback(attachment, SocketState.READ)
                     }
                 }
             }

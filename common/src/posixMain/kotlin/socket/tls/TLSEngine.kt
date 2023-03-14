@@ -2,15 +2,9 @@ package socket.tls
 
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
-import mqtt.broker.Broker
 
-enum class TLSError {
-    OK,
-    WANT_READ,
-    ERROR
-}
+interface TLSEngine {
 
-expect class TLSEngine(serverContext: TLSServerContext) {
     val isInitFinished: Boolean
     val bioShouldRetry: Boolean
 
@@ -24,9 +18,5 @@ expect class TLSEngine(serverContext: TLSServerContext) {
 
     fun getError(result: Int): TLSError
 
-    fun close()
-}
-
-expect class TLSServerContext(broker: Broker) {
     fun close()
 }

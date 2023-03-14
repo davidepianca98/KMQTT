@@ -17,6 +17,18 @@ kotlin {
     mingwX64 {}
     linuxX64 {}
     linuxArm64 {}
+    //macosX64 {}
+    //macosArm64 {}
+    //iosSimulatorArm64 {}
+    //iosX64 {}
+    //watchosSimulatorArm64 {}
+    //watchosX64 {}
+    //watchosArm32 {}
+    //watchosArm64 {}
+    //tvosSimulatorArm64 {}
+    //tvosX64 {}
+    //tvosArm64 {}
+    //iosArm64 {}
 
     sourceSets {
         all {
@@ -54,21 +66,12 @@ kotlin {
         }
         val mingwX64Main by getting {
             dependsOn(posixMain)
-            dependencies {
-                implementation(files("src/nativeInterop/openssl-mingw-x64.klib"))
-            }
         }
         val linuxX64Main by getting {
             dependsOn(posixMain)
-            dependencies {
-                implementation(files("src/nativeInterop/openssl-linux-x64.klib"))
-            }
         }
         val linuxArm64Main by getting {
             dependsOn(posixMain)
-            dependencies {
-                implementation(files("src/nativeInterop/openssl-linux-arm64.klib"))
-            }
         }
     }
 }

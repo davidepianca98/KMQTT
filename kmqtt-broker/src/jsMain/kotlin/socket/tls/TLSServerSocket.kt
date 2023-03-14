@@ -4,12 +4,13 @@ import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
 import socket.ServerSocket
 import socket.ServerSocketLoop
+import socket.SocketState
 import socket.tcp.WebSocket
 import tls.TlsOptions
 
 actual class TLSServerSocket actual constructor(
     private val broker: Broker,
-    private val selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+    private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocket(broker, selectCallback) {
 
     private fun TlsOptions(): TlsOptions = js("{}") as TlsOptions

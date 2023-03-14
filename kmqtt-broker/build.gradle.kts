@@ -73,7 +73,6 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.6.4")
             }
         }
@@ -87,21 +86,12 @@ kotlin {
         }
         val mingwX64Main by getting {
             dependsOn(posixMain)
-            dependencies {
-                implementation(files("src/nativeInterop/openssl-mingw-x64.klib"))
-            }
         }
         val linuxX64Main by getting {
             dependsOn(posixMain)
-            dependencies {
-                implementation(files("src/nativeInterop/openssl-linux-x64.klib"))
-            }
         }
         val linuxArm64Main by getting {
             dependsOn(posixMain)
-            dependencies {
-                implementation(files("src/nativeInterop/openssl-linux-arm64.klib"))
-            }
         }
     }
 }

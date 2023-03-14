@@ -5,19 +5,19 @@ import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
 import socket.IOException
 import socket.ServerSocket
-import socket.ServerSocketLoop
+import socket.SocketState
 import socket.tcp.WebSocket
 
 actual class TLSServerSocket actual constructor(
     private val broker: Broker,
-    selectCallback: (attachment: Any?, state: ServerSocketLoop.SocketState) -> Boolean
+    selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocket(broker, selectCallback) {
 
-    private val tlsServerContext = TLSServerContext(broker)
+    private val tlsServerContext = TLSServerContext(broker.tlsSettings!!)
 
     override fun accept(socket: Int, type: TCPSocketType) {
         try {
-            val engine = TLSEngine(tlsServerContext)
+            val engine = TLSServerEngine(tlsServerContext)
             val sock = TLSSocket(socket, engine, writeRequest, buffer)
             clients[socket] = when (type) {
                 TCPSocketType.MQTT -> ClientConnection(sock, broker)
