@@ -1,4 +1,6 @@
+import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.MemScope
+import platform.posix.sockaddr
 import platform.posix.sockaddr_in
 
 expect fun send(
@@ -69,6 +71,8 @@ expect fun bind(__fd: Int, __addr: kotlinx.cinterop.CValuesRef<platform.posix.so
 expect fun set_non_blocking(__fd: Int): Int
 
 expect fun socket(__domain: Int, __type: Int, __protocol: Int): Int
+
+expect fun connect(__fd: Int, __addr: CValuesRef<sockaddr>?, __len: UInt): Int
 
 expect fun accept(
     __fd: Int,

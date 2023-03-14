@@ -84,6 +84,10 @@ actual fun socket(__domain: Int, __type: Int, __protocol: Int): Int {
     return platform.posix.socket(__domain, __type, __protocol)
 }
 
+actual fun connect(__fd: Int, __addr: CValuesRef<sockaddr>?, __len: UInt): Int {
+    return platform.posix.connect(__fd, __addr, __len)
+}
+
 actual fun accept(__fd: Int, __addr: CValuesRef<sockaddr>?, __addr_len: CValuesRef<UIntVarOf<UInt>>?): Int {
     return platform.posix.accept(__fd, __addr, __addr_len)
 }

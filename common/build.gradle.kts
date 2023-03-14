@@ -17,6 +17,11 @@ kotlin {
     mingwX64 {}
     linuxX64 {}
     linuxArm64 {}
+    //ios {}
+    //tvos {}
+    //watchos {}
+    //macosX64 {}
+    //macosArm64 {}
 
     sourceSets {
         all {

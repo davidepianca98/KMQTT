@@ -77,8 +77,8 @@ actual open class ServerSocket actual constructor(
         }
     }
 
-    open fun createSocket(socketKey: SelectionKey): Socket {
-        return Socket(socketKey, sendBuffer, receiveBuffer)
+    open fun createSocket(channel: SocketChannel, socketKey: SelectionKey): Socket {
+        return Socket(channel, socketKey, sendBuffer, receiveBuffer)
     }
 
     private fun generateDataObject(channel: SocketChannel, socket: SocketInterface): Any? {
@@ -101,9 +101,9 @@ actual open class ServerSocket actual constructor(
 
             val socketKey = channel.register(selector, SelectionKey.OP_READ)
             val newSocket = if (channel.socket().localPort == broker.webSocketPort) {
-                WebSocket(createSocket(socketKey))
+                WebSocket(createSocket(channel, socketKey))
             } else {
-                createSocket(socketKey)
+                createSocket(channel, socketKey)
             }
             socketKey.attach(generateDataObject(channel, newSocket))
         } catch (e: java.io.IOException) {
@@ -148,7 +148,7 @@ actual open class ServerSocket actual constructor(
             val channel = SocketChannel.open(InetSocketAddress(address, broker.cluster.tcpPort))
             channel.configureBlocking(false)
             val socketKey = channel.register(selector, SelectionKey.OP_READ)
-            val connection = generateDataObject(channel, createSocket(socketKey)) as ClusterConnection?
+            val connection = generateDataObject(channel, createSocket(channel, socketKey)) as ClusterConnection?
             socketKey.attach(connection)
             return connection
         }

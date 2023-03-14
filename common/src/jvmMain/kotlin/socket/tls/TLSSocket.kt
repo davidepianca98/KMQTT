@@ -8,19 +8,21 @@ import toUByteArray
 import java.nio.BufferOverflowException
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
+import java.nio.channels.SocketChannel
 import javax.net.ssl.SSLEngine
 import javax.net.ssl.SSLEngineResult
 import javax.net.ssl.SSLException
 
 
 actual class TLSSocket(
+    channel: SocketChannel,
     key: SelectionKey,
     private var sendBuffer: ByteBuffer,
     private var receiveBuffer: ByteBuffer,
     private var sendAppBuffer: ByteBuffer,
     private var receiveAppBuffer: ByteBuffer,
     private val engine: SSLEngine
-) : Socket(key, sendBuffer, receiveBuffer) {
+) : Socket(channel, key, sendBuffer, receiveBuffer) {
 
     private var cacheReceiveBuffer = ByteBuffer.allocate(1024)
     private var cacheBufferReadMode = false

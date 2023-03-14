@@ -15,8 +15,8 @@ import socket.SocketClosedException
 import socket.SocketInterface
 
 actual open class Socket(
-    private val socket: Int,
-    private val writeRequest: MutableList<Int>,
+    protected val socket: Int,
+    private val writeRequest: MutableList<Int>?,
     private val buffer: ByteArray
 ) : SocketInterface {
 
@@ -29,14 +29,14 @@ actual open class Socket(
                 val error = getErrno()
                 if (error == getEagain() || error == getEwouldblock()) {
                     pendingSendData.add(data)
-                    writeRequest.add(socket)
+                    writeRequest?.add(socket)
                 } else {
                     close()
                     throw IOException("Error in send $error")
                 }
             } else if (length < data.size) {
                 pendingSendData.add(data.copyOfRange(length, data.size))
-                writeRequest.add(socket)
+                writeRequest?.add(socket)
             }
             pinned
         }

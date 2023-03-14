@@ -43,7 +43,7 @@ class ClientConnection(
     private var connectHandled = false
     private var connectCompleted = false
     private var authenticationMethod: String? = null
-    private var connectPacket: mqtt.packets.mqtt.MQTTConnect? = null
+    private var connectPacket: MQTTConnect? = null
     private var packetsReceivedBeforeConnack = mutableListOf<MQTTPacket>()
 
     private val currentReceivedPacket = MQTTCurrentPacket(broker.maximumPacketSize)
@@ -151,7 +151,7 @@ class ClientConnection(
     }
 
     private fun handlePacket(packet: MQTTPacket) {
-        if (packet is mqtt.packets.mqtt.MQTTConnect) {
+        if (packet is MQTTConnect) {
             if (!connectHandled) {
                 handleConnect(packet)
                 connectHandled = true
@@ -160,16 +160,16 @@ class ClientConnection(
             if (!connectHandled) // If first packet is not CONNECT, send Protocol Error
                 throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             when (packet) {
-                is mqtt.packets.mqtt.MQTTPublish -> handlePublish(packet)
-                is mqtt.packets.mqtt.MQTTPuback -> handlePuback(packet)
+                is MQTTPublish -> handlePublish(packet)
+                is MQTTPuback -> handlePuback(packet)
                 is MQTTPubrec -> handlePubrec(packet)
                 is MQTTPubrel -> handlePubrel(packet)
-                is mqtt.packets.mqtt.MQTTPubcomp -> handlePubcomp(packet)
+                is MQTTPubcomp -> handlePubcomp(packet)
                 is MQTTSubscribe -> handleSubscribe(packet)
                 is MQTTUnsubscribe -> handleUnsubscribe(packet)
-                is mqtt.packets.mqtt.MQTTPingreq -> handlePingreq()
-                is mqtt.packets.mqtt.MQTTDisconnect -> handleDisconnect(packet)
-                is mqtt.packets.mqtt.MQTTAuth -> handleAuth(packet)
+                is MQTTPingreq -> handlePingreq()
+                is MQTTDisconnect -> handleDisconnect(packet)
+                is MQTTAuth -> handleAuth(packet)
                 else -> throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             }
         }
@@ -219,7 +219,7 @@ class ClientConnection(
             sendQuota--
     }
 
-    private fun handleAuthentication(packet: mqtt.packets.mqtt.MQTTConnect) {
+    private fun handleAuthentication(packet: MQTTConnect) {
         if (broker.authentication != null) {
             if (packet.userName != null || packet.password != null) {
                 if (!broker.authentication.authenticate(clientId!!, packet.userName, packet.password)) {
@@ -274,7 +274,7 @@ class ClientConnection(
         }
     }
 
-    private fun handleConnect(packet: mqtt.packets.mqtt.MQTTConnect) {
+    private fun handleConnect(packet: MQTTConnect) {
         if (connectHandled) {
             return
         }
@@ -309,7 +309,7 @@ class ClientConnection(
         broker.persistence?.persistSession(clientId, session)
     }
 
-    private fun newSession(packet: mqtt.packets.mqtt.MQTTConnect): Session {
+    private fun newSession(packet: MQTTConnect): Session {
         return Session(
             this,
             packet.clientID,
@@ -320,7 +320,7 @@ class ClientConnection(
         )
     }
 
-    private fun initSessionAndSendConnack(packet: mqtt.packets.mqtt.MQTTConnect, authenticationData: UByteArray?) {
+    private fun initSessionAndSendConnack(packet: MQTTConnect, authenticationData: UByteArray?) {
         var sessionPresent = false
         val clientId = this.clientId ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
 
@@ -467,7 +467,7 @@ class ClientConnection(
 
     private fun handlePacketsReceivedBeforeConnack() {
         packetsReceivedBeforeConnack.forEach { packet ->
-            if (packet is mqtt.packets.mqtt.MQTTPublish) {
+            if (packet is MQTTPublish) {
                 handlePublish(packet)
             } else if (packet is MQTTSubscribe) {
                 handleSubscribe(packet)
@@ -487,7 +487,7 @@ class ClientConnection(
         ) != false
     }
 
-    private fun handlePublish(packet: mqtt.packets.mqtt.MQTTPublish) {
+    private fun handlePublish(packet: MQTTPublish) {
         if (!connectCompleted) {
             packetsReceivedBeforeConnack.add(packet)
             return
@@ -560,7 +560,7 @@ class ClientConnection(
         }
     }
 
-    private fun getTopicOrAlias(packet: mqtt.packets.mqtt.MQTTPublish): String {
+    private fun getTopicOrAlias(packet: MQTTPublish): String {
         var topic = packet.topicName
         if (packet is MQTT5Publish) {
             packet.properties.topicAlias?.let {
@@ -576,7 +576,7 @@ class ClientConnection(
         return topic
     }
 
-    private fun qos12ReasonCode(packet: mqtt.packets.mqtt.MQTTPublish): ReasonCode {
+    private fun qos12ReasonCode(packet: MQTTPublish): ReasonCode {
         val payloadFormatValid = if (packet is MQTT5Publish) packet.validatePayloadFormat() else true
         return if (!payloadFormatValid)
             ReasonCode.PAYLOAD_FORMAT_INVALID
@@ -586,7 +586,7 @@ class ClientConnection(
             ReasonCode.SUCCESS
     }
 
-    private fun handlePuback(packet: mqtt.packets.mqtt.MQTTPuback) {
+    private fun handlePuback(packet: MQTTPuback) {
         session!!.acknowledgePublish(packet.packetId)
         incrementSendQuota()
     }
@@ -656,13 +656,13 @@ class ClientConnection(
         }
     }
 
-    private fun handlePubcomp(packet: mqtt.packets.mqtt.MQTTPubcomp) {
+    private fun handlePubcomp(packet: MQTTPubcomp) {
         session!!.acknowledgePubrel(packet.packetId)
         incrementSendQuota()
     }
 
-    private fun prepareRetainedMessages(subscription: Subscription, replaced: Boolean): List<mqtt.packets.mqtt.MQTTPublish> {
-        val retainedMessagesList = mutableListOf<mqtt.packets.mqtt.MQTTPublish>()
+    private fun prepareRetainedMessages(subscription: Subscription, replaced: Boolean): List<MQTTPublish> {
+        val retainedMessagesList = mutableListOf<MQTTPublish>()
         if (!subscription.isShared() &&
             ((subscription.options.retainHandling == 0u) ||
                     (subscription.options.retainHandling == 1u && !replaced))
@@ -705,7 +705,7 @@ class ClientConnection(
             return
         }
 
-        val retainedMessagesList = mutableListOf<mqtt.packets.mqtt.MQTTPublish>()
+        val retainedMessagesList = mutableListOf<MQTTPublish>()
         val reasonCodes = packet.subscriptions.map { subscription ->
             if (!checkAuthorization(subscription.topicFilter, true, null))
                 return@map ReasonCode.NOT_AUTHORIZED
@@ -792,7 +792,7 @@ class ClientConnection(
         writePacket(packet)
     }
 
-    private fun handleDisconnect(packet: mqtt.packets.mqtt.MQTTDisconnect) {
+    private fun handleDisconnect(packet: MQTTDisconnect) {
         val session = try {
             session
         } catch (e: Exception) {
@@ -812,7 +812,7 @@ class ClientConnection(
         }
     }
 
-    private fun handleAuth(packet: mqtt.packets.mqtt.MQTTAuth) {
+    private fun handleAuth(packet: MQTTAuth) {
         if (packet is MQTT5Auth) {
             val authenticationMethod = packet.properties.authenticationMethod
             val clientId = this.clientId ?: throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)

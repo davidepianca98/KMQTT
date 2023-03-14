@@ -2,13 +2,13 @@ package socket.tls
 
 import mqtt.broker.Broker
 import socket.ServerSocket
-import socket.ServerSocketLoop
 import socket.SocketState
 import socket.tcp.Socket
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
+import java.nio.channels.SocketChannel
 import java.security.KeyFactory
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
@@ -71,13 +71,13 @@ actual class TLSServerSocket actual constructor(
         return kmf.keyManagers
     }
 
-    override fun createSocket(socketKey: SelectionKey): Socket {
+    override fun createSocket(channel: SocketChannel, socketKey: SelectionKey): Socket {
         val engine = sslContext.createSSLEngine()
         engine.useClientMode = false
         if (broker.tlsSettings?.requireClientCertificate == true) {
             engine.needClientAuth = true
         }
         engine.beginHandshake()
-        return TLSSocket(socketKey, sendBuffer, receiveBuffer, sendAppBuffer, receiveAppBuffer, engine)
+        return TLSSocket(channel, socketKey, sendBuffer, receiveBuffer, sendAppBuffer, receiveAppBuffer, engine)
     }
 }
