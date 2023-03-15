@@ -3,7 +3,6 @@ package socket.tls
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
 import socket.ServerSocket
-import socket.ServerSocketLoop
 import socket.SocketState
 import socket.tcp.WebSocket
 import tls.TlsOptions

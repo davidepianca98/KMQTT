@@ -7,10 +7,10 @@ import socket.SocketClosedException
 import socket.streams.ByteArrayOutputStream
 import socket.tcp.Socket
 
-actual class TLSSocket(
+actual open class TLSSocket(
     socket: Int,
     private val engine: TLSEngine,
-    writeRequest: MutableList<Int>,
+    writeRequest: MutableList<Int>?,
     buffer: ByteArray
 ) : Socket(socket, writeRequest, buffer) {
 

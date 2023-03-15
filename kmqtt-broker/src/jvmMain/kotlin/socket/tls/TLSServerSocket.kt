@@ -21,7 +21,7 @@ import javax.net.ssl.SSLContext
 
 actual class TLSServerSocket actual constructor(
     private val broker: Broker,
-    private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
+    selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocket(broker, selectCallback) {
 
     private val sslContext = SSLContext.getInstance(broker.tlsSettings!!.version)

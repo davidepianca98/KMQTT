@@ -14,6 +14,7 @@ class MQTTClient(
     private val mqttVersion: Int,
     address: String,
     port: Int,
+    tls: Boolean,
     private val keepAlive: Int,
     private val cleanStart: Boolean = true,
     clientId: String? = null,
@@ -31,7 +32,7 @@ class MQTTClient(
     // TODO check MQTT5 compliance
 
     private val maximumPacketSize = 1024 * 1024
-    private val socket = ClientSocket(address, port, maximumPacketSize, 1000)
+    private val socket = if (!tls) ClientSocket(address, port, maximumPacketSize, 1000) else TLSClientSocket(address, port, maximumPacketSize, 1000)
     private var running = false
 
     private val currentReceivedPacket = MQTTCurrentPacket(maximumPacketSize.toUInt(), mqttVersion)
