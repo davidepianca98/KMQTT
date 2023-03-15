@@ -9,10 +9,13 @@ import socket.streams.DynamicByteBuffer
 import socket.streams.EOFException
 import socket.streams.decodeVariableByteInteger
 
-class MQTTCurrentPacket(private val maximumPacketSize: UInt) {
+class MQTTCurrentPacket(
+    private val maximumPacketSize: UInt,
+    mqttVersion: Int? = null // 4 -> 3.1.1, 5 -> 5, null -> unknown (support both)
+) {
 
     private val currentReceivedData = DynamicByteBuffer()
-    internal var mqttVersion: Int? = null
+    var mqttVersion: Int? = mqttVersion
         private set
 
     fun addData(data: UByteArray): List<MQTTPacket> {

@@ -12,7 +12,7 @@ import socket.streams.ByteArrayOutputStream
 class MQTT4Connack(
     connectAcknowledgeFlags: ConnectAcknowledgeFlags,
     val connectReturnCode: ConnectReturnCode
-) : mqtt.packets.mqtt.MQTTConnack(connectAcknowledgeFlags), MQTT4Packet {
+) : MQTTConnack(connectAcknowledgeFlags), MQTT4Packet {
 
     companion object : MQTTDeserializer {
 

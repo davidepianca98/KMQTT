@@ -10,7 +10,7 @@ import socket.streams.ByteArrayOutputStream
 class MQTT5Disconnect(
     val reasonCode: ReasonCode,
     val properties: MQTT5Properties = MQTT5Properties()
-) : mqtt.packets.mqtt.MQTTDisconnect(), MQTT5Packet {
+) : MQTTDisconnect(), MQTT5Packet {
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         if (size() > maximumPacketSize) {
             properties.reasonString = null

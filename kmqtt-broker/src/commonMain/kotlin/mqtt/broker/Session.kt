@@ -4,6 +4,7 @@ import currentTimeMillis
 import mqtt.Will
 import mqtt.packets.MQTTPacket
 import mqtt.packets.Qos
+import mqtt.packets.mqtt.MQTTPublish
 import mqtt.packets.mqtt.MQTTPubrel
 import mqtt.packets.mqttv4.MQTT4Publish
 import mqtt.packets.mqttv5.MQTT5Properties
@@ -43,14 +44,14 @@ class Session(
     private var packetIdentifier = 1u
 
     // QoS 1 and QoS 2 messages which have been sent to the Client, but have not been completely acknowledged
-    private val pendingAcknowledgeMessages = mutableMapOf<UInt, mqtt.packets.mqtt.MQTTPublish>()
+    private val pendingAcknowledgeMessages = mutableMapOf<UInt, MQTTPublish>()
     private val pendingAcknowledgePubrel = mutableMapOf<UInt, MQTTPubrel>()
 
     // QoS 1 and QoS 2 messages pending transmission to the Client
-    private val pendingSendMessages = mutableMapOf<UInt, mqtt.packets.mqtt.MQTTPublish>()
+    private val pendingSendMessages = mutableMapOf<UInt, MQTTPublish>()
 
     // QoS 2 messages which have been received from the Client that have not been completely acknowledged
-    val qos2ListReceived = mutableMapOf<UInt, mqtt.packets.mqtt.MQTTPublish>()
+    val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
 
     init {
         persist()
@@ -105,7 +106,7 @@ class Session(
         sendPending(sendPacket)
     }
 
-    internal fun publish(packet: mqtt.packets.mqtt.MQTTPublish) {
+    internal fun publish(packet: MQTTPublish) {
         if (packet.messageExpiryIntervalExpired())
             return
         // Update the expiry interval if present

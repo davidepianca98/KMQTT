@@ -21,7 +21,7 @@ class MQTT5Publish(
     val properties: MQTT5Properties = MQTT5Properties(),
     payload: UByteArray? = null,
     timestamp: Long = currentTimeMillis()
-) : mqtt.packets.mqtt.MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp), MQTT5Packet {
+) : MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp), MQTT5Packet {
 
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         return size() <= maximumPacketSize

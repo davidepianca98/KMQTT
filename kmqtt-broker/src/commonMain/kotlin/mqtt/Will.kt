@@ -1,11 +1,12 @@
 package mqtt
 
 import mqtt.packets.Qos
+import mqtt.packets.mqtt.MQTTConnect
 import mqtt.packets.mqttv5.MQTT5Connect
 import mqtt.packets.mqttv5.ReasonCode
 import validatePayloadFormat
 
-class Will(packet: mqtt.packets.mqtt.MQTTConnect) {
+class Will(packet: MQTTConnect) {
     val retain: Boolean
     val qos: Qos
     val topic: String

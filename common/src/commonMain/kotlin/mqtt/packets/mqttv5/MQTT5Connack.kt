@@ -12,7 +12,7 @@ class MQTT5Connack(
     connectAcknowledgeFlags: ConnectAcknowledgeFlags,
     val connectReasonCode: ReasonCode,
     val properties: MQTT5Properties = MQTT5Properties()
-) : mqtt.packets.mqtt.MQTTConnack(connectAcknowledgeFlags), MQTT5Packet {
+) : MQTTConnack(connectAcknowledgeFlags), MQTT5Packet {
 
     companion object : MQTTDeserializer {
 

@@ -20,7 +20,7 @@ class MQTT5Connect(
     willPayload: UByteArray? = null,
     userName: String? = null,
     password: UByteArray? = null
-) : mqtt.packets.mqtt.MQTTConnect(
+) : MQTTConnect(
     protocolName,
     protocolVersion,
     connectFlags,

@@ -11,7 +11,7 @@ class MQTT5Puback(
     packetId: UInt,
     val reasonCode: ReasonCode = ReasonCode.SUCCESS,
     val properties: MQTT5Properties = MQTT5Properties()
-) : mqtt.packets.mqtt.MQTTPuback(packetId), MQTT5Packet {
+) : MQTTPuback(packetId), MQTT5Packet {
 
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         if (size() > maximumPacketSize) {

@@ -8,7 +8,7 @@ import socket.streams.ByteArrayOutputStream
 
 class MQTT4Puback(
     packetId: UInt
-) : mqtt.packets.mqtt.MQTTPuback(packetId), MQTT4Packet {
+) : MQTTPuback(packetId), MQTT4Packet {
 
     companion object : MQTTDeserializer {
 

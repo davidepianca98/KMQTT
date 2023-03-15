@@ -19,7 +19,7 @@ class MQTT4Publish(
     packetId: UInt?,
     payload: UByteArray? = null,
     timestamp: Long = currentTimeMillis()
-) : mqtt.packets.mqtt.MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp), MQTT4Packet {
+) : MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp), MQTT4Packet {
 
     companion object : MQTTDeserializer {
 
@@ -59,7 +59,7 @@ class MQTT4Publish(
         }
     }
 
-    override fun setDuplicate(): mqtt.packets.mqtt.MQTTPublish {
+    override fun setDuplicate(): MQTTPublish {
         return MQTT4Publish(
             retain,
             qos,
