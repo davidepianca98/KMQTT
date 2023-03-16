@@ -25,8 +25,6 @@ actual class TLSServerSocket actual constructor(
 ) : ServerSocket(broker, selectCallback) {
 
     private val sslContext = SSLContext.getInstance(broker.tlsSettings!!.version)
-    private var sendAppBuffer: ByteBuffer
-    private var receiveAppBuffer: ByteBuffer
 
     init {
         val keyStore = KeyStore.getInstance("PKCS12")
@@ -39,10 +37,6 @@ actual class TLSServerSocket actual constructor(
         sslContext.init(keyManagerFactory.keyManagers, null, null)
 
         val initSession = sslContext.createSSLEngine().session
-        sendBuffer = ByteBuffer.allocate(initSession.packetBufferSize)
-        receiveBuffer = ByteBuffer.allocate(initSession.packetBufferSize)
-        sendAppBuffer = ByteBuffer.allocate(initSession.applicationBufferSize)
-        receiveAppBuffer = ByteBuffer.allocate(initSession.applicationBufferSize)
         initSession.invalidate()
     }
 
@@ -77,7 +71,10 @@ actual class TLSServerSocket actual constructor(
         if (broker.tlsSettings?.requireClientCertificate == true) {
             engine.needClientAuth = true
         }
-        engine.beginHandshake()
+        val sendBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
+        val receiveBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
+        val sendAppBuffer = ByteBuffer.allocate(engine.session.applicationBufferSize)
+        val receiveAppBuffer = ByteBuffer.allocate(engine.session.applicationBufferSize)
         return TLSSocket(channel, socketKey, sendBuffer, receiveBuffer, sendAppBuffer, receiveAppBuffer, engine)
     }
 }

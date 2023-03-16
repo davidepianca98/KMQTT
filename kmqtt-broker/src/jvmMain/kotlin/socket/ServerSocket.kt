@@ -29,9 +29,6 @@ actual open class ServerSocket actual constructor(
     private val mqttWebSocket = ServerSocketChannel.open()
     private val selector: Selector = Selector.open()
 
-    protected var sendBuffer: ByteBuffer = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
-    protected var receiveBuffer: ByteBuffer = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
-
     init {
         mqttSocket.configureBlocking(false)
         mqttSocket.bind(InetSocketAddress(broker.host, broker.port), broker.backlog)
@@ -78,6 +75,8 @@ actual open class ServerSocket actual constructor(
     }
 
     open fun createSocket(channel: SocketChannel, socketKey: SelectionKey): Socket {
+        val sendBuffer = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
+        val receiveBuffer = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
         return Socket(channel, socketKey, sendBuffer, receiveBuffer)
     }
 
@@ -107,6 +106,8 @@ actual open class ServerSocket actual constructor(
             }
             socketKey.attach(generateDataObject(channel, newSocket))
         } catch (e: java.io.IOException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
             e.printStackTrace()
         }
     }

@@ -114,5 +114,14 @@ actual fun socketsInit() {}
 actual fun socketsCleanup() {}
 
 actual fun getErrno(): Int = errno
+
 actual fun getEagain(): Int = EAGAIN
+
 actual fun getEwouldblock(): Int = EWOULDBLOCK
+
+actual fun MemScope.set_socket_timeout(__fd: Int, timeout: Long): Int {
+    val timeoutStruct = alloc<timeval>()
+    timeoutStruct.tv_sec = 0
+    timeoutStruct.tv_usec = timeout * 1000
+    return setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, timeoutStruct.ptr, sizeOf<timeval>().toUInt())
+}

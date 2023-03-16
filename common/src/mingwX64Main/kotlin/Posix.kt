@@ -143,5 +143,14 @@ actual fun socketsCleanup() {
 
 
 actual fun getErrno(): Int = WSAGetLastError()
+
 actual fun getEagain(): Int = WSAEWOULDBLOCK
+
 actual fun getEwouldblock(): Int = WSAEWOULDBLOCK
+
+actual fun MemScope.set_socket_timeout(__fd: Int, timeout: Long): Int {
+    val timeoutStruct = alloc<timeval>()
+    timeoutStruct.tv_sec = 0
+    timeoutStruct.tv_usec = timeout.toInt() * 1000
+    return setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, timeoutStruct.ptr, sizeOf<timeval>().toUInt())
+}

@@ -22,7 +22,6 @@ actual class TLSClientSocket actual constructor(
     ByteBuffer.allocate(maximumPacketSize),
     SSLContext.getDefault().createSSLEngine().apply {
         useClientMode = true
-        beginHandshake()
     }
 ) {
     private val selector = Selector.open()

@@ -16,10 +16,8 @@ actual class ClientSocket actual constructor(address: String, port: Int, maximum
                 throw IOException()
             }
 
-            val on = alloc<timeval>()
-            on.tv_sec = 0
-            on.tv_usec = readTimeOut * 1000
-            if (setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, on.ptr, sizeOf<timeval>().toUInt()) == -1) {
+
+            if (set_socket_timeout(socket, readTimeOut.toLong()) == -1) {
                 socketsCleanup()
                 throw IOException("Failed ioctlsocket")
             }
