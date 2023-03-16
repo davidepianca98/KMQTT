@@ -17,15 +17,15 @@ class MQTTClient(
     tls: Boolean,
     private val keepAlive: Int,
     private val cleanStart: Boolean = true,
-    clientId: String? = null,
-    userName: String? = null,
-    password: UByteArray? = null,
-    properties: MQTT5Properties = MQTT5Properties(),
-    willProperties: MQTT5Properties? = null,
-    willTopic: String? = null,
-    willPayload: UByteArray? = null,
-    willRetain: Boolean = false,
-    willQos: Qos = Qos.AT_MOST_ONCE,
+    private val clientId: String? = null,
+    private val userName: String? = null,
+    private val password: UByteArray? = null,
+    private val properties: MQTT5Properties = MQTT5Properties(),
+    private val willProperties: MQTT5Properties? = null,
+    private val willTopic: String? = null,
+    private val willPayload: UByteArray? = null,
+    private val willRetain: Boolean = false,
+    private val willQos: Qos = Qos.AT_MOST_ONCE,
     private val publishReceived: (publish: MQTTPublish) -> Unit
 ) {
 
@@ -66,6 +66,10 @@ class MQTTClient(
             throw IllegalArgumentException("Cannot set password without username")
         }
 
+        sendConnect()
+    }
+
+    private fun sendConnect() {
         val connect = if (mqttVersion == 4) {
             MQTT4Connect(
                 "MQTT",
@@ -129,6 +133,7 @@ class MQTTClient(
         if (qos != Qos.AT_MOST_ONCE) {
             pendingAcknowledgeMessages[packetId!!] = publish
         }
+        socket.send(publish.toByteArray())
     }
 
     fun subscribe(subscriptions: List<Subscription>, properties: MQTT5Properties = MQTT5Properties()) {

@@ -26,7 +26,7 @@ actual open class TLSSocket(
 
     init {
         engine.beginHandshake()
-        runHandshake()
+        runHandshake(engine.useClientMode)
     }
 
     private fun handleReceiveBufferUnderflow() {
@@ -95,7 +95,7 @@ actual open class TLSSocket(
         }
     }
 
-    private fun runHandshake(): Boolean {
+    private fun runHandshake(full: Boolean): Boolean {
         while (engine.handshakeStatus != SSLEngineResult.HandshakeStatus.FINISHED
             && engine.handshakeStatus != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING
         ) {
@@ -116,8 +116,7 @@ actual open class TLSSocket(
                     }
                 }
                 SSLEngineResult.HandshakeStatus.NEED_UNWRAP -> {
-                    println("UNWRAP")
-                    if (!read0()) {
+                    if (!read0() && !full) {
                         return false
                     }
                 }
@@ -135,9 +134,7 @@ actual open class TLSSocket(
                 receiveBuffer.compact()
                 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
                 when (result.status) {
-                    SSLEngineResult.Status.OK -> {
-                        return true
-                    }
+                    SSLEngineResult.Status.OK -> {}
                     SSLEngineResult.Status.BUFFER_UNDERFLOW -> {
                         handleReceiveBufferUnderflow()
                         if (super.readToBuffer() == 0) {
@@ -151,7 +148,7 @@ actual open class TLSSocket(
                         throw SocketClosedException()
                     }
                 }
-            } while (result.status != SSLEngineResult.Status.OK)
+            } while (result.status != SSLEngineResult.Status.OK || (engine.handshakeStatus == SSLEngineResult.HandshakeStatus.FINISHED || engine.handshakeStatus == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING))
         } catch (e: SocketClosedException) {
             engine.closeOutbound()
             close()
@@ -167,7 +164,7 @@ actual open class TLSSocket(
     }
 
     override fun read(): UByteArray? {
-        runHandshake()
+        runHandshake(engine.useClientMode)
         read0()
         receiveAppBuffer.flip()
         val result = receiveAppBuffer.toUByteArray()
