@@ -8,15 +8,15 @@ interface TLSEngine {
     val isInitFinished: Boolean
     val bioShouldRetry: Boolean
 
-    fun accept(): Int
-
     fun write(buffer: CPointer<ByteVar>, length: Int): Int
 
     fun read(buffer: CPointer<ByteVar>, length: Int): Int
 
     fun bioRead(buffer: CPointer<ByteVar>, length: Int): Int
 
-    fun getError(result: Int): TLSError
+    fun bioWrite(buffer: CPointer<ByteVar>, length: Int): Int
+
+    fun getError(result: Int): Int
 
     fun close()
 }

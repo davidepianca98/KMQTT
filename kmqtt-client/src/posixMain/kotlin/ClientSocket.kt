@@ -3,23 +3,30 @@ import platform.posix.*
 import socket.IOException
 import socket.tcp.Socket
 
-actual class ClientSocket actual constructor(address: String, port: Int, maximumPacketSize: Int, readTimeOut: Int)
-    : Socket(socket(AF_INET, SOCK_STREAM, 0), null, ByteArray(maximumPacketSize)) {
+actual class ClientSocket actual constructor(
+    address: String,
+    port: Int,
+    maximumPacketSize: Int,
+    readTimeOut: Int
+) : Socket(
+    socketsInit().run {
+        socket(AF_INET, SOCK_STREAM, 0)
+    },
+    null,
+    ByteArray(maximumPacketSize)
+) {
 
     init {
         memScoped {
-            socketsInit()
-            val serverAddress = sockaddrIn(AF_INET.convert(), port.convert())
-            inet_pton(AF_INET, address, serverAddress.sin_addr.ptr)
+            val ip = getaddrinfo(address, port.toString()) ?: throw IOException("Failed resolving address")
 
-            if (connect(socket, serverAddress.reinterpret<sockaddr>().ptr, sizeOf<sockaddr_in>().convert()) != 0) {
-                throw IOException()
+            if (connect(socket, ip, sizeOf<sockaddr_in>().convert()) == -1) {
+                throw IOException("Socket connect failed, error ${getErrno()}")
             }
-
 
             if (set_socket_timeout(socket, readTimeOut.toLong()) == -1) {
                 socketsCleanup()
-                throw IOException("Failed ioctlsocket")
+                throw IOException("Failed setsockopt for timeout with error ${getErrno()}")
             }
         }
     }

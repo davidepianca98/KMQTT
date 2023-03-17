@@ -1,3 +1,3 @@
 package socket
 
-class SocketClosedException : IOException()
+class SocketClosedException(message: String? = null) : IOException(message)

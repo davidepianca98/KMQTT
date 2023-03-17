@@ -30,6 +30,7 @@ actual class TLSClientEngine : TLSEngine {
             throw IOException("Failed allocating read BIO")
         }
 
+        SSL_set_connect_state(clientContext)
         SSL_set_bio(clientContext, readBio, writeBio)
         context = clientContext
         this.readBio = readBio
@@ -41,10 +42,6 @@ actual class TLSClientEngine : TLSEngine {
 
     override val bioShouldRetry: Boolean
         get() = BIO_test_flags(writeBio, BIO_FLAGS_SHOULD_RETRY) == 0
-
-    override fun accept(): Int {
-        return SSL_accept(context)
-    }
 
     override fun write(buffer: CPointer<ByteVar>, length: Int): Int {
         return SSL_write(context, buffer, length)
@@ -58,13 +55,12 @@ actual class TLSClientEngine : TLSEngine {
         return BIO_read(writeBio, buffer, length)
     }
 
-    override fun getError(result: Int): TLSError {
-        return when (SSL_get_error(context, result)) {
-            SSL_ERROR_NONE -> TLSError.OK
-            SSL_ERROR_WANT_READ -> TLSError.WANT_READ
-            SSL_ERROR_ZERO_RETURN, SSL_ERROR_SYSCALL -> TLSError.ERROR
-            else -> TLSError.ERROR
-        }
+    override fun bioWrite(buffer: CPointer<ByteVar>, length: Int): Int {
+        return BIO_write(readBio, buffer, length)
+    }
+
+    override fun getError(result: Int): Int {
+        return SSL_get_error(context, result)
     }
 
     override fun close() {

@@ -218,7 +218,7 @@ class MQTTClient(
             is MQTTPubrel -> handlePubrel(packet)
             is MQTTPubcomp -> handlePubcomp(packet)
             is MQTTSuback -> handleSuback(packet)
-            is MQTTUnsuback -> handleUnsuback(packet)
+            is MQTTUnsuback -> handleUnsuback()
             is MQTTPingresp -> handlePingresp()
             is MQTTDisconnect -> handleDisconnect(packet)
             //is MQTTAuth -> handleAuth(packet) TODO
@@ -309,7 +309,7 @@ class MQTTClient(
         }
     }
 
-    private fun handleUnsuback(packet: MQTTUnsuback) {
+    private fun handleUnsuback() {
 
     }
 

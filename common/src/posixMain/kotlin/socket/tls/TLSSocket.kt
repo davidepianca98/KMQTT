@@ -14,43 +14,49 @@ actual open class TLSSocket(
     buffer: ByteArray
 ) : Socket(socket, writeRequest, buffer) {
 
-    private val buf = ByteArray(4096)
-    private val encryptedBuf = ByteArray(4096)
+    private val buf = ByteArray(16 * 1024)
+    private val sendBuf = ByteArray(16 * 1024)
 
-    private fun socketSend(data: UByteArray) {
-        super.send(data)
+    private fun socketSend() {
+        sendBuf.usePinned { pinnedSendBuf ->
+            do {
+                val number = engine.bioRead(pinnedSendBuf.addressOf(0), sendBuf.size)
+                if (number > 0) {
+                    super.send(pinnedSendBuf.get().toUByteArray().copyOfRange(0, number))
+                } else if (engine.bioShouldRetry) {
+                    close()
+                    throw IOException("OpenSSL shouldn't retry to read BIO")
+                }
+            } while (number > 0)
+        }
     }
 
     override fun send(data: UByteArray) {
-        if (!engine.isInitFinished)
-            return
-
         var length = data.size
         var index = 0
         data.toByteArray().usePinned { pinnedBuf ->
             while (length > 0) {
                 val result = engine.write(pinnedBuf.addressOf(index), length)
-                val status = engine.getError(result)
+                socketSend()
                 if (result > 0) {
                     length -= result
                     index += result
-
-                    encryptedBuf.usePinned { pinnedEncryptedBuf ->
-                        do {
-                            val number = engine.bioRead(pinnedEncryptedBuf.addressOf(0), buf.size)
-                            if (number > 0) {
-                                socketSend(pinnedEncryptedBuf.get().toUByteArray().copyOfRange(0, number))
-                            } else if (engine.bioShouldRetry) {
-                                close()
-                                throw IOException("OpenSSL shouldn't retry to read BIO")
-                            }
-                        } while (number > 0)
+                } else {
+                    when (val status = engine.getError(result)) {
+                        0 -> { // OK
+                            break
+                        }
+                        2 -> { // WANT_READ
+                            read()
+                        }
+                        3 -> { // WANT_WRITE
+                            throw IOException("OpenSSL want write in write")
+                        }
+                        else -> {
+                            close()
+                            throw IOException("OpenSSL error $status")
+                        }
                     }
-                } else if (status == TLSError.ERROR) {
-                    close()
-                    throw IOException("OpenSSL error $status")
-                } else if (result == 0) {
-                    break
                 }
             }
         }
@@ -65,7 +71,7 @@ actual open class TLSSocket(
         var index = 0
         data.toByteArray().usePinned { pinned ->
             while (length > 0) {
-                val n = engine.write(pinned.addressOf(index), length)
+                val n = engine.bioWrite(pinned.addressOf(index), length)
                 if (n <= 0) {
                     close()
                     throw IOException("Failed in BIO_write")
@@ -73,64 +79,28 @@ actual open class TLSSocket(
 
                 index += n
                 length -= n
-                if (!engine.isInitFinished) {
-                    val acceptResult = engine.accept()
-                    when (val status = engine.getError(acceptResult)) {
-                        TLSError.WANT_READ -> {
-                            buf.usePinned { pinnedBuf ->
-                                do {
-                                    val number = engine.bioRead(pinnedBuf.addressOf(0), buf.size)
-                                    if (number > 0) {
-                                        socketSend(pinnedBuf.get().toUByteArray().copyOfRange(0, number))
-                                    } else if (engine.bioShouldRetry) {
-                                        close()
-                                        throw IOException("OpenSSL shouldn't retry to read BIO")
-                                    }
-                                } while (number > 0)
-                            }
-                        }
-                        TLSError.ERROR -> {
-                            close()
-                            throw IOException("OpenSSL error $status")
-                        }
-                        TLSError.OK -> {}
-                    }
-
-                    if (acceptResult < 0) {
-                        return null
-                    } else if (acceptResult == 0) {
-                        close()
-                        throw SocketClosedException()
-                    }
-                }
 
                 buf.usePinned { pinnedBuf ->
                     var number: Int
                     do {
                         number = engine.read(pinnedBuf.addressOf(0), buf.size)
+                        socketSend()
                         if (number > 0) {
                             returnData.write(pinnedBuf.get().toUByteArray(), 0, number)
+                        } else {
+                            when (val status = engine.getError(number)) {
+                                0 -> {} // OK
+                                2 -> {} // WANT_READ
+                                3 -> { // WANT_WRITE
+                                    throw IOException("OpenSSL want write in read")
+                                }
+                                else -> {
+                                    close()
+                                    throw IOException("OpenSSL error $status")
+                                }
+                            }
                         }
                     } while (number > 0)
-
-                    when (val status = engine.getError(number)) {
-                        TLSError.WANT_READ -> {
-                            do {
-                                val result = engine.bioRead(pinnedBuf.addressOf(0), buf.size)
-                                if (result > 0) {
-                                    socketSend(pinnedBuf.get().toUByteArray().copyOfRange(0, result))
-                                } else if (engine.bioShouldRetry) {
-                                    close()
-                                    throw IOException("OpenSSL shouldn't retry to read BIO")
-                                }
-                            } while (result > 0)
-                        }
-                        TLSError.ERROR -> {
-                            close()
-                            throw IOException("OpenSSL error $status")
-                        }
-                        TLSError.OK -> {}
-                    }
                 }
             }
         }

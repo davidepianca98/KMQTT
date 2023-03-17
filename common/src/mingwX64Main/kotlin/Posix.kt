@@ -1,8 +1,8 @@
 import kotlinx.cinterop.*
 import platform.posix.*
-import platform.windows.LPCVOID
-import platform.windows.LPSTR
-import platform.windows.PVOID
+import platform.posix.SOL_SOCKET
+import platform.posix.SO_RCVTIMEO
+import platform.windows.*
 import platform.windows.WSAEWOULDBLOCK
 import platform.windows.WSAGetLastError
 import socket.IOException
@@ -150,7 +150,21 @@ actual fun getEwouldblock(): Int = WSAEWOULDBLOCK
 
 actual fun MemScope.set_socket_timeout(__fd: Int, timeout: Long): Int {
     val timeoutStruct = alloc<timeval>()
-    timeoutStruct.tv_sec = 0
-    timeoutStruct.tv_usec = timeout.toInt() * 1000
+    val seconds = timeout.toInt() / 1000
+    timeoutStruct.tv_sec = seconds
+    timeoutStruct.tv_usec = (timeout.toInt() - seconds * 1000) * 1000
     return setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, timeoutStruct.ptr, sizeOf<timeval>().toUInt())
+}
+
+actual fun MemScope.getaddrinfo(name: String, service: String?): CPointer<sockaddr>? {
+    val hints = alloc<addrinfo>()
+    platform.posix.memset(hints.ptr, 0, sizeOf<addrinfo>().convert())
+    hints.ai_family = platform.posix.AF_UNSPEC
+    hints.ai_socktype = platform.posix.SOCK_STREAM
+    hints.ai_protocol = platform.posix.IPPROTO_TCP
+    val result = alloc<CPointerVar<addrinfo>>()
+    if (getaddrinfo(name, service, hints.ptr, result.ptr) == 0) {
+        return result.pointed?.ai_addr
+    }
+    return null
 }

@@ -121,7 +121,21 @@ actual fun getEwouldblock(): Int = EWOULDBLOCK
 
 actual fun MemScope.set_socket_timeout(__fd: Int, timeout: Long): Int {
     val timeoutStruct = alloc<timeval>()
-    timeoutStruct.tv_sec = 0
-    timeoutStruct.tv_usec = timeout * 1000
+    val seconds = timeout / 1000
+    timeoutStruct.tv_sec = seconds
+    timeoutStruct.tv_usec = (timeout - seconds * 1000) * 1000
     return setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, timeoutStruct.ptr, sizeOf<timeval>().toUInt())
+}
+
+actual fun MemScope.getaddrinfo(name: String, service: String?): CPointer<sockaddr>? {
+    val hints = alloc<addrinfo>()
+    platform.posix.memset(hints.ptr, 0, sizeOf<addrinfo>().convert())
+    hints.ai_family = platform.posix.AF_UNSPEC
+    hints.ai_socktype = platform.posix.SOCK_STREAM
+    hints.ai_protocol = platform.posix.IPPROTO_TCP
+    val result = alloc<CPointerVar<addrinfo>>()
+    if (getaddrinfo(name, service, hints.ptr, result.ptr) == 0) {
+        return result.pointed?.ai_addr
+    }
+    return null
 }
