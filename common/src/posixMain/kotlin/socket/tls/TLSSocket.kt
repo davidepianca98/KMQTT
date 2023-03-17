@@ -52,6 +52,10 @@ actual open class TLSSocket(
                         3 -> { // WANT_WRITE
                             throw IOException("OpenSSL want write in write")
                         }
+                        6 -> { // ZERO_RETURN
+                            close()
+                            throw SocketClosedException()
+                        }
                         else -> {
                             close()
                             throw IOException("OpenSSL error $status")
@@ -93,6 +97,10 @@ actual open class TLSSocket(
                                 2 -> {} // WANT_READ
                                 3 -> { // WANT_WRITE
                                     throw IOException("OpenSSL want write in read")
+                                }
+                                6 -> { // ZERO_RETURN
+                                    close()
+                                    throw SocketClosedException()
                                 }
                                 else -> {
                                     close()

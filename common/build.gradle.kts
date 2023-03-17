@@ -17,7 +17,7 @@ kotlin {
     mingwX64 {}
     linuxX64 {}
     linuxArm64 {}
-    //ios {}
+    ios {}
     //tvos {}
     //watchos {}
     //macosX64 {}
@@ -77,6 +77,14 @@ kotlin {
             dependencies {
                 implementation(files("src/nativeInterop/openssl-linux-arm64.klib"))
             }
+        }
+        val iosX64Main by getting {
+            dependsOn(posixMain)
+            // TODO add openssl dependency
+        }
+        val iosArm64Main by getting {
+            dependsOn(posixMain)
+            // TODO add openssl dependency
         }
     }
 }
