@@ -15,9 +15,9 @@ class MQTTClient(
     address: String,
     port: Int,
     tls: Boolean,
-    private val keepAlive: Int,
+    private var keepAlive: Int,
     private val cleanStart: Boolean = true,
-    private val clientId: String? = null,
+    private var clientId: String? = null,
     private val userName: String? = null,
     private val password: UByteArray? = null,
     private val properties: MQTT5Properties = MQTT5Properties(),
@@ -31,7 +31,7 @@ class MQTTClient(
 
     // TODO check MQTT5 compliance
 
-    private val maximumPacketSize = 1024 * 1024
+    private val maximumPacketSize = properties.maximumPacketSize?.toInt() ?: (1024 * 1024)
     private val socket = if (!tls) ClientSocket(address, port, maximumPacketSize, 1000) else TLSClientSocket(address, port, maximumPacketSize, 1000)
     private var running = false
 
@@ -46,15 +46,27 @@ class MQTTClient(
     // QoS 2 messages which have been received from the Server, but have not been completely acknowledged
     private val qos2ListReceived = mutableListOf<UInt>()
 
-    // TODO upon disconnection, if cleanStart == 0, reconnect and resend pending publish and pubrel messages
+    // TODO upon disconnection, if cleanStart == 0 and sessionPresent, reconnect and resend pending publish and pubrel messages
+
+    // Connection
+    private val topicAliasesClient = mutableMapOf<UInt, String>() // TODO
+    private val topicAliasesServer = mutableMapOf<String, UInt>()
+    private var maximumQos = Qos.EXACTLY_ONCE
+    private var retainedSupported = true
+    private var maximumServerPacketSize = 128 * 1024 * 1024
+    private var topicAliasMaximum = 0u
+    private var wildcardSubscriptionAvailable = true
+    private var subscriptionIdentifiersAvailable = true
+    private var sharedSubscriptionAvailable = true
+
+    // TODO authentication 3.1.2.11.9, 3.1.2.11.10
 
     init {
-        // TODO allow more configuration and TLS
         if (mqttVersion != 4 && mqttVersion != 5) {
             throw IllegalArgumentException("Unknown MQTT version")
         }
 
-        if (keepAlive > 18 * 60 * 60 + 12 * 60 + 15) {
+        if (keepAlive > 65535) {
             throw IllegalArgumentException("Keep alive exceeding the maximum value")
         }
 
@@ -116,10 +128,19 @@ class MQTTClient(
             return true
         if (pendingAcknowledgeMessages[packetId] != null)
             return true
+        if (pendingAcknowledgePubrel[packetId] != null)
+            return true
         return false
     }
 
     fun publish(retain: Boolean, qos: Qos, topic: String, payload: UByteArray?, properties: MQTT5Properties = MQTT5Properties()) {
+        if (qos > maximumQos) {
+            throw Exception("QoS exceeding maximum server supported QoS")
+        }
+        if (retain && !retainedSupported) {
+            throw Exception("Retained not supported by the server")
+        }
+
         val packetId = if (qos != Qos.AT_MOST_ONCE) {
             generatePacketId()
         } else {
@@ -133,7 +154,11 @@ class MQTTClient(
         if (qos != Qos.AT_MOST_ONCE) {
             pendingAcknowledgeMessages[packetId!!] = publish
         }
-        socket.send(publish.toByteArray())
+        val data = publish.toByteArray()
+        if (data.size > maximumServerPacketSize) {
+            throw Exception("Packet size too big for the server to handle")
+        }
+        socket.send(data)
     }
 
     fun subscribe(subscriptions: List<Subscription>, properties: MQTT5Properties = MQTT5Properties()) {
@@ -177,15 +202,18 @@ class MQTTClient(
                     }
                 } catch (e: MQTTException) {
                     disconnect(e.reasonCode)
+                    close()
                 } catch (e: EOFException) {
                     println("EOF")
                     close()
                 } catch (e: IOException) {
                     println("IOException ${e.message}")
                     disconnect(ReasonCode.UNSPECIFIED_ERROR)
+                    close()
                 } catch (e: Exception) {
                     println("Exception ${e.message} ${e.cause?.message}")
                     disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+                    close()
                 }
             } else {
                 // TODO if connack not received in a reasonable amount of time, then disconnect
@@ -218,7 +246,7 @@ class MQTTClient(
             is MQTTPubrel -> handlePubrel(packet)
             is MQTTPubcomp -> handlePubcomp(packet)
             is MQTTSuback -> handleSuback(packet)
-            is MQTTUnsuback -> handleUnsuback()
+            is MQTTUnsuback -> handleUnsuback(packet)
             is MQTTPingresp -> handlePingresp()
             is MQTTDisconnect -> handleDisconnect(packet)
             //is MQTTAuth -> handleAuth(packet) TODO
@@ -227,10 +255,36 @@ class MQTTClient(
     }
 
     private fun handleConnack(packet: MQTTConnack) {
+        if (packet is MQTT5Connack) {
+            if (packet.connectReasonCode != ReasonCode.SUCCESS) {
+                // TODO 3.2.2.3.16 if reason code 0x9C try to connect to the given server
+                throw MQTTException(packet.connectReasonCode)
+            }
+
+            // TODO 3.2.2.3.3
+
+            maximumQos = packet.properties.maximumQos?.let { Qos.valueOf(it.toInt()) } ?: Qos.EXACTLY_ONCE
+            retainedSupported = packet.properties.retainAvailable != 0u
+            maximumServerPacketSize = packet.properties.maximumPacketSize?.toInt() ?: maximumServerPacketSize
+            clientId = packet.properties.assignedClientIdentifier ?: clientId
+            topicAliasMaximum = packet.properties.topicAliasMaximum ?: topicAliasMaximum
+            wildcardSubscriptionAvailable = packet.properties.wildcardSubscriptionAvailable != 0u
+            subscriptionIdentifiersAvailable = packet.properties.subscriptionIdentifierAvailable != 0u
+            sharedSubscriptionAvailable = packet.properties.sharedSubscriptionAvailable != 0u
+            keepAlive = packet.properties.serverKeepAlive?.toInt() ?: keepAlive
+
+            // TODO 3.2.2.3.17 and 3.2.2.3.18
+        } else if (packet is MQTT4Connack) {
+            if (packet.connectReturnCode != ConnectReturnCode.CONNECTION_ACCEPTED) {
+                throw IOException("Connection failed with code: ${packet.connectReturnCode}")
+            }
+        }
+
         if (cleanStart && packet.connectAcknowledgeFlags.sessionPresentFlag) {
             throw MQTTException(ReasonCode.PROTOCOL_ERROR)
         } else if (!cleanStart && !packet.connectAcknowledgeFlags.sessionPresentFlag) {
-            // TODO either proceed with the session or disconnect
+            // Session expired on the server
+            // TODO clean local session
         }
     }
 
@@ -265,10 +319,16 @@ class MQTTClient(
     }
 
     private fun handlePuback(packet: MQTTPuback) {
+        if (packet is MQTT5Puback && properties.requestProblemInformation == 0u && (packet.properties.reasonString != null || packet.properties.userProperty.isNotEmpty())) {
+            throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        }
         pendingAcknowledgeMessages.remove(packet.packetId)
     }
 
     private fun handlePubrec(packet: MQTTPubrec) {
+        if (packet is MQTT5Pubrec && properties.requestProblemInformation == 0u && (packet.properties.reasonString != null || packet.properties.userProperty.isNotEmpty())) {
+            throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        }
         pendingAcknowledgeMessages.remove(packet.packetId)
         val pubrel = if (packet is MQTT4Pubrec) {
             MQTT4Pubrel(packet.packetId)
@@ -280,6 +340,9 @@ class MQTTClient(
     }
 
     private fun handlePubrel(packet: MQTTPubrel) {
+        if (packet is MQTT5Pubrel && properties.requestProblemInformation == 0u && (packet.properties.reasonString != null || packet.properties.userProperty.isNotEmpty())) {
+            throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        }
         qos2ListReceived.remove(packet.packetId)
         val pubcomp = if (packet is MQTT4Pubrel) {
             MQTT4Pubcomp(packet.packetId)
@@ -290,6 +353,9 @@ class MQTTClient(
     }
 
     private fun handlePubcomp(packet: MQTTPubcomp) {
+        if (packet is MQTT5Pubcomp && properties.requestProblemInformation == 0u && (packet.properties.reasonString != null || packet.properties.userProperty.isNotEmpty())) {
+            throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        }
         pendingAcknowledgePubrel.remove(packet.packetId)
     }
 
@@ -301,6 +367,9 @@ class MQTTClient(
                 }
             }
         } else if (packet is MQTT5Suback) {
+            if (properties.requestProblemInformation == 0u && (packet.properties.reasonString != null || packet.properties.userProperty.isNotEmpty())) {
+                throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+            }
             for (reasonCode in packet.reasonCodes) {
                 if (reasonCode != ReasonCode.SUCCESS || reasonCode != ReasonCode.GRANTED_QOS1 || reasonCode != ReasonCode.GRANTED_QOS2) {
                     throw MQTTException(reasonCode)
@@ -309,8 +378,10 @@ class MQTTClient(
         }
     }
 
-    private fun handleUnsuback() {
-
+    private fun handleUnsuback(packet: MQTTUnsuback) {
+        if (packet is MQTT5Unsuback && properties.requestProblemInformation == 0u && (packet.properties.reasonString != null || packet.properties.userProperty.isNotEmpty())) {
+            throw MQTTException(ReasonCode.PROTOCOL_ERROR)
+        }
     }
 
     private fun handlePingresp() {
