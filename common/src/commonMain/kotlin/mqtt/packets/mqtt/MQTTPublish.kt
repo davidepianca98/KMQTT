@@ -26,10 +26,10 @@ abstract class MQTTPublish(
 
     }
 
-    abstract fun setDuplicate(): mqtt.packets.mqtt.MQTTPublish
+    abstract fun setDuplicate(): MQTTPublish
 
     companion object {
-        fun fromByteArray(mqttVersion: Int, data: UByteArray): mqtt.packets.mqtt.MQTTPublish {
+        fun fromByteArray(mqttVersion: Int, data: UByteArray): MQTTPublish {
             val inStream = ByteArrayInputStream(data)
             val byte1 = inStream.read()
             val mqttControlPacketType = (byte1.toInt() shr 4) and 0b1111

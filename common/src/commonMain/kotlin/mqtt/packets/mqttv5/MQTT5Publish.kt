@@ -50,6 +50,19 @@ class MQTT5Publish(
         return true
     }
 
+    fun setTopicFromAlias(topicName: String): MQTT5Publish {
+        return MQTT5Publish(
+            retain,
+            qos,
+            dup,
+            topicName,
+            packetId,
+            properties.apply { topicAlias = null },
+            payload,
+            timestamp
+        )
+    }
+
     override fun setDuplicate(): MQTT5Publish {
         return MQTT5Publish(
             retain,
