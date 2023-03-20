@@ -1,3 +1,5 @@
 package socket.tls
 
-expect class TLSClientEngine() : TLSEngine
+import TLSClientSettings
+
+expect class TLSClientEngine(tlsSettings: TLSClientSettings) : TLSEngine

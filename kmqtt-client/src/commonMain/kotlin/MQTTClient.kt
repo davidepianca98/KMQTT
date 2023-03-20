@@ -18,7 +18,7 @@ import socket.streams.EOFException
  * @param mqttVersion sets the version of MQTT for this client (4 -> 3.1.1, 5 -> 5)
  * @param address the URL of the server
  * @param port the port of the server
- * @param tls whether to use TLS
+ * @param tls TLS settings, null if no TLS
  * @param keepAlive the MQTT keep alive of the connection in seconds
  * @param userName the username field of the CONNECT packet
  * @param password the password field of the CONNECT packet
@@ -34,8 +34,8 @@ class MQTTClient(
     private val mqttVersion: Int,
     address: String,
     port: Int,
-    tls: Boolean,
-    private var keepAlive: Int,
+    tls: TLSClientSettings?,
+    private var keepAlive: Int = 60,
     private val cleanStart: Boolean = true,
     private var clientId: String? = null,
     private val userName: String? = null,
@@ -51,7 +51,7 @@ class MQTTClient(
 ) {
 
     private val maximumPacketSize = properties.maximumPacketSize?.toInt() ?: (1024 * 1024)
-    private val socket = if (!tls) ClientSocket(address, port, maximumPacketSize, 250) else TLSClientSocket(address, port, maximumPacketSize, 250)
+    private val socket = if (tls == null) ClientSocket(address, port, maximumPacketSize, 250) else TLSClientSocket(address, port, maximumPacketSize, 250, tls)
     private var running = false
     private val lock = reentrantLock()
 

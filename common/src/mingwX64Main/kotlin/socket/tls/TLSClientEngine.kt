@@ -1,11 +1,12 @@
 package socket.tls
 
+import TLSClientSettings
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
 import openssl.*
 import socket.IOException
 
-actual class TLSClientEngine : TLSEngine {
+actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) : TLSEngine {
 
     private val context: CPointer<SSL>
     private val readBio: CPointer<BIO>
@@ -28,6 +29,12 @@ actual class TLSClientEngine : TLSEngine {
             BIO_free(readBio)
             BIO_free(writeBio)
             throw IOException("Failed allocating read BIO")
+        }
+
+        SSL_set_verify(clientContext, SSL_VERIFY_PEER, null)
+
+        if (tlsSettings.serverCertificatePath != null && SSL_CTX_load_verify_locations(sslContext, tlsSettings.serverCertificatePath, null) != 1) {
+            throw Exception("Server certificate path not found")
         }
 
         SSL_set_connect_state(clientContext)

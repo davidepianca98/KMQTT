@@ -4,5 +4,6 @@ expect class TLSClientSocket(
     address: String,
     port: Int,
     maximumPacketSize: Int,
-    readTimeOut: Int
+    readTimeOut: Int,
+    tlsSettings: TLSClientSettings
 ) : TLSSocket
