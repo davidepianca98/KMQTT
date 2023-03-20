@@ -116,7 +116,7 @@ actual open class TLSSocket(
     }
 
     override fun close() {
-        super.close()
         engine.close()
+        super.close()
     }
 }

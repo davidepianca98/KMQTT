@@ -63,7 +63,9 @@ actual open class Socket(
 
     actual override fun close() {
         key?.cancel()
-        channel.close()
+        if (channel.isOpen) {
+            channel.close()
+        }
     }
 
     actual override fun sendRemaining() {

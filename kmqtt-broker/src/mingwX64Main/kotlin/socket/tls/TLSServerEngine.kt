@@ -11,6 +11,8 @@ actual class TLSServerEngine actual constructor(serverContext: TLSServerContext)
     private val readBio: CPointer<BIO>
     private val writeBio: CPointer<BIO>
 
+    private var freed = false
+
     init {
         val readBio = BIO_new(BIO_s_mem()) ?: throw IOException("Failed allocating read BIO")
 
@@ -61,6 +63,9 @@ actual class TLSServerEngine actual constructor(serverContext: TLSServerContext)
     }
 
     override fun close() {
-        SSL_free(context)
+        if (!freed) {
+            SSL_free(context)
+            freed = true
+        }
     }
 }
