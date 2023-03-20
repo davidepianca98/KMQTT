@@ -37,6 +37,18 @@ actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) 
             throw Exception("Server certificate path not found")
         }
 
+        if (tlsSettings.clientCertificatePath != null) {
+            if (SSL_CTX_use_certificate_file(sslContext, tlsSettings.clientCertificatePath, SSL_FILETYPE_PEM) != 1) {
+                throw Exception("Cannot load client's certificate file")
+            }
+            if (SSL_CTX_use_PrivateKey_file(sslContext, tlsSettings.clientCertificateKeyPath!!, SSL_FILETYPE_PEM) != 1) {
+                throw Exception("Cannot load client's key file")
+            }
+            if (SSL_CTX_check_private_key(sslContext) != 1) {
+                throw Exception("Client's certificate and key don't match")
+            }
+        }
+
         SSL_set_connect_state(clientContext)
         SSL_set_bio(clientContext, readBio, writeBio)
         context = clientContext
