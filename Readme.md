@@ -2,22 +2,122 @@
 
 [![Release](https://jitpack.io/v/davidepianca98/KMQTT.svg)](https://jitpack.io/#davidepianca98/KMQTT)
 
-**KMQTT** is a Kotlin Multiplatform MQTT 3.1.1/5.0 Broker, with the objective of targeting the most possible build targets.
+**KMQTT** is a Kotlin Multiplatform MQTT 3.1.1/5.0 Client and Broker, with the objective of targeting the most possible build targets.
 
-## Features
+
+## Client features
 :x: = To Do  
 :white_check_mark: = Supported  
 :heavy_plus_sign: = Work In Progress
 
-| Platform    |     MQTT 3.1.1     | MQTT 5.0           | TCP                |        TLS         |     Websocket      |    Clustering     |
-| :---:       |:------------------:|  :---:             | :---:              |:------------------:|:------------------:|:-----------------:|
-| JVM         | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :heavy_plus_sign: |
-| Windows X64 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Linux X64   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Linux ARM64 | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
-| Node.js     | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:        |
+|  Platform   |          MQTT 3.1.1           |          MQTT 5.0          |             TCP              |        TLS         | Websocket |
+|:-----------:|:-----------------------------:|:--------------------------:|:----------------------------:|:------------------:|:---------:|
+|     JVM     |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |    :x:    |
+| Windows X64 |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |    :x:    |
+|  Linux X64  |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |    :x:    |
+| Linux ARM64 |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |    :x:    |
+|   Node.js   |              :x:              |            :x:             |             :x:              |        :x:         |    :x:    |
+|   iOS X64   |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      |        :x:         |    :x:    |
+|  iOS ARM64  |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      |        :x:         |    :x:    |
 
-## Getting Started
+
+## Broker features
+:x: = To Do  
+:white_check_mark: = Supported  
+:heavy_plus_sign: = Work In Progress
+
+|   Platform    |     MQTT 3.1.1     |      MQTT 5.0       |         TCP         |        TLS         |     Websocket      |    Clustering     |
+|:-------------:|:------------------:|:-------------------:|:-------------------:|:------------------:|:------------------:|:-----------------:|
+|      JVM      | :white_check_mark: | :white_check_mark:  | :white_check_mark:  | :white_check_mark: | :white_check_mark: | :heavy_plus_sign: |
+|  Windows X64  | :white_check_mark: | :white_check_mark:  | :white_check_mark:  | :white_check_mark: | :white_check_mark: |        :x:        |
+|   Linux X64   | :white_check_mark: | :white_check_mark:  | :white_check_mark:  | :white_check_mark: | :white_check_mark: |        :x:        |
+|  Linux ARM64  | :white_check_mark: | :white_check_mark:  | :white_check_mark:  | :white_check_mark: | :white_check_mark: |        :x:        |
+|    Node.js    | :white_check_mark: | :white_check_mark:  | :white_check_mark:  | :white_check_mark: | :white_check_mark: |        :x:        |
+
+
+
+
+## Getting Started with the client
+
+### Library
+
+#### Gradle
+
+##### Global dependencies
+```gradle
+repositories {
+    jcenter()
+    maven("https://jitpack.io")
+}
+dependencies {
+    implementation("com.github.davidepianca98.KMQTT:kmqtt-client-jvm:0.3.3")
+}
+```
+
+Replace jvm with js, linuxx64, linuxarm64, mingwx64 based on the desired target.
+
+##### Kotlin Multiplatform plugin
+On the Kotlin Multiplatform plugin you only need to require the dependency on the common source set and the platform specific parts will automatically be required
+```gradle
+repositories {
+    jcenter()
+    maven("https://jitpack.io")
+}
+
+kotlin {
+    jvm()
+    mingwX64("mingw")
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation("com.github.davidepianca98.KMQTT:kmqtt-client:0.3.3")
+            }
+        }
+    }
+}
+```
+
+#### Quick start code example
+This code starts the MQTT client on port 1883 without TLS encryption. You can play with MQTTClient() constructor parameters to set the various settings
+```kotlin
+fun main() {
+    val client = MQTTClient(
+        5,
+        "test.mosquitto.org",
+        1883,
+        null
+    ) {
+        println(it.payload?.toByteArray()?.decodeToString())
+    }
+    client.subscribe(listOf(Subscription("/randomTopic", SubscriptionOptions(Qos.EXACTLY_ONCE))))
+    client.publish(false, Qos.EXACTLY_ONCE, "/randomTopic", "hello".encodeToByteArray().toUByteArray())
+    client.run()
+}
+```
+
+#### TLS code example
+The certificates and key must be in PEM format, the password can be null
+```kotlin
+fun main() {
+    val client = MQTTClient(
+        5,
+        "test.mosquitto.org",
+        1883,
+        TLSClientSettings(
+            serverCertificatePath = "mosquitto.org.crt",
+        )
+    ) {
+        println(it.payload?.toByteArray()?.decodeToString())
+    }
+    client.subscribe(listOf(Subscription("/randomTopic", SubscriptionOptions(Qos.EXACTLY_ONCE))))
+    client.publish(false, Qos.EXACTLY_ONCE, "/randomTopic", "hello".encodeToByteArray().toUByteArray())
+    client.run()
+}
+```
+
+
+
+## Getting Started with the broker
 
 ### Executables
 You can download the executables for your platform under the release tab
@@ -35,16 +135,16 @@ You can download the executables for your platform under the release tab
 
 ### Library
 
-#### Gradle Maven
+#### Gradle
 
 ##### Global dependencies
 ```gradle
 repositories {
     jcenter()
-    maven { url "https://jitpack.io" }
+    maven("https://jitpack.io")
 }
 dependencies {
-    implementation 'com.github.davidepianca98.KMQTT:kmqtt-jvm:0.3.3'
+    implementation("com.github.davidepianca98.KMQTT:kmqtt-broker-jvm:0.3.3")
 }
 ```
 
@@ -55,7 +155,7 @@ On the Kotlin Multiplatform plugin you only need to require the dependency on th
 ```gradle
 repositories {
     jcenter()
-    maven { url "https://jitpack.io" }
+    maven("https://jitpack.io")
 }
 
 kotlin {
@@ -64,7 +164,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation 'com.github.davidepianca98.KMQTT:kmqtt:0.3.3'
+                implementation("com.github.davidepianca98.KMQTT:kmqtt-broker:0.3.3")
             }
         }
     }
