@@ -18,7 +18,7 @@ kotlin {
     mingwX64 {}
     linuxX64 {}
     linuxArm64 {}
-    //ios {}
+    ios {}
     //tvos {}
     //watchos {}
     //macosX64 {}
@@ -65,6 +65,12 @@ kotlin {
             dependsOn(posixMain)
         }
         val linuxArm64Main by getting {
+            dependsOn(posixMain)
+        }
+        val iosX64Main by getting {
+            dependsOn(posixMain)
+        }
+        val iosArm64Main by getting {
             dependsOn(posixMain)
         }
     }
