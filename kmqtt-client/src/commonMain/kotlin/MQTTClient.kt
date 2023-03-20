@@ -44,12 +44,12 @@ class MQTTClient(
     private val willPayload: UByteArray? = null,
     private val willRetain: Boolean = false,
     private val willQos: Qos = Qos.AT_MOST_ONCE,
-    private val enhancedAuthCallback: (authenticationData: UByteArray?) -> UByteArray? = { throw MQTTException(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR) },
+    private val enhancedAuthCallback: (authenticationData: UByteArray?) -> UByteArray? = { null },
     private val publishReceived: (publish: MQTTPublish) -> Unit
 ) {
 
     private val maximumPacketSize = properties.maximumPacketSize?.toInt() ?: (1024 * 1024)
-    private val socket = if (!tls) ClientSocket(address, port, maximumPacketSize, 1000) else TLSClientSocket(address, port, maximumPacketSize, 1000)
+    private val socket = if (!tls) ClientSocket(address, port, maximumPacketSize, 250) else TLSClientSocket(address, port, maximumPacketSize, 250)
     private var running = false
 
     private val currentReceivedPacket = MQTTCurrentPacket(maximumPacketSize.toUInt(), mqttVersion)
@@ -257,6 +257,7 @@ class MQTTClient(
                         handlePacket(it)
                     }
                 } catch (e: MQTTException) {
+                    e.printStackTrace()
                     disconnect(e.reasonCode)
                     close()
                 } catch (e: EOFException) {
@@ -475,7 +476,7 @@ class MQTTClient(
                 throw MQTTException(ReasonCode.PROTOCOL_ERROR)
             }
             for (reasonCode in packet.reasonCodes) {
-                if (reasonCode != ReasonCode.SUCCESS || reasonCode != ReasonCode.GRANTED_QOS1 || reasonCode != ReasonCode.GRANTED_QOS2) {
+                if (reasonCode != ReasonCode.SUCCESS && reasonCode != ReasonCode.GRANTED_QOS1 && reasonCode != ReasonCode.GRANTED_QOS2) {
                     throw MQTTException(reasonCode)
                 }
             }

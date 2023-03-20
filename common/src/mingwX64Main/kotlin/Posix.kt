@@ -149,11 +149,9 @@ actual fun getEagain(): Int = WSAEWOULDBLOCK
 actual fun getEwouldblock(): Int = WSAEWOULDBLOCK
 
 actual fun MemScope.set_socket_timeout(__fd: Int, timeout: Long): Int {
-    val timeoutStruct = alloc<timeval>()
-    val seconds = timeout.toInt() / 1000
-    timeoutStruct.tv_sec = seconds
-    timeoutStruct.tv_usec = (timeout.toInt() - seconds * 1000) * 1000
-    return setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, timeoutStruct.ptr, sizeOf<timeval>().toUInt())
+    val timeoutValue = alloc<uint32_tVar>()
+    timeoutValue.value = timeout.toUInt()
+    return setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, timeoutValue.ptr, sizeOf<uint32_tVar>().toUInt())
 }
 
 actual fun MemScope.getaddrinfo(name: String, service: String?): CPointer<sockaddr>? {
