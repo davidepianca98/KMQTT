@@ -1,3 +1,5 @@
+import kotlinx.atomicfu.locks.reentrantLock
+import kotlinx.atomicfu.locks.withLock
 import mqtt.MQTTCurrentPacket
 import mqtt.MQTTException
 import mqtt.Subscription
@@ -51,6 +53,7 @@ class MQTTClient(
     private val maximumPacketSize = properties.maximumPacketSize?.toInt() ?: (1024 * 1024)
     private val socket = if (!tls) ClientSocket(address, port, maximumPacketSize, 250) else TLSClientSocket(address, port, maximumPacketSize, 250)
     private var running = false
+    private val lock = reentrantLock()
 
     private val currentReceivedPacket = MQTTCurrentPacket(maximumPacketSize.toUInt(), mqttVersion)
     private var lastActiveTimestamp: Long = currentTimeMillis()
@@ -92,7 +95,9 @@ class MQTTClient(
             throw IllegalArgumentException("Cannot set password without username")
         }
 
-        sendConnect()
+        lock.withLock {
+            sendConnect()
+        }
     }
 
     private fun sendConnect() {
@@ -157,38 +162,40 @@ class MQTTClient(
      * @param properties the properties to be included in the message (used only in MQTT5)
      */
     fun publish(retain: Boolean, qos: Qos, topic: String, payload: UByteArray?, properties: MQTT5Properties = MQTT5Properties()) {
-        if (!connackReceived && properties.authenticationData != null) {
-            throw Exception("Not sending until connection complete")
-        }
-        if (qos > maximumQos) {
-            throw Exception("QoS exceeding maximum server supported QoS")
-        }
-        if (retain && !retainedSupported) {
-            throw Exception("Retained not supported by the server")
-        }
-
-        val packetId = if (qos != Qos.AT_MOST_ONCE) {
-            generatePacketId()
-        } else {
-            null
-        }
-        val publish = if (mqttVersion == 4) {
-            MQTT4Publish(retain, qos, false, topic, packetId, payload)
-        } else {
-            // TODO support client topic aliases
-            MQTT5Publish(retain, qos, false, topic, packetId, properties, payload)
-        }
-        if (qos != Qos.AT_MOST_ONCE) {
-            if (pendingAcknowledgeMessages.size + pendingAcknowledgePubrel.size >= receiveMax.toInt()) {
-                throw Exception("Sending more PUBLISH with QoS > 0 than indicated by the server in receiveMax")
+        lock.withLock {
+            if (!connackReceived && properties.authenticationData != null) {
+                throw Exception("Not sending until connection complete")
             }
-            pendingAcknowledgeMessages[packetId!!] = publish
+            if (qos > maximumQos) {
+                throw Exception("QoS exceeding maximum server supported QoS")
+            }
+            if (retain && !retainedSupported) {
+                throw Exception("Retained not supported by the server")
+            }
+
+            val packetId = if (qos != Qos.AT_MOST_ONCE) {
+                generatePacketId()
+            } else {
+                null
+            }
+            val publish = if (mqttVersion == 4) {
+                MQTT4Publish(retain, qos, false, topic, packetId, payload)
+            } else {
+                // TODO support client topic aliases
+                MQTT5Publish(retain, qos, false, topic, packetId, properties, payload)
+            }
+            if (qos != Qos.AT_MOST_ONCE) {
+                if (pendingAcknowledgeMessages.size + pendingAcknowledgePubrel.size >= receiveMax.toInt()) {
+                    throw Exception("Sending more PUBLISH with QoS > 0 than indicated by the server in receiveMax")
+                }
+                pendingAcknowledgeMessages[packetId!!] = publish
+            }
+            val data = publish.toByteArray()
+            if (data.size > maximumServerPacketSize) {
+                throw Exception("Packet size too big for the server to handle")
+            }
+            socket.send(data)
         }
-        val data = publish.toByteArray()
-        if (data.size > maximumServerPacketSize) {
-            throw Exception("Packet size too big for the server to handle")
-        }
-        socket.send(data)
     }
 
     /**
@@ -198,15 +205,17 @@ class MQTTClient(
      * @param properties the properties to be included in the message (used only in MQTT5)
      */
     fun subscribe(subscriptions: List<Subscription>, properties: MQTT5Properties = MQTT5Properties()) {
-        if (!connackReceived && properties.authenticationData != null) {
-            throw Exception("Not sending until connection complete")
+        lock.withLock {
+            if (!connackReceived && properties.authenticationData != null) {
+                throw Exception("Not sending until connection complete")
+            }
+            val subscribe = if (mqttVersion == 4) {
+                MQTT4Subscribe(generatePacketId(), subscriptions)
+            } else {
+                MQTT5Subscribe(generatePacketId(), subscriptions, properties)
+            }
+            socket.send(subscribe.toByteArray())
         }
-        val subscribe = if (mqttVersion == 4) {
-            MQTT4Subscribe(generatePacketId(), subscriptions)
-        } else {
-            MQTT5Subscribe(generatePacketId(), subscriptions, properties)
-        }
-        socket.send(subscribe.toByteArray())
     }
 
     /**
@@ -216,15 +225,17 @@ class MQTTClient(
      * @param properties the properties to be included in the message (used only in MQTT5)
      */
     fun unsubscribe(topics: List<String>, properties: MQTT5Properties = MQTT5Properties()) {
-        if (!connackReceived && properties.authenticationData != null) {
-            throw Exception("Not sending until connection complete")
+        lock.withLock {
+            if (!connackReceived && properties.authenticationData != null) {
+                throw Exception("Not sending until connection complete")
+            }
+            val unsubscribe = if (mqttVersion == 4) {
+                MQTT4Unsubscribe(generatePacketId(), topics)
+            } else {
+                MQTT5Unsubscribe(generatePacketId(), topics, properties)
+            }
+            socket.send(unsubscribe.toByteArray())
         }
-        val unsubscribe = if (mqttVersion == 4) {
-            MQTT4Unsubscribe(generatePacketId(), topics)
-        } else {
-            MQTT5Unsubscribe(generatePacketId(), topics, properties)
-        }
-        socket.send(unsubscribe.toByteArray())
     }
 
     /**
@@ -233,13 +244,15 @@ class MQTTClient(
      * @param reasonCode the specific reason code (only used in MQTT5)
      */
     fun disconnect(reasonCode: ReasonCode) {
-        val disconnect = if (mqttVersion == 4) {
-            MQTT4Disconnect()
-        } else {
-            MQTT5Disconnect(reasonCode)
+        lock.withLock {
+            val disconnect = if (mqttVersion == 4) {
+                MQTT4Disconnect()
+            } else {
+                MQTT5Disconnect(reasonCode)
+            }
+            socket.send(disconnect.toByteArray())
+            close()
         }
-        socket.send(disconnect.toByteArray())
-        close()
     }
 
     /**
@@ -249,45 +262,47 @@ class MQTTClient(
         running = true
         while (running) {
             val data = socket.read()
-            if (data != null) {
-                lastActiveTimestamp = currentTimeMillis()
+            lock.withLock {
+                if (data != null) {
+                    lastActiveTimestamp = currentTimeMillis()
 
-                try {
-                    currentReceivedPacket.addData(data).forEach {
-                        handlePacket(it)
-                    }
-                } catch (e: MQTTException) {
-                    e.printStackTrace()
-                    disconnect(e.reasonCode)
-                    close()
-                } catch (e: EOFException) {
-                    println("EOF")
-                    close()
-                } catch (e: IOException) {
-                    println("IOException ${e.message}")
-                    disconnect(ReasonCode.UNSPECIFIED_ERROR)
-                    close()
-                } catch (e: Exception) {
-                    println("Exception ${e.message} ${e.cause?.message}")
-                    disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
-                    close()
-                }
-            } else {
-                // TODO if connack not received in a reasonable amount of time, then disconnect
-                if (keepAlive != 0) {
-                    val currentTime = currentTimeMillis()
-                    if (currentTime > lastActiveTimestamp + (keepAlive * 1000)) {
-                        // Timeout
-                        close()
-                        throw MQTTException(ReasonCode.KEEP_ALIVE_TIMEOUT)
-                    } else if (currentTime > lastActiveTimestamp + (keepAlive * 1000 * 0.9)) {
-                        val pingreq = if (mqttVersion == 4) {
-                            MQTT4Pingreq()
-                        } else {
-                            MQTT5Pingreq()
+                    try {
+                        currentReceivedPacket.addData(data).forEach {
+                            handlePacket(it)
                         }
-                        socket.send(pingreq.toByteArray())
-                        // TODO if not receiving pingresp after a reasonable amount of time, close connection
+                    } catch (e: MQTTException) {
+                        e.printStackTrace()
+                        disconnect(e.reasonCode)
+                        close()
+                    } catch (e: EOFException) {
+                        println("EOF")
+                        close()
+                    } catch (e: IOException) {
+                        println("IOException ${e.message}")
+                        disconnect(ReasonCode.UNSPECIFIED_ERROR)
+                        close()
+                    } catch (e: Exception) {
+                        println("Exception ${e.message} ${e.cause?.message}")
+                        disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+                        close()
+                    }
+                } else {
+                    // TODO if connack not received in a reasonable amount of time, then disconnect
+                    if (keepAlive != 0) {
+                        val currentTime = currentTimeMillis()
+                        if (currentTime > lastActiveTimestamp + (keepAlive * 1000)) {
+                            // Timeout
+                            close()
+                            throw MQTTException(ReasonCode.KEEP_ALIVE_TIMEOUT)
+                        } else if (currentTime > lastActiveTimestamp + (keepAlive * 1000 * 0.9)) {
+                            val pingreq = if (mqttVersion == 4) {
+                                MQTT4Pingreq()
+                            } else {
+                                MQTT5Pingreq()
+                            }
+                            socket.send(pingreq.toByteArray())
+                            // TODO if not receiving pingresp after a reasonable amount of time, close connection
+                        }
                     }
                 }
             }
@@ -507,8 +522,13 @@ class MQTTClient(
      * @param data the authenticationData if necessary
      */
     fun reAuthenticate(data: UByteArray?) {
-        val auth = MQTT5Auth(ReasonCode.RE_AUTHENTICATE, MQTT5Properties(authenticationMethod = properties.authenticationMethod, authenticationData = data))
-        socket.send(auth.toByteArray())
+        lock.withLock {
+            val auth = MQTT5Auth(
+                ReasonCode.RE_AUTHENTICATE,
+                MQTT5Properties(authenticationMethod = properties.authenticationMethod, authenticationData = data)
+            )
+            socket.send(auth.toByteArray())
+        }
     }
 
     private fun handleDisconnect(disconnect: MQTTDisconnect) {
