@@ -1,5 +1,5 @@
 rootProject.name = 'kmqtt'
 
-include("common")
+include("kmqtt-common")
 include("kmqtt-broker")
 include("kmqtt-client")

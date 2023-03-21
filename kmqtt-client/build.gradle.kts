@@ -33,7 +33,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation(project(":common"))
+                implementation(project(":kmqtt-common"))
             }
         }
         val commonTest by getting {
