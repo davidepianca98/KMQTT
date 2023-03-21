@@ -153,7 +153,7 @@ actual fun fdSet(fd: Int, fdSet: CValuesRef<fd_set>) {
 }
 
 actual fun fdZero(fdSet: CValuesRef<fd_set>) {
-    __darwin_fd_zero(fdSet)
+    memset(fdSet, 0, sizeOf<fd_set>().convert())
 }
 
 actual fun fdIsSet(fd: Int, fdSet: CValuesRef<fd_set>): Int {
