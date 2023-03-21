@@ -1,7 +1,6 @@
 import kotlinx.cinterop.*
 import platform.posix.*
 import socket.IOException
-import socket.tls.TLSClientEngine
 import socket.tls.TLSSocket
 
 actual class TLSClientSocket actual constructor(
@@ -38,8 +37,8 @@ actual class TLSClientSocket actual constructor(
 
     override fun read(): UByteArray? {
         memScoped {
-            posix_FD_ZERO(readfds.ptr)
-            posix_FD_SET(socket.convert(), readfds.ptr)
+            fdZero(readfds.ptr)
+            fdSet(socket.convert(), readfds.ptr)
 
             select(
                 socket + 1,
@@ -49,7 +48,7 @@ actual class TLSClientSocket actual constructor(
                 readTimeOut.toLong()
             )
 
-            if (posix_FD_ISSET(socket.convert(), readfds.ptr) == 1) {
+            if (fdIsSet(socket.convert(), readfds.ptr) == 1) {
                 return super.read()
             } else {
                 return null

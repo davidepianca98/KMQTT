@@ -1,7 +1,7 @@
 import kotlinx.cinterop.CPointer
-import kotlinx.cinterop.CPointerVar
 import kotlinx.cinterop.CValuesRef
 import kotlinx.cinterop.MemScope
+import platform.posix.fd_set
 import platform.posix.sockaddr
 import platform.posix.sockaddr_in
 
@@ -95,6 +95,12 @@ expect fun MemScope.select(
 ): Int
 
 expect fun MemScope.getaddrinfo(name: String, service: String?): CPointer<sockaddr>?
+
+expect fun fdSet(fd: Int, fdSet: CValuesRef<fd_set>)
+
+expect fun fdZero(fdSet: CValuesRef<fd_set>)
+
+expect fun fdIsSet(fd: Int, fdSet: CValuesRef<fd_set>): Int
 
 expect fun socketsInit()
 

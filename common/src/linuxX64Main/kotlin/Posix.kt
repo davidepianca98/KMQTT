@@ -139,3 +139,15 @@ actual fun MemScope.getaddrinfo(name: String, service: String?): CPointer<sockad
     }
     return null
 }
+
+actual fun fdSet(fd: Int, fdSet: CValuesRef<fd_set>) {
+    posix_FD_SET(fd, fdSet)
+}
+
+actual fun fdZero(fdSet: CValuesRef<fd_set>) {
+    posix_FD_ZERO(fdSet)
+}
+
+actual fun fdIsSet(fd: Int, fdSet: CValuesRef<fd_set>): Int {
+    return posix_FD_ISSET(fd, fdSet)
+}

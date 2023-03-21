@@ -1,10 +1,8 @@
-package socket.tls
-
-import TLSClientSettings
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
 import openssl.*
 import socket.IOException
+import socket.tls.TLSEngine
 
 actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) : TLSEngine {
 
@@ -33,7 +31,11 @@ actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) 
 
         SSL_set_verify(clientContext, SSL_VERIFY_PEER, null)
 
-        if (tlsSettings.serverCertificatePath != null && SSL_CTX_load_verify_locations(sslContext, tlsSettings.serverCertificatePath, null) != 1) {
+        if (tlsSettings.serverCertificatePath != null && SSL_CTX_load_verify_locations(
+                sslContext,
+                tlsSettings.serverCertificatePath,
+                null
+            ) != 1) {
             throw Exception("Server certificate path not found")
         }
 
@@ -44,6 +46,7 @@ actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) 
             if (SSL_CTX_use_PrivateKey_file(sslContext, tlsSettings.clientCertificateKeyPath!!, SSL_FILETYPE_PEM) != 1) {
                 throw Exception("Cannot load client's key file")
             }
+            // TODO SSL_CTX_set_default_passwd_cb()
             if (SSL_CTX_check_private_key(sslContext) != 1) {
                 throw Exception("Client's certificate and key don't match")
             }

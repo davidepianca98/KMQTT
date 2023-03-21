@@ -1,0 +1,8 @@
+---
+
+#include <sys/types.h>
+#include <sys/select.h>
+
+void __darwin_fd_zero(fd_set *fdset) {
+    FD_ZERO(fdset);
+}

@@ -17,7 +17,20 @@ kotlin {
     mingwX64 {}
     linuxX64 {}
     linuxArm64 {}
-    ios {}
+    iosX64 {
+        compilations.getByName("main") {
+            val interop by cinterops.creating {
+                defFile("src/nativeInterop/ios/bindings.def")
+            }
+        }
+    }
+    iosArm64 {
+        compilations.getByName("main") {
+            val interop by cinterops.creating {
+                defFile("src/nativeInterop/ios/bindings.def")
+            }
+        }
+    }
     //tvos {}
     //watchos {}
     //macosX64 {}

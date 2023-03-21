@@ -1,8 +1,6 @@
-package socket.tls
-
-import TLSClientSettings
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
+import socket.tls.TLSEngine
 
 actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) : TLSEngine {
     override val isInitFinished: Boolean
