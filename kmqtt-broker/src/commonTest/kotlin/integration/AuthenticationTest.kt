@@ -35,6 +35,7 @@ class AuthenticationTest {
                 return username == "user" && password?.toByteArray()?.decodeToString() == "pass"
             }
         })
+        broker.step()
 
         val client = MQTTClient(5, broker.host, broker.port, null, userName = "user", password = "pass".encodeToByteArray().toUByteArray()) {}
         testAuthentication(client, broker)

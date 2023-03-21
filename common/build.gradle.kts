@@ -11,7 +11,6 @@ kotlin {
     }
     js(IR) {
         useCommonJs()
-        browser()
         nodejs()
     }
     mingwX64 {}

@@ -7,7 +7,7 @@ import toBuffer
 import toUByteArray
 
 actual open class Socket(
-    private val socket: net.Socket,
+    protected val socket: net.Socket,
     private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : SocketInterface {
 

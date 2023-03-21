@@ -19,32 +19,28 @@ actual class TLSServerSocket actual constructor(
         passphrase = broker.tlsSettings.keyStorePassword
         requestCert = broker.tlsSettings.requireClientCertificate
     }
-    override lateinit var mqttSocket: net.Server
 
-    override lateinit var mqttWebSocket: net.Server
+    override val mqttSocket = tls.createServer(tlsOptions) { socket: tls.TLSSocket ->
+        val localSocket = createSocket(socket)
+        val connection = ClientConnection(localSocket, broker)
+        clients[socket.socketId()] = connection
+        localSocket.setAttachment(connection)
 
-    // TODO this duplication is necessary because overriding the properties, they would get initialized too late and get
-    //      undefined
-    override fun initialize(broker: Broker) {
-        mqttSocket = tls.createServer(tlsOptions) { socket: tls.TLSSocket ->
-            val localSocket = createSocket(socket)
-            val connection = ClientConnection(localSocket, broker)
-            clients[socket.socketId()] = connection
-            localSocket.setAttachment(connection)
+        onConnect(socket)
+    }
+    override val mqttWebSocket = tls.createServer(tlsOptions) { socket: tls.TLSSocket ->
+        val localSocket = createSocket(socket)
+        val connection = ClientConnection(WebSocket(localSocket), broker)
+        clients[socket.socketId()] = connection
+        localSocket.setAttachment(connection)
 
-            onConnect(socket)
+        onConnect(socket)
+    }
+
+    init {
+        mqttSocket.listen(broker.port, broker.host) {
+            doLater()
         }
-
-        mqttWebSocket = tls.createServer(tlsOptions) { socket: tls.TLSSocket ->
-            val localSocket = createSocket(socket)
-            val connection = ClientConnection(WebSocket(localSocket), broker)
-            clients[socket.socketId()] = connection
-            localSocket.setAttachment(connection)
-
-            onConnect(socket)
-        }
-
-        mqttSocket.listen(broker.port, broker.host)
 
         if (broker.enableUdp) {
             TODO("UDP in JS not yet implemented")
