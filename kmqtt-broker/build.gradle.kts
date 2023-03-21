@@ -56,6 +56,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation(project(":kmqtt-client"))
             }
         }
         val jvmMain by getting {
@@ -67,8 +68,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation("com.hivemq:hivemq-mqtt-client:1.3.0")
-                implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
             }
         }
         val jsMain by getting {

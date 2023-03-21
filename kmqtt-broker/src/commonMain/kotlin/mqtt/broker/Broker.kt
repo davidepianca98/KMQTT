@@ -58,10 +58,17 @@ class Broker(
     }
 
     /**
-     * Starts the broker
+     * Starts the broker (blocking run)
      */
     fun listen() {
         server.run()
+    }
+
+    /**
+     * Run a single iteration of the broker (non blocking run)
+     */
+    fun step() {
+        server.step()
     }
 
     internal fun sendWill(session: Session?) {

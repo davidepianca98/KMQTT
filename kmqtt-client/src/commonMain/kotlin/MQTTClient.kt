@@ -11,6 +11,7 @@ import mqtt.packets.mqttv4.*
 import mqtt.packets.mqttv5.*
 import socket.IOException
 import socket.streams.EOFException
+import socket.tcp.Socket
 
 /**
  * MQTT 3.1.1 and 5 client
@@ -32,9 +33,9 @@ import socket.streams.EOFException
  */
 class MQTTClient(
     private val mqttVersion: Int,
-    address: String,
-    port: Int,
-    tls: TLSClientSettings?,
+    private val address: String,
+    private val port: Int,
+    private val tls: TLSClientSettings?,
     private var keepAlive: Int = 60,
     private val cleanStart: Boolean = true,
     private var clientId: String? = null,
@@ -51,8 +52,9 @@ class MQTTClient(
 ) {
 
     private val maximumPacketSize = properties.maximumPacketSize?.toInt() ?: (1024 * 1024)
-    private val socket = if (tls == null) ClientSocket(address, port, maximumPacketSize, 250) else TLSClientSocket(address, port, maximumPacketSize, 250, tls)
-    private var running = false
+    private var socket: Socket? = null
+    var running = false
+        private set
     private val lock = reentrantLock()
 
     private val currentReceivedPacket = MQTTCurrentPacket(maximumPacketSize.toUInt(), mqttVersion)
@@ -76,7 +78,8 @@ class MQTTClient(
     private var subscriptionIdentifiersAvailable = true
     private var sharedSubscriptionAvailable = true
     private var receiveMax = 65535u
-    private var connackReceived = false
+    var connackReceived = false
+        private set
 
     init {
         if (mqttVersion != 4 && mqttVersion != 5) {
@@ -95,9 +98,24 @@ class MQTTClient(
             throw IllegalArgumentException("Cannot set password without username")
         }
 
-        lock.withLock {
+        running = true
+    }
+
+    private fun connectSocket() {
+        if (socket == null) {
+            connackReceived = false
+            socket = if (tls == null)
+                ClientSocket(address, port, maximumPacketSize, 250)
+            else
+                TLSClientSocket(address, port, maximumPacketSize, 250, tls)
+
             sendConnect()
         }
+    }
+
+    private fun send(data: UByteArray) {
+        connectSocket()
+        socket!!.send(data)
     }
 
     private fun sendConnect() {
@@ -128,7 +146,7 @@ class MQTTClient(
                 password
             )
         }
-        socket.send(connect.toByteArray())
+        send(connect.toByteArray())
         lastActiveTimestamp = currentTimeMillis()
     }
 
@@ -194,7 +212,7 @@ class MQTTClient(
             if (data.size > maximumServerPacketSize) {
                 throw Exception("Packet size too big for the server to handle")
             }
-            socket.send(data)
+            send(data)
         }
     }
 
@@ -214,7 +232,7 @@ class MQTTClient(
             } else {
                 MQTT5Subscribe(generatePacketId(), subscriptions, properties)
             }
-            socket.send(subscribe.toByteArray())
+            send(subscribe.toByteArray())
         }
     }
 
@@ -234,7 +252,7 @@ class MQTTClient(
             } else {
                 MQTT5Unsubscribe(generatePacketId(), topics, properties)
             }
-            socket.send(unsubscribe.toByteArray())
+            send(unsubscribe.toByteArray())
         }
     }
 
@@ -250,18 +268,19 @@ class MQTTClient(
             } else {
                 MQTT5Disconnect(reasonCode)
             }
-            socket.send(disconnect.toByteArray())
+            send(disconnect.toByteArray())
             close()
         }
     }
 
     /**
-     * Run the client
+     * Run a single iteration of the client (non blocking)
      */
-    fun run() {
-        running = true
-        while (running) {
-            val data = socket.read()
+    fun step() {
+        if (running) {
+            connectSocket()
+
+            val data = socket!!.read()
             lock.withLock {
                 if (data != null) {
                     lastActiveTimestamp = currentTimeMillis()
@@ -274,17 +293,21 @@ class MQTTClient(
                         e.printStackTrace()
                         disconnect(e.reasonCode)
                         close()
+                        throw e
                     } catch (e: EOFException) {
                         println("EOF")
                         close()
+                        throw e
                     } catch (e: IOException) {
                         println("IOException ${e.message}")
                         disconnect(ReasonCode.UNSPECIFIED_ERROR)
                         close()
+                        throw e
                     } catch (e: Exception) {
                         println("Exception ${e.message} ${e.cause?.message}")
                         disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
                         close()
+                        throw e
                     }
                 } else {
                     // TODO if connack not received in a reasonable amount of time, then disconnect
@@ -300,12 +323,21 @@ class MQTTClient(
                             } else {
                                 MQTT5Pingreq()
                             }
-                            socket.send(pingreq.toByteArray())
+                            send(pingreq.toByteArray())
                             // TODO if not receiving pingresp after a reasonable amount of time, close connection
                         }
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Run the client (blocking)
+     */
+    fun run() {
+        while (running) {
+            step()
         }
     }
 
@@ -366,10 +398,10 @@ class MQTTClient(
         } else if (!cleanStart && packet.connectAcknowledgeFlags.sessionPresentFlag) {
             // Resend pending publish and pubrel messages (with dup=1)
             pendingAcknowledgeMessages.forEach {
-                socket.send(it.value.setDuplicate().toByteArray())
+                send(it.value.setDuplicate().toByteArray())
             }
             pendingAcknowledgePubrel.forEach {
-                socket.send(it.value.toByteArray())
+                send(it.value.toByteArray())
             }
         }
     }
@@ -416,7 +448,7 @@ class MQTTClient(
                 } else {
                     MQTT5Puback(correctPacket.packetId!!)
                 }
-                socket.send(puback.toByteArray())
+                send(puback.toByteArray())
                 publishReceived(correctPacket)
             }
             Qos.EXACTLY_ONCE -> {
@@ -425,7 +457,7 @@ class MQTTClient(
                 } else {
                     MQTT5Pubrec(correctPacket.packetId!!)
                 }
-                socket.send(pubrec.toByteArray())
+                send(pubrec.toByteArray())
                 if (!qos2ListReceived.contains(correctPacket.packetId!!)) {
                     qos2ListReceived.add(correctPacket.packetId!!)
                     publishReceived(correctPacket)
@@ -452,7 +484,7 @@ class MQTTClient(
             MQTT5Pubrel(packet.packetId)
         }
         pendingAcknowledgePubrel[packet.packetId] = pubrel
-        socket.send(pubrel.toByteArray())
+        send(pubrel.toByteArray())
     }
 
     private fun handlePubrel(packet: MQTTPubrel) {
@@ -464,7 +496,7 @@ class MQTTClient(
         } else {
             MQTT5Pubcomp(packet.packetId)
         }
-        socket.send(pubcomp.toByteArray())
+        send(pubcomp.toByteArray())
         if (!qos2ListReceived.remove(packet.packetId)) {
             throw MQTTException(ReasonCode.PACKET_IDENTIFIER_NOT_FOUND)
         }
@@ -512,7 +544,7 @@ class MQTTClient(
         if (packet.authenticateReasonCode == ReasonCode.CONTINUE_AUTHENTICATION) {
             val data = enhancedAuthCallback(packet.properties.authenticationData)
             val auth = MQTT5Auth(ReasonCode.CONTINUE_AUTHENTICATION, MQTT5Properties(authenticationMethod = packet.properties.authenticationMethod, authenticationData = data))
-            socket.send(auth.toByteArray())
+            send(auth.toByteArray())
         }
     }
 
@@ -527,7 +559,7 @@ class MQTTClient(
                 ReasonCode.RE_AUTHENTICATE,
                 MQTT5Properties(authenticationMethod = properties.authenticationMethod, authenticationData = data)
             )
-            socket.send(auth.toByteArray())
+            send(auth.toByteArray())
         }
     }
 
@@ -544,6 +576,8 @@ class MQTTClient(
 
     private fun close() {
         running = false
-        socket.close()
+        socket?.close()
+        connackReceived = false
+        socket = null
     }
 }

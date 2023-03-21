@@ -8,15 +8,27 @@ import socket.udp.UDPEventHandler
 
 class ServerSocketLoop(private val broker: Broker) {
 
-    private val serverSocket =
-        if (broker.tlsSettings == null) ServerSocket(broker, this::selectCallback) else TLSServerSocket(
-            broker,
-            this::selectCallback
-        )
+    private val serverSocket = if (broker.tlsSettings == null)
+        ServerSocket(broker, this::selectCallback)
+    else
+        TLSServerSocket(broker, this::selectCallback)
 
+    /**
+     * Blocking run the server socket loop
+     */
     fun run() {
         while (serverSocket.isRunning()) {
             serverSocket.select(250)
+            broker.cleanUpOperations()
+        }
+    }
+
+    /**
+     * Non blocking run the server socket loop, run a single step and return
+     */
+    fun step() {
+        if (serverSocket.isRunning()) {
+            serverSocket.select(1)
             broker.cleanUpOperations()
         }
     }

@@ -9,7 +9,7 @@ import socket.tcp.Socket
 
 actual open class TLSSocket(
     socket: Int,
-    private val engine: TLSEngine,
+    protected val engine: TLSEngine,
     writeRequest: MutableList<Int>?,
     buffer: ByteArray
 ) : Socket(socket, writeRequest, buffer) {

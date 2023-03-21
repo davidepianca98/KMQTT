@@ -21,12 +21,12 @@ actual open class TLSSocket(
     private var receiveBuffer: ByteBuffer,
     private var sendAppBuffer: ByteBuffer,
     private var receiveAppBuffer: ByteBuffer,
-    private val engine: SSLEngine
+    protected val engine: SSLEngine
 ) : Socket(channel, key, sendBuffer, receiveBuffer) {
 
     init {
         engine.beginHandshake()
-        runHandshake(engine.useClientMode)
+        runHandshake()
     }
 
     private fun handleReceiveBufferUnderflow() {
@@ -54,7 +54,7 @@ actual open class TLSSocket(
         }
     }
 
-    override fun send(data: UByteArray) {
+    private fun send0(data: UByteArray) {
         sendAppBuffer.clear()
         val dataByteArray = data.toByteArray()
         try {
@@ -95,14 +95,18 @@ actual open class TLSSocket(
         }
     }
 
-    private fun runHandshake(full: Boolean): Boolean {
+    override fun send(data: UByteArray) {
+        send0(data)
+    }
+
+    private fun runHandshake(): Boolean {
         while (engine.handshakeStatus != SSLEngineResult.HandshakeStatus.FINISHED
             && engine.handshakeStatus != SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING
         ) {
             @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
             when (engine.handshakeStatus) {
                 SSLEngineResult.HandshakeStatus.NEED_WRAP -> {
-                    send(UByteArray(0))
+                    send0(UByteArray(0))
                 }
                 SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING -> return true
                 SSLEngineResult.HandshakeStatus.FINISHED -> return true
@@ -116,7 +120,7 @@ actual open class TLSSocket(
                     }
                 }
                 SSLEngineResult.HandshakeStatus.NEED_UNWRAP -> {
-                    if (!read0() && !full) {
+                    if (!read0()) {
                         return false
                     }
                 }
@@ -156,7 +160,7 @@ actual open class TLSSocket(
         } catch (e: SSLException) {
             e.printStackTrace()
             engine.closeOutbound()
-            send(UByteArray(0))
+            send0(UByteArray(0))
             close()
             throw IOException(e.message)
         }
@@ -164,7 +168,7 @@ actual open class TLSSocket(
     }
 
     override fun read(): UByteArray? {
-        runHandshake(engine.useClientMode)
+        runHandshake()
         read0()
         receiveAppBuffer.flip()
         val result = receiveAppBuffer.toUByteArray()

@@ -55,4 +55,7 @@ actual class TLSClientSocket actual constructor(
             }
         }
     }
+
+    actual val handshakeComplete: Boolean
+        get() = engine.isInitFinished
 }

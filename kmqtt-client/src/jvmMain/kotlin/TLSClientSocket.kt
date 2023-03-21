@@ -13,6 +13,7 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.util.*
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLEngineResult
 import javax.net.ssl.TrustManagerFactory
 
 
@@ -73,6 +74,8 @@ actual class TLSClientSocket actual constructor(
 ) {
     private val selector = Selector.open()
 
+    private val sendPacketQueue = mutableListOf<UByteArray>()
+
     init {
         channel.register(selector, SelectionKey.OP_READ)
     }
@@ -90,7 +93,23 @@ actual class TLSClientSocket actual constructor(
         }
     }
 
+    override fun send(data: UByteArray) {
+        if (!handshakeComplete) {
+            sendPacketQueue.add(data)
+        } else {
+            super.send(data)
+        }
+    }
+
     override fun read(): UByteArray? {
+        if (handshakeComplete) {
+            val iterator = sendPacketQueue.iterator()
+            while (iterator.hasNext()) {
+                send(iterator.next())
+                iterator.remove()
+            }
+        }
+
         val count = selector.select(readTimeOut.toLong())
         return if (count > 0) {
             selector.selectedKeys().clear()
@@ -99,4 +118,8 @@ actual class TLSClientSocket actual constructor(
             null
         }
     }
+
+    actual val handshakeComplete: Boolean
+        get() = engine.handshakeStatus == SSLEngineResult.HandshakeStatus.FINISHED
+                || engine.handshakeStatus == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING
 }

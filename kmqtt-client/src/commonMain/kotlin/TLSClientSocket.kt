@@ -6,4 +6,7 @@ expect class TLSClientSocket(
     maximumPacketSize: Int,
     readTimeOut: Int,
     tlsSettings: TLSClientSettings
-) : TLSSocket
+) : TLSSocket {
+
+    val handshakeComplete: Boolean
+}
