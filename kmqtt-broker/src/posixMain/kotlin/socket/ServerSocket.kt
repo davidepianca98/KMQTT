@@ -158,6 +158,26 @@ actual open class ServerSocket actual constructor(
         nativeHeap.free(readfds)
         nativeHeap.free(writefds)
         nativeHeap.free(errorfds)
+        if (mqttSocket != -1) {
+            shutdown(mqttSocket)
+            close(mqttSocket)
+        }
+        if (mqttUdpSocket != -1) {
+            shutdown(mqttSocket)
+            close(mqttSocket)
+        }
+        if (mqttWebSocket != -1) {
+            shutdown(mqttSocket)
+            close(mqttSocket)
+        }
+        if (clusteringSocket != -1) {
+            shutdown(mqttSocket)
+            close(mqttSocket)
+        }
+        if (discoverySocket != -1) {
+            shutdown(mqttSocket)
+            close(mqttSocket)
+        }
         socketsCleanup()
     }
 

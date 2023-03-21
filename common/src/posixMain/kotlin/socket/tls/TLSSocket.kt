@@ -17,6 +17,8 @@ actual open class TLSSocket(
     private val buf = ByteArray(16 * 1024)
     private val sendBuf = ByteArray(16 * 1024)
 
+    private val pendingSend = mutableListOf<UByteArray>()
+
     private fun socketSend() {
         sendBuf.usePinned { pinnedSendBuf ->
             do {
@@ -32,6 +34,12 @@ actual open class TLSSocket(
     }
 
     override fun send(data: UByteArray) {
+        if (!send0(data)) {
+            pendingSend.add(data.copyOf())
+        }
+    }
+
+    private fun send0(data: UByteArray): Boolean {
         var length = data.size
         var index = 0
         data.toByteArray().usePinned { pinnedBuf ->
@@ -47,7 +55,9 @@ actual open class TLSSocket(
                             break
                         }
                         2 -> { // WANT_READ
-                            read()
+                            if (read() == null) {
+                                break
+                            }
                         }
                         3 -> { // WANT_WRITE
                             throw IOException("OpenSSL want write in write")
@@ -64,9 +74,20 @@ actual open class TLSSocket(
                 }
             }
         }
+        return length <= 0
     }
 
     override fun read(): UByteArray? {
+        if (engine.isInitFinished) {
+            val iterator = pendingSend.iterator()
+            while (iterator.hasNext()) {
+                val value = iterator.next()
+                if (send0(value)) {
+                    iterator.remove()
+                }
+            }
+        }
+
         val data = super.read() ?: return null
 
         val returnData = ByteArrayOutputStream()

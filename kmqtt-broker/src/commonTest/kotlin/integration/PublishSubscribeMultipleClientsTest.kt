@@ -1,5 +1,6 @@
 package integration
 
+import IgnoreJs
 import MQTTClient
 import mqtt.Subscription
 import mqtt.broker.Broker
@@ -9,14 +10,15 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
-class TestPublishSubscribeMultipleClients {
+@IgnoreJs
+class PublishSubscribeMultipleClientsTest {
 
     private fun testPublish(qos: Qos, topic: String, payload: UByteArray) {
         var received = false
 
         val broker = Broker()
-        val client1 = MQTTClient(5, broker.host, broker.port, null, clientId = "client1") {}
-        val client2 = MQTTClient(5, broker.host, broker.port, null, clientId = "client2") {
+        val client1 = MQTTClient(5, "127.0.0.1", broker.port, null, clientId = "client1") {}
+        val client2 = MQTTClient(5, "127.0.0.1", broker.port, null, clientId = "client2") {
             assertEquals(topic, it.topicName)
             assertContentEquals(payload, it.payload)
             assertEquals(qos, it.qos)

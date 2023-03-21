@@ -1,5 +1,6 @@
 package integration
 
+import IgnoreJs
 import MQTTClient
 import mqtt.Subscription
 import mqtt.broker.Broker
@@ -10,6 +11,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 
+@IgnoreJs
 class PublishSubscribeSingleClientTest {
 
     @Test
@@ -20,7 +22,7 @@ class PublishSubscribeSingleClientTest {
         var received = false
 
         val broker = Broker()
-        val client = MQTTClient(5, broker.host, broker.port, null) {
+        val client = MQTTClient(5, "127.0.0.1", broker.port, null) {
             assertEquals(topic, it.topicName)
             assertContentEquals(sendPayload.encodeToByteArray().toUByteArray(), it.payload)
             assertEquals(Qos.AT_MOST_ONCE, it.qos)

@@ -310,9 +310,14 @@ class MQTTClient(
                         throw e
                     }
                 } else {
-                    // TODO if connack not received in a reasonable amount of time, then disconnect
-                    if (keepAlive != 0) {
-                        val currentTime = currentTimeMillis()
+                    // If connack not received in a reasonable amount of time, then disconnect
+                    val currentTime = currentTimeMillis()
+                    if (!connackReceived && currentTime > lastActiveTimestamp + 30000) {
+                        close()
+                        throw Exception("CONNACK not received in 30 seconds")
+                    }
+
+                    if (keepAlive != 0 && connackReceived) {
                         if (currentTime > lastActiveTimestamp + (keepAlive * 1000)) {
                             // Timeout
                             close()

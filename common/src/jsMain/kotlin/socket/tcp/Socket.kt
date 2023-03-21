@@ -21,6 +21,7 @@ actual open class Socket(
         }
         socket.on("drain", {
             socket.resume()
+            Unit
         } as () -> Unit)
     }
 

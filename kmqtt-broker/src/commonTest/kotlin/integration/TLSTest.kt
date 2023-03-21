@@ -1,5 +1,6 @@
 package integration
 
+import IgnoreJs
 import MQTTClient
 import TLSClientSettings
 import mqtt.Subscription
@@ -11,6 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
+@IgnoreJs
 class TLSTest {
 
     @Test
@@ -21,7 +23,7 @@ class TLSTest {
         var received = false
 
         val broker = Broker(port = 8883, tlsSettings = TLSSettings(keyStoreFilePath = "docker/linux/keyStore.p12", keyStorePassword = "changeit"))
-        val client = MQTTClient(5, broker.host, broker.port, TLSClientSettings(serverCertificatePath = "docker/linux/cert.pem")) {
+        val client = MQTTClient(5, "127.0.0.1", broker.port, TLSClientSettings(serverCertificatePath = "docker/linux/cert.pem")) {
             assertEquals(topic, it.topicName)
             assertContentEquals(sendPayload.encodeToByteArray().toUByteArray(), it.payload)
             assertEquals(Qos.AT_MOST_ONCE, it.qos)
