@@ -1,8 +1,8 @@
-import kotlinx.cinterop.ByteVar
-import kotlinx.cinterop.CPointer
-import kotlinx.cinterop.toKString
+import kotlinx.cinterop.*
 import openssl.*
 import platform.posix.getenv
+import platform.posix.strcpy
+import platform.posix.strlen
 import socket.IOException
 import socket.tls.TLSEngine
 
@@ -24,15 +24,6 @@ actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) 
         val method = TLS_client_method()
         val sslContext = SSL_CTX_new(method)!!
 
-        val clientContext = SSL_new(sslContext)
-        if (clientContext == null) {
-            BIO_free(readBio)
-            BIO_free(writeBio)
-            throw IOException("Failed allocating read BIO")
-        }
-
-        SSL_set_verify(clientContext, SSL_VERIFY_PEER, null)
-
         if (tlsSettings.serverCertificatePath != null) {
             if (SSL_CTX_load_verify_locations(sslContext, tlsSettings.serverCertificatePath, null) != 1) {
                 throw Exception("Server certificate path not found")
@@ -53,7 +44,35 @@ actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) 
             if (SSL_CTX_check_private_key(sslContext) != 1) {
                 throw Exception("Client's certificate and key don't match")
             }
+
+            if (tlsSettings.clientCertificatePassword != null) {
+                SSL_CTX_set_default_passwd_cb_userdata(sslContext, tlsSettings.clientCertificatePassword!!.refTo(0))
+                SSL_CTX_set_default_passwd_cb(
+                    sslContext,
+                    staticCFunction { buf: CPointer<ByteVar>?, size: Int, _: Int, password: COpaquePointer? ->
+                        if (password == null) {
+                            0
+                        } else {
+                            val len = strlen(password.reinterpret<ByteVar>().toKString())
+                            if (size < len.toInt() + 1) {
+                                0
+                            } else {
+                                strcpy(buf, password.reinterpret<ByteVar>().toKString())
+                                len.toInt()
+                            }
+                        }
+                    })
+            }
         }
+
+        val clientContext = SSL_new(sslContext)
+        if (clientContext == null) {
+            BIO_free(readBio)
+            BIO_free(writeBio)
+            throw IOException("Failed allocating read BIO")
+        }
+
+        SSL_set_verify(clientContext, SSL_VERIFY_PEER, null)
 
         SSL_set_connect_state(clientContext)
         SSL_set_bio(clientContext, readBio, writeBio)

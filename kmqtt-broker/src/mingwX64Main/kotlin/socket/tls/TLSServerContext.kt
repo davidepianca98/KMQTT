@@ -19,6 +19,8 @@ actual class TLSServerContext actual constructor(private val tlsSettings: TLSSet
 
         if (tlsSettings.requireClientCertificate) {
             SSL_CTX_set_verify(sslContext, SSL_VERIFY_PEER or SSL_VERIFY_FAIL_IF_NO_PEER_CERT, null)
+        } else {
+            SSL_CTX_set_verify(sslContext, SSL_VERIFY_PEER, null)
         }
 
         val pkcs12File =
