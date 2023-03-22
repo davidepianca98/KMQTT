@@ -107,9 +107,9 @@ class MQTTClient(
         if (socket == null) {
             connackReceived = false
             socket = if (tls == null)
-                ClientSocket(address, port, maximumPacketSize, 250)
+                ClientSocket(address, port, maximumPacketSize, 250, ::check)
             else
-                TLSClientSocket(address, port, maximumPacketSize, 250, tls)
+                TLSClientSocket(address, port, maximumPacketSize, 250, tls, ::check)
             if (webSocket) {
                 socket = WebSocket(socket!!, address)
             }
@@ -120,6 +120,7 @@ class MQTTClient(
 
     private fun send(data: UByteArray) {
         connectSocket()
+        lastActiveTimestamp = currentTimeMillis()
         socket!!.send(data)
     }
 
@@ -278,6 +279,63 @@ class MQTTClient(
         }
     }
 
+    private fun check() {
+        val data = socket!!.read()
+        lock.withLock {
+            if (data != null) {
+                lastActiveTimestamp = currentTimeMillis()
+
+                try {
+                    currentReceivedPacket.addData(data).forEach {
+                        handlePacket(it)
+                    }
+                } catch (e: MQTTException) {
+                    e.printStackTrace()
+                    disconnect(e.reasonCode)
+                    close()
+                    throw e
+                } catch (e: EOFException) {
+                    println("EOF")
+                    close()
+                    throw e
+                } catch (e: IOException) {
+                    println("IOException ${e.message}")
+                    disconnect(ReasonCode.UNSPECIFIED_ERROR)
+                    close()
+                    throw e
+                } catch (e: Exception) {
+                    println("Exception ${e.message} ${e.cause?.message}")
+                    disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+                    close()
+                    throw e
+                }
+            } else {
+                // If connack not received in a reasonable amount of time, then disconnect
+                val currentTime = currentTimeMillis()
+                if (!connackReceived && currentTime > lastActiveTimestamp + 30000) {
+                    close()
+                    throw Exception("CONNACK not received in 30 seconds")
+                }
+
+                if (keepAlive != 0 && connackReceived) {
+                    if (currentTime > lastActiveTimestamp + (keepAlive * 1000)) {
+                        // Timeout
+                        close()
+                        throw MQTTException(ReasonCode.KEEP_ALIVE_TIMEOUT)
+                    } else if (currentTime > lastActiveTimestamp + (keepAlive * 1000 * 0.9)) {
+                        val pingreq = if (mqttVersion == 4) {
+                            MQTT4Pingreq()
+                        } else {
+                            MQTT5Pingreq()
+                        }
+                        send(pingreq.toByteArray())
+                        // TODO if not receiving pingresp after a reasonable amount of time, close connection
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Run a single iteration of the client (non blocking)
      */
@@ -285,60 +343,7 @@ class MQTTClient(
         if (running) {
             connectSocket()
 
-            val data = socket!!.read()
-            lock.withLock {
-                if (data != null) {
-                    lastActiveTimestamp = currentTimeMillis()
-
-                    try {
-                        currentReceivedPacket.addData(data).forEach {
-                            handlePacket(it)
-                        }
-                    } catch (e: MQTTException) {
-                        e.printStackTrace()
-                        disconnect(e.reasonCode)
-                        close()
-                        throw e
-                    } catch (e: EOFException) {
-                        println("EOF")
-                        close()
-                        throw e
-                    } catch (e: IOException) {
-                        println("IOException ${e.message}")
-                        disconnect(ReasonCode.UNSPECIFIED_ERROR)
-                        close()
-                        throw e
-                    } catch (e: Exception) {
-                        println("Exception ${e.message} ${e.cause?.message}")
-                        disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
-                        close()
-                        throw e
-                    }
-                } else {
-                    // If connack not received in a reasonable amount of time, then disconnect
-                    val currentTime = currentTimeMillis()
-                    if (!connackReceived && currentTime > lastActiveTimestamp + 30000) {
-                        close()
-                        throw Exception("CONNACK not received in 30 seconds")
-                    }
-
-                    if (keepAlive != 0 && connackReceived) {
-                        if (currentTime > lastActiveTimestamp + (keepAlive * 1000)) {
-                            // Timeout
-                            close()
-                            throw MQTTException(ReasonCode.KEEP_ALIVE_TIMEOUT)
-                        } else if (currentTime > lastActiveTimestamp + (keepAlive * 1000 * 0.9)) {
-                            val pingreq = if (mqttVersion == 4) {
-                                MQTT4Pingreq()
-                            } else {
-                                MQTT5Pingreq()
-                            }
-                            send(pingreq.toByteArray())
-                            // TODO if not receiving pingresp after a reasonable amount of time, close connection
-                        }
-                    }
-                }
-            }
+            check()
         }
     }
 

@@ -9,7 +9,8 @@ actual class ClientSocket actual constructor(
     address: String,
     port: Int,
     maximumPacketSize: Int,
-    private val readTimeOut: Int
+    private val readTimeOut: Int,
+    checkCallback: () -> Unit
 ) : Socket(
     SocketChannel.open(InetSocketAddress(address, port)),
     null,

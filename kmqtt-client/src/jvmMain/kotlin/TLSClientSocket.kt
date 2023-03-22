@@ -22,7 +22,8 @@ actual class TLSClientSocket actual constructor(
     port: Int,
     maximumPacketSize: Int,
     private val readTimeOut: Int,
-    private val tlsSettings: TLSClientSettings
+    private val tlsSettings: TLSClientSettings,
+    checkCallback: () -> Unit
 ) : TLSSocket(
     SocketChannel.open(InetSocketAddress(address, port)).apply {
         configureBlocking(false)

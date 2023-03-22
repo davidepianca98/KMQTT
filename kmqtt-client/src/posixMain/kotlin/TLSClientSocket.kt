@@ -8,7 +8,8 @@ actual class TLSClientSocket actual constructor(
     port: Int,
     maximumPacketSize: Int,
     private val readTimeOut: Int,
-    tlsSettings: TLSClientSettings
+    tlsSettings: TLSClientSettings,
+    checkCallback: () -> Unit
 ) : TLSSocket(
     socketsInit().run {
         socket(AF_INET, SOCK_STREAM, 0)

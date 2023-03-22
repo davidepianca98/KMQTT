@@ -5,7 +5,8 @@ expect class TLSClientSocket(
     port: Int,
     maximumPacketSize: Int,
     readTimeOut: Int,
-    tlsSettings: TLSClientSettings
+    tlsSettings: TLSClientSettings,
+    checkCallback: () -> Unit
 ) : TLSSocket {
 
     val handshakeComplete: Boolean
