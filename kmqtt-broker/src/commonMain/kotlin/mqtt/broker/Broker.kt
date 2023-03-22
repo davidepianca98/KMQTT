@@ -358,12 +358,15 @@ class Broker(
                     iterator.remove()
                 } else {
                     session.will?.let {
-                        val currentTime = currentTimeMillis()
-                        val expirationTime =
-                            session.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L)
-                        // Check if the will delay interval has expired, if yes send the will
-                        if (expirationTime <= currentTime || it.willDelayInterval == 0u) {
-                            sendWill(session as Session)
+                        if (session.sessionDisconnectedTimestamp != null) {
+                            // Check that the connection has been completed at least once before sending will
+                            val currentTime = currentTimeMillis()
+                            val expirationTime =
+                                session.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L)
+                            // Check if the will delay interval has expired, if yes send the will
+                            if (expirationTime <= currentTime || it.willDelayInterval == 0u) {
+                                sendWill(session as Session)
+                            }
                         }
                     }
                 }
