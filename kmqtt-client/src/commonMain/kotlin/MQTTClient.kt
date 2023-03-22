@@ -10,8 +10,8 @@ import mqtt.packets.mqtt.*
 import mqtt.packets.mqttv4.*
 import mqtt.packets.mqttv5.*
 import socket.IOException
+import socket.SocketInterface
 import socket.streams.EOFException
-import socket.tcp.Socket
 
 /**
  * MQTT 3.1.1 and 5 client
@@ -21,6 +21,7 @@ import socket.tcp.Socket
  * @param port the port of the server
  * @param tls TLS settings, null if no TLS
  * @param keepAlive the MQTT keep alive of the connection in seconds
+ * @param webSocket whether to use a WebSocket for the underlying connection
  * @param userName the username field of the CONNECT packet
  * @param password the password field of the CONNECT packet
  * @param properties the properties to be included in the CONNECT message (used only in MQTT5)
@@ -37,6 +38,7 @@ class MQTTClient(
     private val port: Int,
     private val tls: TLSClientSettings?,
     private var keepAlive: Int = 60,
+    private val webSocket: Boolean = false,
     private val cleanStart: Boolean = true,
     private var clientId: String? = null,
     private val userName: String? = null,
@@ -52,7 +54,7 @@ class MQTTClient(
 ) {
 
     private val maximumPacketSize = properties.maximumPacketSize?.toInt() ?: (1024 * 1024)
-    private var socket: Socket? = null
+    private var socket: SocketInterface? = null
     var running = false
         private set
     private val lock = reentrantLock()
@@ -108,6 +110,9 @@ class MQTTClient(
                 ClientSocket(address, port, maximumPacketSize, 250)
             else
                 TLSClientSocket(address, port, maximumPacketSize, 250, tls)
+            if (webSocket) {
+                socket = WebSocket(socket!!, address)
+            }
 
             sendConnect()
         }

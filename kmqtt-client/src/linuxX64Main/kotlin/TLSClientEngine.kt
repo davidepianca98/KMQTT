@@ -1,6 +1,8 @@
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.toKString
 import openssl.*
+import platform.posix.getenv
 import socket.IOException
 import socket.tls.TLSEngine
 
@@ -31,12 +33,14 @@ actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) 
 
         SSL_set_verify(clientContext, SSL_VERIFY_PEER, null)
 
-        if (tlsSettings.serverCertificatePath != null && SSL_CTX_load_verify_locations(
-                sslContext,
-                tlsSettings.serverCertificatePath,
-                null
-            ) != 1) {
-            throw Exception("Server certificate path not found")
+        if (tlsSettings.serverCertificatePath != null) {
+            if (SSL_CTX_load_verify_locations(sslContext, tlsSettings.serverCertificatePath, null) != 1) {
+                throw Exception("Server certificate path not found")
+            }
+        } else {
+            if (SSL_CTX_load_verify_locations(sslContext, null, getenv(X509_get_default_cert_dir_env()?.toKString())?.toKString()) != 1) {
+                throw Exception("Server certificate path not found")
+            }
         }
 
         if (tlsSettings.clientCertificatePath != null) {

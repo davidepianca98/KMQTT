@@ -10,15 +10,15 @@
 :white_check_mark: = Supported  
 :heavy_plus_sign: = Work In Progress
 
-|  Platform   |          MQTT 3.1.1           |          MQTT 5.0          |             TCP              |        TLS         | Websocket |
-|:-----------:|:-----------------------------:|:--------------------------:|:----------------------------:|:------------------:|:---------:|
-|     JVM     |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |    :x:    |
-| Windows X64 |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |    :x:    |
-|  Linux X64  |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |    :x:    |
-| Linux ARM64 |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |    :x:    |
-|   Node.js   |              :x:              |            :x:             |             :x:              |        :x:         |    :x:    |
-|   iOS X64   |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      |        :x:         |    :x:    |
-|  iOS ARM64  |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      |        :x:         |    :x:    |
+|  Platform   |          MQTT 3.1.1           |          MQTT 5.0          |             TCP              |        TLS         |      Websocket       |
+|:-----------:|:-----------------------------:|:--------------------------:|:----------------------------:|:------------------:|:--------------------:|
+|     JVM     |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |  :white_check_mark:  |
+| Windows X64 |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |  :white_check_mark:  |
+|  Linux X64  |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |  :white_check_mark:  |
+| Linux ARM64 |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      | :white_check_mark: |  :white_check_mark:  |
+|   Node.js   |              :x:              |            :x:             |             :x:              |        :x:         |         :x:          |
+|   iOS X64   |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      |        :x:         |  :white_check_mark:  |
+|  iOS ARM64  |      :white_check_mark:       |     :white_check_mark:     |      :white_check_mark:      |        :x:         |  :white_check_mark:  |
 
 
 ## Broker features
