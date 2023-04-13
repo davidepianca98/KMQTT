@@ -100,7 +100,7 @@ fun main() {
     }
     client.subscribe(listOf(Subscription("/randomTopic", SubscriptionOptions(Qos.EXACTLY_ONCE))))
     client.publish(false, Qos.EXACTLY_ONCE, "/randomTopic", "hello".encodeToByteArray().toUByteArray())
-    client.run()
+    client.run() // Blocking method, use step() if you don't want to block the thread
 }
 ```
 
@@ -120,7 +120,7 @@ fun main() {
     }
     client.subscribe(listOf(Subscription("/randomTopic", SubscriptionOptions(Qos.EXACTLY_ONCE))))
     client.publish(false, Qos.EXACTLY_ONCE, "/randomTopic", "hello".encodeToByteArray().toUByteArray())
-    client.run()
+    client.run() // Blocking method, use step() if you don't want to block the thread
 }
 ```
 
@@ -211,7 +211,7 @@ fun main() {
             return username == "user" && password?.toByteArray()?.decodeToString() == "pass"
         }
     })
-    broker.listen()
+    broker.listen() // Blocking method, use step() if you don't want to block the thread
 }
 ```
 
@@ -232,7 +232,7 @@ fun main() {
             return topicName == "$clientId/topic"
         }
     })
-    broker.listen()
+    broker.listen() // Blocking method, use step() if you don't want to block the thread
 }
 ```
 
@@ -248,7 +248,7 @@ fun main() {
             }
         }
     })
-    broker.listen()
+    broker.listen() // Blocking method, use step() if you don't want to block the thread
 }
 ```
 
@@ -263,7 +263,7 @@ fun main() {
         properties = MQTTProperties(),
         "testPayload".toByteArray().toUByteArray()
     )
-    broker.listen()
+    broker.listen() // Blocking method, use step() if you don't want to block the thread
 }
 ```
 
