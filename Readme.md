@@ -43,6 +43,13 @@
 
 #### Gradle
 
+NOTE: Apple targets are not yet available through JitPack, so the best way to use the library for now is:
+1. Clone the repository.
+2. Run the gradle task `publishToMavenLocal`.
+3. Add `mavenLocal()` to the `repositories` block in your `build.gradle.kts` file.
+4. Continue with the following guide.
+
+
 ##### Global dependencies
 ```gradle
 repositories {
@@ -55,7 +62,7 @@ dependencies {
 }
 ```
 
-Replace jvm with js, linuxx64, linuxarm64, mingwx64 based on the desired target.
+Replace jvm with js, linuxx64, linuxarm64, mingwx64, iosArm64, iosX64 based on the desired target.
 
 ##### Kotlin Multiplatform plugin
 On the Kotlin Multiplatform plugin you only need to require the dependency on the common source set and the platform specific parts will automatically be required
