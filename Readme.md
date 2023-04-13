@@ -104,7 +104,7 @@ fun main() {
     val client = MQTTClient(
         5,
         "test.mosquitto.org",
-        1883,
+        8883,
         TLSClientSettings(
             serverCertificatePath = "mosquitto.org.crt",
         )

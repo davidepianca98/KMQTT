@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.8.10"
+    kotlin("plugin.serialization") version "1.8.20"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
