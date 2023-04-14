@@ -6,7 +6,7 @@ import platform.posix.strlen
 import socket.IOException
 import socket.tls.TLSEngine
 
-actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) : TLSEngine {
+internal actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) : TLSEngine {
 
     private val context: CPointer<SSL>
     private val readBio: CPointer<BIO>

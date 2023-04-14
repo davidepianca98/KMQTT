@@ -1,6 +1,6 @@
 import socket.tls.TLSSocket
 
-expect class TLSClientSocket(
+public expect class TLSClientSocket(
     address: String,
     port: Int,
     maximumPacketSize: Int,
@@ -9,5 +9,5 @@ expect class TLSClientSocket(
     checkCallback: () -> Unit
 ) : TLSSocket {
 
-    val handshakeComplete: Boolean
+    public val handshakeComplete: Boolean
 }

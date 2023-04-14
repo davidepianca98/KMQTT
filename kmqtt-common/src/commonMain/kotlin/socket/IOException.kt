@@ -1,3 +1,3 @@
 package socket
 
-open class IOException(message: String? = null) : Exception(message)
+public open class IOException(message: String? = null) : Exception(message)

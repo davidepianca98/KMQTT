@@ -5,7 +5,7 @@ import mqtt.Will
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.MQTT5Properties
 
-interface ISession {
+internal interface ISession {
 
     val clientId: String
     var connected: Boolean

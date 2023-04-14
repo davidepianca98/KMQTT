@@ -11,7 +11,7 @@ import mqtt.packets.mqttv5.SubscriptionOptions
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Subscribe(
+public class MQTT4Subscribe(
     packetIdentifier: UInt,
     subscriptions: List<Subscription>
 ) : MQTTSubscribe(packetIdentifier, subscriptions), MQTT4Packet {
@@ -29,7 +29,7 @@ class MQTT4Subscribe(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.SUBSCRIBE, 2)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         private fun ByteArrayInputStream.deserializeSubscriptionOptions(): SubscriptionOptions {
             val subscriptionOptions = readByte()

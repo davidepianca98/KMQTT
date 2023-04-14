@@ -12,13 +12,13 @@ import socket.streams.ByteArrayOutputStream
 import validatePayloadFormat
 
 
-class MQTT5Publish(
+public class MQTT5Publish(
     retain: Boolean,
     qos: Qos = Qos.AT_MOST_ONCE,
     dup: Boolean = false,
     topicName: String,
     packetId: UInt?,
-    val properties: MQTT5Properties = MQTT5Properties(),
+    public val properties: MQTT5Properties = MQTT5Properties(),
     payload: UByteArray? = null,
     timestamp: Long = currentTimeMillis()
 ) : MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp), MQTT5Packet {
@@ -43,14 +43,14 @@ class MQTT5Publish(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBLISH, flags)
     }
 
-    fun validatePayloadFormat(): Boolean {
+    public fun validatePayloadFormat(): Boolean {
         properties.payloadFormatIndicator?.let {
             return payload?.validatePayloadFormat(it) ?: true
         }
         return true
     }
 
-    fun setTopicFromAlias(topicName: String): MQTT5Publish {
+    public fun setTopicFromAlias(topicName: String): MQTT5Publish {
         return MQTT5Publish(
             retain,
             qos,
@@ -88,7 +88,7 @@ class MQTT5Publish(
         }
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         private val validProperties = listOf(
             Property.PAYLOAD_FORMAT_INDICATOR,

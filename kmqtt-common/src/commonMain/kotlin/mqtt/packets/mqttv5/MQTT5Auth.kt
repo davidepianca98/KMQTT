@@ -7,9 +7,9 @@ import mqtt.packets.mqtt.MQTTAuth
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Auth(
-    val authenticateReasonCode: ReasonCode,
-    val properties: MQTT5Properties = MQTT5Properties()
+public class MQTT5Auth(
+    public val authenticateReasonCode: ReasonCode,
+    public val properties: MQTT5Properties = MQTT5Properties()
 ) : MQTTAuth(), MQTT5Packet {
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         if (size() > maximumPacketSize) {
@@ -32,7 +32,7 @@ class MQTT5Auth(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.AUTH, 0)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         private val validProperties = listOf(
             Property.AUTHENTICATION_METHOD,

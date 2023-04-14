@@ -8,7 +8,7 @@ import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Unsubscribe(
+public class MQTT4Unsubscribe(
     packetIdentifier: UInt,
     topicFilters: List<String>
 ) : MQTTUnsubscribe(packetIdentifier, topicFilters), MQTT4Packet {
@@ -25,7 +25,7 @@ class MQTT4Unsubscribe(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.UNSUBSCRIBE, 2)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Unsubscribe {
             checkFlags(flags)

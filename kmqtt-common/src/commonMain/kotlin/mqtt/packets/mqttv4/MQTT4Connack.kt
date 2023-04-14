@@ -9,12 +9,12 @@ import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Connack(
+public class MQTT4Connack(
     connectAcknowledgeFlags: ConnectAcknowledgeFlags,
-    val connectReturnCode: ConnectReturnCode
+    public val connectReturnCode: ConnectReturnCode
 ) : MQTTConnack(connectAcknowledgeFlags), MQTT4Packet {
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Connack {
             checkFlags(flags)

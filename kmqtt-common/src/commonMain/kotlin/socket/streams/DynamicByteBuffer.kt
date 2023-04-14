@@ -1,6 +1,6 @@
 package socket.streams
 
-class DynamicByteBuffer : InputStream, OutputStream {
+public class DynamicByteBuffer : InputStream, OutputStream {
 
     private var writePosition = 0
     private var readCounter = 0
@@ -27,11 +27,11 @@ class DynamicByteBuffer : InputStream, OutputStream {
         return data
     }
 
-    fun clearReadCounter() {
+    public fun clearReadCounter() {
         readCounter = lastReadComplete
     }
 
-    fun shift() {
+    public fun shift() {
         if (readCounter == writePosition) {
             writePosition = 0
             readCounter = 0

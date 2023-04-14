@@ -6,7 +6,7 @@ import socket.SocketState
 import toBuffer
 import toUByteArray
 
-actual open class Socket(
+public actual open class Socket(
     protected val socket: net.Socket,
     private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : SocketInterface {
@@ -42,7 +42,7 @@ actual open class Socket(
 
     }
 
-    fun setAttachment(attachment: Any?) {
+    public fun setAttachment(attachment: Any?) {
         this.attachment = attachment
     }
 

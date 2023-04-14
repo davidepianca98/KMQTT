@@ -1,10 +1,10 @@
 package mqtt
 
-fun String.containsWildcard(): Boolean {
+public fun String.containsWildcard(): Boolean {
     return this.contains("#") || this.contains("+")
 }
 
-fun String.isValidTopic(): Boolean {
+public fun String.isValidTopic(): Boolean {
     if (this.isEmpty())
         return false
 
@@ -27,7 +27,7 @@ fun String.isValidTopic(): Boolean {
     return true
 }
 
-fun String.matchesWildcard(wildcardTopic: String): Boolean {
+public fun String.matchesWildcard(wildcardTopic: String): Boolean {
     if (this.containsWildcard())
         return false
     if (!this.isValidTopic() || !wildcardTopic.isValidTopic())
@@ -73,19 +73,16 @@ fun String.matchesWildcard(wildcardTopic: String): Boolean {
     return positionTopic == this.length && positionTopicFilter == wildcardTopic.length
 }
 
-fun String.isSharedTopicFilter(): Boolean {
+public fun String.isSharedTopicFilter(): Boolean {
     val split = this.split("/")
     if (split.size < 3)
         return false
-    if (split[0] == "\$share" && split[1].isNotEmpty() && !split[1].contains("+") && !split[1].contains("#") && this.substringAfter(
-            split[1] + "/"
-        ).isValidTopic()
-    )
-        return true
-    return false
+    return split[0] == "\$share" && split[1].isNotEmpty() && !split[1].contains("+") && !split[1].contains("#") && this.substringAfter(
+        split[1] + "/"
+    ).isValidTopic()
 }
 
-fun String.getSharedTopicFilter(): String? {
+public fun String.getSharedTopicFilter(): String? {
     if (isSharedTopicFilter()) {
         val split = this.split("/")
         return this.substringAfter(split[1] + "/")
@@ -93,7 +90,7 @@ fun String.getSharedTopicFilter(): String? {
     return null
 }
 
-fun String.getSharedTopicShareName(): String? {
+public fun String.getSharedTopicShareName(): String? {
     if (isSharedTopicFilter()) {
         val split = this.split("/")
         return split[1]

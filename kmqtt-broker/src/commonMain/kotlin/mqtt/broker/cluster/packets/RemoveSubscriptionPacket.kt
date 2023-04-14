@@ -4,7 +4,7 @@ import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 import socket.streams.encodeVariableByteInteger
 
-class RemoveSubscriptionPacket(val clientId: String, val topicFilter: String) : ClusterPacket {
+internal class RemoveSubscriptionPacket(val clientId: String, val topicFilter: String) : ClusterPacket {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

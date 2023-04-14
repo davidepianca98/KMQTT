@@ -7,10 +7,10 @@ import mqtt.packets.mqtt.MQTTPubrel
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Pubrel(
+public class MQTT5Pubrel(
     packetId: UInt,
-    val reasonCode: ReasonCode = ReasonCode.SUCCESS,
-    val properties: MQTT5Properties = MQTT5Properties()
+    public val reasonCode: ReasonCode = ReasonCode.SUCCESS,
+    public val properties: MQTT5Properties = MQTT5Properties()
 ) : MQTTPubrel(packetId), MQTT5Packet {
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         if (size() > maximumPacketSize) {
@@ -34,14 +34,14 @@ class MQTT5Pubrel(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBREL, 2)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
-        val validProperties = listOf(
+        private val validProperties = listOf(
             Property.REASON_STRING,
             Property.USER_PROPERTY
         )
 
-        val validReasonCodes = listOf(
+        private val validReasonCodes = listOf(
             ReasonCode.SUCCESS,
             ReasonCode.PACKET_IDENTIFIER_NOT_FOUND
         )

@@ -1,6 +1,6 @@
 package socket.streams
 
-class ByteArrayInputStream(private val array: UByteArray) : InputStream {
+public class ByteArrayInputStream(private val array: UByteArray) : InputStream {
 
     private var position = 0
 
@@ -21,11 +21,11 @@ class ByteArrayInputStream(private val array: UByteArray) : InputStream {
         }
     }
 
-    fun readRemaining(): UByteArray {
+    public fun readRemaining(): UByteArray {
         return readBytes(available())
     }
 
-    fun available(): Int {
+    public fun available(): Int {
         return array.size - position
     }
 }

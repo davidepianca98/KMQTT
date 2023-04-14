@@ -10,15 +10,15 @@ import mqtt.packets.mqtt.MQTTSubscribe
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Subscribe(
+public class MQTT5Subscribe(
     packetIdentifier: UInt,
     subscriptions: List<Subscription>,
-    val properties: MQTT5Properties = MQTT5Properties()
+    public val properties: MQTT5Properties = MQTT5Properties()
 ) : MQTTSubscribe(packetIdentifier, subscriptions), MQTT5Packet {
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
-        val validProperties = listOf(
+        private val validProperties = listOf(
             Property.SUBSCRIPTION_IDENTIFIER,
             Property.USER_PROPERTY
         )

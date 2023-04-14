@@ -9,7 +9,7 @@ import socket.streams.ByteArrayInputStream
 import socket.streams.decodeVariableByteInteger
 import validateUTF8String
 
-interface MQTTDeserializer {
+internal interface MQTTDeserializer {
 
     fun fromByteArray(flags: Int, data: UByteArray): MQTTPacket
 
@@ -65,7 +65,7 @@ interface MQTTDeserializer {
             val propertyIdByte = decodeVariableByteInteger()
             val propertyId = Property.valueOf(propertyIdByte)
             if (propertyId !in validProperties)
-                throw IllegalArgumentException()
+                throw IllegalArgumentException("Invalid property for this packet")
             when (propertyId) {
                 Property.PAYLOAD_FORMAT_INDICATOR -> {
                     if (properties.payloadFormatIndicator != null)

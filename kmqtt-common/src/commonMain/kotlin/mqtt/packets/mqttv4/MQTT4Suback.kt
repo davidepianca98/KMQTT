@@ -8,9 +8,9 @@ import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Suback(
+public class MQTT4Suback(
     packetIdentifier: UInt,
-    val reasonCodes: List<SubackReturnCode>
+    public val reasonCodes: List<SubackReturnCode>
 ) : MQTTSuback(packetIdentifier), MQTT4Packet {
 
     override fun toByteArray(): UByteArray {
@@ -25,7 +25,7 @@ class MQTT4Suback(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.SUBACK, 0)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Suback {
             checkFlags(flags)

@@ -2,4 +2,4 @@ package socket.tls
 
 import socket.tcp.Socket
 
-expect open class TLSSocket : Socket
+public expect open class TLSSocket : Socket

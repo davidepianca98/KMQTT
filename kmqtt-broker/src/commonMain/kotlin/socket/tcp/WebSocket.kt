@@ -9,7 +9,7 @@ import socket.streams.EOFException
 import toBase64
 
 
-class WebSocket(private val socket: Socket) : SocketInterface {
+internal class WebSocket(private val socket: Socket) : SocketInterface {
 
     private var handshakeDone = false
 

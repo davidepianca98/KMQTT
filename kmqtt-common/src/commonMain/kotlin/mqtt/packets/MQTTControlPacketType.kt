@@ -1,6 +1,6 @@
 package mqtt.packets
 
-enum class MQTTControlPacketType(val value: Int) {
+public enum class MQTTControlPacketType(public val value: Int) {
     Reserved(0),
     CONNECT(1),
     CONNACK(2),
@@ -18,7 +18,7 @@ enum class MQTTControlPacketType(val value: Int) {
     DISCONNECT(14),
     AUTH(15);
 
-    companion object {
-        fun valueOf(value: Int) = values().firstOrNull { it.value == value }
+    public companion object {
+        public fun valueOf(value: Int): MQTTControlPacketType? = values().firstOrNull { it.value == value }
     }
 }

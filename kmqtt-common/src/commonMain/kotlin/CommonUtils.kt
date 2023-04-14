@@ -1,9 +1,9 @@
 import socket.streams.ByteArrayOutputStream
 import kotlin.random.Random
 
-expect fun currentTimeMillis(): Long
+public expect fun currentTimeMillis(): Long
 
-fun generateRandomClientId(): String {
+public fun generateRandomClientId(): String {
     val length = 30
     val buffer = StringBuilder(length)
     for (i in 0 until length) {
@@ -12,14 +12,14 @@ fun generateRandomClientId(): String {
     return buffer.toString()
 }
 
-fun UByteArray.validatePayloadFormat(indicator: UInt): Boolean {
+public fun UByteArray.validatePayloadFormat(indicator: UInt): Boolean {
     if (indicator == 1u) {
         return this.toByteArray().decodeToString().validateUTF8String()
     }
     return true
 }
 
-fun String.validateUTF8String(): Boolean {
+public fun String.validateUTF8String(): Boolean {
     this.forEachIndexed { index, character ->
         if (character == '\u0000')
             return false
@@ -35,13 +35,13 @@ fun String.validateUTF8String(): Boolean {
     return true
 }
 
-fun UByteArray.toHexString() = joinToString("") { it.toString(16).padStart(2, '0') }
+public fun UByteArray.toHexString(): String = joinToString("") { it.toString(16).padStart(2, '0') }
 
-fun UIntArray.toHexString() = joinToString("") { it.toString(16).padStart(8, '0') }
+public fun UIntArray.toHexString(): String = joinToString("") { it.toString(16).padStart(8, '0') }
 
-fun String.fromHexString(): ByteArray = chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+public fun String.fromHexString(): ByteArray = chunked(2).map { it.toInt(16).toByte() }.toByteArray()
 
-fun <K, V> MutableMap<K, V>.removeIf(predicate: (MutableMap.MutableEntry<K, V>) -> Boolean): Boolean {
+public fun <K, V> MutableMap<K, V>.removeIf(predicate: (MutableMap.MutableEntry<K, V>) -> Boolean): Boolean {
     var removed = false
     val iterator = iterator()
     while (iterator.hasNext()) {
@@ -56,7 +56,7 @@ fun <K, V> MutableMap<K, V>.removeIf(predicate: (MutableMap.MutableEntry<K, V>) 
 
 private infix fun UInt.leftRotate(bits: Int): UInt = ((this shl bits) or (this shr (32 - bits)))
 
-fun ByteArray.sha1(): ByteArray {
+public fun ByteArray.sha1(): ByteArray {
     val hash = UIntArray(5)
     hash[0] = 0x67452301u
     hash[1] = 0xEFCDAB89u
@@ -138,7 +138,7 @@ fun ByteArray.sha1(): ByteArray {
     return hexString.fromHexString()
 }
 
-fun ByteArray.toBase64(): String {
+public fun ByteArray.toBase64(): String {
     val base64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
     var r = ""
     var p = ""

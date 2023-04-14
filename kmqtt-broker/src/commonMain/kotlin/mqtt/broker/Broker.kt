@@ -15,33 +15,33 @@ import removeIf
 import socket.ServerSocketLoop
 import socket.tls.TLSSettings
 
-class Broker(
-    val port: Int = 1883,
-    val host: String = "0.0.0.0",
-    val backlog: Int = 100000,
-    val tlsSettings: TLSSettings? = null,
-    val authentication: Authentication? = null,
-    val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
-    val authorization: Authorization? = null,
-    val connectionCallbacks: ConnectionCallbacks? = null,
-    val savePassword: Boolean = false,
-    val maximumSessionExpiryInterval: UInt = 0xFFFFFFFFu,
-    val receiveMaximum: UShort? = 1024u,
-    val maximumQos: Qos? = null,
-    val retainedAvailable: Boolean = true,
-    val maximumPacketSize: UInt = 32768u,
-    val maximumTopicAlias: Int? = null,
-    val wildcardSubscriptionAvailable: Boolean = true,
-    val subscriptionIdentifiersAvailable: Boolean = true,
-    val sharedSubscriptionsAvailable: Boolean = true,
-    val serverKeepAlive: Int? = null,
-    val responseInformation: String? = null,
-    val packetInterceptor: PacketInterceptor? = null,
-    val bytesMetrics: BytesMetrics? = null,
-    val persistence: Persistence? = null,
-    val cluster: ClusterSettings? = null,
-    val enableUdp: Boolean = false,
-    val webSocketPort: Int? = null
+public class Broker(
+    public val port: Int = 1883,
+    public val host: String = "0.0.0.0",
+    public val backlog: Int = 100000,
+    public val tlsSettings: TLSSettings? = null,
+    public val authentication: Authentication? = null,
+    public val enhancedAuthenticationProviders: Map<String, EnhancedAuthenticationProvider> = mapOf(),
+    public val authorization: Authorization? = null,
+    public val connectionCallbacks: ConnectionCallbacks? = null,
+    public val savePassword: Boolean = false,
+    public val maximumSessionExpiryInterval: UInt = 0xFFFFFFFFu,
+    public val receiveMaximum: UShort? = 1024u,
+    public val maximumQos: Qos? = null,
+    public val retainedAvailable: Boolean = true,
+    public val maximumPacketSize: UInt = 32768u,
+    public val maximumTopicAlias: Int? = null,
+    public val wildcardSubscriptionAvailable: Boolean = true,
+    public val subscriptionIdentifiersAvailable: Boolean = true,
+    public val sharedSubscriptionsAvailable: Boolean = true,
+    public val serverKeepAlive: Int? = null,
+    public val responseInformation: String? = null,
+    public val packetInterceptor: PacketInterceptor? = null,
+    public val bytesMetrics: BytesMetrics? = null,
+    public val persistence: Persistence? = null,
+    public val cluster: ClusterSettings? = null,
+    public val enableUdp: Boolean = false,
+    public val webSocketPort: Int? = null
 ) {
 
     private val server = ServerSocketLoop(this)
@@ -60,14 +60,14 @@ class Broker(
     /**
      * Starts the broker (blocking run)
      */
-    fun listen() {
+    public fun listen() {
         server.run()
     }
 
     /**
      * Run a single iteration of the broker (non blocking run)
      */
-    fun step() {
+    public fun step() {
         server.step()
     }
 
@@ -234,7 +234,7 @@ class Broker(
      * @param payload content of the message
      * @return true if the publish operation was successful, false otherwise
      */
-    fun publish(
+    public fun publish(
         retain: Boolean,
         topicName: String,
         qos: Qos,
@@ -277,7 +277,7 @@ class Broker(
      * @param clientId clientId of the client to check
      * @return true if the client is connected, false otherwise
      */
-    fun isClientConnected(clientId: String): Boolean {
+    public fun isClientConnected(clientId: String): Boolean {
         return sessions[clientId]?.connected ?: false
     }
 
@@ -379,7 +379,7 @@ class Broker(
      * @param serverReference new server address available for client connection
      * @param temporarilyMoved true if the current server is going to be restarted soon
      */
-    fun stop(serverReference: String? = null, temporarilyMoved: Boolean = false) {
+    public fun stop(serverReference: String? = null, temporarilyMoved: Boolean = false) {
         // TODO close cluster connections and send use another server from that list
         val reasonCode = if (serverReference != null) {
             if (temporarilyMoved) {

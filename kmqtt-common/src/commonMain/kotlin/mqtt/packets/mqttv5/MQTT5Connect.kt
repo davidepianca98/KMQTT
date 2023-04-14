@@ -8,14 +8,14 @@ import mqtt.packets.mqtt.MQTTConnect
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Connect(
+public class MQTT5Connect(
     protocolName: String,
     protocolVersion: Int,
     connectFlags: ConnectFlags,
     keepAlive: Int,
     clientID: String = "",
-    val properties: MQTT5Properties = MQTT5Properties(),
-    val willProperties: MQTT5Properties? = null,
+    public val properties: MQTT5Properties = MQTT5Properties(),
+    public val willProperties: MQTT5Properties? = null,
     willTopic: String? = null,
     willPayload: UByteArray? = null,
     userName: String? = null,
@@ -32,7 +32,7 @@ class MQTT5Connect(
     password
 ), MQTT5Packet {
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
         private val validProperties = listOf(
             Property.SESSION_EXPIRY_INTERVAL,
             Property.AUTHENTICATION_METHOD,

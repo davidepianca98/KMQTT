@@ -5,7 +5,7 @@ import socket.streams.DynamicByteBuffer
 import socket.streams.EOFException
 import socket.streams.decodeVariableByteInteger
 
-class ClusterCurrentPacket {
+internal class ClusterCurrentPacket {
 
     private val currentReceivedData = DynamicByteBuffer()
 

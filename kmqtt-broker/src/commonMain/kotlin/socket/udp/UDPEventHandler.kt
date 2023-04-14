@@ -1,6 +1,6 @@
 package socket.udp
 
-interface UDPEventHandler {
+internal interface UDPEventHandler {
 
     fun dataReceived()
 }

@@ -8,13 +8,13 @@ import mqtt.packets.mqtt.MQTTConnack
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Connack(
+public class MQTT5Connack(
     connectAcknowledgeFlags: ConnectAcknowledgeFlags,
-    val connectReasonCode: ReasonCode,
-    val properties: MQTT5Properties = MQTT5Properties()
+    public val connectReasonCode: ReasonCode,
+    public val properties: MQTT5Properties = MQTT5Properties()
 ) : MQTTConnack(connectAcknowledgeFlags), MQTT5Packet {
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         private val validProperties = listOf(
             Property.SESSION_EXPIRY_INTERVAL,

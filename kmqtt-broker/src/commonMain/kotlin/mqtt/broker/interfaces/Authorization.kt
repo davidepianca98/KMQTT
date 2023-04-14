@@ -1,6 +1,6 @@
 package mqtt.broker.interfaces
 
-interface Authorization {
+public interface Authorization {
 
     /**
      * Checks if the client is allowed to do the specified operation
@@ -12,7 +12,7 @@ interface Authorization {
      * @param payload the content of the PUBLISH message, present only if isSubscription is false
      * @return true if the client is allowed to publish or subscribe, false otherwise
      */
-    fun authorize(
+    public fun authorize(
         clientId: String,
         username: String?,
         password: UByteArray?,

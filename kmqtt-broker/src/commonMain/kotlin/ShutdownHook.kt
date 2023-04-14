@@ -1,1 +1,1 @@
-expect fun setShutdownHook(hook: () -> Unit)
+internal expect fun setShutdownHook(hook: () -> Unit)

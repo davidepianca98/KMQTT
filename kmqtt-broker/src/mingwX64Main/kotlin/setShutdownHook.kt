@@ -1,12 +1,12 @@
 import kotlinx.cinterop.staticCFunction
 import platform.windows.*
 
-actual fun setShutdownHook(hook: () -> Unit) {
+internal actual fun setShutdownHook(hook: () -> Unit) {
 
     val pointer = staticCFunction<DWORD, WINBOOL> {
         try {
             // Not yet possible to call hook in native
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
 
         }
         FALSE

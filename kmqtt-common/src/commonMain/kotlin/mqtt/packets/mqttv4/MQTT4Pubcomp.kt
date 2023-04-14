@@ -6,9 +6,9 @@ import mqtt.packets.mqtt.MQTTPubcomp
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Pubcomp(
+public class MQTT4Pubcomp(
     packetId: UInt
-) : mqtt.packets.mqtt.MQTTPubcomp(packetId), MQTT4Packet {
+) : MQTTPubcomp(packetId), MQTT4Packet {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
@@ -18,7 +18,7 @@ class MQTT4Pubcomp(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBCOMP, 0)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Pubcomp {
             MQTT4Pubcomp.checkFlags(flags)

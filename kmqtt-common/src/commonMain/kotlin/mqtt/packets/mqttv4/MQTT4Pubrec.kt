@@ -6,7 +6,7 @@ import mqtt.packets.mqtt.MQTTPubrec
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Pubrec(
+public class MQTT4Pubrec(
     packetId: UInt
 ) : MQTTPubrec(packetId), MQTT4Packet {
 
@@ -18,7 +18,7 @@ class MQTT4Pubrec(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBREC, 0)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Pubrec {
             checkFlags(flags)

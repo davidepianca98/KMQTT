@@ -5,7 +5,7 @@ import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import validateUTF8String
 
-interface ClusterPacketDeserializer {
+internal interface ClusterPacketDeserializer {
 
     fun fromByteArray(data: UByteArray): ClusterPacket
 

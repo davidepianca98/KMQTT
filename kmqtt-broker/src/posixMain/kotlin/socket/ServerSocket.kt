@@ -27,7 +27,7 @@ import socketsCleanup
 import socketsInit
 import accept as posixAccept
 
-actual open class ServerSocket actual constructor(
+internal actual open class ServerSocket actual constructor(
     private val broker: Broker,
     private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocketInterface {

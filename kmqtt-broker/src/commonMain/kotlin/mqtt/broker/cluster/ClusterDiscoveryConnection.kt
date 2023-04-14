@@ -5,7 +5,7 @@ import mqtt.broker.Broker
 import socket.udp.UDPEventHandler
 import socket.udp.UDPSocket
 
-class ClusterDiscoveryConnection(private val socket: UDPSocket, private val broker: Broker) :
+internal class ClusterDiscoveryConnection(private val socket: UDPSocket, private val broker: Broker) :
     UDPEventHandler {
 
     override fun dataReceived() {

@@ -1,7 +1,7 @@
 import mqtt.broker.Broker
 import socket.tls.TLSSettings
 
-fun main(args: Array<String>) {
+public fun main(args: Array<String>) {
     // TODO this is here only because of NodeJS tests, that run main. As in mocha settings it's not possible to set --exit
     //      we need to avoid starting the broker, otherwise the test task won't ever terminate
     if (args.isEmpty()) {

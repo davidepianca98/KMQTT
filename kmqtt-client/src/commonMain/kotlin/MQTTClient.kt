@@ -32,7 +32,7 @@ import socket.streams.EOFException
  * @param enhancedAuthCallback the callback called when authenticationData is received, it should return the data necessary to continue authentication or null if completed (used only in MQTT5 if authenticationMethod has been set in the CONNECT properties)
  * @param publishReceived the callback called when a PUBLISH message is received by this client
  */
-class MQTTClient(
+public class MQTTClient(
     private val mqttVersion: Int,
     private val address: String,
     private val port: Int,
@@ -55,7 +55,7 @@ class MQTTClient(
 
     private val maximumPacketSize = properties.maximumPacketSize?.toInt() ?: (1024 * 1024)
     private var socket: SocketInterface? = null
-    var running = false
+    public var running: Boolean = false
         private set
     private val lock = reentrantLock()
 
@@ -80,7 +80,7 @@ class MQTTClient(
     private var subscriptionIdentifiersAvailable = true
     private var sharedSubscriptionAvailable = true
     private var receiveMax = 65535u
-    var connackReceived = false
+    public var connackReceived: Boolean = false
         private set
 
     init {
@@ -185,7 +185,7 @@ class MQTTClient(
      * @param payload the content of the message
      * @param properties the properties to be included in the message (used only in MQTT5)
      */
-    fun publish(retain: Boolean, qos: Qos, topic: String, payload: UByteArray?, properties: MQTT5Properties = MQTT5Properties()) {
+    public fun publish(retain: Boolean, qos: Qos, topic: String, payload: UByteArray?, properties: MQTT5Properties = MQTT5Properties()) {
         lock.withLock {
             if (!connackReceived && properties.authenticationData != null) {
                 throw Exception("Not sending until connection complete")
@@ -228,7 +228,7 @@ class MQTTClient(
      * @param subscriptions the list of topic filters and relative settings (many settings are used only in MQTT5)
      * @param properties the properties to be included in the message (used only in MQTT5)
      */
-    fun subscribe(subscriptions: List<Subscription>, properties: MQTT5Properties = MQTT5Properties()) {
+    public fun subscribe(subscriptions: List<Subscription>, properties: MQTT5Properties = MQTT5Properties()) {
         lock.withLock {
             if (!connackReceived && properties.authenticationData != null) {
                 throw Exception("Not sending until connection complete")
@@ -248,7 +248,7 @@ class MQTTClient(
      * @param topics the list of topic filters
      * @param properties the properties to be included in the message (used only in MQTT5)
      */
-    fun unsubscribe(topics: List<String>, properties: MQTT5Properties = MQTT5Properties()) {
+    public fun unsubscribe(topics: List<String>, properties: MQTT5Properties = MQTT5Properties()) {
         lock.withLock {
             if (!connackReceived && properties.authenticationData != null) {
                 throw Exception("Not sending until connection complete")
@@ -267,7 +267,7 @@ class MQTTClient(
      *
      * @param reasonCode the specific reason code (only used in MQTT5)
      */
-    fun disconnect(reasonCode: ReasonCode) {
+    public fun disconnect(reasonCode: ReasonCode) {
         lock.withLock {
             val disconnect = if (mqttVersion == 4) {
                 MQTT4Disconnect()
@@ -339,7 +339,7 @@ class MQTTClient(
     /**
      * Run a single iteration of the client (non blocking)
      */
-    fun step() {
+    public fun step() {
         if (running) {
             connectSocket()
 
@@ -350,7 +350,7 @@ class MQTTClient(
     /**
      * Run the client (blocking)
      */
-    fun run() {
+    public fun run() {
         while (running) {
             step()
         }
@@ -568,7 +568,7 @@ class MQTTClient(
      *
      * @param data the authenticationData if necessary
      */
-    fun reAuthenticate(data: UByteArray?) {
+    public fun reAuthenticate(data: UByteArray?) {
         lock.withLock {
             val auth = MQTT5Auth(
                 ReasonCode.RE_AUTHENTICATE,

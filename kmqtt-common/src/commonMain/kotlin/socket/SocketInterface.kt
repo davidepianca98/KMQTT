@@ -1,12 +1,12 @@
 package socket
 
-interface SocketInterface {
+public interface SocketInterface {
 
-    fun send(data: UByteArray)
+    public fun send(data: UByteArray)
 
-    fun sendRemaining()
+    public fun sendRemaining()
 
-    fun read(): UByteArray?
+    public fun read(): UByteArray?
 
-    fun close()
+    public fun close()
 }

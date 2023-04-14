@@ -2,7 +2,7 @@ package socket.tcp
 
 import socket.SocketInterface
 
-expect open class Socket : SocketInterface {
+public expect open class Socket : SocketInterface {
 
     override fun send(data: UByteArray)
 

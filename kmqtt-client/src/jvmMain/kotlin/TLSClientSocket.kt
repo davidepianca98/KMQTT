@@ -17,7 +17,7 @@ import javax.net.ssl.SSLEngineResult
 import javax.net.ssl.TrustManagerFactory
 
 
-actual class TLSClientSocket actual constructor(
+public actual class TLSClientSocket actual constructor(
     address: String,
     port: Int,
     maximumPacketSize: Int,
@@ -81,7 +81,7 @@ actual class TLSClientSocket actual constructor(
         channel.register(selector, SelectionKey.OP_READ)
     }
 
-    companion object {
+    public companion object {
         private fun getPrivateKeyFromString(key: String): RSAPrivateKey {
             val privateKeyPEM = key
                 .replace("-----BEGIN PRIVATE KEY-----\n", "")
@@ -120,7 +120,7 @@ actual class TLSClientSocket actual constructor(
         }
     }
 
-    actual val handshakeComplete: Boolean
+    public actual val handshakeComplete: Boolean
         get() = engine.handshakeStatus == SSLEngineResult.HandshakeStatus.FINISHED
                 || engine.handshakeStatus == SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING
 }

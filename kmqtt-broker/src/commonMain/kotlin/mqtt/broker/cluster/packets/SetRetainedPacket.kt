@@ -5,7 +5,7 @@ import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 import socket.streams.encodeVariableByteInteger
 
-class SetRetainedPacket(val retained: Pair<mqtt.packets.mqtt.MQTTPublish, String>) : ClusterPacket {
+internal class SetRetainedPacket(val retained: Pair<MQTTPublish, String>) : ClusterPacket {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
@@ -35,7 +35,7 @@ class SetRetainedPacket(val retained: Pair<mqtt.packets.mqtt.MQTTPublish, String
             val clientId = inStream.readUTF8String()
             val packetData = inStream.readRemaining()
 
-            return SetRetainedPacket(Pair(mqtt.packets.mqtt.MQTTPublish.fromByteArray(5, packetData), clientId)) // TODO version 4 also
+            return SetRetainedPacket(Pair(MQTTPublish.fromByteArray(5, packetData), clientId)) // TODO version 4 also
         }
     }
 }

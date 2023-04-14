@@ -9,16 +9,16 @@ import socket.streams.DynamicByteBuffer
 import socket.streams.EOFException
 import socket.streams.decodeVariableByteInteger
 
-class MQTTCurrentPacket(
+public class MQTTCurrentPacket(
     private val maximumPacketSize: UInt,
     mqttVersion: Int? = null // 4 -> 3.1.1, 5 -> 5, null -> unknown (support both)
 ) {
 
     private val currentReceivedData = DynamicByteBuffer()
-    var mqttVersion: Int? = mqttVersion
+    public var mqttVersion: Int? = mqttVersion
         private set
 
-    fun addData(data: UByteArray): List<MQTTPacket> {
+    public fun addData(data: UByteArray): List<MQTTPacket> {
         val packets = mutableListOf<MQTTPacket>()
         currentReceivedData.write(data)
         try {

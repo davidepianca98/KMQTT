@@ -1,8 +1,8 @@
 package mqtt.broker.interfaces
 
-interface EnhancedAuthenticationProvider {
+public interface EnhancedAuthenticationProvider {
 
-    enum class Result {
+    public enum class Result {
         SUCCESS,
         ERROR,
         NEEDS_MORE
@@ -15,7 +15,7 @@ interface EnhancedAuthenticationProvider {
      * @param authenticationData the Authentication Data received, if present, in the received packet
      * @param result function to call to continue the authentication or to set it as complete
      */
-    fun authReceived(
+    public fun authReceived(
         clientId: String,
         authenticationData: UByteArray?,
         result: (completed: Result, authenticationData: UByteArray?) -> Unit

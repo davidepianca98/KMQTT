@@ -7,10 +7,10 @@ import mqtt.packets.mqtt.MQTTPuback
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Puback(
+public class MQTT5Puback(
     packetId: UInt,
-    val reasonCode: ReasonCode = ReasonCode.SUCCESS,
-    val properties: MQTT5Properties = MQTT5Properties()
+    public val reasonCode: ReasonCode = ReasonCode.SUCCESS,
+    public val properties: MQTT5Properties = MQTT5Properties()
 ) : MQTTPuback(packetId), MQTT5Packet {
 
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
@@ -35,14 +35,14 @@ class MQTT5Puback(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBACK, 0)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
-        val validProperties = listOf(
+        private val validProperties = listOf(
             Property.REASON_STRING,
             Property.USER_PROPERTY
         )
 
-        val validReasonCodes = listOf(
+        private val validReasonCodes = listOf(
             ReasonCode.SUCCESS,
             ReasonCode.NO_MATCHING_SUBSCRIBERS,
             ReasonCode.UNSPECIFIED_ERROR,

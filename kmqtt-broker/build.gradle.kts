@@ -10,6 +10,8 @@ plugins {
 val serializationVersion: String by project
 
 kotlin {
+    explicitApi()
+
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"

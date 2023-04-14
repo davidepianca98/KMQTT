@@ -1,3 +1,3 @@
 import socket.tls.TLSEngine
 
-expect class TLSClientEngine(tlsSettings: TLSClientSettings) : TLSEngine
+internal expect class TLSClientEngine(tlsSettings: TLSClientSettings) : TLSEngine

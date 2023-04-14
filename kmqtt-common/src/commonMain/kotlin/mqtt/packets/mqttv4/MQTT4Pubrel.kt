@@ -8,7 +8,7 @@ import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Pubrel(
+public class MQTT4Pubrel(
     packetId: UInt
 ) : MQTTPubrel(packetId), MQTT4Packet {
 
@@ -20,7 +20,7 @@ class MQTT4Pubrel(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.PUBREL, 2)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Pubrel {
             checkFlags(flags)

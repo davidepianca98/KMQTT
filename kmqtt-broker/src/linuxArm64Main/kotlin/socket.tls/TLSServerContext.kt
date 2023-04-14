@@ -6,7 +6,7 @@ import openssl.*
 import platform.posix.fclose
 import platform.posix.fopen
 
-actual class TLSServerContext actual constructor(private val tlsSettings: TLSSettings) {
+internal actual class TLSServerContext actual constructor(private val tlsSettings: TLSSettings) {
 
     val sslContext: CPointer<SSL_CTX>
 

@@ -3,7 +3,7 @@ import platform.posix.*
 import socket.IOException
 import socket.tls.TLSSocket
 
-actual class TLSClientSocket actual constructor(
+public actual class TLSClientSocket actual constructor(
     address: String,
     port: Int,
     maximumPacketSize: Int,
@@ -57,6 +57,6 @@ actual class TLSClientSocket actual constructor(
         }
     }
 
-    actual val handshakeComplete: Boolean
+    public actual val handshakeComplete: Boolean
         get() = engine.isInitFinished
 }

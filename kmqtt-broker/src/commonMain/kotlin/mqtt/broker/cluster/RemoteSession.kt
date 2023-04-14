@@ -10,7 +10,7 @@ import mqtt.packets.mqttv4.MQTT4Publish
 import mqtt.packets.mqttv5.MQTT5Properties
 import mqtt.packets.mqttv5.MQTT5Publish
 
-class RemoteSession(
+internal class RemoteSession(
     private val connection: ClusterConnection,
     override val clientId: String,
     override var sessionExpiryInterval: UInt,

@@ -1,3 +1,3 @@
 package socket.tls
 
-expect class TLSServerEngine(serverContext: TLSServerContext) : TLSEngine
+internal expect class TLSServerEngine(serverContext: TLSServerContext) : TLSEngine

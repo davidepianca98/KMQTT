@@ -11,8 +11,8 @@ import mqtt.packets.mqttv5.MQTT5Properties
 import mqtt.packets.mqttv5.MQTT5Publish
 import mqtt.packets.mqttv5.ReasonCode
 
-class Session(
-    var clientConnection: ClientConnection?,
+public class Session(
+    public var clientConnection: ClientConnection?,
     override val clientId: String,
     override var sessionExpiryInterval: UInt,
     override var will: Will?,
@@ -20,7 +20,7 @@ class Session(
     private val propagateUpdate: (session: Session) -> Unit
 ) : ISession {
 
-    override var connected = false // true only after sending CONNACK
+    override var connected: Boolean = false // true only after sending CONNACK
         set(value) {
             if (value) {
                 field = value
@@ -38,7 +38,7 @@ class Session(
             }
             propagateUpdate(this)
         }
-    override var mqttVersion = 4
+    override var mqttVersion: Int = 4
     override var sessionDisconnectedTimestamp: Long? = null
 
     private var packetIdentifier = 1u
@@ -51,7 +51,7 @@ class Session(
     private val pendingSendMessages = mutableMapOf<UInt, MQTTPublish>()
 
     // QoS 2 messages which have been received from the Client that have not been completely acknowledged
-    val qos2ListReceived = mutableMapOf<UInt, MQTTPublish>()
+    public val qos2ListReceived: MutableMap<UInt, MQTTPublish> = mutableMapOf()
 
     init {
         persist()
@@ -61,21 +61,21 @@ class Session(
         this.persist(clientId, this)
     }
 
-    fun hasPendingAcknowledgeMessage(packetId: UInt): Boolean {
+    public fun hasPendingAcknowledgeMessage(packetId: UInt): Boolean {
         return pendingAcknowledgeMessages[packetId] != null
     }
 
-    fun acknowledgePublish(packetId: UInt) {
+    public fun acknowledgePublish(packetId: UInt) {
         pendingAcknowledgeMessages.remove(packetId)
         persist()
     }
 
-    fun addPendingAcknowledgePubrel(packet: MQTTPubrel) {
+    public fun addPendingAcknowledgePubrel(packet: MQTTPubrel) {
         pendingAcknowledgePubrel[packet.packetId] = packet
         persist()
     }
 
-    fun acknowledgePubrel(packetId: UInt) {
+    public fun acknowledgePubrel(packetId: UInt) {
         pendingAcknowledgePubrel.remove(packetId)
         persist()
     }
@@ -175,7 +175,7 @@ class Session(
     //  same Shared Subscription. It MAY attempt to send the message to another Client as soon as it loses its
     //  connection to the first Client.
 
-    fun generatePacketId(): UInt {
+    public fun generatePacketId(): UInt {
         do {
             packetIdentifier++
             if (packetIdentifier > 65535u)
@@ -186,7 +186,7 @@ class Session(
         return packetIdentifier
     }
 
-    fun isPacketIdInUse(packetId: UInt): Boolean {
+    public fun isPacketIdInUse(packetId: UInt): Boolean {
         if (pendingSendMessages[packetId] != null)
             return true
         if (pendingAcknowledgeMessages[packetId] != null)

@@ -17,12 +17,12 @@ import socket.SocketInterface
 import socket.streams.EOFException
 import socket.tcp.TCPEventHandler
 
-class ClientConnection(
+public class ClientConnection(
     private val client: SocketInterface,
     private val broker: Broker
 ) : TCPEventHandler {
 
-    companion object {
+    public companion object {
         private const val DEFAULT_MAX_SEND_QUOTA = 65535u
     }
 
@@ -49,7 +49,7 @@ class ClientConnection(
     private val currentReceivedPacket = MQTTCurrentPacket(broker.maximumPacketSize)
     private var lastReceivedMessageTimestamp = currentTimeMillis()
 
-    fun checkKeepAliveExpired() {
+    public fun checkKeepAliveExpired() {
         val timeout = ((keepAlive * 1000).toDouble() * 1.5).toInt()
         val expired = currentTimeMillis() > lastReceivedMessageTimestamp + timeout
         if (expired) {
@@ -124,7 +124,7 @@ class ClientConnection(
         clientId?.let { broker.connectionCallbacks?.onDisconnect(it, false) }
     }
 
-    fun disconnect(reasonCode: ReasonCode, serverReference: String? = null) {
+    public fun disconnect(reasonCode: ReasonCode, serverReference: String? = null) {
         if (currentReceivedPacket.mqttVersion == 5) {
             if (!connectCompleted) {
                 val connack = MQTT5Connack(

@@ -6,13 +6,13 @@ import mqtt.packets.MQTTDeserializer
 import mqtt.packets.mqtt.MQTTPingresp
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Pingresp : mqtt.packets.mqtt.MQTTPingresp(), MQTT5Packet {
+public class MQTT5Pingresp : MQTTPingresp(), MQTT5Packet {
 
     override fun toByteArray(): UByteArray {
         return ByteArrayOutputStream().wrapWithFixedHeader(MQTTControlPacketType.PINGRESP, 0)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT5Pingresp {
             checkFlags(flags)

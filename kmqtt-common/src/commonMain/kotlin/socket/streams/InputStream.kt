@@ -1,16 +1,16 @@
 package socket.streams
 
-interface InputStream {
+public interface InputStream {
 
-    fun read(): UByte
+    public fun read(): UByte
 
-    fun readBytes(length: Int): UByteArray
+    public fun readBytes(length: Int): UByteArray
 
-    fun readUShort(): UShort {
+    public fun readUShort(): UShort {
         return ((read().toUInt() shl 8) or read().toUInt()).toUShort()
     }
 
-    fun readUInt(): UInt {
+    public fun readUInt(): UInt {
         var number = 0u
         for (i in 0..3) {
             number = number or (read().toUInt() shl ((3 - i) * 8))
@@ -18,7 +18,7 @@ interface InputStream {
         return number
     }
 
-    fun readULong(): ULong {
+    public fun readULong(): ULong {
         var number: ULong = 0u
         for (i in 0..7) {
             number = number or (read().toULong() shl ((7 - i) * 8))

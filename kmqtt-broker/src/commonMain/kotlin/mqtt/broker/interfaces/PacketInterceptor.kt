@@ -2,7 +2,7 @@ package mqtt.broker.interfaces
 
 import mqtt.packets.MQTTPacket
 
-interface PacketInterceptor {
+public interface PacketInterceptor {
 
     /**
      * Called when a packet is received from a client
@@ -11,5 +11,5 @@ interface PacketInterceptor {
      * @param password the MQTT password provided in the CONNECT packet, if present and broker parameter savePassword=true, null otherwise
      * @param packet the MQTT packet sent by the client
      */
-    fun packetReceived(clientId: String, username: String?, password: UByteArray?, packet: MQTTPacket)
+    public fun packetReceived(clientId: String, username: String?, password: UByteArray?, packet: MQTTPacket)
 }

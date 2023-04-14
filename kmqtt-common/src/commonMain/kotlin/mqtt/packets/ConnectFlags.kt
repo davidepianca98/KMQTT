@@ -3,7 +3,7 @@ package mqtt.packets
 import mqtt.MQTTException
 import mqtt.packets.mqttv5.ReasonCode
 
-data class ConnectFlags(
+public data class ConnectFlags(
     val userNameFlag: Boolean,
     val passwordFlag: Boolean,
     val willRetain: Boolean,
@@ -12,7 +12,7 @@ data class ConnectFlags(
     val cleanStart: Boolean,
     val reserved: Boolean
 ) {
-    fun toByte(): UInt {
+    public fun toByte(): UInt {
         val flags = (((if (userNameFlag) 1 else 0) shl 7) and 0x80) or
                 (((if (passwordFlag) 1 else 0) shl 6) and 0x40) or
                 (((if (willRetain) 1 else 0) shl 5) and 0x20) or
@@ -23,8 +23,8 @@ data class ConnectFlags(
         return flags.toUInt()
     }
 
-    companion object {
-        fun connectFlags(byte: Int): ConnectFlags {
+    public companion object {
+        public fun connectFlags(byte: Int): ConnectFlags {
             val reserved = (byte and 1) == 1
             if (reserved)
                 throw MQTTException(ReasonCode.MALFORMED_PACKET)

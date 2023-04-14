@@ -3,13 +3,13 @@ package mqtt.packets.mqttv5
 import mqtt.MQTTException
 import mqtt.packets.Qos
 
-class SubscriptionOptions(
-    val qos: Qos = Qos.AT_MOST_ONCE,
-    val noLocal: Boolean = false,
-    val retainedAsPublished: Boolean = false,
-    val retainHandling: UInt = 0u
+public class SubscriptionOptions(
+    public val qos: Qos = Qos.AT_MOST_ONCE,
+    public val noLocal: Boolean = false,
+    public val retainedAsPublished: Boolean = false,
+    public val retainHandling: UInt = 0u
 ) {
-    fun toByte(): UInt {
+    public fun toByte(): UInt {
         if (retainHandling !in 0u..2u)
             throw MQTTException(ReasonCode.MALFORMED_PACKET)
         val optionsByte = 0 or

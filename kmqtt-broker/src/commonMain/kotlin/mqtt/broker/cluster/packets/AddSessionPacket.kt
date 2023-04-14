@@ -4,7 +4,7 @@ import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 import socket.streams.encodeVariableByteInteger
 
-class AddSessionPacket(val clientId: String, val sessionExpiryInterval: UInt) : ClusterPacket {
+internal class AddSessionPacket(val clientId: String, val sessionExpiryInterval: UInt) : ClusterPacket {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

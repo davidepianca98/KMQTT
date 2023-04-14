@@ -6,18 +6,18 @@ import mqtt.packets.mqttv5.MQTT5Connect
 import mqtt.packets.mqttv5.ReasonCode
 import validatePayloadFormat
 
-class Will(packet: MQTTConnect) {
-    val retain: Boolean
-    val qos: Qos
-    val topic: String
-    val payload: UByteArray
-    val willDelayInterval: UInt
-    val payloadFormatIndicator: UInt
-    val messageExpiryInterval: UInt?
-    val contentType: String?
-    val responseTopic: String?
-    val correlationData: UByteArray?
-    val userProperty: List<Pair<String, String>>
+public class Will(packet: MQTTConnect) {
+    public val retain: Boolean
+    public val qos: Qos
+    public val topic: String
+    public val payload: UByteArray
+    public val willDelayInterval: UInt
+    public val payloadFormatIndicator: UInt
+    public val messageExpiryInterval: UInt?
+    public val contentType: String?
+    public val responseTopic: String?
+    public val correlationData: UByteArray?
+    public val userProperty: List<Pair<String, String>>
 
     init {
         val properties = if (packet is MQTT5Connect) packet.willProperties!! else null

@@ -14,7 +14,7 @@ import javax.net.ssl.SSLEngineResult
 import javax.net.ssl.SSLException
 
 
-actual open class TLSSocket(
+public actual open class TLSSocket(
     channel: SocketChannel,
     key: SelectionKey?,
     private var sendBuffer: ByteBuffer,

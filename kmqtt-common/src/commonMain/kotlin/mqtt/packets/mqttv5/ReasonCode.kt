@@ -1,6 +1,6 @@
 package mqtt.packets.mqttv5
 
-enum class ReasonCode(val value: Int) {
+public enum class ReasonCode(public val value: Int) {
     SUCCESS(0), // NORMAL_DISCONNECTION, GRANTED_QOS0
     GRANTED_QOS1(1),
     GRANTED_QOS2(2),
@@ -45,7 +45,7 @@ enum class ReasonCode(val value: Int) {
     SUBSCRIPTION_IDENTIFIERS_NOT_SUPPORTED(161),
     WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED(162);
 
-    companion object {
-        fun valueOf(value: Int) = values().firstOrNull { it.value == value }
+    public companion object {
+        public fun valueOf(value: Int): ReasonCode? = values().firstOrNull { it.value == value }
     }
 }

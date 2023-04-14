@@ -1,3 +1,3 @@
-actual fun currentTimeMillis(): Long {
+public actual fun currentTimeMillis(): Long {
     return System.currentTimeMillis()
 }

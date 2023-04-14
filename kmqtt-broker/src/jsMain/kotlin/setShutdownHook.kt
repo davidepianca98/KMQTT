@@ -1,4 +1,4 @@
-actual fun setShutdownHook(hook: () -> Unit) {
+internal actual fun setShutdownHook(hook: () -> Unit) {
     process.on("beforeExit") { _ ->
         hook()
     }

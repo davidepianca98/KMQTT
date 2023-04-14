@@ -7,7 +7,7 @@ import setTimeout
 import socket.tcp.Socket
 import socket.tcp.WebSocket
 
-actual open class ServerSocket actual constructor(
+internal actual open class ServerSocket actual constructor(
     private val broker: Broker,
     private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocketInterface {

@@ -7,7 +7,7 @@
  * @param clientCertificateKeyPath the path to the client certificate key file in PEM format if client verification necessary, null otherwise
  * @param clientCertificatePassword the password to the client certificate key if client verification necessary and the key has a password, null otherwise
  */
-data class TLSClientSettings(
+public data class TLSClientSettings(
     val version: String = "TLS",
     val serverCertificatePath: String? = null,
     val clientCertificatePath: String? = null,

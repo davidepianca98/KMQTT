@@ -6,7 +6,7 @@ import java.nio.ByteBuffer
 import java.nio.channels.DatagramChannel
 import java.nio.channels.SelectionKey
 
-actual class UDPSocket(private val key: SelectionKey) {
+internal actual class UDPSocket(private val key: SelectionKey) {
 
     private val buffer = ByteBuffer.allocate(2048)
 

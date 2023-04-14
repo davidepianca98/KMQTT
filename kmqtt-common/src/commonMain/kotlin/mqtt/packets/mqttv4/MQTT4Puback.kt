@@ -6,11 +6,11 @@ import mqtt.packets.mqtt.MQTTPuback
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Puback(
+public class MQTT4Puback(
     packetId: UInt
 ) : MQTTPuback(packetId), MQTT4Packet {
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Puback {
             checkFlags(flags)

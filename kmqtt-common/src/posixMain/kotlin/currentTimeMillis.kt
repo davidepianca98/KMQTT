@@ -1,5 +1,5 @@
 import kotlin.system.getTimeMillis
 
-actual fun currentTimeMillis(): Long {
+public actual fun currentTimeMillis(): Long {
     return getTimeMillis()
 }

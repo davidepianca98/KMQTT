@@ -3,14 +3,14 @@ package mqtt.packets.mqtt
 import mqtt.packets.ConnectFlags
 import mqtt.packets.MQTTPacket
 
-abstract class MQTTConnect(
-    val protocolName: String,
-    val protocolVersion: Int,
-    val connectFlags: ConnectFlags,
-    val keepAlive: Int,
-    val clientID: String = "",
-    val willTopic: String? = null,
-    val willPayload: UByteArray? = null,
-    val userName: String? = null,
-    val password: UByteArray? = null
+public abstract class MQTTConnect(
+    public val protocolName: String,
+    public val protocolVersion: Int,
+    public val connectFlags: ConnectFlags,
+    public val keepAlive: Int,
+    public val clientID: String = "",
+    public val willTopic: String? = null,
+    public val willPayload: UByteArray? = null,
+    public val userName: String? = null,
+    public val password: UByteArray? = null
 ) : MQTTPacket

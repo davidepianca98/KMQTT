@@ -14,7 +14,7 @@ import socket.IOException
 import socket.SocketClosedException
 import socket.SocketInterface
 
-actual open class Socket(
+public actual open class Socket(
     protected val socket: Int,
     private val writeRequest: MutableList<Int>?,
     private val buffer: ByteArray

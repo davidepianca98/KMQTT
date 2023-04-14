@@ -7,9 +7,9 @@ import mqtt.packets.mqtt.MQTTDisconnect
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Disconnect(
-    val reasonCode: ReasonCode,
-    val properties: MQTT5Properties = MQTT5Properties()
+public class MQTT5Disconnect(
+    public val reasonCode: ReasonCode,
+    public val properties: MQTT5Properties = MQTT5Properties()
 ) : MQTTDisconnect(), MQTT5Packet {
     override fun resizeIfTooBig(maximumPacketSize: UInt): Boolean {
         if (size() > maximumPacketSize) {
@@ -32,7 +32,7 @@ class MQTT5Disconnect(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.DISCONNECT, 0)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         private val validProperties = listOf(
             Property.SESSION_EXPIRY_INTERVAL,
@@ -41,7 +41,7 @@ class MQTT5Disconnect(
             Property.USER_PROPERTY
         )
 
-        val validReasonCodes = listOf(
+        private val validReasonCodes = listOf(
             ReasonCode.SUCCESS,
             ReasonCode.DISCONNECT_WITH_WILL_MESSAGE,
             ReasonCode.UNSPECIFIED_ERROR,

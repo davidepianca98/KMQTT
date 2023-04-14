@@ -1,6 +1,6 @@
 package mqtt.broker.interfaces
 
-interface Authentication {
+public interface Authentication {
 
     /**
      * Checks if the client is allowed to connect to the broker
@@ -8,5 +8,5 @@ interface Authentication {
      * @param username the MQTT username provided in the CONNECT packet, if present, null otherwise
      * @param password the MQTT password provided in the CONNECT packet, if present, null otherwise
      */
-    fun authenticate(clientId: String, username: String?, password: UByteArray?): Boolean
+    public fun authenticate(clientId: String, username: String?, password: UByteArray?): Boolean
 }

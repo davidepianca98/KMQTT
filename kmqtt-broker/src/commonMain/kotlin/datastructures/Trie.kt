@@ -3,7 +3,7 @@ package datastructures
 import mqtt.Subscription
 import mqtt.getSharedTopicFilter
 
-class Trie(subscriptions: Map<String, Subscription>? = null) {
+internal class Trie(subscriptions: Map<String, Subscription>? = null) {
 
     private val root = TrieNode(Char.MIN_VALUE)
 

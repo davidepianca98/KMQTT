@@ -2,4 +2,4 @@ package socket.streams
 
 import socket.IOException
 
-class EOFException : IOException()
+public class EOFException : IOException()

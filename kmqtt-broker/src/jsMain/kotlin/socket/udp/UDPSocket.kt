@@ -4,7 +4,7 @@ import socket.SocketState
 import toBuffer
 import toUByteArray
 
-actual class UDPSocket(
+internal actual class UDPSocket(
     private val socket: dgram.Socket,
     private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) {

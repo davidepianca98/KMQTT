@@ -7,15 +7,15 @@ import mqtt.packets.mqtt.MQTTUnsubscribe
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Unsubscribe(
+public class MQTT5Unsubscribe(
     packetIdentifier: UInt,
     topicFilters: List<String>,
-    val properties: MQTT5Properties = MQTT5Properties()
+    public val properties: MQTT5Properties = MQTT5Properties()
 ) : MQTTUnsubscribe(packetIdentifier, topicFilters), MQTT5Packet {
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
-        val validProperties = listOf(
+        private val validProperties = listOf(
             Property.USER_PROPERTY
         )
 

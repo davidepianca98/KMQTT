@@ -6,7 +6,7 @@ import socket.SocketInterface
 import socket.udp.UDPEventHandler
 import socket.udp.UDPSocket
 
-class UDPConnectionsMap(private val socket: UDPSocket, private val broker: Broker) : UDPEventHandler, SocketInterface {
+internal class UDPConnectionsMap(private val socket: UDPSocket, private val broker: Broker) : UDPEventHandler, SocketInterface {
 
     private val udpSessions = mutableMapOf<String, ClientConnection>()
     private var currentKey = ""

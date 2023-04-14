@@ -4,7 +4,7 @@ import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 import socket.streams.encodeVariableByteInteger
 
-class SessionUpdatePacket(
+internal class SessionUpdatePacket(
     val clientId: String,
     val connected: Boolean,
     val sessionDisconnectedTimestamp: Long?,

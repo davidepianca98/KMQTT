@@ -5,7 +5,7 @@ import socket.streams.DynamicByteBuffer
 import socket.streams.EOFException
 import kotlin.random.Random
 
-class WebSocket(private val socket: SocketInterface, host: String) : SocketInterface {
+public class WebSocket(private val socket: SocketInterface, host: String) : SocketInterface {
 
     private var getSent = false
     private var handshakeDone = false
@@ -102,7 +102,7 @@ class WebSocket(private val socket: SocketInterface, host: String) : SocketInter
         }
     }
 
-    fun ping() {
+    public fun ping() {
         send(UByteArray(0), 0x9)
     }
 

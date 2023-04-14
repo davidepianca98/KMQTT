@@ -7,20 +7,20 @@ import mqtt.packets.mqtt.MQTTSuback
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT5Suback(
+public class MQTT5Suback(
     packetIdentifier: UInt,
-    val reasonCodes: List<ReasonCode>,
-    val properties: MQTT5Properties = MQTT5Properties()
+    public val reasonCodes: List<ReasonCode>,
+    public val properties: MQTT5Properties = MQTT5Properties()
 ) : MQTTSuback(packetIdentifier), MQTT5Packet {
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
-        val validProperties = listOf(
+        private val validProperties = listOf(
             Property.REASON_STRING,
             Property.USER_PROPERTY
         )
 
-        val validReasonCodes = listOf(
+        private val validReasonCodes = listOf(
             ReasonCode.SUCCESS,
             ReasonCode.GRANTED_QOS1,
             ReasonCode.GRANTED_QOS2,

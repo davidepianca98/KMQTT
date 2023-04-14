@@ -5,7 +5,7 @@ import kotlinx.cinterop.CPointer
 import openssl.*
 import socket.IOException
 
-actual class TLSServerEngine actual constructor(serverContext: TLSServerContext) : TLSEngine {
+internal actual class TLSServerEngine actual constructor(serverContext: TLSServerContext) : TLSEngine {
 
     private val context: CPointer<SSL>
     private val readBio: CPointer<BIO>

@@ -19,7 +19,7 @@ import socket.IOException
 import socket.SocketClosedException
 import socklen_tVar
 
-actual class UDPSocket(private val socket: Int) {
+internal actual class UDPSocket(private val socket: Int) {
 
     private val buffer = ByteArray(2048)
 

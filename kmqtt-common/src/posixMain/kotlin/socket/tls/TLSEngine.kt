@@ -3,20 +3,20 @@ package socket.tls
 import kotlinx.cinterop.ByteVar
 import kotlinx.cinterop.CPointer
 
-interface TLSEngine {
+public interface TLSEngine {
 
-    val isInitFinished: Boolean
-    val bioShouldRetry: Boolean
+    public val isInitFinished: Boolean
+    public val bioShouldRetry: Boolean
 
-    fun write(buffer: CPointer<ByteVar>, length: Int): Int
+    public fun write(buffer: CPointer<ByteVar>, length: Int): Int
 
-    fun read(buffer: CPointer<ByteVar>, length: Int): Int
+    public fun read(buffer: CPointer<ByteVar>, length: Int): Int
 
-    fun bioRead(buffer: CPointer<ByteVar>, length: Int): Int
+    public fun bioRead(buffer: CPointer<ByteVar>, length: Int): Int
 
-    fun bioWrite(buffer: CPointer<ByteVar>, length: Int): Int
+    public fun bioWrite(buffer: CPointer<ByteVar>, length: Int): Int
 
-    fun getError(result: Int): Int
+    public fun getError(result: Int): Int
 
-    fun close()
+    public fun close()
 }

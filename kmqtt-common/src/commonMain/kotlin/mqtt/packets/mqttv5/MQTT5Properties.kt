@@ -1,35 +1,35 @@
 package mqtt.packets.mqttv5
 
-class MQTT5Properties(
-    var payloadFormatIndicator: UInt? = null,
-    var messageExpiryInterval: UInt? = null,
-    var contentType: String? = null,
-    var responseTopic: String? = null,
-    var correlationData: UByteArray? = null,
-    val subscriptionIdentifier: MutableList<UInt> = mutableListOf(),
-    var sessionExpiryInterval: UInt? = null,
-    var assignedClientIdentifier: String? = null,
-    var serverKeepAlive: UInt? = null,
-    var authenticationMethod: String? = null,
-    var authenticationData: UByteArray? = null,
-    var requestProblemInformation: UInt? = null,
-    var willDelayInterval: UInt? = null,
-    var requestResponseInformation: UInt? = null,
-    var responseInformation: String? = null,
-    var serverReference: String? = null,
-    var reasonString: String? = null,
-    var receiveMaximum: UInt? = null,
-    var topicAliasMaximum: UInt? = null,
-    var topicAlias: UInt? = null,
-    var maximumQos: UInt? = null,
-    var retainAvailable: UInt? = null,
-    val userProperty: MutableList<Pair<String, String>> = mutableListOf(),
-    var maximumPacketSize: UInt? = null,
-    var wildcardSubscriptionAvailable: UInt? = null,
-    var subscriptionIdentifierAvailable: UInt? = null,
-    var sharedSubscriptionAvailable: UInt? = null
+public class MQTT5Properties(
+    public var payloadFormatIndicator: UInt? = null,
+    public var messageExpiryInterval: UInt? = null,
+    public var contentType: String? = null,
+    public var responseTopic: String? = null,
+    public var correlationData: UByteArray? = null,
+    public val subscriptionIdentifier: MutableList<UInt> = mutableListOf(),
+    public var sessionExpiryInterval: UInt? = null,
+    public var assignedClientIdentifier: String? = null,
+    public var serverKeepAlive: UInt? = null,
+    public var authenticationMethod: String? = null,
+    public var authenticationData: UByteArray? = null,
+    public var requestProblemInformation: UInt? = null,
+    public var willDelayInterval: UInt? = null,
+    public var requestResponseInformation: UInt? = null,
+    public var responseInformation: String? = null,
+    public var serverReference: String? = null,
+    public var reasonString: String? = null,
+    public var receiveMaximum: UInt? = null,
+    public var topicAliasMaximum: UInt? = null,
+    public var topicAlias: UInt? = null,
+    public var maximumQos: UInt? = null,
+    public var retainAvailable: UInt? = null,
+    public val userProperty: MutableList<Pair<String, String>> = mutableListOf(),
+    public var maximumPacketSize: UInt? = null,
+    public var wildcardSubscriptionAvailable: UInt? = null,
+    public var subscriptionIdentifierAvailable: UInt? = null,
+    public var sharedSubscriptionAvailable: UInt? = null
 ) {
-    fun addUserProperty(property: Pair<String, String>) {
+    public fun addUserProperty(property: Pair<String, String>) {
         userProperty += property
     }
 }

@@ -7,7 +7,7 @@ import socket.SocketClosedException
 import socket.streams.ByteArrayOutputStream
 import socket.tcp.Socket
 
-actual open class TLSSocket(
+public actual open class TLSSocket(
     socket: Int,
     protected val engine: TLSEngine,
     writeRequest: MutableList<Int>?,

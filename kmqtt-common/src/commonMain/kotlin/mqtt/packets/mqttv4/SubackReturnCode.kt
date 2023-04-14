@@ -2,18 +2,18 @@ package mqtt.packets.mqttv4
 
 import mqtt.packets.mqttv5.ReasonCode
 
-enum class SubackReturnCode(val value: Int) {
+public enum class SubackReturnCode(public val value: Int) {
     MAXIMUM_QOS0(0),
     MAXIMUM_QOS1(1),
     MAXIMUM_QOS2(2),
     FAILURE(128);
 
-    companion object {
-        fun valueOf(value: Int) = values().firstOrNull { it.value == value }
+    public companion object {
+        public fun valueOf(value: Int): SubackReturnCode? = values().firstOrNull { it.value == value }
     }
 }
 
-fun List<ReasonCode>.toSubackReturnCodes(): List<SubackReturnCode> {
+public fun List<ReasonCode>.toSubackReturnCodes(): List<SubackReturnCode> {
     return map {
         when (it) {
             ReasonCode.SUCCESS -> SubackReturnCode.MAXIMUM_QOS0

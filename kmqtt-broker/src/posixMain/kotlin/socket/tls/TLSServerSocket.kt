@@ -8,7 +8,7 @@ import socket.ServerSocket
 import socket.SocketState
 import socket.tcp.WebSocket
 
-actual class TLSServerSocket actual constructor(
+internal actual class TLSServerSocket actual constructor(
     private val broker: Broker,
     selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocket(broker, selectCallback) {

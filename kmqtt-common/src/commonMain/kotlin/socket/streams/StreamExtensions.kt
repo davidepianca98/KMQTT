@@ -1,6 +1,6 @@
 package socket.streams
 
-fun OutputStream.encodeVariableByteInteger(value: UInt): Int {
+public fun OutputStream.encodeVariableByteInteger(value: UInt): Int {
     var length = 0
     var x = value
     do {
@@ -15,7 +15,7 @@ fun OutputStream.encodeVariableByteInteger(value: UInt): Int {
     return length
 }
 
-fun InputStream.decodeVariableByteInteger(): UInt {
+public fun InputStream.decodeVariableByteInteger(): UInt {
     var multiplier = 1u
     var value = 0u
     do {

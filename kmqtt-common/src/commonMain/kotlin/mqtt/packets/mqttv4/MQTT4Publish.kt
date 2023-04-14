@@ -11,7 +11,7 @@ import mqtt.packets.mqttv5.ReasonCode
 import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
-class MQTT4Publish(
+public class MQTT4Publish(
     retain: Boolean,
     qos: Qos = Qos.AT_MOST_ONCE,
     dup: Boolean = false,
@@ -21,7 +21,7 @@ class MQTT4Publish(
     timestamp: Long = currentTimeMillis()
 ) : MQTTPublish(retain, qos, dup, topicName, packetId, payload, timestamp), MQTT4Packet {
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Publish {
             checkFlags(flags)

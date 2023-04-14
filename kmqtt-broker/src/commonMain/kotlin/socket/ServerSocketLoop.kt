@@ -6,7 +6,7 @@ import socket.tcp.TCPEventHandler
 import socket.tls.TLSServerSocket
 import socket.udp.UDPEventHandler
 
-class ServerSocketLoop(private val broker: Broker) {
+internal class ServerSocketLoop(private val broker: Broker) {
 
     private val serverSocket = if (broker.tlsSettings == null)
         ServerSocket(broker, this::selectCallback)

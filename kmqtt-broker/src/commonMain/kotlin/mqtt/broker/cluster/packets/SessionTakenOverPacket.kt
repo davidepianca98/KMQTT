@@ -4,7 +4,7 @@ import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 import socket.streams.encodeVariableByteInteger
 
-class SessionTakenOverPacket(val clientId: String) : ClusterPacket {
+internal class SessionTakenOverPacket(val clientId: String) : ClusterPacket {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()

@@ -1,3 +1,3 @@
 package mqtt.packets
 
-data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)
+public data class ConnectAcknowledgeFlags(val sessionPresentFlag: Boolean)

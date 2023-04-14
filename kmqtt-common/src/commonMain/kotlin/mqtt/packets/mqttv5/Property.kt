@@ -1,6 +1,6 @@
 package mqtt.packets.mqttv5
 
-enum class Property(val value: UInt) {
+public enum class Property(public val value: UInt) {
     PAYLOAD_FORMAT_INDICATOR(1u),
     MESSAGE_EXPIRY_INTERVAL(2u),
     CONTENT_TYPE(3u),
@@ -29,7 +29,7 @@ enum class Property(val value: UInt) {
     SUBSCRIPTION_IDENTIFIER_AVAILABLE(41u),
     SHARED_SUBSCRIPTION_AVAILABLE(42u);
 
-    companion object {
-        fun valueOf(value: UInt) = values().firstOrNull { it.value == value }
+    public companion object {
+        public fun valueOf(value: UInt): Property? = values().firstOrNull { it.value == value }
     }
 }

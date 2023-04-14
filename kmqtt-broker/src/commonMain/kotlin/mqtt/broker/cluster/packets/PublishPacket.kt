@@ -5,7 +5,7 @@ import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 import socket.streams.encodeVariableByteInteger
 
-class PublishPacket(val packet: mqtt.packets.mqtt.MQTTPublish) : ClusterPacket {
+internal class PublishPacket(val packet: MQTTPublish) : ClusterPacket {
 
     override fun toByteArray(): UByteArray {
         val outStream = ByteArrayOutputStream()
@@ -33,7 +33,7 @@ class PublishPacket(val packet: mqtt.packets.mqtt.MQTTPublish) : ClusterPacket {
 
             val packetData = inStream.readRemaining()
 
-            return PublishPacket(mqtt.packets.mqtt.MQTTPublish.fromByteArray(5, packetData)) // TODO version 4 also
+            return PublishPacket(MQTTPublish.fromByteArray(5, packetData)) // TODO version 4 also
         }
 
     }

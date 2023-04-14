@@ -1,6 +1,6 @@
 package socket.tcp
 
-interface TCPEventHandler {
+internal interface TCPEventHandler {
 
     fun read(): UByteArray?
 

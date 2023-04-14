@@ -1,6 +1,6 @@
 package socket.streams
 
-class ByteArrayOutputStream : OutputStream {
+public class ByteArrayOutputStream : OutputStream {
 
     private var count = 0
     private var array: UByteArray = UByteArray(1024)
@@ -16,7 +16,7 @@ class ByteArrayOutputStream : OutputStream {
         count += 1
     }
 
-    fun write(b: UByteArray, off: Int, len: Int) {
+    public fun write(b: UByteArray, off: Int, len: Int) {
         ensureCapacity(len)
         array = b.copyInto(array, count, off, len)
         count += len
@@ -27,11 +27,11 @@ class ByteArrayOutputStream : OutputStream {
         write(b, 0, b.size)
     }
 
-    fun size(): Int {
+    public fun size(): Int {
         return count
     }
 
-    fun toByteArray(): UByteArray {
+    public fun toByteArray(): UByteArray {
         return array.copyOfRange(0, count)
     }
 

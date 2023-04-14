@@ -1,6 +1,6 @@
 package socket
 
-enum class SocketState {
+public enum class SocketState {
     READ,
     WRITE
 }

@@ -2,7 +2,7 @@ import socket.tls.TLSSocket
 
 private fun TlsConnectionOptions(): tls.ConnectionOptions = js("{}") as tls.ConnectionOptions
 
-actual class TLSClientSocket actual constructor(
+public actual class TLSClientSocket actual constructor(
     address: String,
     port: Int,
     maximumPacketSize: Int,
@@ -20,7 +20,7 @@ actual class TLSClientSocket actual constructor(
     true
 })
 {
-    actual val handshakeComplete: Boolean
+    public actual val handshakeComplete: Boolean
         get() = true
 
     init {

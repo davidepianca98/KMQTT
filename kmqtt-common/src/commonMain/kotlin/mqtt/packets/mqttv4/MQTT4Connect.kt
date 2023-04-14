@@ -10,7 +10,7 @@ import socket.streams.ByteArrayInputStream
 import socket.streams.ByteArrayOutputStream
 
 
-class MQTT4Connect(
+public class MQTT4Connect(
     protocolName: String,
     protocolVersion: Int,
     connectFlags: ConnectFlags,
@@ -69,7 +69,7 @@ class MQTT4Connect(
         return outStream.wrapWithFixedHeader(MQTTControlPacketType.CONNECT, 0)
     }
 
-    companion object : MQTTDeserializer {
+    public companion object : MQTTDeserializer {
 
         override fun fromByteArray(flags: Int, data: UByteArray): MQTT4Connect {
             val inStream = ByteArrayInputStream(data)

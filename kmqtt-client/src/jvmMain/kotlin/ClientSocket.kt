@@ -5,7 +5,7 @@ import java.nio.channels.SelectionKey
 import java.nio.channels.Selector
 import java.nio.channels.SocketChannel
 
-actual class ClientSocket actual constructor(
+public actual class ClientSocket actual constructor(
     address: String,
     port: Int,
     maximumPacketSize: Int,

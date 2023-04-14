@@ -5,7 +5,7 @@ import socket.ServerSocket
 import socket.ServerSocketLoop
 import socket.SocketState
 
-expect class TLSServerSocket(
+internal expect class TLSServerSocket(
     broker: Broker,
     selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocket
