@@ -22,9 +22,9 @@ kotlin {
     linuxArm64 {}
     ios {}
     macosX64 {}
+    macosArm64 {}
     //tvos {}
     //watchos {}
-    //macosArm64 {}
 
     sourceSets {
         all {
@@ -76,6 +76,9 @@ kotlin {
             dependsOn(posixMain)
         }
         val macosX64Main by getting {
+            dependsOn(posixMain)
+        }
+        val macosArm64Main by getting {
             dependsOn(posixMain)
         }
     }

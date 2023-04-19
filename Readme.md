@@ -20,6 +20,7 @@
 |   iOS X64   | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 |  iOS ARM64  | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 |  macOS X64  | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| macOS ARM64 | :white_check_mark: | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 
 ## Broker features
