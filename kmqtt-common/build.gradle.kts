@@ -21,9 +21,9 @@ kotlin {
     linuxArm64 {}
     iosX64 {}
     iosArm64 {}
+    macosX64 {}
     //tvos {}
     //watchos {}
-    //macosX64 {}
     //macosArm64 {}
 
     sourceSets {
@@ -87,6 +87,10 @@ kotlin {
             // TODO add openssl dependency
         }
         val iosArm64Main by getting {
+            dependsOn(posixMain)
+            // TODO add openssl dependency
+        }
+        val macosX64Main by getting {
             dependsOn(posixMain)
             // TODO add openssl dependency
         }
