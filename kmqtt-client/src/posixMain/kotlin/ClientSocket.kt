@@ -47,7 +47,7 @@ public actual class ClientSocket actual constructor(
                 readTimeOut.toLong()
             )
 
-            if (fdIsSet(socket.convert(), readfds.ptr) == 1) {
+            if (fdIsSet(socket.convert(), readfds.ptr) != 0) {
                 return super.read()
             } else {
                 return null
