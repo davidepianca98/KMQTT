@@ -1,0 +1,40 @@
+headers = openssl/ssl.h openssl/err.h openssl/bio.h openssl/pem.h openssl/pkcs12.h
+headerFilter = openssl/*
+package = openssl
+staticLibraries = libssl.a libcrypto.a
+
+compilerOpts.macos_x64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/MacOSX11.3-x86_64.sdk/include
+libraryPaths.macos_x64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/MacOSX11.3-x86_64.sdk/lib
+
+compilerOpts.macos_arm64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/MacOSX11.3-arm64.sdk/include
+libraryPaths.macos_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/MacOSX11.3-arm64.sdk/lib
+
+compilerOpts.ios_x64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/iPhoneSimulator14.5-x86_64.sdk/include
+libraryPaths.ios_x64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/iPhoneSimulator14.5-x86_64.sdk/lib
+
+compilerOpts.ios_simulator_arm64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/iPhoneSimulator14.5-arm64.sdk/include
+libraryPaths.ios_simulator_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/iPhoneSimulator14.5-arm64.sdk/lib
+
+compilerOpts.ios_arm64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/iPhoneOS14.5-arm64.sdk/include
+libraryPaths.ios_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/iPhoneOS14.5-arm64.sdk/lib
+
+compilerOpts.tvos_x64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/AppleTVSimulator14.5-x86_64.sdk/include
+libraryPaths.tvos_x64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/AppleTVSimulator14.5-x86_64.sdk/lib
+
+compilerOpts.tvos_simulator_arm64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/AppleTVSimulator14.5-arm64.sdk/include
+libraryPaths.tvos_simulator_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/AppleTVSimulator14.5-arm64.sdk/lib
+
+compilerOpts.tvos_arm64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/AppleTVOS14.5-arm64.sdk/include
+libraryPaths.tvos_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/AppleTVOS14.5-arm64.sdk/lib
+
+compilerOpts.watchos_x64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchSimulator7.4-x86_64.sdk/include
+libraryPaths.watchos_x64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchSimulator7.4-x86_64.sdk/lib
+
+compilerOpts.watchos_simulator_arm64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchSimulator7.4-arm64.sdk/include
+libraryPaths.watchos_simulator_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchSimulator7.4-arm64.sdk/lib
+
+compilerOpts.watchos_arm64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-arm64_32.sdk/include
+libraryPaths.watchos_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-arm64_32".sdk/lib
+
+compilerOpts.watchos_arm32 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-armv7k.sdk/include
+libraryPaths.watchos_arm32 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-armv7k".sdk/lib

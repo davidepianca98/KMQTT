@@ -20,7 +20,8 @@ kotlin {
     mingwX64 {}
     linuxX64 {}
     linuxArm64 {}
-    ios {}
+    iosX64 {}
+    iosArm64 {}
     macosX64 {}
     macosArm64 {}
     //tvos {}
