@@ -38,6 +38,16 @@ kotlin {
             executable()
         }
     }
+    macosX64 {
+        binaries {
+            executable()
+        }
+    }
+    macosArm64 {
+        binaries {
+            executable()
+        }
+    }
 
     sourceSets {
         all {
@@ -92,6 +102,12 @@ kotlin {
             dependsOn(posixMain)
         }
         val linuxArm64Main by getting {
+            dependsOn(posixMain)
+        }
+        val macosX64Main by getting {
+            dependsOn(posixMain)
+        }
+        val macosArm64Main by getting {
             dependsOn(posixMain)
         }
     }

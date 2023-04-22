@@ -92,11 +92,15 @@ kotlin {
         }
         val macosX64Main by getting {
             dependsOn(posixMain)
-            // TODO add openssl dependency
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-macos-x64.klib"))
+            }
         }
         val macosArm64Main by getting {
             dependsOn(posixMain)
-            // TODO add openssl dependency
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-macos-arm64.klib"))
+            }
         }
     }
 }

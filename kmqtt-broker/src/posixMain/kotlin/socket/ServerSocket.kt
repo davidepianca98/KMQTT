@@ -210,31 +210,31 @@ internal actual open class ServerSocket actual constructor(
                 )
             }
 
-            if (posix_FD_ISSET(mqttSocket.convert(), readfds.ptr) == 1) {
+            if (posix_FD_ISSET(mqttSocket.convert(), readfds.ptr) != 0) {
                 tcpServerSocketAccept(mqttSocket, TCPSocketType.MQTT)
             }
             if (mqttWebSocket != -1) {
-                if (posix_FD_ISSET(mqttWebSocket.convert(), readfds.ptr) == 1) {
+                if (posix_FD_ISSET(mqttWebSocket.convert(), readfds.ptr) != 0) {
                     tcpServerSocketAccept(mqttWebSocket, TCPSocketType.MQTTWS)
                 }
             }
             if (clusteringSocket != -1) {
-                if (posix_FD_ISSET(clusteringSocket.convert(), readfds.ptr) == 1) {
+                if (posix_FD_ISSET(clusteringSocket.convert(), readfds.ptr) != 0) {
                     tcpServerSocketAccept(clusteringSocket, TCPSocketType.CLUSTER)
                 }
             }
             clients.forEach { socket ->
                 when {
-                    posix_FD_ISSET(socket.key.convert(), readfds.ptr) == 1 -> {
+                    posix_FD_ISSET(socket.key.convert(), readfds.ptr) != 0 -> {
                         if (!selectCallback(socket.value, SocketState.READ))
                             clients.remove(socket.key)
                     }
-                    posix_FD_ISSET(socket.key.convert(), writefds.ptr) == 1 -> {
+                    posix_FD_ISSET(socket.key.convert(), writefds.ptr) != 0 -> {
                         writeRequest.remove(socket.key)
                         if (!selectCallback(socket.value, SocketState.WRITE))
                             clients.remove(socket.key)
                     }
-                    posix_FD_ISSET(socket.key.convert(), errorfds.ptr) == 1 -> {
+                    posix_FD_ISSET(socket.key.convert(), errorfds.ptr) != 0 -> {
                         clients.remove(socket.key)
                         shutdown(socket.key)
                         close(socket.key)
