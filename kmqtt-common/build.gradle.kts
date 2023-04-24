@@ -24,8 +24,13 @@ kotlin {
     iosSimulatorArm64 {}
     macosX64 {}
     macosArm64 {}
-    //tvos {}
-    //watchos {}
+    tvosX64 {}
+    tvosSimulatorArm64 {}
+    tvosArm64 {}
+    //watchosArm32 {}
+    //watchosArm64 {}
+    //watchosSimulatorArm64 {}
+    //watchosX64 {}
 
     sourceSets {
         all {
@@ -111,6 +116,24 @@ kotlin {
             dependsOn(posixMain)
             dependencies {
                 implementation(files("src/nativeInterop/openssl-macos-arm64.klib"))
+            }
+        }
+        val tvosX64Main by getting {
+            dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-tvos-x64.klib"))
+            }
+        }
+        val tvosArm64Main by getting {
+            dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-tvos-arm64.klib"))
+            }
+        }
+        val tvosSimulatorArm64Main by getting {
+            dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-tvos-simulator-arm64.klib"))
             }
         }
     }

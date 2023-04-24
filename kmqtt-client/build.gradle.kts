@@ -25,8 +25,13 @@ kotlin {
     iosSimulatorArm64 {}
     macosX64 {}
     macosArm64 {}
-    //tvos {}
-    //watchos {}
+    tvosX64 {}
+    tvosSimulatorArm64 {}
+    tvosArm64 {}
+    //watchosArm32 {}
+    //watchosArm64 {}
+    //watchosSimulatorArm64 {}
+    //watchosX64 {}
 
     sourceSets {
         all {
@@ -84,6 +89,15 @@ kotlin {
             dependsOn(posixMain)
         }
         val macosArm64Main by getting {
+            dependsOn(posixMain)
+        }
+        val tvosX64Main by getting {
+            dependsOn(posixMain)
+        }
+        val tvosArm64Main by getting {
+            dependsOn(posixMain)
+        }
+        val tvosSimulatorArm64Main by getting {
             dependsOn(posixMain)
         }
     }
