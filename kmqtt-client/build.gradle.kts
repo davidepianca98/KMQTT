@@ -22,6 +22,7 @@ kotlin {
     linuxArm64 {}
     iosX64 {}
     iosArm64 {}
+    iosSimulatorArm64 {}
     macosX64 {}
     macosArm64 {}
     //tvos {}
@@ -74,6 +75,9 @@ kotlin {
             dependsOn(posixMain)
         }
         val iosArm64Main by getting {
+            dependsOn(posixMain)
+        }
+        val iosSimulatorArm64Main by getting {
             dependsOn(posixMain)
         }
         val macosX64Main by getting {
