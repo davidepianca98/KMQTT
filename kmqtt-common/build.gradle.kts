@@ -27,10 +27,10 @@ kotlin {
     tvosX64 {}
     tvosSimulatorArm64 {}
     tvosArm64 {}
-    //watchosArm32 {}
-    //watchosArm64 {}
-    //watchosSimulatorArm64 {}
-    //watchosX64 {}
+    watchosArm32 {}
+    watchosArm64 {}
+    watchosSimulatorArm64 {}
+    watchosX64 {}
 
     sourceSets {
         all {
@@ -134,6 +134,30 @@ kotlin {
             dependsOn(posixMain)
             dependencies {
                 implementation(files("src/nativeInterop/openssl-tvos-simulator-arm64.klib"))
+            }
+        }
+        val watchosX64Main by getting {
+            dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-watchos-x64.klib"))
+            }
+        }
+        val watchosArm32Main by getting {
+            dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-watchos-arm32.klib"))
+            }
+        }
+        val watchosArm64Main by getting {
+            dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-watchos-arm64.klib"))
+            }
+        }
+        val watchosSimulatorArm64Main by getting {
+            dependsOn(posixMain)
+            dependencies {
+                implementation(files("src/nativeInterop/openssl-watchos-simulator-arm64.klib"))
             }
         }
     }

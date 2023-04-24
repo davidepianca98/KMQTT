@@ -34,7 +34,7 @@ compilerOpts.watchos_simulator_arm64 = -I/Users/davide/Desktop/openssl/OpenSSL-f
 libraryPaths.watchos_simulator_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchSimulator7.4-arm64.sdk/lib
 
 compilerOpts.watchos_arm64 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-arm64_32.sdk/include
-libraryPaths.watchos_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-arm64_32".sdk/lib
+libraryPaths.watchos_arm64 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-arm64_32.sdk/lib
 
 compilerOpts.watchos_arm32 = -I/Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-armv7k.sdk/include
-libraryPaths.watchos_arm32 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-armv7k".sdk/lib
+libraryPaths.watchos_arm32 = /Users/davide/Desktop/openssl/OpenSSL-for-iPhone/bin/WatchOS7.4-armv7k.sdk/lib
