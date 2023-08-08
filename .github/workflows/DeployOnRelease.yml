@@ -1,0 +1,23 @@
+on:
+ release:
+   types: [created]
+
+jobs:
+ release:
+   runs-on: macos-latest
+   steps:
+     - name: Checkout code
+       uses: actions/checkout@v2
+
+     - name: Setup Java
+       uses: actions/setup-java@v1
+       with:
+           java-version: 11
+     - name: Publish
+       run: |
+           cd ${GITHUB_WORKSPACE}
+           chmod +x ./gradlew
+           ./gradlew check publish --no-configure-on-demand --no-daemon
+       env:
+           ORG_GRADLE_PROJECT_githubUsername: ${{ github.actor }}
+           ORG_GRADLE_PROJECT_githubPassword: ${{ github.token }}
