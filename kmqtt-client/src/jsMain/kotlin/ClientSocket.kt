@@ -1,4 +1,5 @@
 import socket.tcp.Socket
+import web.timers.setTimeout
 
 public actual class ClientSocket actual constructor(
     address: String,
@@ -6,7 +7,7 @@ public actual class ClientSocket actual constructor(
     maximumPacketSize: Int,
     readTimeOut: Int,
     private val checkCallback: () -> Unit
-) : Socket(net.Socket(), { _, _ ->
+) : Socket(node.net.Socket(), { _, _ ->
     checkCallback()
     true
 }) {

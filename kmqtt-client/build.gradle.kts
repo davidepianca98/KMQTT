@@ -12,9 +12,10 @@ kotlin {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
-    js(IR) {
-        useCommonJs()
-        nodejs()
+    js {
+        nodejs {
+            binaries.executable()
+        }
     }
     mingwX64 {}
     linuxX64 {}
@@ -36,6 +37,7 @@ kotlin {
         all {
             languageSettings.apply {
                 optIn("kotlin.ExperimentalUnsignedTypes")
+                optIn("kotlinx.cinterop.ExperimentalForeignApi")
             }
         }
         val commonMain by getting {
@@ -57,7 +59,11 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
-        val jsMain by getting {}
+        val jsMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-node:18.16.12-pre.599")
+            }
+        }
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))

@@ -2,6 +2,7 @@ import kotlinx.cinterop.*
 import platform.posix.fd_set
 import platform.posix.sockaddr
 import platform.posix.sockaddr_in
+import platform.posix.timeval
 
 public expect fun send(
     socket: Int,
@@ -111,3 +112,5 @@ public expect fun getEagain(): Int
 public expect fun getEwouldblock(): Int
 
 public typealias socklen_tVar = UIntVarOf<UInt>
+
+public expect fun gettimeofday(timeval: timeval)

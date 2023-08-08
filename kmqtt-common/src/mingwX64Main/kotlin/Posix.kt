@@ -177,3 +177,19 @@ public actual fun fdZero(fdSet: CValuesRef<fd_set>) {
 public actual fun fdIsSet(fd: Int, fdSet: CValuesRef<fd_set>): Int {
     return posix_FD_ISSET(fd, fdSet)
 }
+
+public actual fun gettimeofday(timeval: timeval) {
+    memScoped {
+        val systemTime = alloc<SYSTEMTIME>()
+        val fileTime = alloc<_FILETIME>()
+
+        val epoch = 116444736000000000UL
+
+        GetSystemTime(systemTime.ptr)
+        SystemTimeToFileTime(systemTime.ptr, fileTime.ptr)
+        val time = fileTime.dwLowDateTime.toULong() + (fileTime.dwHighDateTime.toULong() shl 32)
+
+        timeval.tv_sec  = ((time - epoch) / 10000000UL).toInt()
+        timeval.tv_usec = ((time - epoch).rem(10000000UL) / 10u).toInt()
+    }
+}

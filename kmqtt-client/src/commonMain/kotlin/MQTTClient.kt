@@ -337,7 +337,7 @@ public class MQTTClient(
     }
 
     /**
-     * Run a single iteration of the client (non blocking)
+     * Run a single iteration of the client (non-blocking)
      */
     public fun step() {
         if (running) {

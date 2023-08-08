@@ -2,7 +2,7 @@ package mqtt
 
 import mqtt.packets.mqttv5.SubscriptionOptions
 
-public class Subscription(
+public data class Subscription(
     public val topicFilter: String,
     public val options: SubscriptionOptions = SubscriptionOptions(),
     public val subscriptionIdentifier: UInt? = null

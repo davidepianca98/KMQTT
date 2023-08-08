@@ -122,11 +122,11 @@ internal actual open class ServerSocket actual constructor(
                     socketsCleanup()
                     throw IOException("Invalid socket: error $errno")
                 }
-                prepareStreamSocket(mqttWebSocket, broker.webSocketPort!!)
+                prepareStreamSocket(mqttWebSocket, broker.webSocketPort)
             }
 
             if (broker.cluster != null) {
-                val cluster = broker.cluster!!
+                val cluster = broker.cluster
                 clusteringSocket = socket(AF_INET, SOCK_STREAM, 0)
                 if (clusteringSocket == -1) {
                     socketsCleanup()
@@ -288,7 +288,7 @@ internal actual open class ServerSocket actual constructor(
 
     override fun addClusterConnection(address: String): ClusterConnection? {
         if (broker.cluster != null) {
-            val cluster = broker.cluster!!
+            val cluster = broker.cluster
             memScoped {
                 val socket = socket(AF_INET, SOCK_STREAM, 0)
                 if (socket == -1) {

@@ -1,19 +1,18 @@
 
 allprojects {
     repositories {
-        jcenter()
         mavenCentral()
     }
 }
 
 buildscript {
     dependencies {
-        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.20.0")
+        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.21.0")
     }
 }
 
 plugins {
-    kotlin("multiplatform") version "1.8.20" apply false
+    kotlin("multiplatform") version "1.9.0" apply false
     id("com.louiscad.complete-kotlin") version "1.1.0"
 }
 

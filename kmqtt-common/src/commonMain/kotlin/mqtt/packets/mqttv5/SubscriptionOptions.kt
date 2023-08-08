@@ -3,7 +3,7 @@ package mqtt.packets.mqttv5
 import mqtt.MQTTException
 import mqtt.packets.Qos
 
-public class SubscriptionOptions(
+public data class SubscriptionOptions(
     public val qos: Qos = Qos.AT_MOST_ONCE,
     public val noLocal: Boolean = false,
     public val retainedAsPublished: Boolean = false,

@@ -1,12 +1,8 @@
-import org.khronos.webgl.get
-import org.khronos.webgl.set
+
+import node.buffer.Buffer
 
 public fun UByteArray.toBuffer(): Buffer {
-    val result = Buffer(this.size)
-    for (i in 0 until this.size) {
-        result[i] = this[i].toByte()
-    }
-    return result
+    return Buffer(this)
 }
 
 public fun Buffer.toUByteArray(): UByteArray {

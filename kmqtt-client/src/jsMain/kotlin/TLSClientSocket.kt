@@ -1,6 +1,9 @@
+import socket.tls.ConnectionOptions
 import socket.tls.TLSSocket
+import socket.tls.connect
+import web.timers.setTimeout
 
-private fun TlsConnectionOptions(): tls.ConnectionOptions = js("{}") as tls.ConnectionOptions
+private fun TlsConnectionOptions(): ConnectionOptions = js("{}") as ConnectionOptions
 
 public actual class TLSClientSocket actual constructor(
     address: String,
@@ -9,11 +12,11 @@ public actual class TLSClientSocket actual constructor(
     readTimeOut: Int,
     tlsSettings: TLSClientSettings,
     private val checkCallback: () -> Unit
-) : TLSSocket(tls.connect(port, address, TlsConnectionOptions().apply {
-    ca = tlsSettings.serverCertificatePath?.run { fs.readFileSync(this, null as String?) } ?: ca
-    cert = tlsSettings.clientCertificatePath?.run { fs.readFileSync(this, null as String?) } ?: cert
-    key = tlsSettings.clientCertificateKeyPath?.run { fs.readFileSync(this, null as String?) } ?: key
-    passphrase = tlsSettings.clientCertificatePassword ?: passphrase
+) : TLSSocket(connect(port, address, TlsConnectionOptions().apply {
+    ca = tlsSettings.serverCertificatePath?.run { node.fs.readFileSync(this, null) }
+    cert = tlsSettings.clientCertificatePath?.run { node.fs.readFileSync(this, null) }
+    key = tlsSettings.clientCertificateKeyPath?.run { node.fs.readFileSync(this, null) }
+    passphrase = tlsSettings.clientCertificatePassword
     servername = address
 }), { _, _ ->
     checkCallback()

@@ -2,10 +2,10 @@ package socket.tls
 
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
+import node.net.Socket
 import socket.ServerSocket
 import socket.SocketState
 import socket.tcp.WebSocket
-import tls.TlsOptions
 
 internal actual class TLSServerSocket actual constructor(
     private val broker: Broker,
@@ -15,12 +15,12 @@ internal actual class TLSServerSocket actual constructor(
     private fun TlsOptions(): TlsOptions = js("{}") as TlsOptions
 
     private val tlsOptions = TlsOptions().apply {
-        pfx = fs.readFileSync(broker.tlsSettings!!.keyStoreFilePath, null as String?)
+        pfx = node.fs.readFileSync(broker.tlsSettings!!.keyStoreFilePath, null)
         passphrase = broker.tlsSettings.keyStorePassword
         requestCert = broker.tlsSettings.requireClientCertificate
     }
 
-    override val mqttSocket = tls.createServer(tlsOptions) { socket: tls.TLSSocket ->
+    override val mqttSocket = createServer(tlsOptions) { socket: Socket ->
         val localSocket = createSocket(socket)
         val connection = ClientConnection(localSocket, broker)
         clients[socket.socketId()] = connection
@@ -28,7 +28,7 @@ internal actual class TLSServerSocket actual constructor(
 
         onConnect(socket)
     }
-    override val mqttWebSocket = tls.createServer(tlsOptions) { socket: tls.TLSSocket ->
+    override val mqttWebSocket = createServer(tlsOptions) { socket: Socket ->
         val localSocket = createSocket(socket)
         val connection = ClientConnection(WebSocket(localSocket), broker)
         clients[socket.socketId()] = connection
@@ -55,9 +55,9 @@ internal actual class TLSServerSocket actual constructor(
         }
     }
 
-    private fun tls.TLSSocket.socketId(): String = "$remoteAddress:$remotePort"
+    private fun node.net.Socket.socketId(): String = "$remoteAddress:$remotePort"
 
-    private fun createSocket(socket: tls.TLSSocket): TLSSocket {
+    override fun createSocket(socket: node.net.Socket): TLSSocket {
         return TLSSocket(socket, selectCallback)
     }
 }

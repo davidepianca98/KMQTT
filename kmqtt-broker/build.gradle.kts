@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.8.20"
+    kotlin("plugin.serialization") version "1.9.0"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
@@ -17,7 +17,7 @@ kotlin {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
-    js(IR) {
+    js {
         useCommonJs()
         nodejs {
             binaries.executable()
@@ -54,6 +54,7 @@ kotlin {
             languageSettings.apply {
                 optIn("kotlinx.serialization.ExperimentalSerializationApi")
                 optIn("kotlin.ExperimentalUnsignedTypes")
+                optIn("kotlinx.cinterop.ExperimentalForeignApi")
             }
         }
         val commonMain by getting {
@@ -84,7 +85,8 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.6.4")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-node:18.16.12-pre.599")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.7.2")
             }
         }
         val jsTest by getting {

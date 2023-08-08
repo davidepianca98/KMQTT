@@ -3,9 +3,10 @@ package socket
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
 import mqtt.broker.cluster.ClusterConnection
-import setTimeout
+import node.events.Event
 import socket.tcp.Socket
 import socket.tcp.WebSocket
+import web.timers.setTimeout
 
 internal actual open class ServerSocket actual constructor(
     private val broker: Broker,
@@ -13,7 +14,7 @@ internal actual open class ServerSocket actual constructor(
 ) : ServerSocketInterface {
 
     protected val clients = mutableMapOf<String, Any?>()
-    protected open val mqttSocket: net.Server = net.createServer { socket: net.Socket ->
+    protected open val mqttSocket: node.net.Server = node.net.createServer { socket: node.net.Socket ->
         val localSocket = createSocket(socket)
         val connection = ClientConnection(localSocket, broker)
         clients[socket.socketId()] = connection
@@ -21,7 +22,7 @@ internal actual open class ServerSocket actual constructor(
 
         onConnect(socket)
     }
-    protected open val mqttWebSocket: net.Server = net.createServer { socket: net.Socket ->
+    protected open val mqttWebSocket: node.net.Server = node.net.createServer { socket: node.net.Socket ->
         val localSocket = createSocket(socket)
         val connection = ClientConnection(WebSocket(localSocket), broker)
         clients[socket.socketId()] = connection
@@ -30,25 +31,25 @@ internal actual open class ServerSocket actual constructor(
         onConnect(socket)
     }
 
-    fun onConnect(socket: net.Socket) {
-        socket.on("error") { error: Error ->
+    fun onConnect(socket: node.net.Socket) {
+        socket.on(Event.ERROR) { error: Error ->
             println(error.message)
         }
 
-        socket.on("timeout", {
+        socket.on(Event.TIMEOUT) {
             socket.end()
-        } as () -> Unit)
+        }
 
-        socket.on("end", {
+        socket.on(Event.END) {
             clients.remove(socket.socketId())
-        } as () -> Unit)
+        }
 
-        socket.on("close") { _: Boolean ->
+        socket.on(Event.CLOSE) { _: Boolean ->
             clients.remove(socket.socketId())
         }
     }
 
-    private fun net.Socket.socketId(): String = "$remoteAddress:$remotePort"
+    private fun node.net.Socket.socketId(): String = "$remoteAddress:$remotePort"
 
     init {
         mqttSocket.listen(broker.port, broker.host) {
@@ -75,7 +76,7 @@ internal actual open class ServerSocket actual constructor(
         }, 1000)
     }
 
-    open fun createSocket(socket: net.Socket): Socket {
+    open fun createSocket(socket: node.net.Socket): Socket {
         return Socket(socket, selectCallback)
     }
 

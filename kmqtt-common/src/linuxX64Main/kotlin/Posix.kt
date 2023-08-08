@@ -151,3 +151,7 @@ public actual fun fdZero(fdSet: CValuesRef<fd_set>) {
 public actual fun fdIsSet(fd: Int, fdSet: CValuesRef<fd_set>): Int {
     return posix_FD_ISSET(fd, fdSet)
 }
+
+public actual fun gettimeofday(timeval: timeval) {
+    platform.posix.gettimeofday(timeval.ptr, null)
+}

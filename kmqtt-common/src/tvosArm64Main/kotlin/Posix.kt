@@ -159,3 +159,7 @@ public actual fun fdZero(fdSet: CValuesRef<fd_set>) {
 public actual fun fdIsSet(fd: Int, fdSet: CValuesRef<fd_set>): Int {
     return __darwin_fd_isset(fd, fdSet)
 }
+
+public actual fun gettimeofday(timeval: timeval) {
+    gettimeofday(timeval.ptr, null)
+}
