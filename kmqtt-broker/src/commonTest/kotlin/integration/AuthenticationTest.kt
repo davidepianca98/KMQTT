@@ -1,7 +1,10 @@
 package integration
 
-import IgnoreJs
 import MQTTClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import mqtt.MQTTException
 import mqtt.broker.Broker
 import mqtt.broker.interfaces.Authentication
@@ -11,10 +14,9 @@ import mqtt.packets.mqttv5.ReasonCode
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
-@IgnoreJs
 class AuthenticationTest {
 
-    private fun testAuthentication(
+    private suspend fun testAuthentication(
         client: MQTTClient,
         broker: Broker
     ) {
@@ -23,6 +25,9 @@ class AuthenticationTest {
             broker.step()
             client.step()
             i++
+            withContext(Dispatchers.Default) {
+                delay(10)
+            }
         }
         if (i >= 1000) {
             throw Exception("Test timeout")
@@ -31,7 +36,7 @@ class AuthenticationTest {
     }
 
     @Test
-    fun testSimpleAuthentication() {
+    fun testSimpleAuthentication() = runTest {
         val broker = Broker(authentication = object : Authentication {
             override fun authenticate(clientId: String, username: String?, password: UByteArray?): Boolean {
                 return username == "user" && password?.toByteArray()?.decodeToString() == "pass"
@@ -45,7 +50,7 @@ class AuthenticationTest {
     }
 
     @Test
-    fun testSimpleAuthenticationFailure() {
+    fun testSimpleAuthenticationFailure() = runTest {
         val broker = Broker(authentication = object : Authentication {
             override fun authenticate(clientId: String, username: String?, password: UByteArray?): Boolean {
                 return username == "user" && password?.toByteArray()?.decodeToString() == "pass"
@@ -61,7 +66,7 @@ class AuthenticationTest {
     }
 
     @Test
-    fun testEnhancedAuthentication() {
+    fun testEnhancedAuthentication() = runTest {
         val broker =
             Broker(enhancedAuthenticationProviders = mapOf("TEST-EN-AUTH" to object :
                 EnhancedAuthenticationProvider {

@@ -1,7 +1,10 @@
 package integration
 
-import IgnoreJs
 import MQTTClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import mqtt.Subscription
 import mqtt.broker.Broker
 import mqtt.packets.Qos
@@ -10,10 +13,9 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
-@IgnoreJs
 class PublishSubscribeMultipleClientsTest {
 
-    private fun testPublish(qos: Qos, topic: String, payload: UByteArray) {
+    private suspend fun testPublish(qos: Qos, topic: String, payload: UByteArray) {
         var received = false
 
         val broker = Broker()
@@ -39,6 +41,9 @@ class PublishSubscribeMultipleClientsTest {
             client1.step()
             client2.step()
             i++
+            withContext(Dispatchers.Default) {
+                delay(10)
+            }
         }
 
         broker.stop()
@@ -49,7 +54,7 @@ class PublishSubscribeMultipleClientsTest {
     }
 
     @Test
-    fun testPublishSubscribeTopicQos0() {
+    fun testPublishSubscribeTopicQos0() = runTest {
         val sendPayload = "Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1".encodeToByteArray()
         val topic = "test/topic"
 
@@ -57,7 +62,7 @@ class PublishSubscribeMultipleClientsTest {
     }
 
     @Test
-    fun testPublishSubscribeTopicQos1() {
+    fun testPublishSubscribeTopicQos1() = runTest {
         val sendPayload = "Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1".encodeToByteArray()
         val topic = "test/topic"
 
@@ -65,7 +70,7 @@ class PublishSubscribeMultipleClientsTest {
     }
 
     @Test
-    fun testPublishSubscribeTopicQos2() {
+    fun testPublishSubscribeTopicQos2() = runTest {
         val sendPayload = "Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1Test1".encodeToByteArray()
         val topic = "test/topic"
 

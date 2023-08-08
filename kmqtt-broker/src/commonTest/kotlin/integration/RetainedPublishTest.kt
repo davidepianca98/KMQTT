@@ -1,7 +1,10 @@
 package integration
 
-import IgnoreJs
 import MQTTClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import mqtt.Subscription
 import mqtt.broker.Broker
 import mqtt.packets.Qos
@@ -10,11 +13,10 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
-@IgnoreJs
 class RetainedPublishTest {
 
     @Test
-    fun testRetained() {
+    fun testRetained() = runTest {
         val qos0Topic = "from/qos 0"
         val qos1Topic = "from/qos 1"
         val qos2Topic = "from/qos 2"
@@ -55,6 +57,9 @@ class RetainedPublishTest {
             broker.step()
             client.step()
             i++
+            withContext(Dispatchers.Default) {
+                delay(10)
+            }
         }
 
         broker.stop()

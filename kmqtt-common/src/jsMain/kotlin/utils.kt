@@ -2,7 +2,11 @@
 import node.buffer.Buffer
 
 public fun UByteArray.toBuffer(): Buffer {
-    return Buffer(this)
+    val result = Buffer.alloc(this.size)
+    for (i in indices) {
+        result.writeUint8(this[i].toInt(), i)
+    }
+    return result
 }
 
 public fun Buffer.toUByteArray(): UByteArray {

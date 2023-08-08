@@ -8,6 +8,7 @@ plugins {
 }
 
 val serializationVersion: String by project
+val coroutineVersion: String by project
 
 kotlin {
     explicitApi()
@@ -63,6 +64,7 @@ kotlin {
                 implementation(project(":kmqtt-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
             }
         }
         val commonTest by getting {
@@ -70,6 +72,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation(project(":kmqtt-client"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
             }
         }
         val jvmMain by getting {
@@ -86,7 +89,6 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-node:18.16.12-pre.599")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.7.2")
             }
         }
         val jsTest by getting {

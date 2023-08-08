@@ -10,6 +10,7 @@ import mqtt.packets.mqtt.*
 import mqtt.packets.mqttv4.*
 import mqtt.packets.mqttv5.*
 import socket.IOException
+import socket.SocketClosedException
 import socket.SocketInterface
 import socket.streams.EOFException
 
@@ -279,7 +280,14 @@ public class MQTTClient(
         }
     }
 
+    private var lastException: Exception? = null
+
     private fun check() {
+        if (socket == null) {
+            close()
+            // Needed because of JS callbacks, otherwise the exception gets swallowed and tests don't complete correctly
+            throw lastException ?: SocketClosedException("")
+        }
         val data = socket!!.read()
         lock.withLock {
             if (data != null) {
@@ -290,20 +298,24 @@ public class MQTTClient(
                         handlePacket(it)
                     }
                 } catch (e: MQTTException) {
+                    lastException = e
                     e.printStackTrace()
                     disconnect(e.reasonCode)
                     close()
                     throw e
                 } catch (e: EOFException) {
+                    lastException = e
                     println("EOF")
                     close()
                     throw e
                 } catch (e: IOException) {
+                    lastException = e
                     println("IOException ${e.message}")
                     disconnect(ReasonCode.UNSPECIFIED_ERROR)
                     close()
                     throw e
                 } catch (e: Exception) {
+                    lastException = e
                     println("Exception ${e.message} ${e.cause?.message}")
                     disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
                     close()
@@ -314,14 +326,16 @@ public class MQTTClient(
                 val currentTime = currentTimeMillis()
                 if (!connackReceived && currentTime > lastActiveTimestamp + 30000) {
                     close()
-                    throw Exception("CONNACK not received in 30 seconds")
+                    lastException = Exception("CONNACK not received in 30 seconds")
+                    throw lastException!!
                 }
 
                 if (keepAlive != 0 && connackReceived) {
                     if (currentTime > lastActiveTimestamp + (keepAlive * 1000)) {
                         // Timeout
                         close()
-                        throw MQTTException(ReasonCode.KEEP_ALIVE_TIMEOUT)
+                        lastException = MQTTException(ReasonCode.KEEP_ALIVE_TIMEOUT)
+                        throw lastException!!
                     } else if (currentTime > lastActiveTimestamp + (keepAlive * 1000 * 0.9)) {
                         val pingreq = if (mqttVersion == 4) {
                             MQTT4Pingreq()
