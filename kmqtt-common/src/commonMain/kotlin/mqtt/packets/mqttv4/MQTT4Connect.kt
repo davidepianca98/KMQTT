@@ -1,6 +1,7 @@
 package mqtt.packets.mqttv4
 
 import mqtt.MQTTException
+import mqtt.MQTTVersion
 import mqtt.packets.ConnectFlags
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
@@ -12,7 +13,6 @@ import socket.streams.ByteArrayOutputStream
 
 public class MQTT4Connect(
     protocolName: String,
-    protocolVersion: Int,
     connectFlags: ConnectFlags,
     keepAlive: Int,
     clientID: String = "",
@@ -22,7 +22,7 @@ public class MQTT4Connect(
     password: UByteArray? = null
 ) : MQTTConnect(
     protocolName,
-    protocolVersion,
+    MQTTVersion.MQTT3_1_1.value,
     connectFlags,
     keepAlive,
     clientID,
@@ -93,7 +93,6 @@ public class MQTT4Connect(
 
             return MQTT4Connect(
                 protocolName,
-                protocolVersion,
                 connectFlags,
                 keepAlive.toInt(),
                 clientID,

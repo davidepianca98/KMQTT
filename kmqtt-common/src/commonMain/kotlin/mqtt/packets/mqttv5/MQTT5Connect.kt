@@ -1,6 +1,7 @@
 package mqtt.packets.mqttv5
 
 import mqtt.MQTTException
+import mqtt.MQTTVersion
 import mqtt.packets.ConnectFlags
 import mqtt.packets.MQTTControlPacketType
 import mqtt.packets.MQTTDeserializer
@@ -10,7 +11,6 @@ import socket.streams.ByteArrayOutputStream
 
 public class MQTT5Connect(
     protocolName: String,
-    protocolVersion: Int,
     connectFlags: ConnectFlags,
     keepAlive: Int,
     clientID: String = "",
@@ -22,7 +22,7 @@ public class MQTT5Connect(
     password: UByteArray? = null
 ) : MQTTConnect(
     protocolName,
-    protocolVersion,
+    MQTTVersion.MQTT5.value,
     connectFlags,
     keepAlive,
     clientID,
@@ -85,7 +85,6 @@ public class MQTT5Connect(
 
             return MQTT5Connect(
                 protocolName,
-                protocolVersion,
                 connectFlags,
                 keepAlive.toInt(),
                 clientID,

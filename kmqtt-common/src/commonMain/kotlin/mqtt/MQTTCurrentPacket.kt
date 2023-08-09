@@ -11,11 +11,11 @@ import socket.streams.decodeVariableByteInteger
 
 public class MQTTCurrentPacket(
     private val maximumPacketSize: UInt,
-    mqttVersion: Int? = null // 4 -> 3.1.1, 5 -> 5, null -> unknown (support both)
+    mqttVersion: MQTTVersion? = null // null -> unknown (support both)
 ) {
 
     private val currentReceivedData = DynamicByteBuffer()
-    public var mqttVersion: Int? = mqttVersion
+    public var mqttVersion: MQTTVersion? = mqttVersion
         private set
 
     public fun addData(data: UByteArray): List<MQTTPacket> {
@@ -98,14 +98,14 @@ public class MQTTCurrentPacket(
 
     private fun parseMQTTPacket(type: MQTTControlPacketType, flags: Int, data: UByteArray): MQTTPacket {
         return when (mqttVersion) {
-            4 -> parseMQTT4Packet(type, flags, data)
-            5 -> parseMQTT5Packet(type, flags, data)
+            MQTTVersion.MQTT3_1_1 -> parseMQTT4Packet(type, flags, data)
+            MQTTVersion.MQTT5 -> parseMQTT5Packet(type, flags, data)
             else -> {
                 try {
-                    mqttVersion = 5
+                    mqttVersion = MQTTVersion.MQTT5
                     parseMQTT5Packet(type, flags, data)
                 } catch (e: MQTTException) {
-                    mqttVersion = 4
+                    mqttVersion = MQTTVersion.MQTT3_1_1
                     parseMQTT4Packet(type, flags, data)
                 }
             }

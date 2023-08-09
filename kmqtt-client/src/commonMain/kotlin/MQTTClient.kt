@@ -2,6 +2,7 @@ import kotlinx.atomicfu.locks.reentrantLock
 import kotlinx.atomicfu.locks.withLock
 import mqtt.MQTTCurrentPacket
 import mqtt.MQTTException
+import mqtt.MQTTVersion
 import mqtt.Subscription
 import mqtt.packets.ConnectFlags
 import mqtt.packets.MQTTPacket
@@ -34,7 +35,7 @@ import socket.streams.EOFException
  * @param publishReceived the callback called when a PUBLISH message is received by this client
  */
 public class MQTTClient(
-    private val mqttVersion: Int,
+    private val mqttVersion: MQTTVersion,
     private val address: String,
     private val port: Int,
     private val tls: TLSClientSettings?,
@@ -85,10 +86,6 @@ public class MQTTClient(
         private set
 
     init {
-        if (mqttVersion != 4 && mqttVersion != 5) {
-            throw IllegalArgumentException("Unknown MQTT version")
-        }
-
         if (keepAlive > 65535) {
             throw IllegalArgumentException("Keep alive exceeding the maximum value")
         }
@@ -126,10 +123,9 @@ public class MQTTClient(
     }
 
     private fun sendConnect() {
-        val connect = if (mqttVersion == 4) {
+        val connect = if (mqttVersion == MQTTVersion.MQTT3_1_1) {
             MQTT4Connect(
                 "MQTT",
-                mqttVersion,
                 ConnectFlags(userName != null, password != null, willRetain, willQos, willTopic != null, cleanStart, false),
                 keepAlive,
                 clientId ?: generateRandomClientId(),
@@ -141,7 +137,6 @@ public class MQTTClient(
         } else {
             MQTT5Connect(
                 "MQTT",
-                mqttVersion,
                 ConnectFlags(userName != null, password != null, willRetain, willQos, willTopic != null, cleanStart, false),
                 keepAlive,
                 clientId ?: generateRandomClientId(),
@@ -203,7 +198,7 @@ public class MQTTClient(
             } else {
                 null
             }
-            val publish = if (mqttVersion == 4) {
+            val publish = if (mqttVersion == MQTTVersion.MQTT3_1_1) {
                 MQTT4Publish(retain, qos, false, topic, packetId, payload)
             } else {
                 // TODO support client topic aliases
@@ -234,7 +229,7 @@ public class MQTTClient(
             if (!connackReceived && properties.authenticationData != null) {
                 throw Exception("Not sending until connection complete")
             }
-            val subscribe = if (mqttVersion == 4) {
+            val subscribe = if (mqttVersion == MQTTVersion.MQTT3_1_1) {
                 MQTT4Subscribe(generatePacketId(), subscriptions)
             } else {
                 MQTT5Subscribe(generatePacketId(), subscriptions, properties)
@@ -254,7 +249,7 @@ public class MQTTClient(
             if (!connackReceived && properties.authenticationData != null) {
                 throw Exception("Not sending until connection complete")
             }
-            val unsubscribe = if (mqttVersion == 4) {
+            val unsubscribe = if (mqttVersion == MQTTVersion.MQTT3_1_1) {
                 MQTT4Unsubscribe(generatePacketId(), topics)
             } else {
                 MQTT5Unsubscribe(generatePacketId(), topics, properties)
@@ -270,7 +265,7 @@ public class MQTTClient(
      */
     public fun disconnect(reasonCode: ReasonCode) {
         lock.withLock {
-            val disconnect = if (mqttVersion == 4) {
+            val disconnect = if (mqttVersion == MQTTVersion.MQTT3_1_1) {
                 MQTT4Disconnect()
             } else {
                 MQTT5Disconnect(reasonCode)
@@ -337,7 +332,7 @@ public class MQTTClient(
                         lastException = MQTTException(ReasonCode.KEEP_ALIVE_TIMEOUT)
                         throw lastException!!
                     } else if (currentTime > lastActiveTimestamp + (keepAlive * 1000 * 0.9)) {
-                        val pingreq = if (mqttVersion == 4) {
+                        val pingreq = if (mqttVersion == MQTTVersion.MQTT3_1_1) {
                             MQTT4Pingreq()
                         } else {
                             MQTT5Pingreq()
