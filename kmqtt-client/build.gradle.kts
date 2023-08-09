@@ -17,11 +17,7 @@ kotlin {
             binaries.executable()
         }
     }
-    mingwX64 {
-        binaries {
-            executable {  }
-        }
-    }
+    mingwX64 {}
     linuxX64 {}
     linuxArm64 {}
     iosX64 {}
