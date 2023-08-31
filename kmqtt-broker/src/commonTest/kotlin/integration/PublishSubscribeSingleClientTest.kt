@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
+import mqtt.MQTTVersion
 import mqtt.Subscription
 import mqtt.broker.Broker
 import mqtt.packets.Qos
@@ -24,7 +25,7 @@ class PublishSubscribeSingleClientTest {
         var received = false
 
         val broker = Broker()
-        val client = MQTTClient(5, "127.0.0.1", broker.port, null) {
+        val client = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null) {
             assertEquals(topic, it.topicName)
             assertContentEquals(sendPayload.encodeToByteArray().toUByteArray(), it.payload)
             assertEquals(Qos.AT_MOST_ONCE, it.qos)

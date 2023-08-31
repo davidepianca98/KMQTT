@@ -125,7 +125,7 @@ public class ClientConnection(
     }
 
     public fun disconnect(reasonCode: ReasonCode, serverReference: String? = null) {
-        if (currentReceivedPacket.mqttVersion == 5) {
+        if (currentReceivedPacket.mqttVersion == MQTTVersion.MQTT5) {
             if (!connectCompleted) {
                 val connack = MQTT5Connack(
                     ConnectAcknowledgeFlags(false),
@@ -362,7 +362,7 @@ public class ClientConnection(
             this.session = session
         }
 
-        session.mqttVersion = currentReceivedPacket.mqttVersion ?: 4
+        session.mqttVersion = currentReceivedPacket.mqttVersion ?: MQTTVersion.MQTT3_1_1
         keepAlive = packet.keepAlive
 
         val connack = if (packet is MQTT5Connect) {
@@ -520,7 +520,7 @@ public class ClientConnection(
         when (packet.qos) {
             Qos.AT_LEAST_ONCE -> {
                 val reasonCode = qos12ReasonCode(packet)
-                if (currentReceivedPacket.mqttVersion == 5) {
+                if (currentReceivedPacket.mqttVersion == MQTTVersion.MQTT5) {
                     writePacket(MQTT5Puback(packet.packetId!!, reasonCode))
                 } else {
                     if (reasonCode == ReasonCode.SUCCESS) {
@@ -532,7 +532,7 @@ public class ClientConnection(
             }
             Qos.EXACTLY_ONCE -> {
                 val reasonCode = qos12ReasonCode(packet)
-                if (currentReceivedPacket.mqttVersion == 5) {
+                if (currentReceivedPacket.mqttVersion == MQTTVersion.MQTT5) {
                     writePacket(MQTT5Pubrec(packet.packetId!!, reasonCode))
                 } else {
                     if (reasonCode == ReasonCode.SUCCESS) {
@@ -673,7 +673,7 @@ public class ClientConnection(
                 if (!(subscription.options.noLocal && session!!.clientId == clientId)) {
                     val qos = Qos.min(retainedMessage.qos, subscription.options.qos)
 
-                    if (currentReceivedPacket.mqttVersion == 5) {
+                    if (currentReceivedPacket.mqttVersion == MQTTVersion.MQTT5) {
                         retainedMessagesList += MQTT5Publish(
                             if (subscription.options.retainedAsPublished) retainedMessage.retain else false,
                             qos,
@@ -784,7 +784,7 @@ public class ClientConnection(
     }
 
     private fun handlePingreq() {
-        val packet = if (currentReceivedPacket.mqttVersion == 5) {
+        val packet = if (currentReceivedPacket.mqttVersion == MQTTVersion.MQTT5) {
             MQTT5Pingresp()
         } else {
             MQTT4Pingresp()

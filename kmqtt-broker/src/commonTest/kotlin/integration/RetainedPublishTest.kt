@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
+import mqtt.MQTTVersion
 import mqtt.Subscription
 import mqtt.broker.Broker
 import mqtt.packets.Qos
@@ -25,7 +26,7 @@ class RetainedPublishTest {
         var received = 0
 
         val broker = Broker()
-        val client = MQTTClient(5, "127.0.0.1", broker.port, null) {
+        val client = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null) {
             when (it.topicName) {
                 qos0Topic -> {
                     assertContentEquals("qos 0".encodeToByteArray().toUByteArray(), it.payload)

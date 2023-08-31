@@ -1,6 +1,7 @@
 package mqtt.broker
 
 import currentTimeMillis
+import mqtt.MQTTVersion
 import mqtt.Will
 import mqtt.packets.MQTTPacket
 import mqtt.packets.Qos
@@ -38,7 +39,7 @@ public class Session(
             }
             propagateUpdate(this)
         }
-    override var mqttVersion: Int = 4
+    override var mqttVersion: MQTTVersion = MQTTVersion.MQTT3_1_1
     override var sessionDisconnectedTimestamp: Long? = null
 
     private var packetIdentifier = 1u
@@ -143,7 +144,7 @@ public class Session(
         val packetTopicName =
             clientConnection?.getPublishTopicAlias(topicName, properties ?: MQTT5Properties()) ?: topicName
 
-        val packet = if (mqttVersion == 5) {
+        val packet = if (mqttVersion == MQTTVersion.MQTT5) {
             MQTT5Publish(
                 retain,
                 qos,

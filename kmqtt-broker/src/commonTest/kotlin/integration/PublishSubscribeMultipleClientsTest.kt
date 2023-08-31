@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
+import mqtt.MQTTVersion
 import mqtt.Subscription
 import mqtt.broker.Broker
 import mqtt.packets.Qos
@@ -19,8 +20,8 @@ class PublishSubscribeMultipleClientsTest {
         var received = false
 
         val broker = Broker()
-        val client1 = MQTTClient(5, "127.0.0.1", broker.port, null, clientId = "client1") {}
-        val client2 = MQTTClient(5, "127.0.0.1", broker.port, null, clientId = "client2") {
+        val client1 = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, clientId = "client1") {}
+        val client2 = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, clientId = "client2") {
             assertEquals(topic, it.topicName)
             assertContentEquals(payload, it.payload)
             assertEquals(qos, it.qos)

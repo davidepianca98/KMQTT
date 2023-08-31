@@ -6,6 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import mqtt.MQTTException
+import mqtt.MQTTVersion
 import mqtt.broker.Broker
 import mqtt.broker.interfaces.Authentication
 import mqtt.broker.interfaces.EnhancedAuthenticationProvider
@@ -44,7 +45,7 @@ class AuthenticationTest {
         })
         broker.step()
 
-        val client = MQTTClient(5, "127.0.0.1", broker.port, null, userName = "user", password = "pass".encodeToByteArray().toUByteArray()) {}
+        val client = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, userName = "user", password = "pass".encodeToByteArray().toUByteArray()) {}
         testAuthentication(client, broker)
         broker.stop()
     }
@@ -57,7 +58,7 @@ class AuthenticationTest {
             }
         })
 
-        val client = MQTTClient(5, "127.0.0.1", broker.port, null, userName = "user2", password = "pass".encodeToByteArray().toUByteArray()) {}
+        val client = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, userName = "user2", password = "pass".encodeToByteArray().toUByteArray()) {}
 
         assertFailsWith<MQTTException>(ReasonCode.NOT_AUTHORIZED.toString()) {
             testAuthentication(client, broker)
@@ -85,7 +86,7 @@ class AuthenticationTest {
                 }
             }))
 
-        val client = MQTTClient(5, "127.0.0.1", broker.port, null, properties = MQTT5Properties(authenticationMethod = "TEST-EN-AUTH"), enhancedAuthCallback = { null }) {}
+        val client = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, properties = MQTT5Properties(authenticationMethod = "TEST-EN-AUTH"), enhancedAuthCallback = { null }) {}
 
         testAuthentication(client, broker)
         broker.stop()

@@ -1,6 +1,7 @@
 package mqtt.broker
 
 import currentTimeMillis
+import mqtt.MQTTVersion
 import mqtt.Will
 import mqtt.packets.Qos
 import mqtt.packets.mqttv5.MQTT5Properties
@@ -12,7 +13,7 @@ internal interface ISession {
     var will: Will?
     var sessionExpiryInterval: UInt
     var sessionDisconnectedTimestamp: Long?
-    var mqttVersion: Int
+    var mqttVersion: MQTTVersion
 
     fun publish(
         retain: Boolean,

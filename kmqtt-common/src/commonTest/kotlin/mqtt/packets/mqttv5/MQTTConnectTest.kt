@@ -28,7 +28,6 @@ class MQTTConnectTest {
     )
     private val packet = MQTT5Connect(
         "MQTT",
-        5,
         ConnectFlags(
             false,
             false,

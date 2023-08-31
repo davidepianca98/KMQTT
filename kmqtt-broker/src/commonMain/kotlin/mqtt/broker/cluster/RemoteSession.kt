@@ -1,5 +1,6 @@
 package mqtt.broker.cluster
 
+import mqtt.MQTTVersion
 import mqtt.Will
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
@@ -19,7 +20,7 @@ internal class RemoteSession(
 ) : ISession {
 
     override var connected = false
-    override var mqttVersion = 4
+    override var mqttVersion = MQTTVersion.MQTT3_1_1
 
     // TODO if client connects and a remote session is found for that clientid, request the full session
     //      if persistence is enabled then at startup all the brokers will think the sessions belong to them,
@@ -33,7 +34,7 @@ internal class RemoteSession(
         properties: MQTT5Properties?,
         payload: UByteArray?
     ) {
-        val packet = if (mqttVersion == 5) {
+        val packet = if (mqttVersion == MQTTVersion.MQTT5) {
             MQTT5Publish(
                 retain,
                 qos,

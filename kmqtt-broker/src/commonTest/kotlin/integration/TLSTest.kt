@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
+import mqtt.MQTTVersion
 import mqtt.Subscription
 import mqtt.broker.Broker
 import mqtt.packets.Qos
@@ -25,7 +26,7 @@ class TLSTest {
         var received = false
 
         val broker = Broker(port = 8883, tlsSettings = TLSSettings(keyStoreFilePath = "docker/linux/keyStore.p12", keyStorePassword = "changeit"))
-        val client = MQTTClient(5, "127.0.0.1", broker.port, TLSClientSettings(serverCertificatePath = "docker/linux/cert.pem")) {
+        val client = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, TLSClientSettings(serverCertificatePath = "docker/linux/cert.pem")) {
             assertEquals(topic, it.topicName)
             assertContentEquals(sendPayload.encodeToByteArray().toUByteArray(), it.payload)
             assertEquals(Qos.AT_MOST_ONCE, it.qos)
