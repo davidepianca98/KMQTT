@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    id("maven-publish")
+    id("convention.publication")
     id("kotlinx-atomicfu")
 }
 
