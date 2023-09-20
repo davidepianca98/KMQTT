@@ -17,6 +17,6 @@ plugins {
 }
 
 subprojects {
-    group = "com.github.davidepianca98"
+    group = "io.github.davidepianca98"
     version = "0.4.3"
 }
