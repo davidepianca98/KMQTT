@@ -86,8 +86,8 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("com.github.davidepianca98:kmqtt-common:0.4.2")
-                implementation("com.github.davidepianca98:kmqtt-client:0.4.2")
+                implementation("com.github.davidepianca98:kmqtt-common:0.4.3")
+                implementation("com.github.davidepianca98:kmqtt-client:0.4.3")
             }
         }
     }
@@ -106,8 +106,8 @@ repositories {
     }
 }
 dependencies {
-    implementation("com.github.davidepianca98:kmqtt-common-jvm:0.4.2")
-    implementation("com.github.davidepianca98:kmqtt-client-jvm:0.4.2")
+    implementation("com.github.davidepianca98:kmqtt-common-jvm:0.4.3")
+    implementation("com.github.davidepianca98:kmqtt-client-jvm:0.4.3")
 }
 ```
 
@@ -120,7 +120,7 @@ This code starts the MQTT client on port 1883 without TLS encryption. You can pl
 ```kotlin
 fun main() {
     val client = MQTTClient(
-        5,
+        MQTTVersion.MQTT5,
         "test.mosquitto.org",
         1883,
         null
@@ -138,7 +138,7 @@ The certificates and key must be in PEM format, the password can be null
 ```kotlin
 fun main() {
     val client = MQTTClient(
-        5,
+        MQTTVersion.MQTT5,
         "test.mosquitto.org",
         8883,
         TLSClientSettings(
@@ -208,8 +208,8 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("com.github.davidepianca98:kmqtt-common:0.4.2")
-                implementation("com.github.davidepianca98:kmqtt-broker:0.4.2")
+                implementation("com.github.davidepianca98:kmqtt-common:0.4.3")
+                implementation("com.github.davidepianca98:kmqtt-broker:0.4.3")
             }
         }
     }
@@ -228,8 +228,8 @@ repositories {
     }
 }
 dependencies {
-    implementation("com.github.davidepianca98:kmqtt-common-jvm:0.4.2")
-    implementation("com.github.davidepianca98:kmqtt-broker-jvm:0.4.2")
+    implementation("com.github.davidepianca98:kmqtt-common-jvm:0.4.3")
+    implementation("com.github.davidepianca98:kmqtt-broker-jvm:0.4.3")
 }
 ```
 
