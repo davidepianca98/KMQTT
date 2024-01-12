@@ -2,6 +2,7 @@ package socket.tls
 
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
+import node.fs.ReadFileSyncBufferOptions
 import node.net.Socket
 import socket.ServerSocket
 import socket.SocketState
@@ -13,9 +14,10 @@ internal actual class TLSServerSocket actual constructor(
 ) : ServerSocket(broker, selectCallback) {
 
     private fun TlsOptions(): TlsOptions = js("{}") as TlsOptions
+    private fun ReadFileOptions(): ReadFileSyncBufferOptions = js("{}") as ReadFileSyncBufferOptions
 
     private val tlsOptions = TlsOptions().apply {
-        pfx = node.fs.readFileSync(broker.tlsSettings!!.keyStoreFilePath, null)
+        pfx = node.fs.readFileSync(broker.tlsSettings!!.keyStoreFilePath, ReadFileOptions())
         passphrase = broker.tlsSettings.keyStorePassword
         requestCert = broker.tlsSettings.requireClientCertificate
     }

@@ -1,12 +1,11 @@
 package socket.tcp
 
 import node.buffer.Buffer
-import node.events.Event
 import node.net.Socket
+import node.net.SocketEvent
 import socket.SocketInterface
 import socket.SocketState
 import toBuffer
-import toUByteArray
 
 public actual open class Socket(
     protected val socket: Socket,
@@ -17,11 +16,11 @@ public actual open class Socket(
     private var attachment: Any? = null
 
     init {
-        socket.on(Event.DATA) { data: Buffer ->
+        socket.on(SocketEvent.DATA) { data: Buffer ->
             queue.add(data.toUByteArray())
             selectCallback(attachment, SocketState.READ)
         }
-        socket.on(Event.DRAIN) {
+        socket.on(SocketEvent.DRAIN) {
             socket.resume()
         }
     }

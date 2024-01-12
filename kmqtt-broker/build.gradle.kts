@@ -2,13 +2,15 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.22"
     id("convention.publication")
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 val serializationVersion: String by project
 val coroutineVersion: String by project
+val atomicfuVersion: String by project
+val nodeWrapperVersion: String by project
 
 kotlin {
     explicitApi()
@@ -88,7 +90,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-node:18.16.12-pre.599")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-node:$nodeWrapperVersion")
             }
         }
         val jsTest by getting {
@@ -98,6 +100,9 @@ kotlin {
         }
         val posixMain by creating {
             dependsOn(commonMain)
+            dependencies {
+                implementation("org.jetbrains.kotlinx:atomicfu:$atomicfuVersion")
+            }
         }
         val mingwX64Main by getting {
             dependsOn(posixMain)

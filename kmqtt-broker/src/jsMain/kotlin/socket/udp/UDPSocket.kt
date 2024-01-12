@@ -1,12 +1,10 @@
 package socket.udp
 
-import node.events.Event
 import socket.SocketState
 import toBuffer
-import toUByteArray
 
 internal actual class UDPSocket(
-    private val socket: Socket,
+    private val socket: node.dgram.Socket,
     private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) {
 
@@ -14,7 +12,7 @@ internal actual class UDPSocket(
     private var attachment: Any? = null
 
     init {
-        socket.on(Event.MESSAGE) { msg, rinfo ->
+        socket.on(node.dgram.SocketEvent.MESSAGE) { msg, rinfo ->
             queue.add(UDPReadData(msg.toUByteArray(), rinfo.address, rinfo.port.toInt()))
             selectCallback(attachment, SocketState.READ)
         }

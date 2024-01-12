@@ -2,7 +2,7 @@
 import node.buffer.Buffer
 
 public fun UByteArray.toBuffer(): Buffer {
-    val result = Buffer.alloc(this.size)
+    val result = Buffer.allocUnsafe(this.size)
     for (i in indices) {
         result.writeUint8(this[i].toInt(), i)
     }

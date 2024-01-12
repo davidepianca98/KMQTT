@@ -13,6 +13,7 @@ import socket.tcp.WebSocket
 import socket.udp.UDPSocket
 import java.net.InetAddress
 import java.net.InetSocketAddress
+import java.net.StandardSocketOptions
 import java.nio.ByteBuffer
 import java.nio.channels.*
 
@@ -31,6 +32,7 @@ internal actual open class ServerSocket actual constructor(
 
     init {
         mqttSocket.configureBlocking(false)
+        mqttSocket.setOption(StandardSocketOptions.SO_REUSEADDR, true)
         mqttSocket.bind(InetSocketAddress(broker.host, broker.port), broker.backlog)
         mqttSocket.register(selector, SelectionKey.OP_ACCEPT)
 

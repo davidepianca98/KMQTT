@@ -4,6 +4,8 @@ plugins {
     id("convention.publication")
 }
 
+val nodeWrapperVersion: String by project
+
 kotlin {
     explicitApi()
 
@@ -58,7 +60,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-node:18.16.12-pre.599")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-node:$nodeWrapperVersion")
                 implementation(kotlin("test-js"))
             }
         }

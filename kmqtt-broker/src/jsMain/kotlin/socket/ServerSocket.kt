@@ -3,7 +3,7 @@ package socket
 import mqtt.broker.Broker
 import mqtt.broker.ClientConnection
 import mqtt.broker.cluster.ClusterConnection
-import node.events.Event
+import node.net.SocketEvent
 import socket.tcp.Socket
 import socket.tcp.WebSocket
 import web.timers.setTimeout
@@ -32,19 +32,19 @@ internal actual open class ServerSocket actual constructor(
     }
 
     fun onConnect(socket: node.net.Socket) {
-        socket.on(Event.ERROR) { error: Error ->
+        socket.on(SocketEvent.ERROR) { error: Error ->
             println(error.message)
         }
 
-        socket.on(Event.TIMEOUT) {
+        socket.on(SocketEvent.TIMEOUT) {
             socket.end()
         }
 
-        socket.on(Event.END) {
+        socket.on(SocketEvent.END) {
             clients.remove(socket.socketId())
         }
 
-        socket.on(Event.CLOSE) { _: Boolean ->
+        socket.on(SocketEvent.CLOSE) { _: Boolean ->
             clients.remove(socket.socketId())
         }
     }
