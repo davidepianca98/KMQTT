@@ -278,13 +278,14 @@ public class MQTTClient(
     private var lastException: Exception? = null
 
     private fun check() {
-        if (socket == null) {
-            close()
-            // Needed because of JS callbacks, otherwise the exception gets swallowed and tests don't complete correctly
-            throw lastException ?: SocketClosedException("")
-        }
-        val data = socket!!.read()
         lock.withLock {
+            if (socket == null) {
+                close()
+                // Needed because of JS callbacks, otherwise the exception gets swallowed and tests don't complete correctly
+                throw lastException ?: SocketClosedException("")
+            }
+            val data = socket?.read()
+
             if (data != null) {
                 lastActiveTimestamp = currentTimeMillis()
 
