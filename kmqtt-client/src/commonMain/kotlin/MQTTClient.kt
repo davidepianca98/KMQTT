@@ -279,6 +279,9 @@ public class MQTTClient(
 
     private fun check() {
         lock.withLock {
+            if (!running) {
+                return
+            }
             if (socket == null) {
                 close()
                 // Needed because of JS callbacks, otherwise the exception gets swallowed and tests don't complete correctly
@@ -350,10 +353,12 @@ public class MQTTClient(
      * Run a single iteration of the client (non-blocking)
      */
     public fun step() {
-        if (running) {
-            connectSocket()
+        lock.withLock {
+            if (running) {
+                connectSocket()
 
-            check()
+                check()
+            }
         }
     }
 
