@@ -2,7 +2,6 @@ package socket.tls
 
 import socket.IOException
 import socket.SocketClosedException
-import socket.streams.ByteArrayOutputStream
 import socket.tcp.Socket
 import toUByteArray
 import java.nio.BufferOverflowException

@@ -4,6 +4,7 @@ import socket.IOException
 import socket.SocketClosedException
 import socket.SocketInterface
 import toUByteArray
+import java.nio.BufferOverflowException
 import java.nio.ByteBuffer
 import java.nio.channels.SelectionKey
 import java.nio.channels.SocketChannel
@@ -11,12 +12,18 @@ import java.nio.channels.SocketChannel
 public actual open class Socket(
     protected val channel: SocketChannel,
     private val key: SelectionKey?,
-    private val sendBuffer: ByteBuffer,
+    private var sendBuffer: ByteBuffer,
     private val receiveBuffer: ByteBuffer
 ) : SocketInterface {
 
     actual override fun send(data: UByteArray) {
-        sendBuffer.put(data.toByteArray())
+        val byteArray = data.toByteArray()
+        try {
+            sendBuffer.put(byteArray)
+        } catch (e: BufferOverflowException) {
+            sendBuffer = ByteBuffer.allocate(sendBuffer.capacity() + data.size)
+            sendBuffer.put(byteArray)
+        }
         sendFromBuffer()
     }
 

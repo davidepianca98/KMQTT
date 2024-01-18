@@ -2,6 +2,8 @@ package mqtt.broker
 
 import currentTimeMillis
 import datastructures.Trie
+import kotlinx.atomicfu.locks.reentrantLock
+import kotlinx.atomicfu.locks.withLock
 import mqtt.MQTTException
 import mqtt.Subscription
 import mqtt.broker.cluster.*
@@ -50,6 +52,8 @@ public class Broker(
     private val retainedList = persistence?.getAllRetainedMessages()?.toMutableMap() ?: mutableMapOf()
 
     private val clusterConnections = mutableMapOf<String, ClusterConnection>()
+
+    internal val lock = reentrantLock()
 
     init {
         if (enableUdp && maximumPacketSize > 65535u) {
@@ -241,7 +245,9 @@ public class Broker(
         properties: MQTT5Properties?,
         payload: UByteArray?
     ): Boolean {
-        return publish("", retain, topicName, qos, properties, payload)
+        lock.withLock {
+            return publish("", retain, topicName, qos, properties, payload)
+        }
     }
 
     internal fun publishFromRemote(packet: mqtt.packets.mqtt.MQTTPublish) {
@@ -278,7 +284,9 @@ public class Broker(
      * @return true if the client is connected, false otherwise
      */
     public fun isClientConnected(clientId: String): Boolean {
-        return sessions[clientId]?.connected ?: false
+        return lock.withLock {
+            sessions[clientId]?.connected ?: false
+        }
     }
 
     internal fun addSubscription(clientId: String, subscription: Subscription, remote: Boolean = false): Boolean {
@@ -341,31 +349,33 @@ public class Broker(
     }
 
     internal fun cleanUpOperations() {
-        val iterator = sessions.iterator()
-        while (iterator.hasNext()) {
-            val iSession = iterator.next()
-            val session = iSession.value
-            if (session.connected) { // Check the keep alive timer is being respected
-                session.checkKeepAliveExpired()
-            } else {
-                if (session.isExpired()) {
-                    session.will?.let {
-                        sendWill(session as Session)
-                    }
-                    persistence?.removeSession(iSession.key)
-                    subscriptions.delete(iSession.key)
-                    persistence?.removeSubscriptions(iSession.key)
-                    iterator.remove()
+        lock.withLock {
+            val iterator = sessions.iterator()
+            while (iterator.hasNext()) {
+                val iSession = iterator.next()
+                val session = iSession.value
+                if (session.connected) { // Check the keep alive timer is being respected
+                    session.checkKeepAliveExpired()
                 } else {
-                    session.will?.let {
-                        if (session.sessionDisconnectedTimestamp != null) {
-                            // Check that the connection has been completed at least once before sending will
-                            val currentTime = currentTimeMillis()
-                            val expirationTime =
-                                session.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L)
-                            // Check if the will delay interval has expired, if yes send the will
-                            if (expirationTime <= currentTime || it.willDelayInterval == 0u) {
-                                sendWill(session as Session)
+                    if (session.isExpired()) {
+                        session.will?.let {
+                            sendWill(session as Session)
+                        }
+                        persistence?.removeSession(iSession.key)
+                        subscriptions.delete(iSession.key)
+                        persistence?.removeSubscriptions(iSession.key)
+                        iterator.remove()
+                    } else {
+                        session.will?.let {
+                            if (session.sessionDisconnectedTimestamp != null) {
+                                // Check that the connection has been completed at least once before sending will
+                                val currentTime = currentTimeMillis()
+                                val expirationTime =
+                                    session.sessionDisconnectedTimestamp!! + (it.willDelayInterval.toLong() * 1000L)
+                                // Check if the will delay interval has expired, if yes send the will
+                                if (expirationTime <= currentTime || it.willDelayInterval == 0u) {
+                                    sendWill(session as Session)
+                                }
                             }
                         }
                     }
@@ -380,20 +390,22 @@ public class Broker(
      * @param temporarilyMoved true if the current server is going to be restarted soon
      */
     public fun stop(serverReference: String? = null, temporarilyMoved: Boolean = false) {
-        // TODO close cluster connections and send use another server from that list
-        val reasonCode = if (serverReference != null) {
-            if (temporarilyMoved) {
-                ReasonCode.USE_ANOTHER_SERVER
+        lock.withLock {
+            // TODO close cluster connections and send use another server from that list
+            val reasonCode = if (serverReference != null) {
+                if (temporarilyMoved) {
+                    ReasonCode.USE_ANOTHER_SERVER
+                } else {
+                    ReasonCode.SERVER_MOVED
+                }
             } else {
-                ReasonCode.SERVER_MOVED
+                ReasonCode.SERVER_SHUTTING_DOWN
             }
-        } else {
-            ReasonCode.SERVER_SHUTTING_DOWN
+            sessions.filter { it.value.connected && it.value is Session }.forEach {
+                (it.value as Session).clientConnection?.disconnect(reasonCode, serverReference)
+            }
+            server.stop()
         }
-        sessions.filter { it.value.connected && it.value is Session }.forEach {
-            (it.value as Session).clientConnection?.disconnect(reasonCode, serverReference)
-        }
-        server.stop()
     }
 
     internal fun addClusterConnection(address: String) {

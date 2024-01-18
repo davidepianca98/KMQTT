@@ -1,5 +1,6 @@
 package socket
 
+import kotlinx.atomicfu.locks.withLock
 import mqtt.broker.Broker
 import mqtt.broker.cluster.ClusterConnection
 import socket.tcp.TCPEventHandler
@@ -34,10 +35,12 @@ internal class ServerSocketLoop(private val broker: Broker) {
     }
 
     private fun selectCallback(attachment: Any?, state: SocketState): Boolean {
-        return when (attachment) {
-            is TCPEventHandler -> handleTcpEvent(attachment, state)
-            is UDPEventHandler -> handleUdpEvent(attachment, state)
-            else -> true
+        return broker.lock.withLock {
+            when (attachment) {
+                is TCPEventHandler -> handleTcpEvent(attachment, state)
+                is UDPEventHandler -> handleUdpEvent(attachment, state)
+                else -> true
+            }
         }
     }
 

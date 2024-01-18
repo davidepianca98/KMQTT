@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "1.9.22"
     id("convention.publication")
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("kotlinx-atomicfu")
 }
 
 val serializationVersion: String by project
@@ -142,7 +143,6 @@ publishing {
             name = "github"
             url = uri("https://maven.pkg.github.com/davidepianca98/KMQTT")
             credentials(PasswordCredentials::class)
-
         }
     }
 }
