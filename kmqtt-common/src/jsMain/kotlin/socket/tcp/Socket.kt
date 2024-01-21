@@ -31,7 +31,11 @@ public actual open class Socket(
 
     actual override fun send(data: UByteArray) {
         socket.write(data.toBuffer())
-        selectCallback(attachment, SocketState.WRITE)
+        try {
+            selectCallback(attachment, SocketState.WRITE)
+        } catch (e: dynamic) {
+            close()
+        }
     }
 
     actual override fun read(): UByteArray? {
@@ -40,6 +44,9 @@ public actual open class Socket(
 
     actual override fun close() {
         socket.end()
+        socket._destroy(null) {
+            socket.unref()
+        }
     }
 
     actual override fun sendRemaining() {

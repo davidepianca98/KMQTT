@@ -2,6 +2,7 @@ package integration
 
 import MQTTClient
 import TLSClientSettings
+import com.goncalossilva.resources.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
@@ -10,6 +11,7 @@ import mqtt.MQTTVersion
 import mqtt.Subscription
 import mqtt.broker.Broker
 import mqtt.packets.Qos
+import mqtt.packets.mqttv5.ReasonCode
 import mqtt.packets.mqttv5.SubscriptionOptions
 import socket.tls.TLSSettings
 import kotlin.test.Test
@@ -18,15 +20,14 @@ import kotlin.test.assertEquals
 
 class TLSTest {
 
-    @Test
-    fun testPublish() = runTest {
+    private suspend fun runTest(pathPrefix: String) {
         val sendPayload = "Test"
         val topic = "test/topic"
 
         var received = false
 
-        val broker = Broker(port = 8883, tlsSettings = TLSSettings(keyStoreFilePath = "docker/linux/keyStore.p12", keyStorePassword = "changeit"))
-        val client = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, TLSClientSettings(serverCertificatePath = "docker/linux/cert.pem")) {
+        val broker = Broker(port = 8883, tlsSettings = TLSSettings(keyStoreFilePath = pathPrefix + "keyStore.p12", keyStorePassword = "changeit"))
+        val client = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, TLSClientSettings(serverCertificatePath = pathPrefix + "cert.pem")) {
             assertEquals(topic, it.topicName)
             assertContentEquals(sendPayload.encodeToByteArray().toUByteArray(), it.payload)
             assertEquals(Qos.AT_MOST_ONCE, it.qos)
@@ -50,10 +51,21 @@ class TLSTest {
             }
         }
 
+        client.disconnect(ReasonCode.SUCCESS)
+
         broker.stop()
 
         if (i >= 1000) {
             throw Exception("Test timeout")
+        }
+    }
+
+    @Test
+    fun testPublish() = runTest {
+        if (Resource("src/commonTest/resources/keyStore.p12").exists()) {
+            runTest("src/commonTest/resources/")
+        } else {
+            runTest("kotlin/")
         }
     }
 }

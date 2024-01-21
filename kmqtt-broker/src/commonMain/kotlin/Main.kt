@@ -1,21 +1,17 @@
 import mqtt.broker.Broker
 import socket.tls.TLSSettings
 
-public fun main(args: Array<String>) {
-    // TODO this is here only because of NodeJS tests, that run main. As in mocha settings it's not possible to set --exit
-    //      we need to avoid starting the broker, otherwise the test task won't ever terminate
-    if (args.isEmpty()) {
-        println("At least one argument needed:")
-        println("    -h x.x.x.x")
-        println("    -p port")
-        println("    --max-connections n")
-        println("    --key-store path")
-        println("    --key-store-psw password")
-        println("    --wsp port")
-        return
-    }
-    println("Starting KMQTT")
+private fun showHelp() {
+    println("At least one argument needed:")
+    println("    -h x.x.x.x")
+    println("    -p port")
+    println("    --max-connections n")
+    println("    --key-store path")
+    println("    --key-store-psw password")
+    println("    --wsp port")
+}
 
+public fun main(args: Array<String>) {
     val argumentsMap = HashMap<String, String>()
     var i = 0
     while (i < args.size) {
@@ -26,9 +22,15 @@ public fun main(args: Array<String>) {
             "--key-store" -> argumentsMap["keyStore"] = args[++i]
             "--key-store-psw" -> argumentsMap["keyStorePassword"] = args[++i]
             "--wsp" -> argumentsMap["wsPort"] = args[++i]
+            "--help" -> {
+                showHelp()
+                return
+            }
         }
         i++
     }
+
+    println("Starting KMQTT")
 
     val host = argumentsMap["host"] ?: "0.0.0.0"
     val port = argumentsMap["port"]?.toInt() ?: 1883

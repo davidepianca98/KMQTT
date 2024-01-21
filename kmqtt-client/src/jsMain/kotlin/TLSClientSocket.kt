@@ -32,18 +32,27 @@ public actual class TLSClientSocket actual constructor(
     public actual val handshakeComplete: Boolean
         get() = true
 
+    private var open = true
+
     init {
         doLater()
     }
 
     private fun doLater() {
-        setTimeout({
-            try {
-                checkCallback()
-                doLater()
-            } catch (e: dynamic) {
-                close()
-            }
-        }, 250)
+        if (open) {
+            setTimeout({
+                try {
+                    checkCallback()
+                    doLater()
+                } catch (e: dynamic) {
+                    close()
+                }
+            }, 250)
+        }
+    }
+
+    override fun close() {
+        open = false
+        super.close()
     }
 }

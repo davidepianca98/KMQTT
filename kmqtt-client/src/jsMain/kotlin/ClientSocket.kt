@@ -19,11 +19,15 @@ public actual class ClientSocket actual constructor(
         doLater()
     }
 
-    private fun doLater() {
+    protected fun doLater() {
         if (open) {
             setTimeout({
-                checkCallback()
-                doLater()
+                try {
+                    checkCallback()
+                    doLater()
+                } catch (e: dynamic) {
+                    close()
+                }
             }, 250)
         }
     }

@@ -76,6 +76,7 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
                 implementation(project(":kmqtt-client"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
+                implementation("com.goncalossilva:resources:0.4.0")
             }
         }
         val jvmMain by getting {
