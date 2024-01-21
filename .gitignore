@@ -95,3 +95,5 @@ fabric.properties
 .idea/detekt.xml
 .gradle/
 build/
+
+local.properties
