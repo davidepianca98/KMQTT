@@ -18,7 +18,11 @@ public actual open class Socket(
     init {
         socket.on(SocketEvent.DATA) { data: Buffer ->
             queue.add(data.toUByteArray())
-            selectCallback(attachment, SocketState.READ)
+            try {
+                selectCallback(attachment, SocketState.READ)
+            } catch (e: dynamic) {
+                close()
+            }
         }
         socket.on(SocketEvent.DRAIN) {
             socket.resume()

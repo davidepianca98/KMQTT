@@ -25,7 +25,7 @@ internal actual class TLSServerSocket actual constructor(
     override val mqttSocket = createServer(tlsOptions) { socket: Socket ->
         val localSocket = createSocket(socket)
         val connection = ClientConnection(localSocket, broker)
-        clients[socket.socketId()] = connection
+        clients[socket.socketId()] = Pair(socket, connection)
         localSocket.setAttachment(connection)
 
         onConnect(socket)
@@ -33,7 +33,7 @@ internal actual class TLSServerSocket actual constructor(
     override val mqttWebSocket = createServer(tlsOptions) { socket: Socket ->
         val localSocket = createSocket(socket)
         val connection = ClientConnection(WebSocket(localSocket), broker)
-        clients[socket.socketId()] = connection
+        clients[socket.socketId()] = Pair(socket, connection)
         localSocket.setAttachment(connection)
 
         onConnect(socket)

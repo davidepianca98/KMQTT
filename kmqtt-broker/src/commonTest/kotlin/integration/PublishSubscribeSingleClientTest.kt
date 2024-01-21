@@ -9,6 +9,7 @@ import mqtt.MQTTVersion
 import mqtt.Subscription
 import mqtt.broker.Broker
 import mqtt.packets.Qos
+import mqtt.packets.mqttv5.ReasonCode
 import mqtt.packets.mqttv5.SubscriptionOptions
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -49,6 +50,7 @@ class PublishSubscribeSingleClientTest {
             }
         }
 
+        client.disconnect(ReasonCode.SUCCESS)
         broker.stop()
 
         if (i >= 1000) {

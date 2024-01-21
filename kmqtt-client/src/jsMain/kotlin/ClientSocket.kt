@@ -12,15 +12,24 @@ public actual class ClientSocket actual constructor(
     true
 }) {
 
+    private var open = true
+
     init {
         socket.connect(port, address)
         doLater()
     }
 
     private fun doLater() {
-        setTimeout({
-            checkCallback()
-            doLater()
-        }, 250)
+        if (open) {
+            setTimeout({
+                checkCallback()
+                doLater()
+            }, 250)
+        }
+    }
+
+    override fun close() {
+        open = false
+        super.close()
     }
 }

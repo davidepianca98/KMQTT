@@ -4,7 +4,7 @@ import socket.tls.TLSSocket
 import socket.tls.connect
 import web.timers.setTimeout
 
-private fun TlsConnectionOptions(): ConnectionOptions = js("{}") as ConnectionOptions
+private fun TlsConnectionOptions(): ConnectionOptions = js("{ checkServerIdentity: function (host, cert) { return undefined; }}") as ConnectionOptions
 
 public actual class TLSClientSocket actual constructor(
     address: String,
@@ -21,8 +21,12 @@ public actual class TLSClientSocket actual constructor(
     passphrase = tlsSettings.clientCertificatePassword
     servername = address
 }), { _, _ ->
-    checkCallback()
-    true
+    try {
+        checkCallback()
+        true
+    } catch (e: dynamic) {
+        false
+    }
 })
 {
     public actual val handshakeComplete: Boolean
@@ -34,8 +38,12 @@ public actual class TLSClientSocket actual constructor(
 
     private fun doLater() {
         setTimeout({
-            checkCallback()
-            doLater()
+            try {
+                checkCallback()
+                doLater()
+            } catch (e: dynamic) {
+                close()
+            }
         }, 250)
     }
 }

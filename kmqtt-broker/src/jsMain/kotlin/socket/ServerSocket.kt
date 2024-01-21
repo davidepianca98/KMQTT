@@ -13,11 +13,11 @@ internal actual open class ServerSocket actual constructor(
     private val selectCallback: (attachment: Any?, state: SocketState) -> Boolean
 ) : ServerSocketInterface {
 
-    protected val clients = mutableMapOf<String, Any?>()
+    protected val clients = mutableMapOf<String, Pair<node.net.Socket, Any?>>()
     protected open val mqttSocket: node.net.Server = node.net.createServer { socket: node.net.Socket ->
         val localSocket = createSocket(socket)
         val connection = ClientConnection(localSocket, broker)
-        clients[socket.socketId()] = connection
+        clients[socket.socketId()] = Pair(socket, connection)
         localSocket.setAttachment(connection)
 
         onConnect(socket)
@@ -25,7 +25,7 @@ internal actual open class ServerSocket actual constructor(
     protected open val mqttWebSocket: node.net.Server = node.net.createServer { socket: node.net.Socket ->
         val localSocket = createSocket(socket)
         val connection = ClientConnection(WebSocket(localSocket), broker)
-        clients[socket.socketId()] = connection
+        clients[socket.socketId()] = Pair(socket, connection)
         localSocket.setAttachment(connection)
 
         onConnect(socket)
@@ -52,27 +52,31 @@ internal actual open class ServerSocket actual constructor(
     private fun node.net.Socket.socketId(): String = "$remoteAddress:$remotePort"
 
     init {
-        mqttSocket.listen(broker.port, broker.host) {
-            doLater()
-        }
+        if (mqttSocket != undefined) {
+            mqttSocket.listen(broker.port, broker.host) {
+                doLater()
+            }
 
-        if (broker.enableUdp) {
-            TODO("UDP in JS not yet implemented")
-        }
+            if (broker.enableUdp) {
+                TODO("UDP in JS not yet implemented")
+            }
 
-        if (broker.webSocketPort != null) {
-            mqttWebSocket.listen(broker.webSocketPort, broker.host)
-        }
+            if (broker.webSocketPort != null) {
+                mqttWebSocket.listen(broker.webSocketPort, broker.host)
+            }
 
-        if (broker.cluster != null) {
-            TODO("Cluster in JS not yet implemented")
+            if (broker.cluster != null) {
+                TODO("Cluster in JS not yet implemented")
+            }
         }
     }
 
     protected fun doLater() {
         setTimeout({
-            broker.cleanUpOperations()
-            doLater()
+            if (mqttSocket.listening) {
+                broker.cleanUpOperations()
+                doLater()
+            }
         }, 1000)
     }
 
@@ -81,8 +85,17 @@ internal actual open class ServerSocket actual constructor(
     }
 
     actual fun close() {
-        mqttSocket.close()
-        mqttWebSocket.close()
+        mqttSocket.close {
+            mqttSocket.unref()
+        }
+        mqttWebSocket.close {
+            mqttWebSocket.unref()
+        }
+        for (client in clients) {
+            client.value.first._destroy(null) {
+
+            }
+        }
     }
 
     actual fun isRunning(): Boolean = false
