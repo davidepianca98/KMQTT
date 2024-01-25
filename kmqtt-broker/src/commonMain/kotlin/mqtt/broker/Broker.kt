@@ -289,6 +289,14 @@ public class Broker(
         }
     }
 
+    /**
+     * Retrieves the set of all connected clients.
+     * @return a set of strings representing the client IDs of all connected clients
+     */
+    public fun getConnectedClientIds(): Set<String> {
+        return sessions.keys
+    }
+
     internal fun addSubscription(clientId: String, subscription: Subscription, remote: Boolean = false): Boolean {
         val replaced = subscriptions.insert(subscription, clientId)
         persistence?.persistSubscription(clientId, subscription)
