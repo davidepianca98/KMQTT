@@ -5,7 +5,7 @@ import socket.streams.DynamicByteBuffer
 import socket.streams.EOFException
 import kotlin.random.Random
 
-public class WebSocket(private val socket: SocketInterface, host: String) : SocketInterface {
+public class WebSocket(private val socket: SocketInterface, host: String, path: String = "/mqtt") : SocketInterface {
 
     private var getSent = false
     private var handshakeDone = false
@@ -14,7 +14,7 @@ public class WebSocket(private val socket: SocketInterface, host: String) : Sock
 
     private val key = Random.Default.nextBytes(16).toBase64()
 
-    private val handshakeMessage = "GET /mqtt HTTP/1.1\r\n" +
+    private val handshakeMessage = "GET $path HTTP/1.1\r\n" +
             "Host: $host\r\n" +
             "Upgrade: websocket\r\n" +
             "Connection: Upgrade\r\n" +

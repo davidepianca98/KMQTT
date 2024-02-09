@@ -23,7 +23,7 @@ import socket.streams.EOFException
  * @param port the port of the server
  * @param tls TLS settings, null if no TLS
  * @param keepAlive the MQTT keep alive of the connection in seconds
- * @param webSocket whether to use a WebSocket for the underlying connection
+ * @param webSocket whether to use a WebSocket for the underlying connection, null if no WebSocket, otherwise the HTTP path, usually /mqtt
  * @param userName the username field of the CONNECT packet
  * @param password the password field of the CONNECT packet
  * @param properties the properties to be included in the CONNECT message (used only in MQTT5)
@@ -40,7 +40,7 @@ public class MQTTClient(
     private val port: Int,
     private val tls: TLSClientSettings?,
     private var keepAlive: Int = 60,
-    private val webSocket: Boolean = false,
+    private val webSocket: String? = null,
     private val cleanStart: Boolean = true,
     private var clientId: String? = null,
     private val userName: String? = null,
@@ -108,8 +108,8 @@ public class MQTTClient(
                 ClientSocket(address, port, maximumPacketSize, 250, ::check)
             else
                 TLSClientSocket(address, port, maximumPacketSize, 250, tls, ::check)
-            if (webSocket) {
-                socket = WebSocket(socket!!, address)
+            if (webSocket != null) {
+                socket = WebSocket(socket!!, address, webSocket)
             }
 
             sendConnect()
