@@ -52,6 +52,8 @@ public class MQTTClient(
     private val willRetain: Boolean = false,
     private val willQos: Qos = Qos.AT_MOST_ONCE,
     private val enhancedAuthCallback: (authenticationData: UByteArray?) -> UByteArray? = { null },
+    private val onConnected: (connack: MQTTConnack) -> Unit = {},
+    private val onDisconnected: (disconnect: MQTTDisconnect?) -> Unit = {},
     private val publishReceived: (publish: MQTTPublish) -> Unit
 ) {
 
@@ -301,23 +303,27 @@ public class MQTTClient(
                     e.printStackTrace()
                     disconnect(e.reasonCode)
                     close()
+                    onDisconnected(null)
                     throw e
                 } catch (e: EOFException) {
                     lastException = e
                     println("EOF")
                     close()
+                    onDisconnected(null)
                     throw e
                 } catch (e: IOException) {
                     lastException = e
                     println("IOException ${e.message}")
                     disconnect(ReasonCode.UNSPECIFIED_ERROR)
                     close()
+                    onDisconnected(null)
                     throw e
                 } catch (e: Exception) {
                     lastException = e
                     println("Exception ${e.message} ${e.cause?.message}")
                     disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
                     close()
+                    onDisconnected(null)
                     throw e
                 }
             } else {
@@ -434,6 +440,7 @@ public class MQTTClient(
                 send(it.value.toByteArray())
             }
         }
+        onConnected(packet)
     }
 
     private fun handlePublish(packet: MQTTPublish) {
@@ -602,6 +609,7 @@ public class MQTTClient(
                 throw MQTTException(disconnect.reasonCode)
             }
         }
+        onDisconnected(disconnect)
     }
 
     private fun close() {
