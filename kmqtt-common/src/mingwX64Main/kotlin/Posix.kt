@@ -156,7 +156,7 @@ public actual fun MemScope.set_socket_timeout(__fd: Int, timeout: Long): Int {
 public actual fun MemScope.getaddrinfo(name: String, service: String?): CPointer<sockaddr>? {
     val hints = alloc<addrinfo>()
     platform.posix.memset(hints.ptr, 0, sizeOf<addrinfo>().convert())
-    hints.ai_family = platform.posix.AF_UNSPEC
+    hints.ai_family = platform.posix.AF_INET
     hints.ai_socktype = platform.posix.SOCK_STREAM
     hints.ai_protocol = platform.posix.IPPROTO_TCP
     val result = alloc<CPointerVar<addrinfo>>()
