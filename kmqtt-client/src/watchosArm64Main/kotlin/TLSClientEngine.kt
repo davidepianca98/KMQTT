@@ -4,6 +4,7 @@ import platform.posix.getenv
 import platform.posix.strcpy
 import platform.posix.strlen
 import socket.IOException
+import socket.tls.TLSClientSettings
 import socket.tls.TLSEngine
 
 internal actual class TLSClientEngine actual constructor(tlsSettings: TLSClientSettings) : TLSEngine {
@@ -11,6 +12,42 @@ internal actual class TLSClientEngine actual constructor(tlsSettings: TLSClientS
     private val context: CPointer<SSL>
     private val readBio: CPointer<BIO>
     private val writeBio: CPointer<BIO>
+
+    fun loadServerCertsFromString(context: CPointer<SSL_CTX>, certBuffer: String): Boolean {
+        val bio = BIO_new(BIO_s_mem())
+        BIO_puts(bio, certBuffer)
+
+        val inf = PEM_X509_INFO_read_bio(bio, null, null, null)
+
+        if (inf == null) {
+            BIO_free(bio)
+            return false
+        }
+
+        val ctx = SSL_CTX_get_cert_store(context);
+
+        var loaded = 0
+        for (i in 0..<sk_X509_INFO_num(inf)) {
+            val itmp = sk_X509_INFO_value(inf, i)
+            if (itmp != null && itmp.pointed.x509 != null) {
+                if (X509_STORE_add_cert(ctx, itmp.pointed.x509) != 1) {
+                    sk_X509_INFO_pop_free(inf, staticCFunction { buf: CPointer<X509_INFO>? ->
+                        X509_INFO_free(buf)
+                    })
+                    BIO_free(bio)
+                    return false
+                }
+                loaded++
+            }
+        }
+
+        sk_X509_INFO_pop_free(inf, staticCFunction { buf: CPointer<X509_INFO>? ->
+            X509_INFO_free(buf)
+        })
+        BIO_free(bio)
+
+        return loaded > 0
+    }
 
     init {
         val readBio = BIO_new(BIO_s_mem()) ?: throw IOException("Failed allocating read BIO")
@@ -24,9 +61,12 @@ internal actual class TLSClientEngine actual constructor(tlsSettings: TLSClientS
         val method = TLS_client_method()
         val sslContext = SSL_CTX_new(method)!!
 
-        if (tlsSettings.serverCertificatePath != null) {
-            if (SSL_CTX_load_verify_locations(sslContext, tlsSettings.serverCertificatePath, null) != 1) {
-                throw Exception("Server certificate path not found")
+        if (tlsSettings.serverCertificate != null) {
+            if (!loadServerCertsFromString(sslContext, tlsSettings.serverCertificate!!)) {
+                // Try file
+                if (SSL_CTX_load_verify_locations(sslContext, tlsSettings.serverCertificate, null) != 1) {
+                    throw Exception("Server certificate path not found")
+                }
             }
         } else {
             if (SSL_CTX_load_verify_locations(sslContext, null, getenv(X509_get_default_cert_dir_env()?.toKString())?.toKString()) != 1) {
@@ -34,12 +74,32 @@ internal actual class TLSClientEngine actual constructor(tlsSettings: TLSClientS
             }
         }
 
-        if (tlsSettings.clientCertificatePath != null) {
-            if (SSL_CTX_use_certificate_file(sslContext, tlsSettings.clientCertificatePath, SSL_FILETYPE_PEM) != 1) {
-                throw Exception("Cannot load client's certificate file")
+        if (tlsSettings.clientCertificate != null) {
+            val bio = BIO_new(BIO_s_mem())
+            BIO_puts(bio, tlsSettings.clientCertificate)
+            val certificate = PEM_read_bio_X509(bio, null, null, null)
+
+            if (certificate != null) {
+                if (SSL_CTX_use_certificate(sslContext, certificate) != 1) {
+                    throw Exception("Cannot load client's certificate")
+                }
+            } else {
+                // Load file
+                if (SSL_CTX_use_certificate_file(sslContext, tlsSettings.clientCertificate, SSL_FILETYPE_PEM) != 1) {
+                    throw Exception("Cannot load client's certificate file")
+                }
             }
-            if (SSL_CTX_use_PrivateKey_file(sslContext, tlsSettings.clientCertificateKeyPath!!, SSL_FILETYPE_PEM) != 1) {
-                throw Exception("Cannot load client's key file")
+
+            BIO_puts(bio, tlsSettings.clientCertificateKey)
+            val key = PEM_read_bio_PrivateKey(bio, null, null, null)
+            if (key != null) {
+                if (SSL_CTX_use_PrivateKey(sslContext, key) != 1) {
+                    throw Exception("Cannot load client's key")
+                }
+            } else {
+                if (SSL_CTX_use_PrivateKey_file(sslContext, tlsSettings.clientCertificateKey!!, SSL_FILETYPE_PEM) != 1) {
+                    throw Exception("Cannot load client's key file")
+                }
             }
             if (SSL_CTX_check_private_key(sslContext) != 1) {
                 throw Exception("Client's certificate and key don't match")

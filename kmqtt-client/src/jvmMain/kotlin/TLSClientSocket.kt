@@ -1,3 +1,4 @@
+import socket.tls.TLSClientSettings
 import socket.tls.TLSSocket
 import java.io.FileInputStream
 import java.net.InetSocketAddress
@@ -34,10 +35,10 @@ public actual class TLSClientSocket actual constructor(
     ByteBuffer.allocate(maximumPacketSize),
     ByteBuffer.allocate(maximumPacketSize),
     SSLContext.getInstance(tlsSettings.version).apply {
-        val trustManagers = if (tlsSettings.serverCertificatePath != null) {
+        val trustManagers = if (tlsSettings.serverCertificate != null) {
             val certificate = CertificateFactory
                 .getInstance("X.509")
-                .generateCertificate(FileInputStream(tlsSettings.serverCertificatePath!!))
+                .generateCertificate(if (tlsSettings.serverCertificate!!.isValidPem()) tlsSettings.serverCertificate?.byteInputStream() else FileInputStream(tlsSettings.serverCertificate!!))
 
             val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
             keyStore.load(null, null)
@@ -51,14 +52,14 @@ public actual class TLSClientSocket actual constructor(
             null
         }
 
-        val keyManagers = if (tlsSettings.clientCertificatePath != null) {
+        val keyManagers = if (tlsSettings.clientCertificate != null) {
             val certificate = CertificateFactory
                 .getInstance("X.509")
-                .generateCertificate(FileInputStream(tlsSettings.clientCertificatePath!!))
+                .generateCertificate(if (tlsSettings.clientCertificate!!.isValidPem()) tlsSettings.clientCertificate?.byteInputStream() else FileInputStream(tlsSettings.clientCertificate!!))
 
             val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
             keyStore.load(null, null)
-            val key = getPrivateKeyFromString(FileInputStream(tlsSettings.clientCertificateKeyPath!!).bufferedReader().readText())
+            val key = getPrivateKeyFromString(if (tlsSettings.clientCertificateKey!!.isValidPem()) tlsSettings.clientCertificateKey!! else FileInputStream(tlsSettings.clientCertificateKey!!).bufferedReader().readText())
             keyStore.setKeyEntry("client", key, tlsSettings.clientCertificatePassword?.toCharArray(), arrayOf(certificate))
 
             val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())

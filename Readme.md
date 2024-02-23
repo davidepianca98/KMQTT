@@ -109,7 +109,7 @@ fun main() {
 ```
 
 #### TLS code example
-The certificates and key must be in PEM format, the password can be null
+The certificates and key must be in PEM format, and they can be either a path to the PEM file or the actual PEM string. The password can be null if the private key has no protection.
 ```kotlin
 fun main() {
     val client = MQTTClient(
@@ -117,7 +117,7 @@ fun main() {
         "test.mosquitto.org",
         8883,
         TLSClientSettings(
-            serverCertificatePath = "mosquitto.org.crt",
+            serverCertificate = "mosquitto.org.crt",
         )
     ) {
         println(it.payload?.toByteArray()?.decodeToString())

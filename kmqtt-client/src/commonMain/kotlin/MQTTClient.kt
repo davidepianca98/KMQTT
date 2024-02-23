@@ -14,6 +14,7 @@ import socket.IOException
 import socket.SocketClosedException
 import socket.SocketInterface
 import socket.streams.EOFException
+import socket.tls.TLSClientSettings
 
 /**
  * MQTT 3.1.1 and 5 client

@@ -1,3 +1,4 @@
+import socket.tls.TLSClientSettings
 import socket.tls.TLSSocket
 
 public expect class TLSClientSocket(

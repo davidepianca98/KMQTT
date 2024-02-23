@@ -1,6 +1,7 @@
 import kotlinx.cinterop.*
 import platform.posix.*
 import socket.IOException
+import socket.tls.TLSClientSettings
 import socket.tls.TLSSocket
 
 public actual class TLSClientSocket actual constructor(
