@@ -9,7 +9,6 @@ plugins {
 }
 
 val serializationVersion: String by project
-val coroutineVersion: String by project
 val atomicfuVersion: String by project
 val nodeWrapperVersion: String by project
 
@@ -67,7 +66,7 @@ kotlin {
                 implementation(project(":kmqtt-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
         val commonTest by getting {
@@ -75,7 +74,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation(project(":kmqtt-client"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
+                implementation(libs.kotlinx.coroutines.test)
                 implementation("com.goncalossilva:resources:0.4.0")
             }
         }

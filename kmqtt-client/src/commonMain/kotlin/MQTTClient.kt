@@ -1,5 +1,9 @@
 import kotlinx.atomicfu.locks.reentrantLock
 import kotlinx.atomicfu.locks.withLock
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mqtt.MQTTCurrentPacket
 import mqtt.MQTTException
 import mqtt.MQTTVersion
@@ -55,6 +59,7 @@ public class MQTTClient(
     private val enhancedAuthCallback: (authenticationData: UByteArray?) -> UByteArray? = { null },
     private val onConnected: (connack: MQTTConnack) -> Unit = {},
     private val onDisconnected: (disconnect: MQTTDisconnect?) -> Unit = {},
+    private val onError: (error: Throwable) -> Unit = { throw it },
     private val publishReceived: (publish: MQTTPublish) -> Unit
 ) {
 
@@ -375,6 +380,28 @@ public class MQTTClient(
     public fun run() {
         while (running) {
             step()
+        }
+    }
+
+    /**
+     * Run the client in a coroutine using [dispatcher] with a [delayTimeMs] delay between each
+     * iteration to workaround abusing thread lock
+     */
+    public fun runAsync(
+        dispatcher: CoroutineDispatcher,
+        delayTimeMs : Long = 1L
+    ) {
+        CoroutineScope(dispatcher).launch {
+            while (running) {
+                try {
+                    step()
+                } catch (t: Throwable) {
+                    close()
+                    onError(t)
+                    return@launch
+                }
+                delay(delayTimeMs)
+            }
         }
     }
 
