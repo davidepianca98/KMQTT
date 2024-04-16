@@ -152,7 +152,6 @@ public class MQTTClient(
             )
         }
         send(connect.toByteArray())
-        lastActiveTimestamp = currentTimeMillis()
     }
 
     private fun generatePacketId(): UInt {
@@ -293,8 +292,6 @@ public class MQTTClient(
             val data = socket?.read()
 
             if (data != null) {
-                lastActiveTimestamp = currentTimeMillis()
-
                 try {
                     currentReceivedPacket.addData(data).forEach {
                         handlePacket(it)
