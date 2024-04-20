@@ -1,5 +1,6 @@
 import kotlinx.atomicfu.AtomicBoolean
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -354,6 +355,7 @@ public class MQTTClient(
 
     /**
      * Run a single iteration of the client (blocking)
+     * This function blocks the thread for a single iteration duration
      */
     public fun step() {
         if (running.value) {
@@ -363,10 +365,22 @@ public class MQTTClient(
 
     /**
      * Run the client (blocking)
+     * This function blocks the thread until the client stops
      */
     public fun run() {
         while (running.value) {
             step()
+        }
+    }
+
+    /**
+     * Run the client
+     * This function runs the thread on the specified dispatcher until the client stops
+     * @param dispatcher the dispatcher on which to run the client
+     */
+    public fun runSuspend(dispatcher: CoroutineDispatcher = Dispatchers.Default) {
+        CoroutineScope(dispatcher).launch {
+            run()
         }
     }
 
