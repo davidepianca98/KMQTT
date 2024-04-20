@@ -4,6 +4,7 @@ plugins {
     id("kotlinx-atomicfu")
 }
 
+val coroutineVersion: String by project
 val atomicfuVersion: String by project
 val nodeWrapperVersion: String by project
 

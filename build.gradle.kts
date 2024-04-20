@@ -12,7 +12,7 @@ buildscript {
 }
 
 plugins {
-    kotlin("multiplatform") version "1.9.22" apply false
+    kotlin("multiplatform") version "1.9.23" apply false
     id("com.louiscad.complete-kotlin") version "1.1.0"
     id("com.goncalossilva.resources") version "0.4.0"
 }
