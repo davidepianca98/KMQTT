@@ -5,7 +5,7 @@ public actual class ClientSocket actual constructor(
     address: String,
     port: Int,
     maximumPacketSize: Int,
-    readTimeOut: Int,
+    private val readTimeOut: Int,
     private val checkCallback: () -> Unit
 ) : Socket(node.net.Socket(), { _, _ ->
     checkCallback()
@@ -28,7 +28,7 @@ public actual class ClientSocket actual constructor(
                 } catch (e: dynamic) {
                     close()
                 }
-            }, 250)
+            }, readTimeOut)
         }
     }
 

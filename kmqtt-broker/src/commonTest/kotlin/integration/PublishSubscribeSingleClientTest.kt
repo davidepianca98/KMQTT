@@ -45,9 +45,7 @@ class PublishSubscribeSingleClientTest {
             broker.step()
             client.step()
             i++
-            withContext(Dispatchers.Default) {
-                delay(10)
-            }
+            delay(10)
         }
 
         client.disconnect(ReasonCode.SUCCESS)

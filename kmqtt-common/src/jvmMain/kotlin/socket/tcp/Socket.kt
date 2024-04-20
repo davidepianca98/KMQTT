@@ -51,7 +51,7 @@ public actual open class Socket(
                 length >= 0 -> return length
                 else -> {
                     close()
-                    throw SocketClosedException()
+                    throw SocketClosedException("Read to buffer error End Of Stream ($length)")
                 }
             }
         } catch (e: java.io.IOException) {

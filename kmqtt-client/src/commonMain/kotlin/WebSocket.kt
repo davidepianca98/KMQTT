@@ -98,7 +98,7 @@ public class WebSocket(private val socket: SocketInterface, host: String, path: 
             }
         } else {
             socket.close()
-            throw IOException("Not a HTTP 101")
+            throw IOException("Not a HTTP 101: $string")
         }
     }
 

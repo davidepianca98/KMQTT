@@ -1,10 +1,8 @@
 package integration
 
 import MQTTClient
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withContext
 import mqtt.MQTTVersion
 import mqtt.Subscription
 import mqtt.broker.Broker
@@ -21,35 +19,34 @@ class PublishSubscribeMultipleClientsTest {
         var received = false
 
         val broker = Broker()
-        val client1 = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, clientId = "client1") {}
-        val client2 = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, clientId = "client2") {
+
+        val clientSub = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, clientId = "client2") {
             assertEquals(topic, it.topicName)
             assertContentEquals(payload, it.payload)
             assertEquals(qos, it.qos)
             received = true
         }
+        broker.step()
+        clientSub.subscribe(listOf(Subscription(topic, SubscriptionOptions(qos))))
 
         broker.step()
 
-        client2.subscribe(listOf(Subscription(topic, SubscriptionOptions(qos))))
-
+        val clientPub = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, clientId = "client1") {}
         broker.step()
 
-        client1.publish(false, qos, topic, payload)
+        clientPub.publish(false, qos, topic, payload)
 
         var i = 0
         while (!received && i < 1000) {
             broker.step()
-            client1.step()
-            client2.step()
+            clientPub.step()
+            clientSub.step()
             i++
-            withContext(Dispatchers.Default) {
-                delay(10)
-            }
+            delay(10)
         }
 
-        client1.disconnect(ReasonCode.SUCCESS)
-        client2.disconnect(ReasonCode.SUCCESS)
+        clientPub.disconnect(ReasonCode.SUCCESS)
+        clientSub.disconnect(ReasonCode.SUCCESS)
         broker.stop()
 
         if (i >= 1000) {

@@ -12,7 +12,7 @@ public actual class TLSClientSocket actual constructor(
     address: String,
     port: Int,
     maximumPacketSize: Int,
-    readTimeOut: Int,
+    private val readTimeOut: Int,
     tlsSettings: TLSClientSettings,
     private val checkCallback: () -> Unit
 ) : TLSSocket(connect(port, address, TlsConnectionOptions().apply {
@@ -71,7 +71,7 @@ public actual class TLSClientSocket actual constructor(
                 } catch (e: dynamic) {
                     close()
                 }
-            }, 250)
+            }, readTimeOut)
         }
     }
 

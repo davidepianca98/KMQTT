@@ -33,11 +33,16 @@ class TLSTest {
             assertEquals(Qos.AT_MOST_ONCE, it.qos)
             received = true
         }
-        broker.step()
+        for (i in 1..5) {
+            // Process handshake and CONNECT
+            broker.step()
+            client.step()
+        }
 
         client.subscribe(listOf(Subscription(topic, SubscriptionOptions(Qos.AT_MOST_ONCE))))
 
         broker.step()
+        client.step()
 
         client.publish(false, Qos.AT_MOST_ONCE, topic, sendPayload.encodeToByteArray().toUByteArray())
 
@@ -46,9 +51,7 @@ class TLSTest {
             broker.step()
             client.step()
             i++
-            withContext(Dispatchers.Default) {
-                delay(10)
-            }
+            delay(10)
         }
 
         client.disconnect(ReasonCode.SUCCESS)

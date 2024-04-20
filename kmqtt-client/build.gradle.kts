@@ -46,6 +46,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(project(":kmqtt-common"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
             }
         }
         val commonTest by getting {

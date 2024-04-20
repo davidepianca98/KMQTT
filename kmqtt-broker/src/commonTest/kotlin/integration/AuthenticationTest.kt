@@ -1,11 +1,8 @@
 package integration
 
 import MQTTClient
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withContext
-import mqtt.MQTTException
 import mqtt.MQTTVersion
 import mqtt.broker.Broker
 import mqtt.broker.interfaces.Authentication
@@ -13,7 +10,6 @@ import mqtt.broker.interfaces.EnhancedAuthenticationProvider
 import mqtt.packets.mqttv5.MQTT5Properties
 import mqtt.packets.mqttv5.ReasonCode
 import kotlin.test.Test
-import kotlin.test.assertFailsWith
 
 class AuthenticationTest {
 
@@ -22,13 +18,11 @@ class AuthenticationTest {
         broker: Broker
     ) {
         var i = 0
-        while (!client.connackReceived && i < 1000) {
+        while (!client.isConnackReceived() && i < 1000) {
             broker.step()
             client.step()
             i++
-            withContext(Dispatchers.Default) {
-                delay(10)
-            }
+            delay(10)
         }
         if (i >= 1000) {
             throw Exception("Test timeout")

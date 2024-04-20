@@ -85,7 +85,7 @@ public actual class TLSClientSocket actual constructor(
     public companion object {
         private fun getPrivateKeyFromString(key: String): RSAPrivateKey {
             val privateKeyPEM = key
-                .replace("-----BEGIN PRIVATE KEY-----\n", "")
+                .replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
                 .replace("\n","")
             val encoded = Base64.getDecoder().decode(privateKeyPEM)
