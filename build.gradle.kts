@@ -7,14 +7,14 @@ allprojects {
 
 buildscript {
     dependencies {
-        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.23.1")
+        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.24.0")
     }
 }
 
 plugins {
-    kotlin("multiplatform") version "1.9.23" apply false
-    id("com.louiscad.complete-kotlin") version "1.1.0"
-    id("com.goncalossilva.resources") version "0.4.0"
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.complete.kotlin)
+    alias(libs.plugins.goncalossilva.resources)
 }
 
 subprojects {

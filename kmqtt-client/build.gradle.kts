@@ -1,12 +1,8 @@
 plugins {
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.multiplatform)
     id("convention.publication")
     id("kotlinx-atomicfu")
 }
-
-val coroutineVersion: String by project
-val atomicfuVersion: String by project
-val nodeWrapperVersion: String by project
 
 kotlin {
     explicitApi()
@@ -47,7 +43,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(project(":kmqtt-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
         val commonTest by getting {
@@ -65,7 +61,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-node:$nodeWrapperVersion")
+                implementation(libs.kotlin.node)
             }
         }
         val jsTest by getting {
@@ -76,7 +72,7 @@ kotlin {
         val posixMain by creating {
             dependsOn(commonMain)
             dependencies {
-                implementation("org.jetbrains.kotlinx:atomicfu:$atomicfuVersion")
+                implementation(libs.atomicfu)
             }
         }
         val mingwX64Main by getting {

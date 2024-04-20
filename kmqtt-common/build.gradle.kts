@@ -1,10 +1,8 @@
 
 plugins {
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.multiplatform)
     id("convention.publication")
 }
-
-val nodeWrapperVersion: String by project
 
 kotlin {
     explicitApi()
@@ -60,7 +58,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-node:$nodeWrapperVersion")
+                implementation(libs.kotlin.node)
                 implementation(kotlin("test-js"))
             }
         }

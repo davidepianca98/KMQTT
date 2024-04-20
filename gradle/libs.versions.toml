@@ -1,0 +1,25 @@
+[versions]
+serialization = "1.6.3"
+coroutines = "1.8.0"
+atomicfu = "0.24.0"
+nodeWrapper = "20.11.30-pre.732"
+completeKotlin = "1.1.0"
+silvaResources = "0.4.0"
+kotlin = "1.9.23"
+shadow = "7.1.2"
+
+[libraries]
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization" }
+kotlin-node = { module = "org.jetbrains.kotlin-wrappers:kotlin-node", version.ref = "nodeWrapper" }
+atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
+goncalossilva-resources = { module = "com.goncalossilva:resources", version.ref = "silvaResources" }
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+complete-kotlin = { id = "com.louiscad.complete-kotlin", version.ref = "completeKotlin" }
+goncalossilva-resources = { id = "com.goncalossilva.resources", version.ref = "silvaResources" }
+johnrengelman-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }

@@ -1,17 +1,12 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.9.23"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     id("convention.publication")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    alias(libs.plugins.johnrengelman.shadow)
     id("kotlinx-atomicfu")
 }
-
-val serializationVersion: String by project
-val coroutineVersion: String by project
-val atomicfuVersion: String by project
-val nodeWrapperVersion: String by project
 
 kotlin {
     explicitApi()
@@ -65,9 +60,9 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(project(":kmqtt-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+                implementation(libs.kotlinx.serialization.core)
+                implementation(libs.kotlinx.serialization.protobuf)
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
         val commonTest by getting {
@@ -75,8 +70,8 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation(project(":kmqtt-client"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
-                implementation("com.goncalossilva:resources:0.4.0")
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.goncalossilva.resources)
             }
         }
         val jvmMain by getting {
@@ -92,7 +87,7 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-node:$nodeWrapperVersion")
+                implementation(libs.kotlin.node)
             }
         }
         val jsTest by getting {
@@ -103,7 +98,7 @@ kotlin {
         val posixMain by creating {
             dependsOn(commonMain)
             dependencies {
-                implementation("org.jetbrains.kotlinx:atomicfu:$atomicfuVersion")
+                implementation(libs.atomicfu)
             }
         }
         val mingwX64Main by getting {

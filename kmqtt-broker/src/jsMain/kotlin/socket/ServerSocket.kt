@@ -32,7 +32,7 @@ internal actual open class ServerSocket actual constructor(
     }
 
     fun onConnect(socket: node.net.Socket) {
-        socket.on(SocketEvent.ERROR) { error: Error ->
+        socket.on(SocketEvent.ERROR) { error: Throwable ->
             println(error.message)
         }
 
