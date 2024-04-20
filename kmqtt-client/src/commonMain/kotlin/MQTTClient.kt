@@ -103,14 +103,14 @@ public class MQTTClient(
             throw IllegalArgumentException("Cannot set password without username")
         }
 
-        running.value = true
+        running.getAndSet(true)
 
         connectSocket(250)
     }
 
     private fun connectSocket(readTimeout: Int) {
         if (socket == null) {
-            connackReceived.value = false
+            connackReceived.getAndSet(false)
             socket = if (tls == null)
                 ClientSocket(address, port, maximumPacketSize, readTimeout, ::check)
             else
@@ -129,7 +129,7 @@ public class MQTTClient(
 
     private fun send(data: UByteArray) {
         socket?.send(data) ?: throw SocketClosedException("MQTT send failed")
-        lastActiveTimestamp.value = currentTimeMillis()
+        lastActiveTimestamp.getAndSet(currentTimeMillis())
     }
 
     private fun sendConnect() {
@@ -398,13 +398,13 @@ public class MQTTClient(
             }
 
             val receiveMax = packet.properties.receiveMaximum ?: 65535u
-            this.receiveMax.value = receiveMax
+            this.receiveMax.getAndSet(receiveMax)
             val maximumQos = packet.properties.maximumQos?.let { Qos.valueOf(it.toInt()) } ?: Qos.EXACTLY_ONCE
-            this.maximumQos.value = maximumQos
+            this.maximumQos.getAndSet(maximumQos)
             val retainAvailable = packet.properties.retainAvailable != 0u
-            this.retainedSupported.value = retainAvailable
+            this.retainedSupported.getAndSet(retainAvailable)
             val maximumServerPacketSize = packet.properties.maximumPacketSize?.toInt() ?: maximumServerPacketSize.value
-            this.maximumServerPacketSize.value = maximumServerPacketSize
+            this.maximumServerPacketSize.getAndSet(maximumServerPacketSize)
             clientId = packet.properties.assignedClientIdentifier ?: clientId
             topicAliasMaximum = packet.properties.topicAliasMaximum ?: topicAliasMaximum
             wildcardSubscriptionAvailable = packet.properties.wildcardSubscriptionAvailable != 0u
@@ -412,7 +412,7 @@ public class MQTTClient(
             sharedSubscriptionAvailable = packet.properties.sharedSubscriptionAvailable != 0u
 
             val keepAlive = packet.properties.serverKeepAlive?.toInt() ?: keepAlive.value
-            this.keepAlive.value = keepAlive
+            this.keepAlive.getAndSet(keepAlive)
 
             enhancedAuthCallback(packet.properties.authenticationData)
         } else if (packet is MQTT4Connack) {
@@ -421,7 +421,7 @@ public class MQTTClient(
             }
         }
 
-        connackReceived.value = true
+        connackReceived.getAndSet(true)
         if (cleanStart && packet.connectAcknowledgeFlags.sessionPresentFlag) {
             throw MQTTException(ReasonCode.PROTOCOL_ERROR)
         } else if (!cleanStart && !packet.connectAcknowledgeFlags.sessionPresentFlag) {
@@ -573,7 +573,7 @@ public class MQTTClient(
     }
 
     private fun handlePingresp() {
-        lastActiveTimestamp.value = currentTimeMillis()
+        lastActiveTimestamp.getAndSet(currentTimeMillis())
     }
 
     private fun handleAuth(packet: MQTT5Auth) {
@@ -610,9 +610,9 @@ public class MQTTClient(
     }
 
     private fun close() {
-        running.value = false
+        running.getAndSet(false)
         socket?.close()
-        connackReceived.value = false
+        connackReceived.getAndSet(false)
         socket = null
     }
 }
