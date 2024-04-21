@@ -20,21 +20,29 @@ class PublishSubscribeMultipleClientsTest {
 
         val broker = Broker()
 
-        val clientSub = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, clientId = "client2") {
+        val clientPub = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, clientId = "client1") {}
+
+        broker.step()
+        clientPub.step()
+
+        val clientSub = MQTTClient(
+            MQTTVersion.MQTT5,
+            "127.0.0.1",
+            broker.port,
+            null,
+            clientId = "client2",
+            onSubscribed = {
+                clientPub.publish(false, qos, topic, payload)
+            }
+        ) {
             assertEquals(topic, it.topicName)
             assertContentEquals(payload, it.payload)
             assertEquals(qos, it.qos)
             received = true
         }
         broker.step()
+
         clientSub.subscribe(listOf(Subscription(topic, SubscriptionOptions(qos))))
-
-        broker.step()
-
-        val clientPub = MQTTClient(MQTTVersion.MQTT5, "127.0.0.1", broker.port, null, clientId = "client1") {}
-        broker.step()
-
-        clientPub.publish(false, qos, topic, payload)
 
         var i = 0
         while (!received && i < 1000) {
