@@ -1,6 +1,7 @@
 package socket
 
 import mqtt.broker.Broker
+import mqtt.broker.cluster.ClusterConnection
 
 internal expect open class ServerSocket(
     broker: Broker,
@@ -12,4 +13,6 @@ internal expect open class ServerSocket(
     fun select(timeout: Long)
 
     fun close()
+
+    override fun addClusterConnection(address: String): ClusterConnection?
 }

@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 ####################################################
 ########          GCC   and tools        ###########
@@ -24,12 +24,12 @@ RUN set -x \
 ###############################################################################
 
 ### Some env variables
-ENV OPENSSL_VERSION="1.1.1t"
-ENV KOTLIN_VERSION2="1.8.10"
-ENV KOTLIN_VERSION="1.8.10"
+ENV OPENSSL_VERSION="1.1.1w"
+ENV KOTLIN_VERSION2="2.0.0"
+ENV KOTLIN_VERSION="2.0.0"
 
 RUN set -x \
- && wget --no-check-certificate -O /tmp/kotlin-native-linux-${KOTLIN_VERSION}.tar.gz "https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION2}/kotlin-native-linux-x86_64-${KOTLIN_VERSION}.tar.gz" \
+ && wget --no-check-certificate -O /tmp/kotlin-native-linux-${KOTLIN_VERSION}.tar.gz "https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION2}/kotlin-native-prebuilt-linux-x86_64-${KOTLIN_VERSION}.tar.gz" \
  && cd /tmp \
  && tar -xzvf kotlin-native-linux-${KOTLIN_VERSION}.tar.gz
 
@@ -65,7 +65,7 @@ RUN set -x \
 
 RUN set -x \
  && cd /tmp/linuxArm64/openssl-${OPENSSL_VERSION} \
- && ./Configure --release no-shared no-asm --cross-compile-prefix=aarch64-linux-gnu- linux-aarch64 \
+ && ./Configure --release no-shared no-asm --cross-compile-prefix=aarch64-linux-gnu- -mno-outline-atomics linux-aarch64 \
  && make \
  && ar -x libssl.a \
  && ar -x libcrypto.a \
@@ -77,16 +77,16 @@ RUN set -x \
  && cd /tmp \
  && mkdir klib_linux_x64 \
  && cd /tmp/klib_linux_x64 \
- && ../kotlin-native-linux-x86_64-${KOTLIN_VERSION}/bin/cinterop -def ../openssl.def -target "linux_x64" -o openssl
+ && ../kotlin-native-prebuilt-linux-x86_64-${KOTLIN_VERSION}/bin/cinterop -def ../openssl.def -target "linux_x64" -o openssl
 
 RUN set -x \
  && cd /tmp \
  && mkdir klib_mingw_x64 \
  && cd /tmp/klib_mingw_x64 \
- && ../kotlin-native-linux-x86_64-${KOTLIN_VERSION}/bin/cinterop -def ../openssl.def -target "mingw_x64" -o openssl
+ && ../kotlin-native-prebuilt-linux-x86_64-${KOTLIN_VERSION}/bin/cinterop -def ../openssl.def -target "mingw_x64" -o openssl
 
 RUN set -x \
  && cd /tmp \
  && mkdir klib_linux_arm64 \
  && cd /tmp/klib_linux_arm64 \
- && ../kotlin-native-linux-x86_64-${KOTLIN_VERSION}/bin/cinterop -def ../openssl.def -target "linux_arm64" -o openssl
+ && ../kotlin-native-prebuilt-linux-x86_64-${KOTLIN_VERSION}/bin/cinterop -def ../openssl.def -target "linux_arm64" -o openssl

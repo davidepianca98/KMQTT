@@ -104,7 +104,7 @@ internal actual open class ServerSocket actual constructor(
         // Not doing anything as NodeJs is callback based
     }
 
-    final override fun addClusterConnection(address: String): ClusterConnection? {
+    actual override fun addClusterConnection(address: String): ClusterConnection? {
         TODO("Cluster in JS not yet implemented")
     }
 }

@@ -16,12 +16,12 @@ import javax.net.ssl.SSLException
 public actual open class TLSSocket(
     channel: SocketChannel,
     key: SelectionKey?,
-    private var sendBuffer: ByteBuffer,
-    private var receiveBuffer: ByteBuffer,
+    private var sendBuffer1: ByteBuffer,
+    private var receiveBuffer1: ByteBuffer,
     private var sendAppBuffer: ByteBuffer,
     private var receiveAppBuffer: ByteBuffer,
     protected val engine: SSLEngine
-) : Socket(channel, key, sendBuffer, receiveBuffer) {
+) : Socket(channel, key, sendBuffer1, receiveBuffer1) {
 
     init {
         engine.beginHandshake()
@@ -29,11 +29,11 @@ public actual open class TLSSocket(
     }
 
     private fun handleReceiveBufferUnderflow() {
-        if (engine.session.packetBufferSize > receiveBuffer.capacity()) {
+        if (engine.session.packetBufferSize > receiveBuffer1.capacity()) {
             val newBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
-            receiveBuffer.flip()
-            newBuffer.put(receiveBuffer)
-            receiveBuffer = newBuffer
+            receiveBuffer1.flip()
+            newBuffer.put(receiveBuffer1)
+            receiveBuffer1 = newBuffer
         }
     }
 
@@ -46,10 +46,10 @@ public actual open class TLSSocket(
     }
 
     private fun handleSendBufferOverflow() {
-        sendBuffer = if (engine.session.packetBufferSize > sendBuffer.capacity()) {
+        sendBuffer1 = if (engine.session.packetBufferSize > sendBuffer1.capacity()) {
             ByteBuffer.allocate(engine.session.applicationBufferSize)
         } else {
-            ByteBuffer.allocate(sendBuffer.capacity() * 2)
+            ByteBuffer.allocate(sendBuffer1.capacity() * 2)
         }
     }
 
@@ -65,7 +65,7 @@ public actual open class TLSSocket(
         sendAppBuffer.flip()
         try {
             do {
-                val result = engine.wrap(sendAppBuffer, sendBuffer)
+                val result = engine.wrap(sendAppBuffer, sendBuffer1)
                 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
                 when (result.status) {
                     SSLEngineResult.Status.BUFFER_UNDERFLOW -> {
@@ -132,9 +132,9 @@ public actual open class TLSSocket(
     private fun read0(): Boolean {
         try {
             do {
-                receiveBuffer.flip()
-                val result = engine.unwrap(receiveBuffer, receiveAppBuffer)
-                receiveBuffer.compact()
+                receiveBuffer1.flip()
+                val result = engine.unwrap(receiveBuffer1, receiveAppBuffer)
+                receiveBuffer1.compact()
                 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
                 when (result.status) {
                     SSLEngineResult.Status.OK -> {}

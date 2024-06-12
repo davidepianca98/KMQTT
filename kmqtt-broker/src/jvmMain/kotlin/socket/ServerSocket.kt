@@ -146,7 +146,7 @@ internal actual open class ServerSocket actual constructor(
         }
     }
 
-    final override fun addClusterConnection(address: String): ClusterConnection? {
+    actual override fun addClusterConnection(address: String): ClusterConnection? {
         if (broker.cluster != null) {
             val channel = SocketChannel.open(InetSocketAddress(address, broker.cluster.tcpPort))
             channel.configureBlocking(false)

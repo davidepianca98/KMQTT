@@ -286,7 +286,7 @@ internal actual open class ServerSocket actual constructor(
 
     }
 
-    override fun addClusterConnection(address: String): ClusterConnection? {
+    actual override fun addClusterConnection(address: String): ClusterConnection? {
         if (broker.cluster != null) {
             val cluster = broker.cluster
             memScoped {
