@@ -9,6 +9,7 @@ import java.nio.channels.SocketChannel
 import java.security.KeyFactory
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
 import java.security.interfaces.RSAPrivateKey
 import java.security.spec.PKCS8EncodedKeySpec
 import java.util.*
@@ -16,6 +17,7 @@ import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLEngineResult
 import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 
 public actual class TLSClientSocket actual constructor(
@@ -49,7 +51,19 @@ public actual class TLSClientSocket actual constructor(
 
             trustManagerFactory.trustManagers
         } else {
-            null
+            if (!tlsSettings.checkServerCertificate) {
+                arrayOf(object : X509TrustManager {
+                    override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+
+                    override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+
+                    override fun getAcceptedIssuers(): Array<X509Certificate> {
+                        return arrayOf()
+                    }
+                })
+            } else {
+                null
+            }
         }
 
         val keyManagers = if (tlsSettings.clientCertificate != null) {

@@ -69,8 +69,18 @@ internal actual class TLSClientEngine actual constructor(tlsSettings: TLSClientS
                 }
             }
         } else {
-            if (SSL_CTX_load_verify_locations(sslContext, null, getenv(X509_get_default_cert_dir_env()?.toKString())?.toKString()) != 1) {
-                throw Exception("Server certificate path not found")
+            if (!tlsSettings.checkServerCertificate) {
+                SSL_CTX_set_cert_verify_callback(
+                    sslContext,
+                    staticCFunction { buf: CPointer<X509_STORE_CTX>?, arg: COpaquePointer? ->
+                        1
+                    },
+                    null
+                )
+            } else {
+                if (SSL_CTX_load_verify_locations(sslContext, null, getenv(X509_get_default_cert_dir_env()?.toKString())?.toKString()) != 1) {
+                    throw Exception("Server certificate path not found")
+                }
             }
         }
 
