@@ -34,6 +34,10 @@ internal class ServerSocketLoop(private val broker: Broker) {
         }
     }
 
+    fun isRunning(): Boolean {
+        return serverSocket.isRunning()
+    }
+
     private fun selectCallback(attachment: Any?, state: SocketState): Boolean {
         return broker.lock.withLock {
             when (attachment) {

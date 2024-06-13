@@ -43,7 +43,8 @@ public class Broker(
     public val persistence: Persistence? = null,
     public val cluster: ClusterSettings? = null,
     public val enableUdp: Boolean = false,
-    public val webSocketPort: Int? = null
+    public val webSocketPort: Int? = null,
+    private val miscCallbacks: MiscCallbacks? = null
 ) {
 
     private val server = ServerSocketLoop(this)
@@ -55,6 +56,9 @@ public class Broker(
 
     internal val lock = reentrantLock()
 
+    private var startCallbackCalled = false
+    private var stopCallbackCalled = false
+
     init {
         if (enableUdp && maximumPacketSize > 65535u) {
             throw IllegalArgumentException("When UDP is enabled the maximum packet size can't be bigger than the datagram maximum size")
@@ -65,14 +69,32 @@ public class Broker(
      * Starts the broker (blocking run)
      */
     public fun listen() {
+        if (!startCallbackCalled) {
+            miscCallbacks?.brokerStarted()
+            startCallbackCalled = true
+        }
         server.run()
+        if (!stopCallbackCalled) {
+            miscCallbacks?.brokerStopped()
+            stopCallbackCalled = true
+        }
     }
 
     /**
      * Run a single iteration of the broker (non blocking run)
      */
     public fun step() {
+        if (!startCallbackCalled) {
+            miscCallbacks?.brokerStarted()
+            startCallbackCalled = true
+        }
         server.step()
+        if (!server.isRunning()) {
+            if (!stopCallbackCalled) {
+                miscCallbacks?.brokerStopped()
+                stopCallbackCalled = true
+            }
+        }
     }
 
     internal fun sendWill(session: Session?) {
@@ -413,6 +435,10 @@ public class Broker(
                 (it.value as Session).clientConnection?.disconnect(reasonCode, serverReference)
             }
             server.stop()
+        }
+        if (!stopCallbackCalled) {
+            miscCallbacks?.brokerStopped()
+            stopCallbackCalled = true
         }
     }
 
