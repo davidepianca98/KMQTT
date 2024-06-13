@@ -8,6 +8,7 @@ public actual class ClientSocket actual constructor(
     port: Int,
     maximumPacketSize: Int,
     private val readTimeOut: Int,
+    private val connectTimeOut: Int,
     checkCallback: () -> Unit
 ) : Socket(
     socketsInit().run {
@@ -23,7 +24,13 @@ public actual class ClientSocket actual constructor(
         memScoped {
             val ip = getaddrinfo(address, port.toString()) ?: throw IOException("Failed resolving address")
 
+            if (set_send_socket_timeout(socket, connectTimeOut.convert()) == -1) {
+                socketsCleanup()
+                throw IOException("Socket connect timeout set failed, error ${getErrno()}")
+            }
+
             if (connect(socket, ip, sizeOf<sockaddr_in>().convert()) == -1) {
+                socketsCleanup()
                 throw IOException("Socket connect failed, error ${getErrno()}")
             }
 

@@ -5,5 +5,6 @@ public expect class ClientSocket(
     port: Int,
     maximumPacketSize: Int,
     readTimeOut: Int,
+    connectTimeOut: Int,
     checkCallback: () -> Unit
 ) : Socket

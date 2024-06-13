@@ -6,6 +6,7 @@ public expect class TLSClientSocket(
     port: Int,
     maximumPacketSize: Int,
     readTimeOut: Int,
+    connectTimeOut: Int,
     tlsSettings: TLSClientSettings,
     checkCallback: () -> Unit
 ) : TLSSocket {

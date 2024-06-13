@@ -1,3 +1,4 @@
+import socket.IOException
 import socket.tcp.Socket
 import web.timers.setTimeout
 
@@ -6,6 +7,7 @@ public actual class ClientSocket actual constructor(
     port: Int,
     maximumPacketSize: Int,
     private val readTimeOut: Int,
+    private val connectTimeOut: Int,
     private val checkCallback: () -> Unit
 ) : Socket(node.net.Socket(), { _, _ ->
     checkCallback()
@@ -16,6 +18,12 @@ public actual class ClientSocket actual constructor(
 
     init {
         socket.connect(port, address)
+        setTimeout({
+            if (socket.connecting) {
+                close()
+                throw IOException("Socket connect timeout set failed")
+            }
+        }, connectTimeOut)
         doLater()
     }
 

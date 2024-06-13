@@ -10,9 +10,10 @@ public actual class ClientSocket actual constructor(
     port: Int,
     maximumPacketSize: Int,
     private val readTimeOut: Int,
+    connectTimeOut: Int,
     checkCallback: () -> Unit
 ) : Socket(
-    SocketChannel.open(InetSocketAddress(address, port)),
+    SocketChannel.open(),
     null,
     ByteBuffer.allocate(maximumPacketSize),
     ByteBuffer.allocate(maximumPacketSize)
@@ -21,8 +22,13 @@ public actual class ClientSocket actual constructor(
     private val selector = Selector.open()
 
     init {
+        channel.socket().connect(InetSocketAddress(address, port), connectTimeOut)
         channel.configureBlocking(false)
         channel.register(selector, SelectionKey.OP_READ)
+
+        if (!channel.isConnected) {
+            throw Exception("Connect timeout expired")
+        }
     }
 
     override fun read(): UByteArray? {

@@ -42,6 +42,7 @@ import socket.tls.TLSClientSettings
  * @param willRetain set if the will PUBLISH must be retained by the server
  * @param willQos the QoS of the will PUBLISH message
  * @param connackTimeout timeout in seconds after which the connection is closed if no CONNACK packet has been received
+ * @param connectTimeout timeout in seconds after which an exception will be thrown if the socket is not able to establish a connection
  * @param enhancedAuthCallback the callback called when authenticationData is received, it should return the data necessary to continue authentication or null if completed (used only in MQTT5 if authenticationMethod has been set in the CONNECT properties)
  * @param onConnected called when the CONNACK packet has been received and the connection has been established
  * @param onDisconnected called when a DISCONNECT packet has been received or if the connection has been terminated
@@ -67,6 +68,7 @@ public class MQTTClient(
     private val willRetain: Boolean = false,
     private val willQos: Qos = Qos.AT_MOST_ONCE,
     private val connackTimeout: Int = 30,
+    private val connectTimeout: Int = 30,
     private val enhancedAuthCallback: (authenticationData: UByteArray?) -> UByteArray? = { null },
     private val onConnected: (connack: MQTTConnack) -> Unit = {},
     private val onDisconnected: (disconnect: MQTTDisconnect?) -> Unit = {},
@@ -124,16 +126,16 @@ public class MQTTClient(
 
         running.getAndSet(true)
 
-        connectSocket(250)
+        connectSocket(250, connectTimeout * 1000)
     }
 
-    private fun connectSocket(readTimeout: Int) {
+    private fun connectSocket(readTimeout: Int, connectTimeout: Int) {
         if (socket == null) {
             connackReceived.getAndSet(false)
             socket = if (tls == null)
-                ClientSocket(address, port, maximumPacketSize, readTimeout, ::check)
+                ClientSocket(address, port, maximumPacketSize, readTimeout, connectTimeout, ::check)
             else
-                TLSClientSocket(address, port, maximumPacketSize, readTimeout, tls, ::check)
+                TLSClientSocket(address, port, maximumPacketSize, readTimeout, connectTimeout, tls, ::check)
             if (webSocket != null) {
                 socket = WebSocket(socket!!, address, webSocket)
             }

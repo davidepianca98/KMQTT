@@ -25,10 +25,12 @@ public actual class TLSClientSocket actual constructor(
     port: Int,
     maximumPacketSize: Int,
     private val readTimeOut: Int,
+    private val connectTimeOut: Int,
     private val tlsSettings: TLSClientSettings,
     checkCallback: () -> Unit
 ) : TLSSocket(
-    SocketChannel.open(InetSocketAddress(address, port)).apply {
+    SocketChannel.open().apply {
+        socket().connect(InetSocketAddress(address, port), connectTimeOut)
         configureBlocking(false)
     },
     null,

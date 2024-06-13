@@ -119,11 +119,19 @@ public actual fun getEagain(): Int = EAGAIN
 
 public actual fun getEwouldblock(): Int = EWOULDBLOCK
 
-public actual fun MemScope.set_socket_timeout(__fd: Int, timeout: Long): Int {
+public actual fun MemScope.set_send_socket_timeout(__fd: Int, timeout: Long): Int {
     val timeoutStruct = alloc<timeval>()
     val seconds = timeout / 1000
-    timeoutStruct.tv_sec = seconds
-    timeoutStruct.tv_usec = (timeout - seconds * 1000) * 1000
+    timeoutStruct.tv_sec = seconds.convert()
+    timeoutStruct.tv_usec = ((timeout - seconds * 1000) * 1000).convert()
+    return setsockopt(__fd, SOL_SOCKET, SO_SNDTIMEO, timeoutStruct.ptr, sizeOf<timeval>().toUInt())
+}
+
+public actual fun MemScope.set_recv_socket_timeout(__fd: Int, timeout: Long): Int {
+    val timeoutStruct = alloc<timeval>()
+    val seconds = timeout / 1000
+    timeoutStruct.tv_sec = seconds.convert()
+    timeoutStruct.tv_usec = ((timeout - seconds * 1000) * 1000).convert()
     return setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, timeoutStruct.ptr, sizeOf<timeval>().toUInt())
 }
 

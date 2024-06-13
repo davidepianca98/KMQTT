@@ -71,7 +71,9 @@ public expect fun bind(__fd: Int, __addr: CValuesRef<sockaddr>?, __len: UInt): I
 
 public expect fun set_non_blocking(__fd: Int): Int
 
-public expect fun MemScope.set_socket_timeout(__fd: Int, timeout: Long): Int
+public expect fun MemScope.set_send_socket_timeout(__fd: Int, timeout: Long): Int
+
+public expect fun MemScope.set_recv_socket_timeout(__fd: Int, timeout: Long): Int
 
 public expect fun socket(__domain: Int, __type: Int, __protocol: Int): Int
 

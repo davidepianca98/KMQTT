@@ -147,7 +147,13 @@ public actual fun getEagain(): Int = WSAEWOULDBLOCK
 
 public actual fun getEwouldblock(): Int = WSAEWOULDBLOCK
 
-public actual fun MemScope.set_socket_timeout(__fd: Int, timeout: Long): Int {
+public actual fun MemScope.set_send_socket_timeout(__fd: Int, timeout: Long): Int {
+    val timeoutValue = alloc<uint32_tVar>()
+    timeoutValue.value = timeout.toUInt()
+    return setsockopt(__fd, SOL_SOCKET, platform.posix.SO_SNDTIMEO, timeoutValue.ptr, sizeOf<uint32_tVar>().toUInt())
+}
+
+public actual fun MemScope.set_recv_socket_timeout(__fd: Int, timeout: Long): Int {
     val timeoutValue = alloc<uint32_tVar>()
     timeoutValue.value = timeout.toUInt()
     return setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, timeoutValue.ptr, sizeOf<uint32_tVar>().toUInt())

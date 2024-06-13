@@ -13,6 +13,7 @@ public actual class TLSClientSocket actual constructor(
     port: Int,
     maximumPacketSize: Int,
     private val readTimeOut: Int,
+    connectTimeOut: Int,
     tlsSettings: TLSClientSettings,
     private val checkCallback: () -> Unit
 ) : TLSSocket(connect(port, address, TlsConnectionOptions().apply {
@@ -59,6 +60,12 @@ public actual class TLSClientSocket actual constructor(
     private var open = true
 
     init {
+        setTimeout({
+            if (socket.connecting) {
+                close()
+                throw IOException("Socket connect timeout set failed")
+            }
+        }, connectTimeOut)
         doLater()
     }
 
