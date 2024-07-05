@@ -29,7 +29,7 @@ public data class ConnectFlags(
             if (reserved)
                 throw MQTTException(ReasonCode.MALFORMED_PACKET)
             val willFlag = ((byte shr 2) and 1) == 1
-            val willQos = ((byte shr 4) and 1) or ((byte shl 3) and 1)
+            val willQos = ((byte shr 3) and 3)
             val willRetain = ((byte shr 5) and 1) == 1
             if (willFlag) {
                 if (willQos == 3)
