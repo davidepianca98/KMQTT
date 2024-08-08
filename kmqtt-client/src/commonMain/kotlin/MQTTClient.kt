@@ -329,7 +329,13 @@ public class MQTTClient(
             }
         }
 
-        val data = socket?.read()
+        val data = try {
+            socket?.read()
+        } catch (e: Exception) {
+            close()
+            onDisconnected(null)
+            throw e
+        }
 
         if (data != null) {
             try {
@@ -341,7 +347,6 @@ public class MQTTClient(
                 }
             } catch (e: MQTTException) {
                 lastException = e
-                e.printStackTrace()
                 disconnect(e.reasonCode)
                 close()
                 onDisconnected(null)
