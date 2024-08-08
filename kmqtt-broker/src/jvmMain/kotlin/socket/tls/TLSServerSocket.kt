@@ -27,17 +27,22 @@ internal actual class TLSServerSocket actual constructor(
     private val sslContext = SSLContext.getInstance(broker.tlsSettings!!.version)
 
     init {
-        val keyStore = KeyStore.getInstance("PKCS12")
-        File(broker.tlsSettings!!.keyStoreFilePath).inputStream().use {
-            keyStore.load(it, broker.tlsSettings.keyStorePassword?.toCharArray())
+        try {
+            val keyStore = KeyStore.getInstance("PKCS12")
+            File(broker.tlsSettings!!.keyStoreFilePath).inputStream().use {
+                keyStore.load(it, broker.tlsSettings.keyStorePassword?.toCharArray())
+            }
+            val keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+            keyManagerFactory.init(keyStore, broker.tlsSettings.keyStorePassword?.toCharArray())
+
+            sslContext.init(keyManagerFactory.keyManagers, null, null)
+
+            val initSession = sslContext.createSSLEngine().session
+            initSession.invalidate()
+        } catch (e: Exception) {
+            close()
+            throw e
         }
-        val keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
-        keyManagerFactory.init(keyStore, broker.tlsSettings.keyStorePassword?.toCharArray())
-
-        sslContext.init(keyManagerFactory.keyManagers, null, null)
-
-        val initSession = sslContext.createSSLEngine().session
-        initSession.invalidate()
     }
 
     private fun buildKeyManagers(
