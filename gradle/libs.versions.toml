@@ -5,7 +5,7 @@ atomicfu = "0.24.0"
 nodeWrapper = "20.11.30-pre.732"
 completeKotlin = "1.1.0"
 silvaResources = "0.4.0"
-kotlin = "2.0.0"
+kotlin = "2.0.10"
 shadow = "7.1.2"
 
 [libraries]

@@ -25,8 +25,8 @@ RUN set -x \
 
 ### Some env variables
 ENV OPENSSL_VERSION="1.1.1w"
-ENV KOTLIN_VERSION2="2.0.0"
-ENV KOTLIN_VERSION="2.0.0"
+ENV KOTLIN_VERSION2="2.0.10"
+ENV KOTLIN_VERSION="2.0.10"
 
 RUN set -x \
  && wget --no-check-certificate -O /tmp/kotlin-native-linux-${KOTLIN_VERSION}.tar.gz "https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION2}/kotlin-native-prebuilt-linux-x86_64-${KOTLIN_VERSION}.tar.gz" \
