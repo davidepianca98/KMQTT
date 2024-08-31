@@ -130,6 +130,11 @@ public class WebSocket(private val socket: SocketInterface, host: String, path: 
         return null
     }
 
+    private fun decodePing(length: ULong): UByteArray? {
+        send(decodeBinary(length), 0xA)
+        return null
+    }
+
     private fun decodePong(length: ULong): UByteArray? {
         decodeBinary(length)
         return null
@@ -156,6 +161,7 @@ public class WebSocket(private val socket: SocketInterface, host: String, path: 
                 val decoded = when (opcode.toInt()) {
                     0x2 -> decodeBinary(length)
                     0x8 -> decodeClose(length)
+                    0x9 -> decodePing(length)
                     0xA -> decodePong(length)
                     else -> {
                         close()
