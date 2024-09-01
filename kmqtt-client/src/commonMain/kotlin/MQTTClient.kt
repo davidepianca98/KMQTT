@@ -369,34 +369,34 @@ public class MQTTClient(
                 onDisconnected(null)
                 throw e
             }
-        } else {
-            // If connack not received in a reasonable amount of time, then disconnect
-            val currentTime = currentTimeMillis()
-            val lastActive = lastActiveTimestamp.value
-            val isConnackReceived = connackReceived.value
+        }
 
-            if (!isConnackReceived && currentTime > lastActive + (connackTimeout * 1000)) {
+        // If connack not received in a reasonable amount of time, then disconnect
+        val currentTime = currentTimeMillis()
+        val lastActive = lastActiveTimestamp.value
+        val isConnackReceived = connackReceived.value
+
+        if (!isConnackReceived && currentTime > lastActive + (connackTimeout * 1000)) {
+            close()
+            lastException = Exception("CONNACK not received in 30 seconds")
+            throw lastException!!
+        }
+
+        val actualKeepAlive = keepAlive.value
+        if (actualKeepAlive != 0 && isConnackReceived) {
+            if (currentTime > lastActive + (actualKeepAlive * 1000)) {
+                // Timeout
                 close()
-                lastException = Exception("CONNACK not received in 30 seconds")
+                lastException = MQTTException(ReasonCode.KEEP_ALIVE_TIMEOUT)
                 throw lastException!!
-            }
-
-            val actualKeepAlive = keepAlive.value
-            if (actualKeepAlive != 0 && isConnackReceived) {
-                if (currentTime > lastActive + (actualKeepAlive * 1000)) {
-                    // Timeout
-                    close()
-                    lastException = MQTTException(ReasonCode.KEEP_ALIVE_TIMEOUT)
-                    throw lastException!!
-                } else if (currentTime > lastActive + (actualKeepAlive * 1000 * 0.9)) {
-                    val pingreq = if (mqttVersion == MQTTVersion.MQTT3_1_1) {
-                        MQTT4Pingreq()
-                    } else {
-                        MQTT5Pingreq()
-                    }
-                    send(pingreq.toByteArray())
-                    // TODO if not receiving pingresp after a reasonable amount of time, close connection
+            } else if (currentTime > lastActive + (actualKeepAlive * 1000 * 0.9)) {
+                val pingreq = if (mqttVersion == MQTTVersion.MQTT3_1_1) {
+                    MQTT4Pingreq()
+                } else {
+                    MQTT5Pingreq()
                 }
+                send(pingreq.toByteArray())
+                // TODO if not receiving pingresp after a reasonable amount of time, close connection
             }
         }
     }
