@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     id("convention.publication")
-    id("kotlinx-atomicfu")
+    id("org.jetbrains.kotlinx.atomicfu")
 }
 
 kotlin {

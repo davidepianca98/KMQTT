@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("convention.publication")
     alias(libs.plugins.johnrengelman.shadow)
-    id("kotlinx-atomicfu")
+    id("org.jetbrains.kotlinx.atomicfu")
 }
 
 kotlin {
