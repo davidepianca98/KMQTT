@@ -69,8 +69,8 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("io.github.davidepianca98:kmqtt-common:0.4.8")
-                implementation("io.github.davidepianca98:kmqtt-client:0.4.8")
+                implementation("io.github.davidepianca98:kmqtt-common:1.0.0")
+                implementation("io.github.davidepianca98:kmqtt-client:1.0.0")
             }
         }
     }
@@ -83,8 +83,8 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("io.github.davidepianca98:kmqtt-common-jvm:0.4.8")
-    implementation("io.github.davidepianca98:kmqtt-client-jvm:0.4.8")
+    implementation("io.github.davidepianca98:kmqtt-common-jvm:1.0.0")
+    implementation("io.github.davidepianca98:kmqtt-client-jvm:1.0.0")
 }
 ```
 
@@ -166,8 +166,8 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("io.github.davidepianca98:kmqtt-common:0.4.8")
-                implementation("io.github.davidepianca98:kmqtt-broker:0.4.8")
+                implementation("io.github.davidepianca98:kmqtt-common:1.0.0")
+                implementation("io.github.davidepianca98:kmqtt-broker:1.0.0")
             }
         }
     }
@@ -180,8 +180,8 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("io.github.davidepianca98:kmqtt-common-jvm:0.4.8")
-    implementation("io.github.davidepianca98:kmqtt-broker-jvm:0.4.8")
+    implementation("io.github.davidepianca98:kmqtt-common-jvm:1.0.0")
+    implementation("io.github.davidepianca98:kmqtt-broker-jvm:1.0.0")
 }
 ```
 
