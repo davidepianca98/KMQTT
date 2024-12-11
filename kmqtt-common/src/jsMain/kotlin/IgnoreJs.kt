@@ -1,1 +1,0 @@
-public actual typealias IgnoreJs = kotlin.test.Ignore

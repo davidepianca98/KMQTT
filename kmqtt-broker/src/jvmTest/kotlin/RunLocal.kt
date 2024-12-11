@@ -1,6 +1,6 @@
-import mqtt.broker.Broker
-import mqtt.broker.interfaces.Authorization
-import socket.tls.TLSSettings
+import io.github.davidepianca98.mqtt.broker.Broker
+import io.github.davidepianca98.mqtt.broker.interfaces.Authorization
+import io.github.davidepianca98.socket.tls.TLSSettings
 
 fun main() {
     Broker(
