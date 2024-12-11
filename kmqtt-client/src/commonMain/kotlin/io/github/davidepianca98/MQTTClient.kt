@@ -60,6 +60,7 @@ import io.github.davidepianca98.socket.SocketClosedException
 import io.github.davidepianca98.socket.SocketInterface
 import io.github.davidepianca98.socket.streams.EOFException
 import io.github.davidepianca98.socket.tls.TLSClientSettings
+import kotlinx.coroutines.CoroutineExceptionHandler
 
 /**
  * MQTT 3.1.1 and 5 client
@@ -480,9 +481,13 @@ public class MQTTClient(
      * Run the client
      * This function runs the thread on the specified dispatcher until the client stops
      * @param dispatcher the dispatcher on which to run the client
+     * @param exceptionHandler the exception handler for the coroutine scope
      */
-    public fun runSuspend(dispatcher: CoroutineDispatcher = Dispatchers.Default) {
-        CoroutineScope(dispatcher).launch {
+    public fun runSuspend(
+        dispatcher: CoroutineDispatcher = Dispatchers.Default,
+        exceptionHandler: CoroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->}
+    ) {
+        CoroutineScope(dispatcher).launch(exceptionHandler) {
             run()
         }
     }
