@@ -403,7 +403,12 @@ public class MQTTClient(
                 }
             } catch (e: MQTTException) {
                 lastException = e
-                disconnect(e.reasonCode)
+                disconnect(
+                    when (e.reasonCode) {
+                        ReasonCode.GRANTED_QOS1, ReasonCode.GRANTED_QOS2 -> ReasonCode.SUCCESS
+                        else -> e.reasonCode
+                    }
+                )
                 close()
                 onDisconnected(null)
                 throw e
