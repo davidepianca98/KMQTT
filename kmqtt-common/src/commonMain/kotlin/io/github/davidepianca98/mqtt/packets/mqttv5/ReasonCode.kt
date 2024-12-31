@@ -46,6 +46,6 @@ public enum class ReasonCode(public val value: Int) {
     WILDCARD_SUBSCRIPTIONS_NOT_SUPPORTED(162);
 
     public companion object {
-        public fun valueOf(value: Int): ReasonCode? = values().firstOrNull { it.value == value }
+        public fun valueOf(value: Int): ReasonCode? = entries.firstOrNull { it.value == value }
     }
 }

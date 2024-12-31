@@ -41,6 +41,7 @@ import io.github.davidepianca98.mqtt.packets.mqttv4.MQTT4Pubcomp
 import io.github.davidepianca98.mqtt.packets.mqttv4.MQTT4Publish
 import io.github.davidepianca98.mqtt.packets.mqttv4.MQTT4Suback
 import io.github.davidepianca98.mqtt.packets.mqttv4.MQTT4Subscribe
+import io.github.davidepianca98.mqtt.packets.mqttv4.toReasonCode
 import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Auth
 import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Connack
 import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Connect
@@ -539,7 +540,8 @@ public class MQTTClient(
             enhancedAuthCallback(packet.properties.authenticationData)
         } else if (packet is MQTT4Connack) {
             if (packet.connectReturnCode != ConnectReturnCode.CONNECTION_ACCEPTED) {
-                throw IOException("Connection failed with code: ${packet.connectReturnCode}")
+                throw MQTTException(packet.connectReturnCode.toReasonCode())
+//                throw IOException("Connection failed with code: ${packet.connectReturnCode}")
             }
         }
 
