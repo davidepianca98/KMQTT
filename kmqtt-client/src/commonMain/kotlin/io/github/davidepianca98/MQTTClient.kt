@@ -61,7 +61,6 @@ import io.github.davidepianca98.socket.SocketClosedException
 import io.github.davidepianca98.socket.SocketInterface
 import io.github.davidepianca98.socket.streams.EOFException
 import io.github.davidepianca98.socket.tls.TLSClientSettings
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.yield
@@ -423,7 +422,6 @@ public class MQTTClient(
             } catch (e: MQTTException) {
                 lastException = e
                 disconnect(e.reasonCode)
-                close()
                 onDisconnected(null)
                 throw e
             } catch (e: EOFException) {
@@ -434,13 +432,11 @@ public class MQTTClient(
             } catch (e: IOException) {
                 lastException = e
                 disconnect(ReasonCode.UNSPECIFIED_ERROR)
-                close()
                 onDisconnected(null)
                 throw e
             } catch (e: Exception) {
                 lastException = e
                 disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
-                close()
                 onDisconnected(null)
                 throw e
             }
@@ -529,10 +525,10 @@ public class MQTTClient(
                     step()
                     yield()
                 }
-            } catch (e: CancellationException) {
-                disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
-                close()
-                throw e
+            } finally {
+                if (running.value) {
+                    disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+                }
             }
         }
     }
