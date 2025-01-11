@@ -12,7 +12,9 @@ import java.security.KeyFactory
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
+import java.security.interfaces.ECPrivateKey
 import java.security.interfaces.RSAPrivateKey
+import java.security.spec.InvalidKeySpecException
 import java.security.spec.PKCS8EncodedKeySpec
 import java.util.*
 import javax.net.ssl.KeyManagerFactory
@@ -77,7 +79,12 @@ public actual class TLSClientSocket actual constructor(
 
             val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
             keyStore.load(null, null)
-            val key = getPrivateKeyFromString(if (tlsSettings.clientCertificateKey!!.isValidPem()) tlsSettings.clientCertificateKey!! else FileInputStream(tlsSettings.clientCertificateKey!!).bufferedReader().readText())
+            val keyContent = if (tlsSettings.clientCertificateKey!!.isValidPem()) tlsSettings.clientCertificateKey!! else FileInputStream(tlsSettings.clientCertificateKey!!).bufferedReader().readText();
+            val key = try {
+                getRSAPrivateKeyFromString(keyContent)
+            } catch (e: InvalidKeySpecException) {
+                getECPrivateKeyFromString(keyContent)
+            }
             keyStore.setKeyEntry("client", key, tlsSettings.clientCertificatePassword?.toCharArray(), arrayOf(certificate))
 
             val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
@@ -101,7 +108,7 @@ public actual class TLSClientSocket actual constructor(
     }
 
     public companion object {
-        private fun getPrivateKeyFromString(key: String): RSAPrivateKey {
+        private fun getRSAPrivateKeyFromString(key: String): RSAPrivateKey {
             val privateKeyPEM = key
                 .replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
@@ -110,6 +117,17 @@ public actual class TLSClientSocket actual constructor(
             val kf = KeyFactory.getInstance("RSA")
             val keySpec = PKCS8EncodedKeySpec(encoded)
             return kf.generatePrivate(keySpec) as RSAPrivateKey
+        }
+
+        private fun getECPrivateKeyFromString(key: String): ECPrivateKey {
+            val privateKeyPEM = key
+                .replace("-----BEGIN EC PRIVATE KEY-----", "")
+                .replace("-----END EC PRIVATE KEY-----", "")
+                .replace("\n","")
+            val encoded = Base64.getDecoder().decode(privateKeyPEM)
+            val kf = KeyFactory.getInstance("EC")
+            val keySpec = PKCS8EncodedKeySpec(encoded)
+            return kf.generatePrivate(keySpec) as ECPrivateKey
         }
     }
 

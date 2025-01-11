@@ -3,7 +3,6 @@ serialization = "1.7.3"
 coroutines = "1.9.0"
 atomicfu = "0.26.1"
 nodeWrapper = "20.11.30-pre.732"
-completeKotlin = "1.1.0"
 silvaResources = "0.4.0"
 kotlin = "2.1.0"
 shadow = "8.3.5"
@@ -20,6 +19,5 @@ goncalossilva-resources = { module = "com.goncalossilva:resources", version.ref 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-complete-kotlin = { id = "com.louiscad.complete-kotlin", version.ref = "completeKotlin" }
 goncalossilva-resources = { id = "com.goncalossilva.resources", version.ref = "silvaResources" }
 johnrengelman-shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

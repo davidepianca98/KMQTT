@@ -96,7 +96,6 @@ import kotlinx.coroutines.yield
  * @param publishReceived called when a PUBLISH packet has been received
  */
 public class MQTTClient(
-    private val autoInit: Boolean = true,
     private val mqttVersion: MQTTVersion,
     private val address: String,
     private val port: Int,
@@ -115,6 +114,7 @@ public class MQTTClient(
     private val willQos: Qos = Qos.AT_MOST_ONCE,
     private val connackTimeout: Int = 30,
     private val connectTimeout: Int = 30,
+    private val autoInit: Boolean = true,
     private val enhancedAuthCallback: (authenticationData: UByteArray?) -> UByteArray? = { null },
     private val onConnected: (connack: MQTTConnack) -> Unit = {},
     private val onDisconnected: (disconnect: MQTTDisconnect?) -> Unit = {},

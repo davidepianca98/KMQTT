@@ -13,7 +13,6 @@ buildscript {
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
-    alias(libs.plugins.complete.kotlin)
     alias(libs.plugins.goncalossilva.resources)
 }
 
