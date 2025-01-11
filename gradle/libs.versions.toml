@@ -1,9 +1,9 @@
 [versions]
-serialization = "1.7.3"
-coroutines = "1.9.0"
-atomicfu = "0.26.1"
+serialization = "1.8.0"
+coroutines = "1.10.1"
+atomicfu = "0.27.0"
 nodeWrapper = "20.11.30-pre.732"
-silvaResources = "0.4.0"
+silvaResources = "0.10.0"
 kotlin = "2.1.0"
 shadow = "8.3.5"
 
