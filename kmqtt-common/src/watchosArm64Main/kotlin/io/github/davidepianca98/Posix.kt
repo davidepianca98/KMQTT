@@ -145,7 +145,7 @@ public actual fun MemScope.set_recv_socket_timeout(__fd: Int, timeout: Long): In
     return setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, timeoutStruct.ptr, sizeOf<timeval>().toUInt())
 }
 
-public actual fun MemScope.getaddrinfo(name: String, service: String?): CPointer<sockaddr>? {
+public actual fun MemScope.getaddrinfo(name: String, service: String?): Pair<CPointer<sockaddr>, UInt>? {
     val hints = alloc<addrinfo>()
     platform.posix.memset(hints.ptr, 0, sizeOf<addrinfo>().convert())
     hints.ai_family = platform.posix.AF_UNSPEC
@@ -153,7 +153,11 @@ public actual fun MemScope.getaddrinfo(name: String, service: String?): CPointer
     hints.ai_protocol = platform.posix.IPPROTO_TCP
     val result = alloc<CPointerVar<addrinfo>>()
     if (getaddrinfo(name, service, hints.ptr, result.ptr) == 0) {
-        return result.pointed?.ai_addr
+        return if (result.pointed != null && result.pointed?.ai_addr != null && result.pointed?.ai_addrlen != null) {
+            Pair(result.pointed?.ai_addr!!, result.pointed?.ai_addrlen!!)
+        } else {
+            null
+        }
     }
     return null
 }

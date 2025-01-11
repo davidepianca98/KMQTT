@@ -97,7 +97,7 @@ public expect fun MemScope.select(
     timeout: Long
 ): Int
 
-public expect fun MemScope.getaddrinfo(name: String, service: String?): CPointer<sockaddr>?
+public expect fun MemScope.getaddrinfo(name: String, service: String?): Pair<CPointer<sockaddr>, UInt>?
 
 public expect fun fdSet(fd: Int, fdSet: CValuesRef<fd_set>)
 
