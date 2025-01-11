@@ -74,6 +74,11 @@ public class MQTT5Connack(
                 ReasonCode.valueOf(inStream.readByte().toInt()) ?: throw MQTTException(
                     ReasonCode.PROTOCOL_ERROR
                 )
+
+            if (connectReasonCode !in validReasonCodes) throw MQTTException(
+                ReasonCode.PROTOCOL_ERROR
+            )
+
             val properties = inStream.deserializeProperties(validProperties)
 
             return MQTT5Connack(

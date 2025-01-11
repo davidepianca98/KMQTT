@@ -9,7 +9,7 @@ public enum class SubackReturnCode(public val value: Int) {
     FAILURE(128);
 
     public companion object {
-        public fun valueOf(value: Int): SubackReturnCode? = values().firstOrNull { it.value == value }
+        public fun valueOf(value: Int): SubackReturnCode? = entries.firstOrNull { it.value == value }
     }
 }
 
