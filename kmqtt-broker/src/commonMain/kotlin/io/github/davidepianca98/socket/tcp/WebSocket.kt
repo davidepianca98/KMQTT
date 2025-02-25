@@ -85,9 +85,12 @@ internal class WebSocket(private val socket: Socket) : SocketInterface {
 
     private fun decodeBinary(length: ULong, key: UByteArray): UByteArray {
         val decoded = ByteArrayOutputStream()
-        for (i in 0 until length.toInt()) {
-            decoded.write(currentReceivedData.read() xor key[i and 0x3])
+
+        val bytes = currentReceivedData.readBytes(length.toInt()).mapIndexed { index, uByte ->
+            uByte xor key[index and 0x3]
         }
+        decoded.write(bytes.toUByteArray())
+
         currentReceivedData.shift()
         return decoded.toByteArray()
     }
