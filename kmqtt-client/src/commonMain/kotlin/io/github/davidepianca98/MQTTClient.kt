@@ -96,10 +96,10 @@ import kotlinx.coroutines.yield
  * @param publishReceived called when a PUBLISH packet has been received
  */
 public class MQTTClient(
-    private val mqttVersion: MQTTVersion,
+    private val mqttVersion: MQTTVersion = MQTTVersion.MQTT5,
     private val address: String,
     private val port: Int,
-    private val tls: TLSClientSettings?,
+    private val tls: TLSClientSettings? = null,
     keepAlive: Int = 60,
     private val webSocket: String? = null,
     private val cleanStart: Boolean = true,
@@ -180,26 +180,31 @@ public class MQTTClient(
 
     public fun init() {
         if (!initialized.value) {
+            connectSocket(250, connectTimeout * 1000)
+
             initialized.getAndSet(true)
             running.getAndSet(true)
-
-            connectSocket(250, connectTimeout * 1000)
         }
     }
 
     private fun connectSocket(readTimeout: Int, connectTimeout: Int) {
-        if (socket == null) {
-            connackReceived.getAndSet(false)
-            socket = if (tls == null)
-                ClientSocket(address, port, maximumPacketSize, readTimeout, connectTimeout, ::check)
-            else
-                TLSClientSocket(address, port, maximumPacketSize, readTimeout, connectTimeout, tls, ::check)
-            if (webSocket != null) {
-                socket = WebSocket(socket!!, address, webSocket)
-            }
-
+        connackReceived.getAndSet(false)
+        socket = WebSocket(host = address, port= port){
             sendConnect()
         }
+
+//        if (socket == null) {
+//            connackReceived.getAndSet(false)
+//            socket = if (tls == null)
+//                ClientSocket(address, port, maximumPacketSize, readTimeout, connectTimeout, ::check)
+//            else
+//                TLSClientSocket(address, port, maximumPacketSize, readTimeout, connectTimeout, tls, ::check)
+//            if (webSocket != null) {
+//                socket = WebSocket(socket!!, address, webSocket)
+//            }
+//
+//            sendConnect()
+//        }
     }
 
     public fun isInitialized(): Boolean = initialized.value

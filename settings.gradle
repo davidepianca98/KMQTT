@@ -2,5 +2,7 @@ rootProject.name = 'kmqtt'
 
 includeBuild("convention-plugins")
 include("kmqtt-common")
-include("kmqtt-broker")
+include("kmqtt-socket")
 include("kmqtt-client")
+include("kmqtt-broker")
+include("kmqtt-cmp-sample")

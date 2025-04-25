@@ -60,6 +60,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(project(":kmqtt-common"))
+                implementation(project(":kmqtt-socket"))
                 implementation(libs.kotlinx.serialization.core)
                 implementation(libs.kotlinx.serialization.protobuf)
                 implementation(libs.kotlinx.coroutines.core)

@@ -1,23 +1,43 @@
 [versions]
 serialization = "1.8.0"
-coroutines = "1.10.1"
+coroutines = "1.10.2"
 atomicfu = "0.27.0"
 nodeWrapper = "20.11.30-pre.732"
 silvaResources = "0.10.0"
-kotlin = "2.1.0"
+kotlin = "2.1.20"
 shadow = "8.3.5"
+ktor = "3.1.2"
+
+#Only used for cmp-sample
+compose = "1.7.3"
+compose-hot-reload = "1.0.0-alpha08"
+logback= "1.5.18"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-wasmjs = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-wasm-js", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization" }
 kotlin-node = { module = "org.jetbrains.kotlin-wrappers:kotlin-node", version.ref = "nodeWrapper" }
 atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
 goncalossilva-resources = { module = "com.goncalossilva:resources", version.ref = "silvaResources" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
+ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
+
+#Only used for cmp-sample
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 goncalossilva-resources = { id = "com.goncalossilva.resources", version.ref = "silvaResources" }
 johnrengelman-shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+
+#Only used for cmp-sample
+kotlin-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-hot-reload = { id = "org.jetbrains.compose.hot-reload", version.ref = "compose-hot-reload" }

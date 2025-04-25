@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     id("convention.publication")
@@ -12,6 +15,7 @@ kotlin {
         }
     }
     js {
+        browser()
         nodejs {
             binaries.executable()
         }
@@ -32,6 +36,9 @@ kotlin {
     watchosSimulatorArm64 {}
     watchosX64 {}
 
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {}
+
     sourceSets {
         all {
             languageSettings.apply {
@@ -42,8 +49,10 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation(project(":kmqtt-common"))
+                api(project(":kmqtt-common"))
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.websockets)
             }
         }
         val commonTest by getting {
@@ -52,7 +61,12 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        val jvmMain by getting {}
+        val jvmMain by getting {
+            dependencies {
+                implementation(libs.ktor.client.cio)
+                implementation("ch.qos.logback:logback-classic:1.5.18")
+            }
+        }
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
@@ -69,56 +83,12 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        val posixMain by creating {
-            dependsOn(commonMain)
+
+        val wasmJsMain by getting {
             dependencies {
-                implementation(libs.atomicfu)
+                implementation(libs.kotlinx.coroutines.wasmjs)
+                implementation(libs.ktor.client.js)
             }
-        }
-        val mingwX64Main by getting {
-            dependsOn(posixMain)
-        }
-        val linuxX64Main by getting {
-            dependsOn(posixMain)
-        }
-        val linuxArm64Main by getting {
-            dependsOn(posixMain)
-        }
-        val iosX64Main by getting {
-            dependsOn(posixMain)
-        }
-        val iosArm64Main by getting {
-            dependsOn(posixMain)
-        }
-        val iosSimulatorArm64Main by getting {
-            dependsOn(posixMain)
-        }
-        val macosX64Main by getting {
-            dependsOn(posixMain)
-        }
-        val macosArm64Main by getting {
-            dependsOn(posixMain)
-        }
-        val tvosX64Main by getting {
-            dependsOn(posixMain)
-        }
-        val tvosArm64Main by getting {
-            dependsOn(posixMain)
-        }
-        val tvosSimulatorArm64Main by getting {
-            dependsOn(posixMain)
-        }
-        val watchosX64Main by getting {
-            dependsOn(posixMain)
-        }
-        val watchosArm32Main by getting {
-            dependsOn(posixMain)
-        }
-        val watchosArm64Main by getting {
-            dependsOn(posixMain)
-        }
-        val watchosSimulatorArm64Main by getting {
-            dependsOn(posixMain)
         }
     }
 }

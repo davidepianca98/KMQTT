@@ -33,13 +33,13 @@ public fun main(args: Array<String>) {
 
     println("Starting KMQTT")
 
-    val host = argumentsMap["host"] ?: "0.0.0.0"
+    val host = argumentsMap["host"] ?: "127.0.0.1"
     val port = argumentsMap["port"]?.toInt() ?: 1883
     val backlog = argumentsMap["maxConn"]?.toInt() ?: 128
     val tlsSettings = argumentsMap["keyStore"]?.let {
         TLSSettings(keyStoreFilePath = it, keyStorePassword = argumentsMap["keyStorePassword"])
     }
-    val wsPort = argumentsMap["wsPort"]?.toInt()
+    val wsPort = 1884//argumentsMap["wsPort"]?.toInt()
 
     val broker = Broker(
         port = port,
