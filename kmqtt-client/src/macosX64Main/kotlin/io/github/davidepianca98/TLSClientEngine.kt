@@ -137,11 +137,44 @@ internal actual class TLSClientEngine actual constructor(tlsSettings: TLSClientS
             }
         }
 
+        tlsSettings.alpnProtocols?.let {
+            val protoBytes = it.flatMap { proto ->
+                val bytes = proto.encodeToByteArray()
+                listOf(bytes.size.toByte()) + bytes.toList()
+            }.toByteArray()
+
+            protoBytes.usePinned { pinned ->
+                val result = SSL_CTX_set_alpn_protos(
+                    sslContext,
+                    pinned.addressOf(0).reinterpret(),
+                    protoBytes.size.toUInt()
+                )
+                if (result != 0) {
+                    throw Exception("Failed to set ALPN protocols")
+                }
+            }
+        }
+
         val clientContext = SSL_new(sslContext)
         if (clientContext == null) {
             BIO_free(readBio)
             BIO_free(writeBio)
             throw IOException("Failed allocating read BIO")
+        }
+
+        tlsSettings.serverNameIndications?.let {
+            it.encodeToByteArray().usePinned { pinned ->
+                val result = SSL_ctrl(
+                    clientContext, // CPointer<SSL>
+                    SSL_CTRL_SET_TLSEXT_HOSTNAME,
+                    TLSEXT_NAMETYPE_host_name.toLong(),
+                    pinned.addressOf(0)
+                )
+
+                if (result != 1L) {
+                    throw Exception("Failed to set SNI hostname")
+                }
+            }
         }
 
         SSL_set_verify(clientContext, SSL_VERIFY_PEER, null)

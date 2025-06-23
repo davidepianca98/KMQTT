@@ -18,6 +18,7 @@ import java.security.spec.InvalidKeySpecException
 import java.security.spec.PKCS8EncodedKeySpec
 import java.util.*
 import javax.net.ssl.KeyManagerFactory
+import javax.net.ssl.SNIHostName
 import javax.net.ssl.SSLContext
 import javax.net.ssl.SSLEngineResult
 import javax.net.ssl.TrustManagerFactory
@@ -97,6 +98,15 @@ public actual class TLSClientSocket actual constructor(
         init(keyManagers, trustManagers, null)
     }.createSSLEngine().apply {
         useClientMode = true
+
+        val params = sslParameters
+        tlsSettings.alpnProtocols?.let {
+            params.applicationProtocols = it.toTypedArray()
+        }
+        tlsSettings.serverNameIndications?.let {
+            params.serverNames = listOf(SNIHostName(it))
+        }
+        sslParameters = params
     }
 ) {
     private val selector = Selector.open()
