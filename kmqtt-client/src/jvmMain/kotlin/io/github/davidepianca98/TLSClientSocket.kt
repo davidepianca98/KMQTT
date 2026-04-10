@@ -17,6 +17,10 @@ import java.security.interfaces.RSAPrivateKey
 import java.security.spec.InvalidKeySpecException
 import java.security.spec.PKCS8EncodedKeySpec
 import java.util.*
+import javax.crypto.Cipher
+import javax.crypto.EncryptedPrivateKeyInfo
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SNIHostName
 import javax.net.ssl.SSLContext
@@ -81,10 +85,14 @@ public actual class TLSClientSocket actual constructor(
             val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
             keyStore.load(null, null)
             val keyContent = if (tlsSettings.clientCertificateKey!!.isValidPem()) tlsSettings.clientCertificateKey!! else FileInputStream(tlsSettings.clientCertificateKey!!).bufferedReader().readText();
-            val key = try {
-                getRSAPrivateKeyFromString(keyContent)
-            } catch (e: InvalidKeySpecException) {
-                getECPrivateKeyFromString(keyContent)
+            val key = if (keyContent.contains("-----BEGIN ENCRYPTED PRIVATE KEY-----")) {
+                decryptPrivateKey(keyContent, tlsSettings.clientCertificatePassword)
+            } else {
+                try {
+                    getRSAPrivateKeyFromString(keyContent)
+                } catch (e: InvalidKeySpecException) {
+                    getECPrivateKeyFromString(keyContent)
+                }
             }
             keyStore.setKeyEntry("client", key, tlsSettings.clientCertificatePassword?.toCharArray(), arrayOf(certificate))
 
@@ -118,6 +126,35 @@ public actual class TLSClientSocket actual constructor(
     }
 
     public companion object {
+        private fun decryptPrivateKey(key: String, password: String?): java.security.PrivateKey {
+            requireNotNull(password) { "clientCertificatePassword is required for encrypted private keys" }
+            val pem = key
+                .replace("-----BEGIN ENCRYPTED PRIVATE KEY-----", "")
+                .replace("-----END ENCRYPTED PRIVATE KEY-----", "")
+                .replace("\\s".toRegex(), "")
+            val encoded = Base64.getDecoder().decode(pem)
+            val encryptedKeyInfo = EncryptedPrivateKeyInfo(encoded)
+            val keySpec = PBEKeySpec(password.toCharArray())
+            try {
+                val secretKeyFactory = SecretKeyFactory.getInstance(encryptedKeyInfo.algName)
+                val secretKey = secretKeyFactory.generateSecret(keySpec)
+                val cipher = Cipher.getInstance(encryptedKeyInfo.algName)
+                cipher.init(Cipher.DECRYPT_MODE, secretKey, encryptedKeyInfo.algParameters)
+                val pkcs8Spec = encryptedKeyInfo.getKeySpec(cipher)
+                return try {
+                    KeyFactory.getInstance("RSA").generatePrivate(pkcs8Spec)
+                } catch (e: InvalidKeySpecException) {
+                    try {
+                        KeyFactory.getInstance("EC").generatePrivate(pkcs8Spec)
+                    } catch (e2: InvalidKeySpecException) {
+                        throw IllegalArgumentException("Unsupported private key algorithm. Only RSA and EC are supported.", e2)
+                    }
+                }
+            } finally {
+                keySpec.clearPassword()
+            }
+        }
+
         private fun getRSAPrivateKeyFromString(key: String): RSAPrivateKey {
             val privateKeyPEM = key
                 .replace("-----BEGIN PRIVATE KEY-----", "")

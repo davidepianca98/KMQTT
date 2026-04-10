@@ -180,5 +180,5 @@ public fun ByteArray.toBase64(): String {
 }
 
 public fun String.isValidPem(): Boolean {
-    return matches("(-----BEGIN PUBLIC KEY-----(\\n|\\r|\\r\\n)([0-9a-zA-Z+/=]{64}(\\n|\\r|\\r\\n))*([0-9a-zA-Z+/=]{1,63}(\\n|\\r|\\r\\n))?-----END PUBLIC KEY-----(\\n|\\r|\\r\\n)?)|(-----BEGIN PRIVATE KEY-----(\\n|\\r|\\r\\n)([0-9a-zA-Z+/=]{64}(\\n|\\r|\\r\\n))*([0-9a-zA-Z+/=]{1,63}(\\n|\\r|\\r\\n))?-----END PRIVATE KEY-----(\\n|\\r|\\r\\n)?)|(-----BEGIN CERTIFICATE-----(\\n|\\r|\\r\\n)([0-9a-zA-Z+/=]{64}(\\n|\\r|\\r\\n))*([0-9a-zA-Z+/=]{1,63}(\\n|\\r|\\r\\n))?-----END CERTIFICATE-----(\\n|\\r|\\r\\n)?)".toRegex())
+    return matches("(-----BEGIN PUBLIC KEY-----(\\n|\\r|\\r\\n)([0-9a-zA-Z+/=]{64}(\\n|\\r|\\r\\n))*([0-9a-zA-Z+/=]{1,63}(\\n|\\r|\\r\\n))?-----END PUBLIC KEY-----(\\n|\\r|\\r\\n)?)|(-----BEGIN PRIVATE KEY-----(\\n|\\r|\\r\\n)([0-9a-zA-Z+/=]{64}(\\n|\\r|\\r\\n))*([0-9a-zA-Z+/=]{1,63}(\\n|\\r|\\r\\n))?-----END PRIVATE KEY-----(\\n|\\r|\\r\\n)?)|(-----BEGIN ENCRYPTED PRIVATE KEY-----(\\n|\\r|\\r\\n)([0-9a-zA-Z+/=]{64}(\\n|\\r|\\r\\n))*([0-9a-zA-Z+/=]{1,63}(\\n|\\r|\\r\\n))?-----END ENCRYPTED PRIVATE KEY-----(\\n|\\r|\\r\\n)?)|(-----BEGIN CERTIFICATE-----(\\n|\\r|\\r\\n)([0-9a-zA-Z+/=]{64}(\\n|\\r|\\r\\n))*([0-9a-zA-Z+/=]{1,63}(\\n|\\r|\\r\\n))?-----END CERTIFICATE-----(\\n|\\r|\\r\\n)?)".toRegex())
 }
