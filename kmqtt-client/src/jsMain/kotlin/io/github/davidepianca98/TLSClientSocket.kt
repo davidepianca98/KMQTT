@@ -14,7 +14,7 @@ private fun TlsConnectionOptions(): ConnectionOptions = js("{ checkServerIdentit
 public actual class TLSClientSocket actual constructor(
     address: String,
     port: Int,
-    maximumPacketSize: Int,
+    socketBufferSize: Int,
     private val readTimeOut: Int,
     connectTimeOut: Int,
     tlsSettings: TLSClientSettings,

@@ -77,8 +77,8 @@ internal actual open class ServerSocket actual constructor(
     }
 
     open fun createSocket(channel: SocketChannel, socketKey: SelectionKey): Socket {
-        val sendBuffer = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
-        val receiveBuffer = ByteBuffer.allocate(broker.maximumPacketSize.toInt())
+        val sendBuffer = ByteBuffer.allocate(broker.socketBufferSize)
+        val receiveBuffer = ByteBuffer.allocate(broker.socketBufferSize)
         return Socket(channel, socketKey, sendBuffer, receiveBuffer)
     }
 

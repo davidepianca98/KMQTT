@@ -10,15 +10,15 @@ import java.nio.channels.SocketChannel
 public actual class ClientSocket actual constructor(
     address: String,
     port: Int,
-    maximumPacketSize: Int,
+    socketBufferSize: Int,
     private val readTimeOut: Int,
     connectTimeOut: Int,
     checkCallback: () -> Unit
 ) : Socket(
     SocketChannel.open(),
     null,
-    ByteBuffer.allocate(maximumPacketSize),
-    ByteBuffer.allocate(maximumPacketSize)
+    ByteBuffer.allocate(socketBufferSize),
+    ByteBuffer.allocate(socketBufferSize)
 ) {
 
     private val selector = Selector.open()

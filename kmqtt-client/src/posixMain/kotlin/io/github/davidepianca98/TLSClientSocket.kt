@@ -9,7 +9,7 @@ import io.github.davidepianca98.socket.tls.TLSSocket
 public actual class TLSClientSocket actual constructor(
     address: String,
     port: Int,
-    maximumPacketSize: Int,
+    socketBufferSize: Int,
     private val readTimeOut: Int,
     private val connectTimeOut: Int,
     tlsSettings: TLSClientSettings,
@@ -20,7 +20,7 @@ public actual class TLSClientSocket actual constructor(
     },
     TLSClientEngine(tlsSettings),
     null,
-    ByteArray(maximumPacketSize)
+    ByteArray(socketBufferSize)
 ) {
 
     private val readfds = nativeHeap.alloc<fd_set>()

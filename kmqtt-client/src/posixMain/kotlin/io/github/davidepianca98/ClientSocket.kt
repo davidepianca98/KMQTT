@@ -8,7 +8,7 @@ import io.github.davidepianca98.socket.tcp.Socket
 public actual class ClientSocket actual constructor(
     address: String,
     port: Int,
-    maximumPacketSize: Int,
+    socketBufferSize: Int,
     private val readTimeOut: Int,
     private val connectTimeOut: Int,
     checkCallback: () -> Unit
@@ -17,7 +17,7 @@ public actual class ClientSocket actual constructor(
         socket(AF_INET, SOCK_STREAM, 0)
     },
     null,
-    ByteArray(maximumPacketSize)
+    ByteArray(socketBufferSize)
 ) {
 
     private val readfds = nativeHeap.alloc<fd_set>()

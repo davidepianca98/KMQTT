@@ -7,7 +7,7 @@ import web.timers.setTimeout
 public actual class ClientSocket actual constructor(
     address: String,
     port: Int,
-    maximumPacketSize: Int,
+    socketBufferSize: Int,
     private val readTimeOut: Int,
     private val connectTimeOut: Int,
     private val checkCallback: () -> Unit

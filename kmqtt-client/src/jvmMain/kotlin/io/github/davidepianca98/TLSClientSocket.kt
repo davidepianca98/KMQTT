@@ -28,7 +28,7 @@ import javax.net.ssl.X509TrustManager
 public actual class TLSClientSocket actual constructor(
     address: String,
     port: Int,
-    maximumPacketSize: Int,
+    socketBufferSize: Int,
     private val readTimeOut: Int,
     private val connectTimeOut: Int,
     private val tlsSettings: TLSClientSettings,
@@ -39,10 +39,10 @@ public actual class TLSClientSocket actual constructor(
         configureBlocking(false)
     },
     null,
-    ByteBuffer.allocate(maximumPacketSize),
-    ByteBuffer.allocate(maximumPacketSize),
-    ByteBuffer.allocate(maximumPacketSize),
-    ByteBuffer.allocate(maximumPacketSize),
+    ByteBuffer.allocate(socketBufferSize),
+    ByteBuffer.allocate(socketBufferSize),
+    ByteBuffer.allocate(socketBufferSize),
+    ByteBuffer.allocate(socketBufferSize),
     SSLContext.getInstance(tlsSettings.version).apply {
         val trustManagers = if (tlsSettings.serverCertificate != null) {
             val certificate = CertificateFactory

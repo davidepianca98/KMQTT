@@ -15,6 +15,11 @@ kotlin {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
         }
+        // Pinned so the buffer-allocation regression tests fail deterministically
+        // if sockets ever preallocate maximumPacketSize-sized buffers again
+        testRuns["test"].executionTask.configure {
+            maxHeapSize = "256m"
+        }
     }
     js {
         useCommonJs()

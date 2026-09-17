@@ -14,8 +14,8 @@ import kotlin.concurrent.withLock
 public actual open class Socket(
     protected val channel: SocketChannel,
     private val key: SelectionKey?,
-    private var sendBuffer: ByteBuffer,
-    private val receiveBuffer: ByteBuffer
+    protected var sendBuffer: ByteBuffer,
+    protected var receiveBuffer: ByteBuffer
 ) : SocketInterface {
 
     private val lock = ReentrantLock()
@@ -26,8 +26,11 @@ public actual open class Socket(
             try {
                 sendBuffer.put(byteArray)
             } catch (e: BufferOverflowException) {
-                sendBuffer = ByteBuffer.allocate(sendBuffer.capacity() + data.size)
-                sendBuffer.put(byteArray)
+                val newBuffer = ByteBuffer.allocate(sendBuffer.capacity() + data.size)
+                sendBuffer.flip()
+                newBuffer.put(sendBuffer)
+                newBuffer.put(byteArray)
+                sendBuffer = newBuffer
             }
             sendFromBuffer()
         }
