@@ -43,7 +43,7 @@ internal actual open class ServerSocket actual constructor(
     protected val clients = mutableMapOf<Int, Any?>()
     protected val writeRequest = mutableListOf<Int>()
 
-    protected val buffer = ByteArray(broker.maximumPacketSize.toInt())
+    protected val buffer = ByteArray(broker.socketBufferSize)
 
     private val readfds = nativeHeap.alloc<fd_set>()
     private val writefds = nativeHeap.alloc<fd_set>()

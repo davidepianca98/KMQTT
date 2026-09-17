@@ -13,6 +13,7 @@ import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Properties
 import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Publish
 import io.github.davidepianca98.mqtt.packets.mqttv5.ReasonCode
 import io.github.davidepianca98.removeIf
+import io.github.davidepianca98.socket.DEFAULT_SOCKET_BUFFER_SIZE
 import io.github.davidepianca98.socket.ServerSocketLoop
 import io.github.davidepianca98.socket.tls.TLSSettings
 import kotlinx.atomicfu.locks.reentrantLock
@@ -33,6 +34,7 @@ public class Broker(
     public val maximumQos: Qos? = null,
     public val retainedAvailable: Boolean = true,
     public val maximumPacketSize: UInt = 32768u,
+    public val socketBufferSize: Int = DEFAULT_SOCKET_BUFFER_SIZE,
     public val maximumTopicAlias: Int? = null,
     public val wildcardSubscriptionAvailable: Boolean = true,
     public val subscriptionIdentifiersAvailable: Boolean = true,
@@ -48,6 +50,17 @@ public class Broker(
     private val miscCallbacks: MiscCallbacks? = null
 ) {
 
+    init {
+        // Validate before ServerSocketLoop is created below, otherwise a rejected
+        // configuration would leave the listening sockets bound
+        if (enableUdp && maximumPacketSize > 65535u) {
+            throw IllegalArgumentException("When UDP is enabled the maximum packet size can't be bigger than the datagram maximum size")
+        }
+        if (socketBufferSize <= 0) {
+            throw IllegalArgumentException("Socket buffer size must be positive")
+        }
+    }
+
     private val server = ServerSocketLoop(this)
     private val sessions = (persistence?.getAllSessions() as Map<String, ISession>?)?.toMutableMap() ?: mutableMapOf()
     private val subscriptions = Trie(persistence?.getAllSubscriptions())
@@ -59,12 +72,6 @@ public class Broker(
 
     private var startCallbackCalled = false
     private var stopCallbackCalled = false
-
-    init {
-        if (enableUdp && maximumPacketSize > 65535u) {
-            throw IllegalArgumentException("When UDP is enabled the maximum packet size can't be bigger than the datagram maximum size")
-        }
-    }
 
     /**
      * Starts the broker (blocking run)

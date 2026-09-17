@@ -16,12 +16,12 @@ import javax.net.ssl.SSLException
 public actual open class TLSSocket(
     channel: SocketChannel,
     key: SelectionKey?,
-    private var sendBuffer1: ByteBuffer,
-    private var receiveBuffer1: ByteBuffer,
+    sendBuffer: ByteBuffer,
+    receiveBuffer: ByteBuffer,
     private var sendAppBuffer: ByteBuffer,
     private var receiveAppBuffer: ByteBuffer,
     protected val engine: SSLEngine
-) : Socket(channel, key, sendBuffer1, receiveBuffer1) {
+) : Socket(channel, key, sendBuffer, receiveBuffer) {
 
     init {
         engine.beginHandshake()
@@ -29,11 +29,11 @@ public actual open class TLSSocket(
     }
 
     private fun handleReceiveBufferUnderflow() {
-        if (engine.session.packetBufferSize > receiveBuffer1.capacity()) {
+        if (engine.session.packetBufferSize > receiveBuffer.capacity()) {
             val newBuffer = ByteBuffer.allocate(engine.session.packetBufferSize)
-            receiveBuffer1.flip()
-            newBuffer.put(receiveBuffer1)
-            receiveBuffer1 = newBuffer
+            receiveBuffer.flip()
+            newBuffer.put(receiveBuffer)
+            receiveBuffer = newBuffer
         }
     }
 
@@ -46,11 +46,11 @@ public actual open class TLSSocket(
     }
 
     private fun handleSendBufferOverflow() {
-        sendBuffer1 = if (engine.session.packetBufferSize > sendBuffer1.capacity()) {
-            ByteBuffer.allocate(engine.session.applicationBufferSize)
-        } else {
-            ByteBuffer.allocate(sendBuffer1.capacity() * 2)
-        }
+        val size = maxOf(engine.session.packetBufferSize, sendBuffer.capacity() * 2)
+        val newBuffer = ByteBuffer.allocate(size)
+        sendBuffer.flip()
+        newBuffer.put(sendBuffer)
+        sendBuffer = newBuffer
     }
 
     private fun send0(data: UByteArray) {
@@ -65,7 +65,7 @@ public actual open class TLSSocket(
         sendAppBuffer.flip()
         try {
             do {
-                val result = engine.wrap(sendAppBuffer, sendBuffer1)
+                val result = engine.wrap(sendAppBuffer, sendBuffer)
                 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
                 when (result.status) {
                     SSLEngineResult.Status.BUFFER_UNDERFLOW -> {
@@ -81,7 +81,7 @@ public actual open class TLSSocket(
                         throw SocketClosedException()
                     }
                 }
-            } while (result.status != SSLEngineResult.Status.OK)
+            } while (result.status != SSLEngineResult.Status.OK || sendAppBuffer.hasRemaining())
         } catch (e: SocketClosedException) {
             engine.closeOutbound()
             close()
@@ -132,9 +132,9 @@ public actual open class TLSSocket(
     private fun read0(): Boolean {
         try {
             do {
-                receiveBuffer1.flip()
-                val result = engine.unwrap(receiveBuffer1, receiveAppBuffer)
-                receiveBuffer1.compact()
+                receiveBuffer.flip()
+                val result = engine.unwrap(receiveBuffer, receiveAppBuffer)
+                receiveBuffer.compact()
                 @Suppress("WHEN_ENUM_CAN_BE_NULL_IN_JAVA")
                 when (result.status) {
                     SSLEngineResult.Status.OK -> {}

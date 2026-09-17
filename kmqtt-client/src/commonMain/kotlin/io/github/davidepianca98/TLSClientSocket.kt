@@ -6,7 +6,7 @@ import io.github.davidepianca98.socket.tls.TLSSocket
 public expect class TLSClientSocket(
     address: String,
     port: Int,
-    maximumPacketSize: Int,
+    socketBufferSize: Int,
     readTimeOut: Int,
     connectTimeOut: Int,
     tlsSettings: TLSClientSettings,

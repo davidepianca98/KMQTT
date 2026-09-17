@@ -1,8 +1,11 @@
 package io.github.davidepianca98.mqtt
 
+import io.github.davidepianca98.mqtt.MQTTException
 import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Publish
+import io.github.davidepianca98.mqtt.packets.mqttv5.ReasonCode
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class MQTTCurrentPacketTest {
 
@@ -63,5 +66,20 @@ class MQTTCurrentPacketTest {
         assertEquals(publish2.payload!!.size, (packetsSecondRound[0] as MQTT5Publish).payload!!.size)
         assertEquals(publish3.topicName, (packetsSecondRound[1] as MQTT5Publish).topicName)
         assertEquals(publish3.payload!!.size, (packetsSecondRound[1] as MQTT5Publish).payload!!.size)
+    }
+
+    @Test
+    fun testPacketExceedingMaximumPacketSizeRejectedFromHeaderAlone() {
+        val currentPacket = MQTTCurrentPacket(1024u)
+
+        val publish = MQTT5Publish(false, topicName = "test/topic", packetId = null, payload = UByteArray(2000))
+        val data = publish.toByteArray()
+
+        val headerOnly = data.copyOfRange(0, 5)
+
+        val exception = assertFailsWith<MQTTException> {
+            currentPacket.addData(headerOnly)
+        }
+        assertEquals(ReasonCode.PACKET_TOO_LARGE, exception.reasonCode)
     }
 }

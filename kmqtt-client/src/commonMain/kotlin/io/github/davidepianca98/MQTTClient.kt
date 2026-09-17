@@ -56,6 +56,7 @@ import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Suback
 import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Unsuback
 import io.github.davidepianca98.mqtt.packets.mqttv5.MQTT5Unsubscribe
 import io.github.davidepianca98.mqtt.packets.mqttv5.ReasonCode
+import io.github.davidepianca98.socket.DEFAULT_SOCKET_BUFFER_SIZE
 import io.github.davidepianca98.socket.IOException
 import io.github.davidepianca98.socket.SocketClosedException
 import io.github.davidepianca98.socket.SocketInterface
@@ -87,6 +88,7 @@ import kotlinx.coroutines.yield
  * @param willQos the QoS of the will PUBLISH message
  * @param connackTimeout timeout in seconds after which the connection is closed if no CONNACK packet has been received
  * @param connectTimeout timeout in seconds after which an exception will be thrown if the socket is not able to establish a connection
+ * @param socketBufferSize the size in bytes of the socket I/O buffers. Packets bigger than this are reassembled incrementally, so this is independent of maximumPacketSize and does not limit the packet size
  * @param enhancedAuthCallback the callback called when authenticationData is received, it should return the data necessary to continue authentication or null if completed (used only in MQTT5 if authenticationMethod has been set in the CONNECT properties)
  * @param onConnected called when the CONNACK packet has been received and the connection has been established
  * @param onDisconnected called when a DISCONNECT packet has been received or if the connection has been terminated
@@ -114,6 +116,7 @@ public class MQTTClient(
     private val willQos: Qos = Qos.AT_MOST_ONCE,
     private val connackTimeout: Int = 30,
     private val connectTimeout: Int = 30,
+    private val socketBufferSize: Int = DEFAULT_SOCKET_BUFFER_SIZE,
     private val autoInit: Boolean = true,
     private val enhancedAuthCallback: (authenticationData: UByteArray?) -> UByteArray? = { null },
     private val onConnected: (connack: MQTTConnack) -> Unit = {},
@@ -173,6 +176,10 @@ public class MQTTClient(
             throw IllegalArgumentException("Cannot set password without username")
         }
 
+        if (socketBufferSize <= 0) {
+            throw IllegalArgumentException("Socket buffer size must be positive")
+        }
+
         if (autoInit) {
             init()
         }
@@ -191,9 +198,9 @@ public class MQTTClient(
         if (socket == null) {
             connackReceived.getAndSet(false)
             socket = if (tls == null)
-                ClientSocket(address, port, maximumPacketSize, readTimeout, connectTimeout, ::check)
+                ClientSocket(address, port, socketBufferSize, readTimeout, connectTimeout, ::check)
             else
-                TLSClientSocket(address, port, maximumPacketSize, readTimeout, connectTimeout, tls, ::check)
+                TLSClientSocket(address, port, socketBufferSize, readTimeout, connectTimeout, tls, ::check)
             if (webSocket != null) {
                 socket = WebSocket(socket!!, address, webSocket)
             }
