@@ -47,6 +47,7 @@ public actual class TLSClientSocket actual constructor(
     }
 
     override fun read(): UByteArray? {
+        ensureOpen()
         memScoped {
             fdZero(readfds.ptr)
             fdSet(socket.convert(), readfds.ptr)

@@ -183,7 +183,13 @@ public class MQTTClient(
             initialized.getAndSet(true)
             running.getAndSet(true)
 
-            connectSocket(250, connectTimeout * 1000)
+            try {
+                connectSocket(250, connectTimeout * 1000)
+            } catch (e: Exception) {
+                close()
+                initialized.getAndSet(false)
+                throw e
+            }
         }
     }
 
@@ -210,7 +216,13 @@ public class MQTTClient(
 
     private fun send(data: UByteArray, force: Boolean = false) {
         if (connackReceived.value || force) {
-            socket?.send(data) ?: throw SocketClosedException("MQTT send failed")
+            try {
+                socket?.send(data) ?: throw SocketClosedException("MQTT send failed")
+            } catch (e: IOException) {
+                lastException = e
+                close()
+                throw e
+            }
             if (debugLog) {
                 println("Sent: " + data.toHexString())
             }
@@ -388,8 +400,11 @@ public class MQTTClient(
         } else {
             MQTT5Disconnect(reasonCode)
         }
-        send(disconnect.toByteArray())
-        close()
+        try {
+            send(disconnect.toByteArray())
+        } finally {
+            close()
+        }
     }
 
     private var lastException: Exception? = null
@@ -403,17 +418,17 @@ public class MQTTClient(
             // Needed because of JS callbacks, otherwise the exception gets swallowed and tests don't complete correctly
             throw lastException ?: SocketClosedException("")
         }
-        socket?.sendRemaining()
-        if (connackReceived.value) {
-            val pending = pendingSendMessages.getAndSet(mutableListOf())
-            for (data in pending) {
-                send(data)
-            }
-        }
-
         val data = try {
+            socket?.sendRemaining()
+            if (connackReceived.value) {
+                val pending = pendingSendMessages.getAndSet(mutableListOf())
+                for (data in pending) {
+                    send(data)
+                }
+            }
             socket?.read()
         } catch (e: Exception) {
+            lastException = e
             close()
             onDisconnected(null)
             throw e
@@ -429,7 +444,7 @@ public class MQTTClient(
                 }
             } catch (e: MQTTException) {
                 lastException = e
-                disconnect(e.reasonCode)
+                disconnectAfterFailure(e, e.reasonCode)
                 onDisconnected(null)
                 throw e
             } catch (e: EOFException) {
@@ -439,12 +454,12 @@ public class MQTTClient(
                 throw e
             } catch (e: IOException) {
                 lastException = e
-                disconnect(ReasonCode.UNSPECIFIED_ERROR)
+                close()
                 onDisconnected(null)
                 throw e
             } catch (e: Exception) {
                 lastException = e
-                disconnect(ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
+                disconnectAfterFailure(e, ReasonCode.IMPLEMENTATION_SPECIFIC_ERROR)
                 onDisconnected(null)
                 throw e
             }
@@ -477,6 +492,14 @@ public class MQTTClient(
                 send(pingreq.toByteArray())
                 // TODO if not receiving pingresp after a reasonable amount of time, close connection
             }
+        }
+    }
+
+    private fun disconnectAfterFailure(failure: Exception, reasonCode: ReasonCode) {
+        try {
+            disconnect(reasonCode)
+        } catch (e: IOException) {
+            failure.addSuppressed(e)
         }
     }
 
@@ -802,8 +825,9 @@ public class MQTTClient(
 
     private fun close() {
         running.getAndSet(false)
-        socket?.close()
-        connackReceived.getAndSet(false)
+        val socketToClose = socket
         socket = null
+        connackReceived.getAndSet(false)
+        socketToClose?.close()
     }
 }

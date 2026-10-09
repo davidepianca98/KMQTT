@@ -34,6 +34,7 @@ public actual open class TLSSocket(
     }
 
     override fun send(data: UByteArray) {
+        ensureOpen()
         if (!send0(data)) {
             pendingSend.add(data.copyOf())
         }
@@ -78,6 +79,7 @@ public actual open class TLSSocket(
     }
 
     override fun read(): UByteArray? {
+        ensureOpen()
         if (engine.isInitFinished) {
             val iterator = pendingSend.iterator()
             while (iterator.hasNext()) {
@@ -137,7 +139,11 @@ public actual open class TLSSocket(
     }
 
     override fun close() {
-        engine.close()
+        if (isClosed) {
+            return
+        }
         super.close()
+        pendingSend.clear()
+        engine.close()
     }
 }

@@ -22,7 +22,17 @@ public actual open class Socket(
 
     private var pendingSendData = mutableListOf<UByteArray>()
 
+    protected var isClosed: Boolean = false
+        private set
+
+    protected fun ensureOpen() {
+        if (isClosed) {
+            throw SocketClosedException()
+        }
+    }
+
     actual override fun send(data: UByteArray) {
+        ensureOpen()
         data.toByteArray().usePinned { pinned ->
             val length = send(socket, pinned.addressOf(0), data.size, 0)
             if (length < 0) {
@@ -43,6 +53,7 @@ public actual open class Socket(
     }
 
     actual override fun sendRemaining() {
+        ensureOpen()
         val sendData = mutableListOf<UByteArray>()
         sendData.addAll(pendingSendData)
         pendingSendData.clear()
@@ -52,6 +63,7 @@ public actual open class Socket(
     }
 
     actual override fun read(): UByteArray? {
+        ensureOpen()
         buffer.usePinned { pinned ->
             val length = recv(socket.convert(), pinned.addressOf(0), buffer.size.convert(), 0)
             when {
@@ -76,6 +88,11 @@ public actual open class Socket(
     }
 
     actual override fun close() {
+        if (isClosed) {
+            return
+        }
+        isClosed = true
+        pendingSendData.clear()
         shutdown(socket)
         close(socket)
     }
